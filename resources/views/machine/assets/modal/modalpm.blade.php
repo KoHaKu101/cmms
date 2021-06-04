@@ -18,11 +18,11 @@
 					@csrf
           <input type="hidden" id="MACHINE_CODE" name="MACHINE_CODE" value="{{ $dataset->MACHINE_CODE }}" >
 
-          <div class="col-md-8 col-lg-3 ml-2 table">
+          <div class="col-md-8 col-lg-12 ml-2">
             <table class="table table-bordered table-head-bg-info table-bordered-bd-info" id="addpmmachine" >
                 <thead>
                   <tr>
-                    <th scope="col" width="">#</th>
+                    <th >#</th>
                     <th scope="col">รายการ</th>
                   </tr>
                 </thead>
@@ -32,7 +32,6 @@
                      <td><input class="form-check-input" type="checkbox" id="PM_TEMPLATE_UNID_REF[]" name="PM_TEMPLATE_UNID_REF[]" value="{{ $datapm->UNID }}"></td>
                      <td>{{ $datapm->PM_TEMPLATE_NAME }}</td>
                    </tr>
-
                  @endforeach
                </tbody>
              </table>

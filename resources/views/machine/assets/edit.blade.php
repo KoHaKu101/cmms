@@ -291,7 +291,9 @@
 @include('machine.assets.modal.uploadmanue')
 @include('machine.assets.modal.machinesparepart')
 @include('machine.assets.modal.addsparepart')
-@include('machine.assets.modal.pmmachine')
+{{-- @include('machine.assets.modal.pmmachine') --}}
+@include('machine.assets.modal.modalpm')
+@include('machine.assets.modal.modalpmremove')
 
 
 @stop
@@ -306,15 +308,33 @@
 	 <script src="{{ asset('assets/js/ajax/ajax-csrf.js') }}"></script>
 	 <script>
 	 $(document).ready(function(){
-		 var table =	$('#machinespartelist').DataTable({
+			$('#machinespartelist').DataTable({
 				 "pageLength": 10,
 				 "bLengthChange": false,
 				 "bFilter": true,
 				 "bInfo": false,
 				 "bAutoWidth": false,
 				 'bSort': false,
-				 
+
 			 });
+			 $('#addpmmachine').DataTable({
+					"pageLength": 10,
+					"bLengthChange": false,
+					"bFilter": true,
+					"bInfo": false,
+					"bAutoWidth": false,
+					'bSort': false,
+
+				});
+				$('#removepmmachine').DataTable({
+					 "pageLength": 10,
+					 "bLengthChange": false,
+					 "bFilter": true,
+					 "bInfo": false,
+					 "bAutoWidth": false,
+					 'bSort': false,
+
+				 });
 	 });
  </script>
 @stop

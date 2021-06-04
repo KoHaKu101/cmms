@@ -169,7 +169,7 @@ class MachineController extends Controller
     $machineline                 = MachineLine::select('LINE_CODE','LINE_NAME')
                                               ->where('LINE_STATUS','=','9')
                                               ->get();
-    $machinerepair               = MachineRepairREQ::where('MACHINE_CODE','=',$dataset->MACHINE_CODE)
+    $machinerepair               = MachineRepairREQ::where('MACHINE_UNID','=',$UNID)
                                                 ->where('CLOSE_STATUS','=','9')
                                                 ->get();
 
@@ -186,11 +186,12 @@ class MachineController extends Controller
 
     $masterimpsgroup             =  MasterIMPSGroup::orderBy('PM_TEMPLATELIST_INDEX','ASC')->get();
     $pmlistdetail                =  MachinePmTemplateDetail::orderBy('PM_DETAIL_INDEX','ASC')->get();
-    // $machinesparepart            =  MachineSparePart::where('MACHINE_UNID','=',$UNID)->where('STATUS','=','9')->get();
     $machinesparepart            =  MachineSparePart::where('MACHINE_UNID','=',$UNID)->where('STATUS','=','9')
                                              ->get();
+    $machinepmtemplateremove     = MachinePmTemplate::whereIn('PM_TEMPLATE_NAME',MasterIMPS::select('PM_TEMPLATE_NAME')->where('MACHINE_UNID',$UNID))->orderBy('CREATE_TIME','ASC')->paginate(6);
+    $machinepmtemplate           = MachinePmTemplate::whereNotIn('PM_TEMPLATE_NAME',MasterIMPS::select('PM_TEMPLATE_NAME')->where('MACHINE_UNID',$UNID))->orderBy('CREATE_TIME','ASC')->paginate(6);
 
-    return view('machine/assets/edit',compact('masterimps','masterimpsgroup','pmlistdetail','machinerank'
+    return view('machine/assets/edit',compact('machinepmtemplate','machinepmtemplateremove','masterimps','masterimpsgroup','pmlistdetail','machinerank'
     ,'dataset','machineupload','machinetype','machineline','machinestatus','machineemp','machinerepair','machinesparepart'));
   }
   public function Update(Request $request,$UNID){
