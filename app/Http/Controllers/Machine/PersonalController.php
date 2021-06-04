@@ -99,6 +99,8 @@ class PersonalController extends Controller
 
   }
   public function Update(Request $request,$UNID){
+      $data_EMPNAME = EMPName::where('UNID',$UNID)->first();
+      $last_img = $data_EMPNAME->$last_img;
     if ($request->hasFile('EMP_ICON')) {
       if ($request->file('EMP_ICON')->isValid()) {
           $image = $request->file('EMP_ICON');
@@ -106,10 +108,8 @@ class PersonalController extends Controller
           $this->saveimg($image,$new_name);
             $last_img = $new_name;
       }
-  } else {
-      $last_img = "";
   }
-  $dataset = EMPName::where('UNID',$UNID)->update([
+   EMPName::where('UNID',$UNID)->update([
 
     'EMP_CODE'         => $request->EMP_CODE,
     'EMP_NAME'         => $request->EMP_NAME,
