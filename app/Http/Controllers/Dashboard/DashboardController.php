@@ -20,10 +20,8 @@ class DashboardController extends Controller
   public function Dashboard(){
     //dashboardสรุป
     $dataset = Machine::select('MACHINE_CHECK')->get();
-    $datarepair = MachineRepairREQ::select('CLOSE_STATUS')->first();
+    $datarepair = MachineRepairREQ::select('CLOSE_STATUS')->get();
 
-
-    //dashboardเครื่องจักรLINE
     $data_line = Machine::select('MACHINE_LINE')->get();
     //แจ้งซ่อม
     $datarepairlist = MachineRepairREQ::where('CLOSE_STATUS','=','9')->orderBy('DOC_DATE','DESC')->take(9)->get();

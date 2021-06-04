@@ -90,10 +90,8 @@ class MachineTypeTableController extends Controller
 }
 public function Update(Request $request,$UNID) {
   $DATA_MACHINE_TYPE = MachineTypeTable::where('UNID','=',$UNID)->first();
-  $last_img = $DATA_MACHINE_TYPE->last_img;
-  $imgupdate = $request->imgupdate;
+  $last_img = $DATA_MACHINE_TYPE->TYPE_ICON;
   if ($request->hasFile('TYPE_ICON')) {
-    if ($request->file('TYPE_ICON')->isValid()) {
       $pathfile = public_path('image/machinetype/'.$last_img);
       File::delete($pathfile);
       $image = $request->file('TYPE_ICON');
@@ -101,9 +99,6 @@ public function Update(Request $request,$UNID) {
       $this->saveimg($image,$new_name);
 
       $last_img = $new_name;
-    }
-} else {
-    $last_img = $imgupdate;
 }
   MachineTypeTable::where('UNID',$UNID)->update([
     'TYPE_CODE'       => $request->TYPE_CODE,
