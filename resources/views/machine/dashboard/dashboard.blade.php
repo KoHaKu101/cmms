@@ -185,13 +185,13 @@
 									</div>
 									<div class="flex-1 ml-3 pt-1 col-md-6 col-lg-7">
 										<h4 class="text-uppercase fw-bold mb-1">{{$dataitem->MACHINE_CODE}}
-										<span class="text-success pl-3">	{{$dataitem->MACHINE_TYPE == 'RUN' ? 'ทำงานปกติ' : 'หยุดทำงาน'}}
+										<span class="text-success pl-3">	{{$dataitem->MACHINE_STATUS == '9' ? 'ทำงานปกติ' : 'หยุดทำงาน'}}
 										</span></h4>
 
-										<span class="text-muted" >{{ $dataitem->MACHINE_CAUSE }}</span>
+										<span class="text-muted" >{{ $dataitem->REPAIR_SUBSELECT_NAME }}</span>
 									</div>
 									<div class="float-right pt-1 col-md-6 col-lg-3">
-										<h5 class="text-muted">{{$dataitem->MACHINE_DOCDATE}}</h5>
+										<h5 class="text-muted">{{$dataitem->DOC_DATE}}</h5>
 									</div>
 									</div>
 									<hr>
