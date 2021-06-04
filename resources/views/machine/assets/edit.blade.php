@@ -291,7 +291,6 @@
 @include('machine.assets.modal.uploadmanue')
 @include('machine.assets.modal.machinesparepart')
 @include('machine.assets.modal.addsparepart')
-{{-- @include('machine.assets.modal.pmmachine') --}}
 @include('machine.assets.modal.modalpm')
 @include('machine.assets.modal.modalpmremove')
 
