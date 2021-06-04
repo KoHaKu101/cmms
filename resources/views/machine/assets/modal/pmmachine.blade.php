@@ -32,7 +32,6 @@
                      <td><input class="form-check-input" type="checkbox" id="PM_TEMPLATE_UNID_REF[]" name="PM_TEMPLATE_UNID_REF[]" value="{{ $datapm->UNID }}"></td>
                      <td>{{ $datapm->PM_TEMPLATE_NAME }}</td>
                    </tr>
-
                  @endforeach
                </tbody>
              </table>

@@ -42,11 +42,18 @@ class MachineRepairController extends Controller
     return $number;
   }
 
-  public function Index(){
+  public function Index(Request $request){
 
-    $dataset = MachineRepairREQ::orderby('CLOSE_STATUS','DESC')->orderBy('DOC_DATE','DESC')->paginate(10);
+    $SEARCH = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '%';
 
-    return View('machine/repair/repairlist',compact('dataset'));
+    $dataset = MachineRepairREQ::where(function ($query) use ($SEARCH) {
+              $query->where('MACHINE_CODE', 'like', $SEARCH)
+                  ->orWhere('DOC_NO', 'like', $SEARCH);})
+                            ->orderby('CLOSE_STATUS','DESC')
+                            ->orderBy('DOC_DATE','DESC')
+                            ->paginate(10);
+   $SEARCH = str_replace('%','',$SEARCH);
+    return View('machine/repair/repairlist',compact('dataset','SEARCH'));
   }
 
   public function PrepareSearch(Request $request){
