@@ -32,14 +32,16 @@
                      <td>
                        {{ $index+1  }}
                      </td>
-                     <td><div class="form-check">
-                     <label class="form-check-label">
-                       <input class="form-check-input add-machine" type="checkbox" value="{{ $datapm->UNID }}"
-                       id="PM_TEMPLATE_UNID_REF[]" name="PM_TEMPLATE_UNID_REF[]"
-                       >
-                       <span class="form-check-sign">{{$datapm->PM_TEMPLATE_NAME}}</span>
-                     </label>
-                   </div></td>
+                     <td>
+                        <div class="form-check">
+                             <label class="form-check-label">
+                             <input class="form-check-input add-machine" type="checkbox" value="{{ $datapm->UNID }}"
+                             id="PM_TEMPLATE_UNID_REF[]" name="PM_TEMPLATE_UNID_REF[]"
+                              >
+                            <span class="form-check-sign">{{$datapm->PM_TEMPLATE_NAME}}</span>
+                           </label>
+                       </div>
+                    </td>
                    </tr>
                  @endforeach
                </tbody>
