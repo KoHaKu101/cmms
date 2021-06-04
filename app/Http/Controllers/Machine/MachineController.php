@@ -63,10 +63,25 @@ class MachineController extends Controller
     return View('machine/assets/machinemenu',compact(['dataset']),['dataset' => $dataset]);
   }
 
-  public function All($LINE_CODE = NULL) {
+  public function All(Request $request,$LINE_CODE = NULL) {
 
     $MACHINE_LINE = $LINE_CODE;
-    return view('machine/assets/machinelist',compact('MACHINE_LINE'));
+    $SEARCH = $request->SEARCH;
+    if ($MACHINE_LINE != NULL) {
+      $machine = Machine::select('*')->selectRaw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_V2')
+                        ->where('MACHINE_CODE','like', '%'.$SEARCH.'%')
+                        ->where('MACHINE_LINE',$MACHINE_LINE)
+                        ->where('MACHINE_STATUS','!=','4')
+                        ->orderBy('MACHINE_CODE','ASC')->paginate(10);
+    }else {
+      $machine = Machine::select('*')->selectRaw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_V2')
+                        ->where(function ($query) use ($SEARCH) {
+                             $query->where('MACHINE_CODE', 'like', '%'.$SEARCH.'%')
+                                   ->orWhere('MACHINE_LINE', 'like', '%'.$SEARCH.'%');})
+                        ->where('MACHINE_STATUS','!=','4')
+                        ->orderBy('MACHINE_CODE','ASC')->paginate(10);
+    }
+    return view('machine/assets/machinelist',compact('MACHINE_LINE','machine','SEARCH'));
   }
 
   public function Create(){

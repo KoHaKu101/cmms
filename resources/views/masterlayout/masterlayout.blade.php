@@ -88,7 +88,8 @@
 
 	<script type="text/javascript" src="{{ asset('assets/js/atlantis.min.js') }}"></script>
 		@include('sweetalert::alert')
-		@livewireScripts
+	{{-- <script type="text/javascript" src="{{ asset('vendor/livewire/livewire.js') }}"></script> --}}
+		{{-- @livewireScripts --}}
 
 @yield('javascript')
 
