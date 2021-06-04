@@ -215,8 +215,8 @@
 													<div class="form-group">
 															<label for="AUTOMAIL" class="col-md-3 col-form-label">Auto Mail Alert(day)</label>
 															<div class="col-md-9 p-0">
-																<input type="hidden" id="UNID" name="UNID" value="{{$dataset->UNID}}">
-																<input type="number" class="form-control form-control-sm input-full"  id="AUTOMAIL" name="AUTOMAIL" value="{{ $dataset->AUTOMAIL != NULL ? $dataset->AUTOMAIL : "7" }}" min="1" max="90">
+																<input type="hidden" id="UNID" name="UNID" value="{{ isset($datamail[0]->UNID) ? $datamail[0]->UNID : '' }}">
+																<input type="number" class="form-control form-control-sm input-full"  id="AUTOMAIL" name="AUTOMAIL" value="{{ isset($dataset->AUTOMAIL) != NULL ? $dataset->AUTOMAIL : "7" }}" min="1" max="90">
 															</div>
 														</div>
 												</div>
@@ -224,7 +224,7 @@
 													<div class="form-group">
 															<label for="AUTOPLAN" class="col-md-3 col-form-label">Auto Plan(day)</label>
 															<div class="col-md-9 p-0">
-																<input type="number" class="form-control form-control-sm input-full"  id="AUTOPLAN" name="AUTOPLAN" value="{{ $dataset->AUTOPLAN != NULL ? $dataset->AUTOPLAN : "730" }}" min="1" max="1000">
+																<input type="number" class="form-control form-control-sm input-full"  id="AUTOPLAN" name="AUTOPLAN" value="{{ isset($dataset->AUTOPLAN) != NULL ? $dataset->AUTOPLAN : "730" }}" min="1" max="1000">
 															</div>
 														</div>
 												</div>

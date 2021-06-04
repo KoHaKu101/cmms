@@ -17,7 +17,8 @@ class MailSetup extends Model
     public $table ='PMCS_CMMS_SETUP_MAIL';
 
     protected $fillable = [
-         'UNID', 'MAILHOST', 'EMAILADDRESS', 'MAILPASSWORD', 'MAILPORT', 'MAILPROTOCOL', 'AUTOMAIL', 'AUTOPLAN','PLAN_CHECK',
+         'UNID', 'MAILHOST', 'EMAILADDRESS', 'MAILPASSWORD', 'MAILPORT', 'MAILPROTOCOL'
+         , 'AUTOMAIL', 'AUTOPLAN','PLAN_CHECK',
           'CREATE_BY', 'CREATE_TIME', 'MODIFY_BY', 'MODIFY_TIME'
     ];
 
