@@ -116,9 +116,6 @@
                 </div>
               @endforeach
             </div>
-
-            {{-- @livewire('showpmmachine',['MACHINE_CODE'=>$dataset->MACHINE_CODE,'RANK'=>$dataset->MACHINE_RANK_MONTH ]) --}}
-
         </div>
       </div>
     </div>

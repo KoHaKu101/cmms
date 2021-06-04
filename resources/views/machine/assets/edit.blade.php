@@ -300,7 +300,22 @@
 {{-- ส่วนjava --}}
 @section('javascript')
 	<script src="{{ asset('assets/fullcalendar/moment.js') }}"></script>
+	<script src="{{ asset('assets/js/plugin/datatables/datatables.min.js')}}">
+	</script>
 	<script src="{{ asset('assets/js/useinproject/machine/editmachine.js') }}"></script>
 	 <script src="{{ asset('assets/js/ajax/ajax-csrf.js') }}"></script>
+	 <script>
+	 $(document).ready(function(){
+		 var table =	$('#machinespartelist').DataTable({
+				 "pageLength": 10,
+				 "bLengthChange": false,
+				 "bFilter": true,
+				 "bInfo": false,
+				 "bAutoWidth": false,
+				 'bSort': false,
+				 
+			 });
+	 });
+ </script>
 @stop
 {{-- ปิดส่วนjava --}}
