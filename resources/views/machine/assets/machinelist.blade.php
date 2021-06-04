@@ -138,7 +138,7 @@
 								                  </button>
 								              </td>
 								              <td>
-								                <a href="{{ url('machine/repair/form/'.$row->MACHINE_CODE) }}">
+								                <a href="{{ url('machine/repair/form/'.$row->UNID) }}">
 								                  <button type="button" class="btn btn-danger btn-sm btn-block my-1" style="width:130px">
 								                    <span class="float-left">
 								                      <i class="fas fa-wrench fa-lg mx-1 mt-1"></i>
