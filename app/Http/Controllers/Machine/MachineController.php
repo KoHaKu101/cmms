@@ -65,8 +65,8 @@ class MachineController extends Controller
 
   public function All($LINE_CODE = NULL) {
 
-    $LINE_CODE = $LINE_CODE;
-    return view('machine/assets/machinelist',compact('LINE_CODE'));
+    $MACHINE_LINE = $LINE_CODE;
+    return view('machine/assets/machinelist',compact('MACHINE_LINE'));
   }
 
   public function Create(){

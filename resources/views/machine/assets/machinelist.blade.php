@@ -47,7 +47,7 @@
 								</button>
 								</a>
 								<button class="btn btn-primary  btn-xs" type="button" id="buttonprint">
-									<input type="hidden" id="MACHINE_LINE" name="MACHINE_LINE" value="{{ $LINE_CODE }}">
+									<input type="hidden" id="MACHINE_LINE" name="MACHINE_LINE" value="{{ $MACHINE_LINE }}">
 									<span class="fas fa-print fa-lg">	Print	</span>
 								</button>
 
@@ -59,11 +59,11 @@
 	        <div class="container mt-2">
 						<div class="row">
 							<div class="col-md-12">
-								@if ($LINE_CODE != NULL)
-									@livewire('searchmachine',['MACHINE_LINE'=>$LINE_CODE])
+								{{-- @if ($MACHINE_LINE != NULL)
+									@livewire('searchmachine',['MACHINE_LINE'=>$MACHINE_LINE])
 								@else
 									@livewire('searchmachine')
-								@endif
+								@endif --}}
 
 
 

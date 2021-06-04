@@ -50,7 +50,7 @@
                                         <div class="btn-group">
                                             <a href="{{url('machine/assets/machinelist/')}}" class=" btn" rel="nofollow" data-cbp-singlePage="projects">ทะเบียนเครื่องจักร</a>
 
-                                            <a href="{{url('machine/syscheck/syschecklist')}}" class=" btn btn-sm btn-right" data-title="GoPro: HERO3+ Black Edition<br>by GoPro">กำหนดตรวจสอบ</a>
+                                            <a href="#" class=" btn btn-sm btn-right" data-title="GoPro: HERO3+ Black Edition<br>by GoPro">กำหนดตรวจสอบ</a>
                                         </div>
                                     </div>
                                 </div>
@@ -78,7 +78,7 @@
                                           <div class="btn-group">
                                               <a href="{{url('machine/assets/machinelist/'.$dataitem->LINE_CODE)}}" class=" btn" rel="nofollow" data-cbp-singlePage="projects">ทะเบียนเครื่องจักร</a>
                                               <input type="hidden" value="{{ $dataitem->LINE_CODE }}">
-                                              <a href="{{url('machine/syscheck/syschecklist:/'.$dataitem->LINE_CODE)}}" class=" btn btn-sm btn-right" >กำหนดตรวจสอบ</a>
+                                              <a href="#" class=" btn btn-sm btn-right" >กำหนดตรวจสอบ</a>
                                           </div>
                                       </div>
                                   </div>
