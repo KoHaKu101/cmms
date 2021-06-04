@@ -236,9 +236,14 @@ $(document).on('click','.delete-confirm', function (event) {
         if (result.isConfirmed) {
           var pmmaster_template_unid = [];
           $('#MACHINE_UNID').each(function(){
+
               var machineunid = $(this).val();
-              $('#PM_TEMPLATE_UNID_REF:checked').each(function(){
+
+              $('.PM_TEMPLATE_UNID_REFREMOVE:checked').each(function(){
+
+
                   pmmaster_template_unid.push($(this).val());
+
                   window.location.href = '/machine/system/remove/'+pmmaster_template_unid+'/'+machineunid;
               });
           });

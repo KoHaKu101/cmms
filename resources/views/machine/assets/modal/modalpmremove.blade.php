@@ -21,7 +21,7 @@
 
               <div class="card-body">
                 <div class="row">
-                  <div class="col-md-8 col-lg-3 ml-2">
+                  <div class="col-md-12 col-lg-12 ml-2">
                     <table class="table table-bordered table-head-bg-info table-bordered-bd-info" id="removepmmachine" >
                         <thead>
                           <tr>
@@ -30,11 +30,21 @@
                           </tr>
                         </thead>
                        <tbody class="data-machine">
-                         @foreach($machinepmtemplateremove as $datapmremove)
+                         @foreach($machinepmtemplateremove as $index => $datapmremove)
                            <tr>
-                             <td><input class="form-check-input" type="checkbox" id="PM_TEMPLATE_UNID_REF[]" name="PM_TEMPLATE_UNID_REF[]" value="{{ $datapmremove->UNID }}"></td>
-                             <td>{{ $datapmremove->PM_TEMPLATE_NAME }}</td>
+                             <td>
+                               {{ $index+1  }}
+                             </td>
+                             <td><div class="form-check">
+                             <label class="form-check-label">
+                               <input class="form-check-input add-machine PM_TEMPLATE_UNID_REFREMOVE" type="checkbox" value="{{ $datapmremove->UNID }}"
+                               id="PM_TEMPLATE_UNID_REFREMOVE{{ $datapmremove->UNID }}" name="PM_TEMPLATE_UNID_REFREMOVE{{ $datapmremove->UNID }}"
+                               >
+                               <span class="form-check-sign">{{$datapmremove->PM_TEMPLATE_NAME}}</span>
+                             </label>
+                           </div></td>
                            </tr>
+
 
                          @endforeach
                        </tbody>
