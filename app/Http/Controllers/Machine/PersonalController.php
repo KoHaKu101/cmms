@@ -100,7 +100,7 @@ class PersonalController extends Controller
   }
   public function Update(Request $request,$UNID){
       $data_EMPNAME = EMPName::where('UNID',$UNID)->first();
-      $last_img = $data_EMPNAME->$last_img;
+      $last_img = $data_EMPNAME->EMP_ICON;
     if ($request->hasFile('EMP_ICON')) {
       if ($request->file('EMP_ICON')->isValid()) {
           $image = $request->file('EMP_ICON');
