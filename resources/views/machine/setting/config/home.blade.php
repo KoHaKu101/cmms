@@ -213,7 +213,7 @@
 											<div class="row">
 												<div class="col-md-6 col-lg-6">
 													<div class="form-group">
-															<label for="AUTOMAIL" class="col-md-3 col-form-label">Auto Mail Alert(day)</label>
+															<label for="AUTOMAIL" class="col-md-3 col-form-label">Auto Mail Alert(day/วัน)</label>
 															<div class="col-md-9 p-0">
 																<input type="hidden" id="UNID" name="UNID" value="{{ isset($datamail[0]) ? $datamail[0]->UNID : '' }}">
 																<input type="number" class="form-control form-control-sm input-full"  id="AUTOMAIL" name="AUTOMAIL" value="{{ isset($datamail[0]->AUTOMAIL)  ? $datamail[0]->AUTOMAIL : "" }}" min="1" max="90">
@@ -222,7 +222,7 @@
 												</div>
 												<div class="col-md-6 col-lg-6">
 													<div class="form-group">
-															<label for="AUTOPLAN" class="col-md-3 col-form-label">Auto Plan(day)</label>
+															<label for="AUTOPLAN" class="col-md-3 col-form-label">Auto Plan(month/เดือน)</label>
 															<div class="col-md-9 p-0">
 																<input type="number" class="form-control form-control-sm input-full"  id="AUTOPLAN" name="AUTOPLAN" value="{{ isset($datamail[0]->AUTOPLAN)  ? $datamail[0]->AUTOPLAN : "" }}" min="1" max="1000">
 															</div>

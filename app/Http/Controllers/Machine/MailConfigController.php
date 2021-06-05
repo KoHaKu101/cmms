@@ -66,6 +66,7 @@ class MailConfigController extends Controller
         'MAILPASSWORD'    =>  $request->MAILPASSWORD,
         'MAILPORT'        =>  $request->MAILPORT,
         'MAILPROTOCOL'    =>  $request->MAILPROTOCOL,
+        'AUTOPLAN'        =>  24,
         'CREATE_BY'       => Auth::user()->name,
         'CREATE_TIME'     => Carbon::now(),
       ]);
@@ -78,6 +79,7 @@ class MailConfigController extends Controller
         'MAILPASSWORD'    =>  $request->MAILPASSWORD,
         'MAILPORT'        =>  $request->MAILPORT,
         'MAILPROTOCOL'    =>  $request->MAILPROTOCOL,
+
         'MODIFY_BY'       => Auth::user()->name,
         'MODIFY_TIME'     => Carbon::now(),
       ]);

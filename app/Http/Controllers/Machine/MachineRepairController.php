@@ -93,7 +93,8 @@ class MachineRepairController extends Controller
       if ($rowcount->count() > 0) {
         $count = $rowcount->count()+1;
       }
-      $DOC_NO = 'RE6406-000'.$count;
+      $DOC_YY = date('y')+543;
+      $DOC_NO = 'RE'.$DOC_YY.date('m').'-'.$count;
 
       MachineRepairREQ::insert([
         'UNID'=> $UNID

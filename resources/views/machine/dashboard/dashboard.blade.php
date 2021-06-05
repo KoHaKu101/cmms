@@ -185,7 +185,7 @@
 									</div>
 									<div class="flex-1 ml-3 pt-1 col-md-6 col-lg-7">
 										<h4 class="text-uppercase fw-bold mb-1">{{$dataitem->MACHINE_CODE}}
-										<span class="text-success pl-3">	{{$dataitem->MACHINE_STATUS == '9' ? 'ทำงานปกติ' : 'หยุดทำงาน'}}
+										<span class="{{$dataitem->MACHINE_STATUS == '1' ? 'text-danger' : 'text-warning'}} pl-3">	{{$dataitem->MACHINE_STATUS == '1' ? 'หยุดทำงาน' : 'ทำงานปกติ'}}
 										</span></h4>
 
 										<span class="text-muted" >{{ $dataitem->REPAIR_SUBSELECT_NAME }}</span>

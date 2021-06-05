@@ -45,6 +45,9 @@
 
 						<div class="card">
 							<div class="col-md-12">
+								<div class="row mx-1 my-2">
+									<a href="{{ route('repair.list') }}" class="btn btn-warning btn-sm "><span class="fas fa-arrow-left fa-lg mr-1"></span> Back</a>
+								</div>
 								<div class="card-header text-center bg-primary ">
 									<h3 class="card-title text-white"><b>แจ้งซ่อม เครื่อง</b> {{$datamachine->MACHINE_CODE}}</h3>
 								</div>
@@ -109,7 +112,8 @@
 												@endforeach
 											</div>
 											<div class="card-action text-center">
-
+												<a href="{{ route('repair.list') }}" class="btn btn-warning mx-1 my-1"
+												><i class="fas fa-arrow-alt-circle-left mr-1"></i>Previous</a>
 												<button type="button" class="btn btn-primary mx-1 my-1"
 												onclick="nextstep(this)"
 												data-step="step2">Next <i class="fas fa-arrow-alt-circle-right ml-1"></i></button>
