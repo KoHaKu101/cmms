@@ -41,12 +41,25 @@ class DailyCheckController extends Controller
 
   //อยู่ใน machine edit
   public function DailyList(Request $request){
-     $MACHINE_LINE = $request->MACHINE_LINE != '' ? $request->MACHINE_LINE : '' ;
-     $MACHINE_CODE = $request->SEARCH_MACHINE != '' ? $request->SEARCH_MACHINE : '' ;
-     $YEAR         = $request->YEAR != '' ? $request->YEAR : '' ;
-     $MONTH        = $request->MONTH != '' ? $request->MONTH : '' ;
+     $MACHINE_LINE = $request->MACHINE_LINE != '' ? '%'.$request->MACHINE_LINE.'%' : '%' ;
+     $MACHINE_CODE = $request->SEARCH_MACHINE != '' ? '%'.$request->SEARCH_MACHINE.'%' : '%' ;
+     $YEAR         = $request->YEAR != '' ? $request->YEAR : date('Y') ;
+     $MONTH        = $request->MONTH != '' ? $request->MONTH : date('n') ;
 
-      return view('machine.dailycheck.dailylist',compact('MONTH','YEAR','MACHINE_LINE','MACHINE_CODE'));
+
+     $DATA_MACHINE = Machine::select('*')->selectRaw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_V2')
+                                         ->where('MACHINE_CODE','like',$MACHINE_CODE)
+                                         ->where('MACHINE_LINE','like',$MACHINE_LINE)
+                                         ->where('MACHINE_STATUS','=','9')
+                                         ->orderBy('MACHINE_CODE')
+                                         ->paginate(10);
+
+    $DATA_CHECKSHEET = MachineCheckSheet::where('CHECK_MONTH','=',$MONTH)
+                                          ->where('CHECK_YEAR','=',$YEAR)
+                                          ->get();
+      $MACHINE_LINE = str_replace('%','',$MACHINE_LINE);
+      $MACHINE_CODE = str_replace('%','',$MACHINE_CODE);
+      return view('machine.dailycheck.dailylist',compact('DATA_MACHINE','DATA_CHECKSHEET','MONTH','YEAR','MACHINE_LINE','MACHINE_CODE'));
   }
 
   public function CheckSheetUpload(Request $request) {
