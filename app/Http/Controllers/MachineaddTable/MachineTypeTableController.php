@@ -81,8 +81,7 @@ class MachineTypeTableController extends Controller
       'CREATE_TIME'     => Carbon::now(),
       'UNID'            => $UNID
     ]);
-    $dataset = MachineTypeTable::paginate(10);
-    return Redirect()->route('machinetypetable.list',compact('dataset'))->with('success','ลงทะเบียน สำเร็จ');
+    return Redirect()->route('machinetypetable.edit',$UNID)->with('success','ลงทะเบียน สำเร็จ');
   }
   public function Edit($UNID) {
     $dataset = MachineTypeTable::where('UNID','=',$UNID)->first();
