@@ -375,7 +375,7 @@ $(document).ready(function() {
 				var sparepart_qty = $("#SPAREPART_QTY_"+tr.id).val();
 				var spartpart_unid = $("#SPARPART_UNID").val();
 				var spartpart_code = $("#SPARPART_CODE").val();
-
+				$('#MACHINE_UNID_'+machine_unid).attr('disabled',true);
 				if (checkbox_val) {
 
 					if (sparepart_qty == 0 || sparepart_qty < 0 ) {
