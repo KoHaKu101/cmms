@@ -127,7 +127,7 @@
 												<img
 												<?php
 												$noimg = asset("assets/img/nobody.jpg");
-												$hasimg = asset($dataset->MACHINE_ICON);
+												$hasimg = asset('image/machine/'.$dataset->MACHINE_LINE.'/'.$dataset->MACHINE_ICON);
 												echo ($dataset->MACHINE_ICON == "") ? 'src= '.$noimg.' ' : 'src= '.$hasimg.' ' ;
 												?>
 												 width="200" height="200px" class="mt-4">

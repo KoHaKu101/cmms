@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Auth;
+use File;
 
 
 //******************** model ***********************
@@ -103,7 +104,7 @@ class MachineController extends Controller
         if ($request->file('MACHINE_ICON')->isValid()) {
           $image = $request->file('MACHINE_ICON');
           $new_name = rand() . '.' . $image->getClientOriginalExtension();
-          $this->SaveImg($image,$new_name);
+          $this->SaveImg($image,$new_name,$request->MACHINE_LINE);
           $last_img = $new_name;
         }
       } else {
@@ -200,7 +201,7 @@ class MachineController extends Controller
       if ($request->file('MACHINE_ICON')->isValid()) {
         $image = $request->file('MACHINE_ICON');
         $new_name = rand() . '.' . $image->getClientOriginalExtension();
-        $this->SaveImg($image,$new_name);
+        $this->SaveImg($image,$new_name,$request->MACHINE_LINE);
         $last_img = $new_name;
       }
     } else {
@@ -275,7 +276,7 @@ class MachineController extends Controller
   public function UserHomePage(){
     return View('machine.userpage.userhomepage');
   }
-  public function SaveImg($image = NULL,$new_name = NULL){
+  public function SaveImg($image = NULL,$new_name = NULL,$MACHINE_LINE = NULL){
     $img_ext = $image->getClientOriginalExtension();
     $width = 450;
     $height = 300;
@@ -294,7 +295,7 @@ class MachineController extends Controller
       $img_create  = ImageCreateTrueColor($width, $height);
       ImageCopyResampled($img_create, $img_master, 0, 0, 0, 0, $width+1, $height+1, $img_widht, $img_height);
     }
-    $path = public_path('image/machine/'.$request->MACHINE_LINE);
+    $path = public_path('image/machine/'.$MACHINE_LINE);
       if(!File::isDirectory($path)){
       File::makeDirectory($path, 0777, true, true);
       }
