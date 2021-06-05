@@ -13,6 +13,7 @@ use App\Models\Machine\Machine;
 use App\Models\Machine\MachineSparePart;
 use App\Models\Machine\SparePart;
 use App\Models\Machine\SparePartPlan;
+use App\Models\SettingMenu\MailSetup;
 //********************** controller ****************
 use App\Http\Controllers\MachineAddTable\SparPartController;
 //************** Package form github ***************
@@ -108,6 +109,11 @@ class MachineSparePartController extends Controller
   return Response()->json(['res' => $html]);
   }
   public function Save(Request $request){
+    $totalmonth         = MailSetup::select('AUTOPLAN')->first();
+
+    if (!isset($totalmonth->AUTOPLAN)) {
+        return Response()->json(['res' => false]);
+    }
     $MACHINE_UNID  = $request->MACHINE_UNID ;
     $MACHINE_CODE = $request->MACHINE_CODE;
     $PERIOD        = $request->PERIOD ;

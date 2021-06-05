@@ -45,8 +45,13 @@ class SysCheckController extends Controller
 
   //อยู่ใน machine edit
   public function StoreList(Request $request){
-    $machine = Machine::select('MACHINE_RANK_MONTH','MACHINE_RANK_CODE','UNID')->where('MACHINE_CODE',$request->MACHINE_CODE)->first();
+    $totalmonth         = MailSetup::select('AUTOPLAN')->first();
 
+    if (!isset($totalmonth->AUTOPLAN)) {
+        alert()->error('กรุณาระบุระยะเวลา แผน','ใน ตั้งค่า -> CMMS');
+        return redirect()->back();
+    }
+    $machine = Machine::select('MACHINE_RANK_MONTH','MACHINE_RANK_CODE','UNID')->where('MACHINE_CODE',$request->MACHINE_CODE)->first();
     if ($machine->MACHINE_RANK_CODE) {
       foreach ($request->PM_TEMPLATE_UNID_REF as $dataset => $value) {
         $masterimpsunid = $request->PM_TEMPLATE_UNID_REF[$dataset];
@@ -91,12 +96,12 @@ class SysCheckController extends Controller
           if ($saveresult) {
             $totalloop          = 0;
             $totalmonth         = MailSetup::select('AUTOPLAN')->first();
-            $totalmonth         = isset($totalmonth->AUTOPLAN) ? $totalmonth->AUTOPLAN : 24;
+            $
             $preiodmonth        = $machine->MACHINE_RANK_MONTH;
-            
+
             $pm_lastdate        = Carbon::now();
             $machine_unid       = $machine->UNID;
-            for ($i = 0; $i < $totalmonth ; $i++) {
+            for ($i = 0; $i < $totalmonth->AUTOPLAN ; $i++) {
                 if (($i%$preiodmonth == 0)) {
                   $totalloop++;
                   $pm_lastdate    = Carbon::parse($pm_lastdate)->addMonth($preiodmonth);

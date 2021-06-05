@@ -120,7 +120,7 @@ class SparPartController extends Controller
       $data = MachineSparePart::where('SPAREPART_UNID','=',$SPAREPART_UNID)->update([
         'STATUS' => $STATUS
       ]);
-      
+
       SparePartPlan::where('SPAREPART_UNID','=',$SPAREPART_UNID)->update([
         'STATUS_OPEN' => $STATUS
       ]);
@@ -143,6 +143,11 @@ class SparPartController extends Controller
 
   }
   public function SaveMachine(Request $request){
+    $totalmonth         = MailSetup::select('AUTOPLAN')->first();
+
+    if (!isset($totalmonth->AUTOPLAN)) {
+        return Response()->json(['res' => false]);
+    }
      $MACHINE_UNID  = $request->MACHINE_UNID ;
 
      $PERIOD        = $request->PERIOD ;

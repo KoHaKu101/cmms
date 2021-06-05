@@ -55,10 +55,6 @@ class MachineSysTemTableController extends Controller
                                             ->where('PM_TEMPLATE_UNID_REF',$UNID)
                                             ->orderBy('PMCS_MACHINE.MACHINE_CODE','ASC')
                                             ->get();
-
-      // if ($data) {
-      //   $datamachine              = Machine::where('UNID',$data->MACHINE_UNID)->orderBy('MACHINE_CODE','ASC')->get();
-      // }
       $countdetail = $datapmtemplatefirst->count();
 
     }

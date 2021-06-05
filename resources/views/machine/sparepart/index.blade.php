@@ -251,11 +251,28 @@ function savemachine(machine_unid,spartpart_unid,spartpart_code,period,datestart
 							SPARTPART_UNID : spartpart_unid,
 							SPARTPART_CODE : spartpart_code,
 							SPAREPART_QTY : sparepart_qty,};
+
 	$.ajax({
 		type: "GET",
 		url: url,
 		data: data,
+		dataType: 'JSON',
 		success: function (data) {
+
+			if (data.res == false) {
+			Swal.fire({
+			  title: 'กรุณาระบุระยะเวลา แผน',
+			  text: "ใน ตั้งค่า -> CMMS",
+			  icon: 'error',
+			  showCancelButton: false,
+			  confirmButtonColor: '#3085d6',
+			  confirmButtonText: 'OK!'
+			}).then((result) => {
+			  if (result.isConfirmed) {
+					location.reload();
+						}
+			  });
+			}
 		}
 	});
 };

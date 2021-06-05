@@ -17,6 +17,20 @@ function savemachine(sparepart_unid,machine_unid,machine_code,period,datestart,s
     url: url,
     data: data,
     success: function (data) {
+      if (data.res == false) {
+      Swal.fire({
+        title: 'กรุณาระบุระยะเวลา แผน',
+        text: "ใน ตั้งค่า -> CMMS",
+        icon: 'error',
+        showCancelButton: false,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          location.reload();
+            }
+        });
+      }
     }
   });
 };
