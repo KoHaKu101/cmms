@@ -173,12 +173,12 @@
 								<div class="card-body">
 
 									@foreach($datarepairlist as $dataitem)
-										{{-- @for($i = 1; $i < 9-$data_set ; $i++) --}}
+
 										<div class="row">
 									<div class="d-flex col-md-6 col-lg-1">
 										<input type="hidden" value="1">
 										<div class="avatar avatar-online">
-											<span class="avatar-title rounded-circle border border-white bg-danger" style="width:50px"><i class="fa fa-wrench"></i></span>
+											<span class="avatar-title rounded-circle border border-white {{$dataitem->PRIORITY == '9' ? 'bg-danger' : 'bg-warning'}}" style="width:50px"><i class="fa fa-wrench"></i></span>
 										</div>
 
 
@@ -265,7 +265,42 @@
 <script src="{{asset('/assets/js/plugin/chart.js/chart.min.js')}}"></script>
 <script src="{{asset('/assets/js/plugin/chart-circle/circles.min.js')}}"></script>
 	{{-- แจ้งซ่อมแต่ล่ะLine--}}
-<script type="text/javascript" src="{{ asset('assets/js/useinproject/dashboard/repair.js') }}">
+<script type="text/javascript">
+
+	var chartDom = document.getElementById('repair');
+	var myChart = echarts.init(chartDom);
+	var option;
+	option = {
+		legend: {show: true,textStyle: {
+      fontSize: 14
+    }},
+		tooltip: {},
+		dataset: {
+			source: [
+			['product', 'Line1', 'Line2', 'Line3','Line4', 'Line5', 'Line6'],
+			['แจ้งซ่อมในแต่ล่ะ LINE', {{ $datarepairline1 }}, {{ $datarepairline2 }}
+													, {{ $datarepairline3 }},	{{ $datarepairline4 }}
+													, {{ $datarepairline5 }}, {{ $datarepairline6 }}],
+		]
+	},
+	xAxis: {type: 'category'},
+	yAxis: {},
+	series: [
+		{type: 'bar',color: '#14BAFD',
+		label: {position: "top",show: true,fontSize: 16,color: 'black'},},
+		{type: 'bar',color: '#FF944F',
+		label: {position: "top",show: true,fontSize: 16,color: 'black'},},
+		{type: 'bar',color: '#BAFF4F',
+		label: {position: "top",show: true,fontSize: 16,color: 'black'},},
+		{type: 'bar',color: '#FF4F4F',
+		label: {position: "top",show: true,fontSize: 16,color: 'black'},},
+		{type: 'bar',color: '#FF4FCF',
+		label: {position: "top",show: true,fontSize: 16,color: 'black'},},
+		{type: 'bar',color: '#4F62FF',
+		label: {position: "top",show: true,fontSize: 16,color: 'black'},}
+	]
+	};
+	option && myChart.setOption(option);
 	</script>
 	{{-- ค่าใช้จ่าย--}}
 <script type="text/javascript" src="{{ asset('assets/js/useinproject/dashboard/repairpay.js') }}">
@@ -274,10 +309,10 @@
 	Circles.create({
 	  id:'circles-1',
 	  radius:45,
-	  value:{{$data_line->where('MACHINE_LINE','L1')->count()}},
+	  value:{{$data_line1}},
 	  maxValue:500,
 	  width:10,
-	  text: {{$data_line->where('MACHINE_LINE','L1')->count()}},
+	  text: {{$data_line1}},
 	  colors:['#585963', '#14BAFD'],
 	  duration:400,
 	  wrpClass:'circles-wrp',
@@ -288,10 +323,10 @@
 	Circles.create({
 	  id:'circles-2',
 	  radius:45,
-	  value:{{$data_line->where('MACHINE_LINE','L2')->count()}},
+	  value:{{$data_line2}},
 	  maxValue:500,
 	  width:10,
-	  text: {{$data_line->where('MACHINE_LINE','L2')->count()}},
+	  text: {{$data_line2}},
 	  colors:['#585963', '#FF944F'],
 	  duration:400,
 	  wrpClass:'circles-wrp',
@@ -302,10 +337,10 @@
 	Circles.create({
 	  id:'circles-3',
 	  radius:45,
-	  value:{{$data_line->where('MACHINE_LINE','L3')->count()}},
+	  value:{{$data_line3}},
 	  maxValue:500,
 	  width:10,
-	  text: {{$data_line->where('MACHINE_LINE','L3')->count()}},
+	  text: {{$data_line3}},
 	  colors:['#585963', '#BAFF4F'],
 	  duration:400,
 	  wrpClass:'circles-wrp',
@@ -316,10 +351,10 @@
 	Circles.create({
 	  id:'circles-4',
 	  radius:45,
-	  value:{{$data_line->where('MACHINE_LINE','L4')->count()}},
+	  value:{{$data_line4}},
 	  maxValue:500,
 	  width:10,
-	  text: {{$data_line->where('MACHINE_LINE','L4')->count()}},
+	  text: {{$data_line4}},
 	  colors:['#585963', '#FF4F4F'],
 	  duration:400,
 	  wrpClass:'circles-wrp',
@@ -330,10 +365,10 @@
 	Circles.create({
 	  id:'circles-5',
 	  radius:45,
-	  value:{{$data_line->where('MACHINE_LINE','L5')->count()}},
+	  value:{{$data_line5}},
 	  maxValue:500,
 	  width:10,
-	  text: {{$data_line->where('MACHINE_LINE','L5')->count()}},
+	  text: {{$data_line5}},
 	  colors:['#585963', '#FF4FCF'],
 	  duration:400,
 	  wrpClass:'circles-wrp',
@@ -344,10 +379,10 @@
 	Circles.create({
 	  id:'circles-6',
 	  radius:45,
-	  value:{{$data_line->where('MACHINE_LINE','L6')->count()}},
+	  value:{{$data_line6}},
 	  maxValue:500,
 	  width:10,
-	  text: {{$data_line->where('MACHINE_LINE','L6')->count()}},
+	  text: {{$data_line6}},
 	  colors:['#585963', '#4F62FF'],
 	  duration:400,
 	  wrpClass:'circles-wrp',

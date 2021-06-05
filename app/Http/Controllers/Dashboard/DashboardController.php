@@ -18,16 +18,31 @@ class DashboardController extends Controller
     return View('machine/dashboard/sumaryline');
   }
   public function Dashboard(){
-    //dashboardสรุป
+
     $dataset = Machine::select('MACHINE_CHECK')->get();
     $datarepair = MachineRepairREQ::select('CLOSE_STATUS')->get();
 
-    $data_line = Machine::select('MACHINE_LINE')->get();
-    //แจ้งซ่อม
-    $datarepairlist = MachineRepairREQ::where('CLOSE_STATUS','=','9')->orderBy('DOC_DATE','DESC')->take(9)->get();
-    // dd($data_set);
-    return View('machine/dashboard/dashboard',compact('datarepairlist','dataset','data_line','datarepair'));
+
+    $data_line1 = Machine::select('MACHINE_LINE')->where('MACHINE_LINE','=','L1')->count();
+    $data_line2 = Machine::select('MACHINE_LINE')->where('MACHINE_LINE','=','L2')->count();
+    $data_line3 = Machine::select('MACHINE_LINE')->where('MACHINE_LINE','=','L3')->count();
+    $data_line4 = Machine::select('MACHINE_LINE')->where('MACHINE_LINE','=','L4')->count();
+    $data_line5 = Machine::select('MACHINE_LINE')->where('MACHINE_LINE','=','L5')->count();
+    $data_line6 = Machine::select('MACHINE_LINE')->where('MACHINE_LINE','=','L6')->count();
+
+    $datarepairlist = MachineRepairREQ::where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE','DESC')->take(9)->get();
+    $datarepairline1 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L1')->count();
+    $datarepairline2 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L2')->count();
+    $datarepairline3 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L3')->count();
+    $datarepairline4 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L4')->count();
+    $datarepairline5 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L5')->count();
+    $datarepairline6 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L6')->count();
+    return View('machine/dashboard/dashboard',compact('datarepairlist','dataset','datarepair'
+    ,'data_line1','data_line2','data_line3','data_line4','data_line5','data_line6'
+    ,'datarepairline1','datarepairline2','datarepairline3','datarepairline4','datarepairline5','datarepairline6'));
   }
+
+
   public function Notification(Request $request){
     $data = MachineRepairREQ::select('*')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(4)->get();
     return response()->json(['datarepair' => $data]);
