@@ -277,8 +277,8 @@ class MachineController extends Controller
   }
   public function SaveImg($image = NULL,$new_name = NULL){
     $img_ext = $image->getClientOriginalExtension();
-    $width = 800;
-    $height = 500;
+    $width = 450;
+    $height = 300;
     $image = file_get_contents($image);
     $img_master  = imagecreatefromstring($image);
     $img_widht   = ImagesX($img_master);

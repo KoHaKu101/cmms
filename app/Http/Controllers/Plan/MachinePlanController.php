@@ -22,8 +22,6 @@ use App\Models\MachineAddTable\MachinePmTemplateList;
 use App\Models\MachineAddTable\MachinePmTemplate;
 //******************** model setting ***********************
 use App\Models\SettingMenu\MailSetup;
-//******************** form git ***********************
-use Intervention\Image\ImageManagerStatic as Image;
 
 //***************** Controller ************************
 use App\Http\Controllers\Machine\UploadImgController;
@@ -360,8 +358,8 @@ class MachinePlanController extends Controller
         $image = $request->file('FILE_NAME');
         $new_name = rand() . '.' . $image->getClientOriginalExtension();
         $img_ext = $image->getClientOriginalExtension();
-        $width = 800;
-        $height = 800;
+        $width = 450;
+        $height = 300;
         $image = file_get_contents($image);
         $img_master  = imagecreatefromstring($image);
         $img_widht   = ImagesX($img_master);

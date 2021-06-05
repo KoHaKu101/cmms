@@ -132,8 +132,8 @@ class PersonalController extends Controller
   }
   public function saveimg($image=NULL,$new_name=NULL){
     $img_ext = $image->getClientOriginalExtension();
-    $width = 1200;
-    $height = 900;
+    $width = 450;
+    $height = 300;
     $image = file_get_contents($image);
     $img_master  = imagecreatefromstring($image);
     $img_widht   = ImagesX($img_master);
