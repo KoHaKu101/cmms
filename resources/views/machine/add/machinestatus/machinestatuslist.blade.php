@@ -92,11 +92,7 @@
           <div class="container">
 						<div class="row">
 							<div class="col-md-12 gx-4">
-								<a href="{{ route('dashboard') }}">
-								<button class="btn btn-warning  btn-xs ">
-									<span class="fas fa-arrow-left fa-lg">Back </span>
-								</button>
-							</a>
+
 							</div>
 						</div>
           </div>
