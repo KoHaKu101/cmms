@@ -62,16 +62,7 @@
 													<input type="hidden" class="form-control" name="PM_TEMPLATELIST_CHECK" value="{{ $datapmtemplatelist->PM_TEMPLATELIST_CHECK }}">
 												 	<input type="text" class="form-control" name="PM_TEMPLATELIST_NAME" value="{{ $datapmtemplatelist->PM_TEMPLATELIST_NAME }}">
 											 	</div>
-												<div class="col-md-6 col-lg-2 has-error">
-													<label> ระยะเวลา</label>
-													<div class="input-group">
-														<input type="text" class="form-control" name="PM_TEMPLATELIST_DAY" value="{{ $datapmtemplatelist->PM_TEMPLATELIST_DAY / 30 }}">
-														<div class="input-group-append">
-
-															<span class="input-group-text">เดือน</span>
-														</div>
-													</div>
-												</div>
+												
 
 												<div class="col-md-6 col-lg-2 has-error">
 													<label> สถานะ</label>

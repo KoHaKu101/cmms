@@ -7,7 +7,7 @@
           <div class="card-header bg-warning">
             <div class="row">
               <div class="col-6 col-sm-5 col-md-7 col-lg-9">
-                <h3 align="center" style="color:white;" class="mt-2">ตรวจสอบระบบ</h3>
+                <h3 align="center" style="color:white;" class="mt-2">ตรวจเช็คเครื่องจักร</h3>
               </div>
               <div class="col-6 col-sm-7 col-md-5 col-lg-3">
                   <button id="add" type="button" class="btn btn-primary btn-sm mt-2 mx-2"

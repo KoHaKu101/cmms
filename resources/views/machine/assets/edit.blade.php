@@ -238,7 +238,7 @@
 	    											<a id="personal" data-toggle="tab" href="#personal" class="tabselect" >พนักงานประจำเครื่อง</a>
 	  											</li>
 													<li>
-	    											<a id="planpm" data-toggle="tab" href="#planpm" class="tabselect" >ตรวจสอบระบบ</a>
+	    											<a id="planpm" data-toggle="tab" href="#planpm" class="tabselect" >ตรวจเช็คเครื่องจักร</a>
 	  											</li>
 													<li>
 	    											<a id="planpdm" data-toggle="tab" href="#planpdm" class="tabselect">เปลี่ยนอะไหล่</a>

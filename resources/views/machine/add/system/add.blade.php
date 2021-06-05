@@ -57,15 +57,6 @@
 													<input type="hidden" class="form-control" name="PM_TEMPLATE_UNID_REF" value="{{ $datapmtemplate->UNID }}"  >
 												 	<input type="text" class="form-control" name="PM_TEMPLATELIST_NAME" >
 											 	</div>
-												<div class="col-md-6 col-lg-2 has-error">
-													<label> ระยะเวลา</label>
-													<div class="input-group">
-														<input type="text" class="form-control" name="PM_TEMPLATELIST_DAY" >
-														<div class="input-group-append">
-															<span class="input-group-text">เดือน</span>
-														</div>
-													</div>
-												</div>
 										 	</div>
 											<div class="row">
 												<div class="col-md-6 col-lg-9">

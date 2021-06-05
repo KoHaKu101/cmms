@@ -14,7 +14,7 @@
     height: 2.5rem;
     font-size: 0.85rem;
 }
-.deleteimg {
+.deleteimg {	
 	color: #fff;
 	position: absolute;
 	padding: 10px;
