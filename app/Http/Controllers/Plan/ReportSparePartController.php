@@ -47,34 +47,57 @@ class ReportSparePartController extends Controller
     $SEARCH = $request->SEARCH != '' ? '%'.$request->SEARCH.'%' : '%';
     $STATUS = $request->STATUS;
     $MACHINE_LINE = isset($request->MACHINE_LINE) ? $request->MACHINE_LINE : '%';
-
-    if ($STATUS == 'NEW') {
-
-      $DATA_SPAREPLAN = SparePartPlan::where('DOC_YEAR','=',$DOC_YEAR)->where('DOC_MONTH','=',$DOC_MONTH)
-                                     ->where(function ($query) use ($SEARCH) {
-                                          $query->where('MACHINE_CODE', 'like', $SEARCH)
-                                                ->orWhere('SPAREPART_NAME', 'like', $SEARCH);})
-                                     ->where('MACHINE_LINE','like',$MACHINE_LINE)
-                                     ->where('STATUS','!=','COMPLETE')
-                                     ->where('STATUS_OPEN','=',9)
-                                     ->count();
-    }elseif($STATUS == 'COMPLETE'){
-      $DATA_SPAREPLAN = SparePartPlan::where('DOC_YEAR','=',$DOC_YEAR)->where('DOC_MONTH','=',$DOC_MONTH)
+      if ($STATUS == 'NEW') {
+        $DATA_SPAREPLAN = SparePartPlan::select('*')->selectraw("
+        CASE
+        WHEN DOC_MONTH > MONTH(getdate()) and DOC_YEAR > YEAR(getdate()) THEN 'FALSE'
+        WHEN DOC_MONTH > MONTH(getdate()) THEN 'FALSE'
+     　 else 'TRUE'
+      　    END AS classtext")->where('DOC_YEAR','=',$DOC_YEAR)->where('DOC_MONTH','=',$DOC_MONTH)
                                     ->where(function ($query) use ($SEARCH) {
-                                         $query->where('MACHINE_CODE', 'like', $SEARCH)
-                                               ->orWhere('SPAREPART_NAME', 'like', $SEARCH);})
-                                     ->where('MACHINE_LINE','like',$MACHINE_LINE)
-                                     ->where('STATUS','=','COMPLETE')
-                                     ->where('STATUS_OPEN','=',9)
-                                     ->count();
-    }else {
-      $DATA_SPAREPLAN = SparePartPlan::where('DOC_YEAR','=',$DOC_YEAR)->where('DOC_MONTH','=',$DOC_MONTH)
-                                      ->where(function ($query) use ($SEARCH) {
-                                          $query->where('MACHINE_CODE', 'like', $SEARCH)
-                                                ->orWhere('SPAREPART_NAME', 'like', $SEARCH);})
-                                     ->where('MACHINE_LINE','like',$MACHINE_LINE)
-                                     ->where('STATUS_OPEN','=',9)
-                                     ->count();
+                                        $query->where('MACHINE_CODE', 'like', $SEARCH)
+                                              ->orWhere('SPAREPART_NAME', 'like', $SEARCH);})
+                                       ->where('MACHINE_LINE','like',$MACHINE_LINE)
+                                       ->where('STATUS','!=','COMPLETE')
+                                       ->where('STATUS_OPEN','=','9')
+                                       ->orderBy('PLAN_DATE')
+                                       ->orderBy('MACHINE_LINE')
+                                       ->orderBy('MACHINE_CODE')
+                                       ->paginate(10);
+      }elseif($STATUS == 'COMPLETE'){
+        $DATA_SPAREPLAN = SparePartPlan::
+        select('*')->selectraw("
+        CASE
+        WHEN DOC_MONTH > MONTH(getdate()) and DOC_YEAR > YEAR(getdate()) THEN 'FALSE'
+        WHEN DOC_MONTH > MONTH(getdate()) THEN 'FALSE'
+     　 else 'TRUE'
+      　    END AS classtext")->where('DOC_YEAR','=',$DOC_YEAR)->where('DOC_MONTH','=',$DOC_MONTH)
+                                    ->where(function ($query) use ($SEARCH) {
+                                        $query->where('MACHINE_CODE', 'like', $SEARCH)
+                                              ->orWhere('SPAREPART_NAME', 'like', $SEARCH);})
+                                      ->where('MACHINE_LINE','like',$MACHINE_LINE)
+                                       ->where('STATUS','=','COMPLETE')
+                                       ->where('STATUS_OPEN','=','9')
+                                       ->orderBy('PLAN_DATE')
+                                       ->orderBy('MACHINE_LINE')
+                                       ->orderBy('MACHINE_CODE')
+                                       ->paginate(10);
+      }else {
+        $DATA_SPAREPLAN = SparePartPlan::select('*')->selectraw("
+        CASE
+        WHEN DOC_MONTH > MONTH(getdate()) and DOC_YEAR > YEAR(getdate()) THEN 'FALSE'
+        WHEN DOC_MONTH > MONTH(getdate()) THEN 'FALSE'
+     　 else 'TRUE'
+      　    END AS classtext")->where('DOC_YEAR','=',$DOC_YEAR)->where('DOC_MONTH','=',$DOC_MONTH)
+                                    ->where(function ($query) use ($SEARCH) {
+                                        $query->where('MACHINE_CODE', 'like', $SEARCH)
+                                              ->orWhere('SPAREPART_NAME', 'like', $SEARCH);})
+                                       ->where('MACHINE_LINE','like',$MACHINE_LINE)
+                                       ->where('STATUS_OPEN','=','9')
+                                       ->orderBy('PLAN_DATE')
+                                       ->orderBy('MACHINE_LINE')
+                                       ->orderBy('MACHINE_CODE')
+                                       ->paginate(10);
       }
       $SEARCH = str_replace('%','',$SEARCH);
       $STATUS = str_replace('%','',$STATUS);

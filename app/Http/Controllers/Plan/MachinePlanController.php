@@ -59,22 +59,34 @@ class MachinePlanController extends Controller
     $MACHINE_CODE = $request->MACHINE_CODE;
     $MACHINE_LINE = $request->MACHINE_LINE;
     $PLAN_STATUS = $request->PLAN_STATUS;
-    $PLAN_MONTH = $request->PLAN_MONTH;
+    $PLAN_MONTH = $request->PLAN_MONTH > 0 ? $request->PLAN_MONTH : date('n');
 
+    $MACHINE_CODE = $MACHINE_CODE != '' ? '%'.$MACHINE_CODE.'%' : '%';
+    $MACHINE_LINE = $MACHINE_LINE != '' ? '%'.$MACHINE_LINE.'%' : '%';
 
-    if ($MACHINE_CODE or $MACHINE_LINE ) {
-      $MACHINE_CODE = $MACHINE_CODE != '' ? '%'.$MACHINE_CODE.'%' : '%';
-      $MACHINE_LINE = $MACHINE_LINE != '' ? '%'.$MACHINE_LINE.'%' : '%';
-      $MACHINE_CODE = str_replace('%','',$MACHINE_CODE);
-      $MACHINE_LINE = str_replace('%','',$MACHINE_LINE);
-    }else {
-      $MACHINE_CODE = "";
-      $MACHINE_LINE = "";
-    }
+      $machinepmplan = MachinePlanPm::select('*')->selectraw("
+       CASE
+       WHEN PLAN_STATUS = 'COMPLETE' THEN 'icon-success'
+       WHEN PLAN_STATUS != 'COMPLETE' and DATEDIFF(DAY, GETDATE(),PLAN_DATE ) > ( SELECT PLAN_CHECK FROM PMCS_CMMS_SETUP_MAIL) THEN 'icon-mute'
+    　 WHEN PLAN_STATUS != 'COMPLETE' and DATEDIFF(DAY, GETDATE(),PLAN_DATE ) <= -( SELECT PLAN_CHECK FROM PMCS_CMMS_SETUP_MAIL) THEN 'icon-danger'
+    　 WHEN PLAN_STATUS != 'COMPLETE' and DATEDIFF(DAY, GETDATE(),PLAN_DATE ) > -( SELECT PLAN_CHECK FROM PMCS_CMMS_SETUP_MAIL) THEN 'icon-warning'
+    　    END AS classtext")->where('PLAN_YEAR','=',$PLAN_YEAR)
+                        ->where('MACHINE_CODE','like',$MACHINE_CODE)
+                        ->where('MACHINE_LINE','like',$MACHINE_LINE)
+                        ->where('PLAN_STATUS','like',$PLAN_STATUS != '' ? $PLAN_STATUS :'%')
+                        ->where('PLAN_MONTH','like',$PLAN_MONTH > 0 ? $PLAN_MONTH : '%')
+                        ->orderBy('PLAN_STATUS','DESC')
+                        ->orderby('PLAN_DATE','ASC')
+                        ->orderBy('MACHINE_CODE','ASC')
+                        ->paginate(16);
+
+    $MACHINE_CODE = str_replace('%','',$MACHINE_CODE);
+    $MACHINE_LINE = str_replace('%','',$MACHINE_LINE);
+
 
     $machineline = MachineLine::select('LINE_NAME','LINE_CODE')->where('LINE_NAME','like','%'.'Line'.'%')->get();
 
-    return view('machine.plan.pmplanlist',compact('machineline','MACHINE_CODE','MACHINE_LINE','PLAN_YEAR','PLAN_STATUS','PLAN_MONTH'));
+    return view('machine.plan.pmplanlist',compact('machinepmplan','machineline','MACHINE_CODE','MACHINE_LINE','PLAN_YEAR','PLAN_STATUS','PLAN_MONTH'));
 
   }
 
