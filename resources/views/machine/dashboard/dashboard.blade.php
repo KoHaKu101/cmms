@@ -284,7 +284,7 @@
 		]
 	},
 	xAxis: {type: 'category'},
-	yAxis: {},
+	yAxis: {type: 'value',minInterval: 1, min: 0},
 	series: [
 		{type: 'bar',color: '#14BAFD',
 		label: {position: "top",show: true,fontSize: 16,color: 'black'},},
