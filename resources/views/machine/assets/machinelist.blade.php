@@ -63,7 +63,7 @@
 								  <div class="card-header bg-primary  ">
 								    <div class="row ">
 								      <div class="col-md-3 col-lg-2">
-								        <h4 class="ml-3 mt-2 " style="color:white;" ><i class="fas fa-wrench fa-lg mr-1"></i> เครื่องจักร </h4>
+								        <h4 class="ml-3 mt-2 " style="color:white;" ><i class="fas fa-wrench fa-lg mr-1"></i> เครื่องจักร {{ ': '.$MACHINE_LINE }} </h4>
 								      </div>
 								      <div class="col-md-3">
 												<form action="{{ route('machine.list',$MACHINE_LINE) }}" method="POST" enctype="multipart/form-data">
