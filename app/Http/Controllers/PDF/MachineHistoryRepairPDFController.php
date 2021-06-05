@@ -20,7 +20,7 @@ class MachineHistoryRepairPDFController extends Fpdf
     {
       $dataset = Machine::where('UNID',$UNID)->first();
       $machinerepair = MachineRepairREQ::where('MACHINE_CODE','=',$dataset->MACHINE_CODE)
-                                      ->where('MACHINE_DOCNO','like','%'.'RE'.'%')
+                                      ->where('DOC_NO','like','%'.'RE'.'%')
                                       ->get();
       $count = MachineRepairREQ::where('MACHINE_CODE','=',$dataset->MACHINE_CODE)
                                       ->get()->count();
@@ -65,12 +65,12 @@ class MachineHistoryRepairPDFController extends Fpdf
      $pdf->Ln();
      $pdf->SetFont('THSarabunNew','',14 );
      foreach ($machinerepair as $row) {
-       $pdf->Cell(40,6,iconv('UTF-8', 'cp874', $row->MACHINE_DOCNO),1,0,'');
-       $pdf->Cell(32,6,iconv('UTF-8//IGNORE', 'cp874//IGNORE', $row->MACHINE_DOCDATE),1,0,'');
-       $array = array($row->MACHINE_NOTE,$row->MACHINE_CAUSE);
+       $pdf->Cell(40,6,iconv('UTF-8', 'cp874', $row->DOC_NO),1,0,'');
+       $pdf->Cell(32,6,iconv('UTF-8//IGNORE', 'cp874//IGNORE', $row->DOC_DATE),1,0,'');
 
-       $detail = implode(" ",$array);
-       $pdf->Cell(78,6,iconv('UTF-8//IGNORE', 'cp874//IGNORE', $detail),1,0,'');
+
+
+       $pdf->Cell(78,6,iconv('UTF-8//IGNORE', 'cp874//IGNORE', $row->REPAIR_SUBSELECT_NAME),1,0,'');
        $pdf->Cell(44,6,iconv('UTF-8//IGNORE', 'cp874//IGNORE', ($row->status = '9')? 'ดำเนินการสำเร็จ' : 'กำลังดำเนินการ'),1,0,'');
 
        $pdf->Ln();

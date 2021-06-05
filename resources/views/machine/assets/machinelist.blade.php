@@ -118,7 +118,7 @@
 								              <td >  {{ $row->MACHINE_LINE }}  </td>
 								              <td style="width:400px;">              {{ $row->MACHINE_NAME_V2 }}  </td>
 								              <td style="width:100px;">
-								                <a href="{{ url('machine/assets/edit/'.$row->UNID) }}">
+								                <a href="#">
 								                  <button type="button" class="btn btn-secondary btn-sm btn-block my-1" style="width:80px">
 								                    <span class="float-left">
 								                      <i  style="font-size:17px"class="icon-printer mx-1 mt-1"></i>
