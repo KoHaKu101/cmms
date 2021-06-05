@@ -82,10 +82,10 @@ Route::get('/cookie/set',[CookieController::class,'setCookie'])->name('cookie.se
 Route::get('/cookie/get',[CookieController::class,'getCookie'])->name('cookie.get');
 
 
-Route::get('/machine/repair/search',function(){
-  if(Request::ajax()){
-    return Response::json(Request::all());
-  }});
+// Route::get('/machine/repair/search',function(){
+//   if(Request::ajax()){
+//     return Response::json(Request::all());
+//   }});
 
 
 Route::middleware(['auth:sanctum', 'verified']);

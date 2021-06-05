@@ -91,7 +91,7 @@
 						        </div>
 						        @endforeach
 						      @else
-						        <tr><td> Loading ........... </td></tr>
+						        
 						      @endif
 						    </div>
 						  </div>

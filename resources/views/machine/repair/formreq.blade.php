@@ -31,18 +31,18 @@
 	.select2 select2-container select2-container--default select2-container--above select2-container--open{
 		width: 200px
 	}
-	/* .btn-flame {
-    background: #f5bdca!important;
-    border-color: #ff0000!important;
-} */
+
 	</style>
 	<div class="content">
-<div class="page-inner">
-	<div class="py-12">
+
+
 			<div class="container">
 				<div class="page-inner">
 						<div class="card">
 							<div class="col-md-12">
+								<div class="row mx-1 my-2">
+									<a href="{{ route('repair.repairsearch') }}" class="btn btn-warning btn-sm "><span class="fas fa-arrow-left fa-lg mr-1"></span> Back</a>
+								</div>
 								<div class="card-header text-center bg-primary ">
 									<h3 class="card-title text-white"><b>แจ้งซ่อม เครื่อง</b> {{$datamachine->MACHINE_CODE}}</h3>
 								</div>
@@ -97,6 +97,8 @@
 												@endforeach
 											</div>
 											<div class="card-action text-center">
+												<a href="{{ route('repair.repairsearch') }}" class="btn btn-warning mx-1 my-1"
+												><i class="fas fa-arrow-alt-circle-left mr-1"></i>Previous</a>
 												<button type="button" class="btn btn-primary mx-1 my-1"
 												onclick="nextstep(this)"
 												data-step="step2">Next <i class="fas fa-arrow-alt-circle-right ml-1"></i></button>
@@ -122,7 +124,7 @@
 													<div class="card-action text-center">
 														<button type="button" class="btn btn-warning mx-1 my-1"
 														onclick="previousstep(this)"
-														data-step="step2">Previous</button>
+														data-step="step2"><i class="fas fa-arrow-alt-circle-left mr-1"></i> Previous</button>
 														<button type="button" class="btn btn-primary mx-1 my-1"
 														onclick="nextstep(this)"
 														data-step="step4">Next <i class="fas fa-arrow-alt-circle-right ml-1"></i></button>
@@ -229,8 +231,6 @@
 
 				</div>
 			</div>
-		</div>
-</div>
 </div>
 
 
