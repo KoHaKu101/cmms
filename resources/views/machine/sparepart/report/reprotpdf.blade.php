@@ -32,12 +32,13 @@
 					<div class="col-md-12">
 							<div class="card">
 								<div class="card-header bg-primary">
-									<h4 class="card-title text-white">Preventive Plan	: รายงานประจำปี</h4>
+									<h4 class="card-title text-white">Predictive Plan	: รายงานประจำปี</h4>
 								</div>
 								<div class="card-body text-center">
 									<div class="row ">
 										@for ($m=date('Y')-2; $m < date('Y')+2; $m++)
-											<div class="col-sm-6 col-md-3" onclick="window.open('{{ route('plan.yearpdf',$m) }}', '_blank', 'width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');"
+											<div class="col-sm-6 col-md-3"
+											onclick="positionedPopup('{{ route('SparPart.Report.planmonthprint').'?DOC_YEAR='.$m}}','myWindow');return false"
 												style="cursor:pointer;" >
 												<div class="card card-stats card-round">
 													<div class="card-body">
@@ -65,7 +66,7 @@
 						<div class="col-md-12">
 								<div class="card">
 									<div class="card-header bg-primary form-inline">
-										<h4 class="card-title text-white">Preventive Plan	: รายงานประจำเดือน  ปี:</h4>
+										<h4 class="card-title text-white">Predictive Plan	: รายงานประจำเดือน  ปี:</h4>
 										<select class="form-control form-control-sm input-group filled text-info mx-3" id="PLAN_YEAR" name="PLAN_YEAR">
 											@for ($m=date('Y')-2; $m < date('Y')+2; $m++)
 												<option value="{{$m}}" {{ date('Y') == $m ? 'selected' : '' }}>{{$m}}</option>
@@ -81,7 +82,9 @@
 												@endphp
 												@for ($i=1; $i < 13; $i++)
 
-													<div class="col-sm-6 col-lg-2 text-center" onclick="planmonthpdf('{{ $i }}')" style="cursor:pointer;">
+													<div class="col-sm-6 col-lg-2 text-center"
+													onclick="planmonthpdf('{{ $i }}')"
+													style="cursor:pointer;">
 														<div class="card">
 															<div class="p-2">
 																<img class="card-img-top rounded" src="{{asset('../assets/img/12zodiac/'.$i.'.png')}}" alt="Product 5" style="width:100px">
@@ -114,11 +117,14 @@
 
 {{-- ส่วนjava --}}
 @section('javascript')
+<script src="{{ asset('assets/js/ajax/appcommon.js') }}"></script>
 <script>
  function planmonthpdf(month){
 	 var year = $('#PLAN_YEAR').val();
 
-	 window.open('/machine/pdf/plan/planpmmonth/'+year+'/'+month+'' , 'PLAN', 'width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');
+	 var url  = "{{ route('SparPart.Report.planmonthprint') }}?DOC_YEAR="+year+"&DOC_MONTH="+month;
+
+	 window.open(url , 'PLANPDM', 'width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');
  }
 </script>
 

@@ -26,6 +26,8 @@ use App\Http\Controllers\Machine\CookieController;
 use App\Http\Controllers\Plan\MachinePlanController;
 use App\Http\Controllers\Plan\Report\PlanYearMachinePm;
 use App\Http\Controllers\Plan\Report\PlanMonthMachinePm;
+use App\Http\Controllers\Plan\Report\PlanYearMachinePdm;
+use App\Http\Controllers\Plan\Report\PlanMonthMachinePdm;
 use App\Http\Controllers\Plan\Report\FormPMMachine;
 use App\Http\Controllers\Plan\ReportSparePartController;
 
@@ -149,7 +151,6 @@ Route::get('machine/repair/repairlist'             ,[MachineRepairController::cl
 
 //daily checksheet
 Route::get('machine/daily/list'                     ,[DailyCheckController::class,'DailyList'])  ->name('daily.list');
-// Route::post('machine/daily/list'                    ,[DailyCheckController::class,'DailyList']);
 Route::post('machine/daily/uploadimg'               ,[DailyCheckController::class,'CheckSheetUpload']) ->name('daily.upload');
 Route::get('machine/daily/deleteimg/{UNID?}'         ,[DailyCheckController::class,'DeleteImg']) ->name('daily.delete');
 //***************************** tabledata ****************************************
@@ -213,12 +214,14 @@ Route::get('machine/spart/report'                            ,[ReportSparePartCo
 Route::get('machine/spart/report/planmonth/formimg'                 ,[ReportSparePartController::class,'FormImg']) ->name('SparPart.Report.FormImg');
 Route::post('machine/spart/planmonth/saveimg'                 ,[ReportSparePartController::class,'SaveImg']) ->name('SparPart.Report.SaveImg');
 Route::post('machine/spart/planmonth/deleteimg'                 ,[ReportSparePartController::class,'DeleteImg']) ->name('SparPart.Report.DeleteImg');
+Route::get('machine/spart/report/planpdm/list'                 ,[ReportSparePartController::class,'PlanPDMList']) ->name('SparPart.Report.PlanPDMList');
 //machine sparepart
 Route::get('machine/machinespart/getlistsparepart/{UNID}' ,[MachineSparePartController::class,'GetListSparepart']) ->name('MachineSparPart.GetListSparepart');
 Route::get('machine/machinespart/save'                    ,[MachineSparePartController::class,'Save']) ->name('MachineSparPart.Save');
 Route::post('machine/machinespart/update'                   ,[MachineSparePartController::class,'Update']) ->name('MachineSparPart.Update');
 Route::get('machine/machinespart/delete'                   ,[MachineSparePartController::class,'Delete']) ->name('MachineSparPart.Delete');
 Route::get('machine/machinespart/statusopen'                    ,[MachineSparePartController::class,'StatusOpen']) ->name('MachineSparPart.StatusOpen');
+
   //***************************** PlanPm ****************************************
 Route::get('machine/plan/planpm'                             ,[MachinePlanController::class,'PMPlanPrint']) ->name('plan.pm');
 Route::post('machine/plan/planpmpdf'                         ,[MachinePlanController::class,'PdfPlanPm']) ->name('plan.pmpdf');

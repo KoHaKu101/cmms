@@ -17,13 +17,13 @@ class PlanMonthHeaderFooter extends Fpdf
   private $DOC_YEAR;
   private $DOC_MONTH;
   function Header($LINE = NULL,$YEAR = 0,$MONTH = 0){
-    if ($LINE & $YEAR & $MONTH ){
+    if ($LINE & $YEAR ){
        $this->MACHINE_LINE = $LINE ;
        $this->DOC_YEAR = $YEAR ;
        $this->DOC_MONTH = $MONTH ;
 
   $cel=array(8,20,35,10,15,10,10,10,8,8);
-  $array_month = array(1 => "มกราคม",2 => "กุมภาพันธ์",3 =>"มีนาคม",4 => "เมษายน",5 =>"พฤษภาคม",6 =>"มิถุนายน",
+  $array_month = array(0=>"",1 => "มกราคม",2 => "กุมภาพันธ์",3 =>"มีนาคม",4 => "เมษายน",5 =>"พฤษภาคม",6 =>"มิถุนายน",
                    7 =>"กรกฎาคม",8 =>"สิงหาคม",9 =>"กันยายน",10 =>"ตุลาคม",11 => "พฤศจิกายน",12 =>"ธันวาคม");
   $RowH=4;
   // img
@@ -33,7 +33,15 @@ class PlanMonthHeaderFooter extends Fpdf
   $this->AddFont('THSarabunNew','','THSarabunNew.php');
   $this->AddFont('THSarabunNew','B','THSarabunNew_b.php');
   $this->Rect(10, 10, 193, 267, 'D');
-  $this->SetTitle('รายงานประจำเดือน '.$array_month[$this->DOC_MONTH].' ปี '.$this->DOC_YEAR,'isUTF8');
+
+  if ($this->DOC_MONTH == 0) {
+    $title = ' ปี '.$this->DOC_YEAR;
+    $header = ' ปี '.$this->DOC_YEAR.' LINE : '.$this->MACHINE_LINE.'';
+  }else {
+    $title = 'รายงานประจำเดือน '.$array_month[$this->DOC_MONTH].' ปี '.$this->DOC_YEAR;
+    $header = 'ประจำเดือน '.$array_month[$this->DOC_MONTH].' ปี '.$this->DOC_YEAR.' LINE : '.$this->MACHINE_LINE.'';
+  }
+  $this->SetTitle($title,'isUTF8');
   $this->SetFont('THSarabunNew','b',18);
 
   $this->Cell(26,11,$this->Image($logo,$this->GetX()+5, $this->GetY()+3,16),'LTR',0,'C',false);
@@ -46,7 +54,7 @@ class PlanMonthHeaderFooter extends Fpdf
   $this->Cell(26,11,'','LBR',0,'C',false);
 
   $this->SetFont('THSarabunNew','b',18);
-  $this->Cell(90, 11, iconv('UTF-8', 'cp874', 'ประจำเดือน '.$array_month[$this->DOC_MONTH].' ปี '.$this->DOC_YEAR.' LINE : '.$this->MACHINE_LINE.''),'LBR',0,'C');
+  $this->Cell(90, 11, iconv('UTF-8', 'cp874',$header ),'LBR',0,'C');
   $this->Cell(25,11, '','LTBR',0,'C');
   $this->Cell(26,11, '','LTBR',0,'C');
   $this->Cell(26,11, '','LTBR',1,'C');

@@ -227,7 +227,7 @@ class ReportSparePartController extends Controller
         </div>
       </div>
     </div>
-';
+      ';
     return Response()->json(['html' => $html,'btn_status' => $htmlfooter,'btn_confirm' => $htmlconform]);
 
   }
@@ -407,18 +407,30 @@ class ReportSparePartController extends Controller
   public function PlanMonthPrint(Request $request){
 
     $DOC_YEAR  = $request->DOC_YEAR > 0 ? $request->DOC_YEAR : date('Y');
-    $DOC_MONTH = $request->DOC_MONTH > 0 ? $request->DOC_MONTH : date('n');
+    $DOC_MONTH = $request->DOC_MONTH > 0 ? $request->DOC_MONTH : 0;
     $SEARCH = $request->SEARCH != '' ? '%'.$request->SEARCH.'%' : '%';
-
+    $where =  [['DOC_YEAR', '=', $DOC_YEAR],['DOC_MONTH','=',$DOC_MONTH]];
+    if ($DOC_MONTH == 0) {
+      $where =  [['DOC_YEAR', '=', $DOC_YEAR]];
+    }
     $DATA_MACHINE_LINE = SparePartPlan::select('MACHINE_LINE')
-                                    ->where('DOC_YEAR','=',$DOC_YEAR)->where('DOC_MONTH','=',$DOC_MONTH)
+                                    ->where($where)
                                     ->where(function ($query) use ($SEARCH) {
                                         $query->where('MACHINE_CODE', 'like', $SEARCH)
                                               ->orWhere('SPAREPART_NAME', 'like', $SEARCH);})
                                     ->groupBy('MACHINE_LINE')
                                     ->orderBy('MACHINE_LINE')
                                     ->get();
-
+    if(count($DATA_MACHINE_LINE) == 0) {
+      return '<body style="background-color:powderblue;">
+              <br/><h1 align="center" style="color:red;"> No Data </h1>
+              <div align="center">
+              <button onclick="javascript:window.close()"
+              style="background: #1572e8!important;border-color:#1572e8!important;font-size:14px;
+              padding:.65rem 1.4rem;font-size:14px;opacity:1;border-radius: 3px;
+              padding: 5px 9px;color:white">
+              close </button></div></body>';
+    }
     $this->pdf->AddFont('THSarabunNew','','THSarabunNew.php');
     $this->pdf->AddFont('THSarabunNew','B','THSarabunNew_b.php');
     $this->pdf->SetFont('Arial','B',16);
@@ -432,7 +444,7 @@ class ReportSparePartController extends Controller
       $rHigeht=8;
       $i = 1 ;
       $limit = 31;
-      $DETAIL_SPAREPLAN = SparePartPlan::where('DOC_YEAR','=',$DOC_YEAR)->where('DOC_MONTH','=',$DOC_MONTH)
+      $DETAIL_SPAREPLAN = SparePartPlan::where($where)
                                       ->where('MACHINE_LINE','=',$row->MACHINE_LINE)
                                       ->where(function ($query) use ($SEARCH) {
                                           $query->where('MACHINE_CODE', 'like', $SEARCH)
@@ -468,6 +480,9 @@ class ReportSparePartController extends Controller
     $this->pdf->Output('I','planmonth.pdf');
     exit;
 
+  }
+  public function PlanPDMList(){
+    return view('machine.sparepart.report.reprotpdf');
   }
   protected function normalize($word)
      {
