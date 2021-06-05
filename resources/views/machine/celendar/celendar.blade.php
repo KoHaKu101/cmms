@@ -3,7 +3,6 @@
 @section('css')
 	<link href={{ asset('/assets/fullcalendar/main.css') }} rel='stylesheet' />
 
-{{-- <link rel="stylesheet" href="{{ asset('assets/icofont/icofont.min.css') }}"> --}}
 @endsection
 {{-- ส่วนหัว --}}
 @section('Logoandnavbar')
@@ -67,18 +66,20 @@
       },
 			dayMaxEvents: true,
 			events: [
+				@if (isset($datamasterimpsgroup))
+
+
 				@foreach ($datamasterimpsgroup as $key => $data)
 					@foreach ($datamachine->where('MACHINE_CODE',$data->MACHINE_CODE) as $key => $datasub)
-
 					{
 						title: '{{ $data->MACHINE_CODE }} : {{ $data->PM_TEMPLATELIST_NAME }}',
 						url: '{{ url('machine/system/check/'.$datasub->UNID.'/'.$data->UNID) }}',
 						start: '{{ $data->PM_NEXT_DATE }}',
 					},
-					
 					@endforeach
 				@endforeach
 
+				@endif
 
 			]
 		});

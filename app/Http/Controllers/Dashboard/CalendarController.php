@@ -21,8 +21,12 @@ class CalendarController extends Controller
 
   public function Index(){
     $notify              = MailSetup::select('AUTOPLAN')->first();
-    $dataset             = Carbon::parse()->startOfYear()->addDay($notify->AUTOPLAN);
-    $datamasterimpsgroup = MasterIMPSGroup::where('PM_NEXT_DATE','<',$dataset)->get();
+    $datamasterimpsgroup = NULL;
+    if (isset($notify)) {
+      $dataset             = Carbon::parse()->startOfYear()->addDay($notify->AUTOPLAN);
+      $datamasterimpsgroup = MasterIMPSGroup::where('PM_NEXT_DATE','<',$dataset)->get();
+    }
+
     $datamachine         = Machine::select('UNID','MACHINE_CODE')->get();
     return View('machine/celendar/celendar',compact('datamasterimpsgroup','datamachine'));
   }
