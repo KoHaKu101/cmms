@@ -18,5 +18,5 @@ class EMPName extends Model
     protected $keyType = 'string';
     public $table ='PMCS_EMP_NAME';
 
-    protected $fillable = ['EMP_CODE','EMP_NAME','EMP_ICON','EMP_GROUP','EMP_NOTE','EMP_STATUS','CREATE_BY','CREATE_TIME','MODIFY_BY','MODIFY_TIME','UNID'];
+    protected $fillable = ['POSITION','EMP_CODE','EMP_NAME','EMP_ICON','EMP_GROUP','EMP_NOTE','EMP_STATUS','CREATE_BY','CREATE_TIME','MODIFY_BY','MODIFY_TIME','UNID'];
 }

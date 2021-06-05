@@ -60,7 +60,7 @@
 											<div class="form-group mt-4">
 												<img src="/assets/img/nobody.jpg" width="200" height="200px" class="mt-4">
 													<input type="file" class="form-control mt-4" id="EMP_ICON" name="EMP_ICON" >
-												
+
 											</div>
 										</div>
 										<!-- ช่อง2-->
@@ -68,7 +68,7 @@
 											<div class="form-group has-error">
 												<label for="EMP_CODE">รหัสพนักงาน</label>
 													<input type="text" class="form-control" id="EMP_CODE" name="EMP_CODE" placeholder="รหัสพนักงาน" required autofocus>
-												
+
 											</div>
 
 
@@ -94,11 +94,11 @@
 											</div>
 											<div class="form-group col-md-12 has-error">
 												<lebel>ตำแหน่งงาน</lebel>
-												<select class="form-control form-control" id="" name="">
+												<select class="form-control form-control" id="POSITION" name="POSITION" required>
 												<option value>--แสดงทั้งหมด--</option>
-												<option value>หัวหน้างาน</option>
-												<option value>พนักงานประจำ</option>
-												<option value>พนักงานรายวัน</option>
+												<option value="SUPER">หัวหน้างาน</option>
+												<option value="FULLTIME">พนักงานประจำ</option>
+												<option value="DAILY">พนักงานรายวัน</option>
 												</select>
 											</div>
 

@@ -75,15 +75,17 @@
 											@foreach ($dataset as $key => $dataitem)
 												@php
 												$EMP_ICON = $dataitem->EMP_ICON != '' ?	'image/emp/'.$dataitem->EMP_ICON : 'assets/img/no_image1200_900.png';
+												$POSITION = array(''=>'','SUPER'=>'หัวหน้างาน','FULLTIME'=>'พนักงานประจำ','DAILY'=>'พนักงานรายวัน');
+
 												@endphp
 												<div class="col-md-6 col-lg-4">
 													<div class="card card-post card-round">
 														<img class="card-img-top" src="{{ asset($EMP_ICON) }}" alt="Card image cap">
 														<div class="card-body">
 															<div class="separator-solid"></div>
-																<h3 class="card-title">{{ $dataitem->EMP_NAME2 }}</h3>
-																<h5 >รหัสพนักงาน {{ $dataitem->EMP_CODE }}</h5>
-																<h5 >ตำแหน่งงาน </h5>
+																<h3 class="card-title my-1">{{ $dataitem->EMP_NAME2 }}</h3>
+																<h5 >รหัสพนักงาน : {{ $dataitem->EMP_CODE }}</h5>
+																<h5 >ตำแหน่งงาน : {{ $POSITION[$dataitem->POSITION] }}</h5>
 																<h5 >ประจำ {{ $dataitem->EMP_GROUP }} </h5>
 																<a href="{{ url('machine/personal/edit/'.$dataitem->UNID) }}">
 																	<span style="color: green;">

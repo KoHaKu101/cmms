@@ -80,7 +80,8 @@ class PersonalController extends Controller
       'EMP_GROUP'        => $request->EMP_GROUP,
       'EMP_NOTE'         => $request->EMP_NOTE,
       'EMP_STATUS'           => $request->EMP_STATUS,
-      'CREATE_BY'            => Auth::user()->name,
+      'POSITION'             => $request->POSITION,
+      'CREATE_BY'            => Auth  ::user()->name,
       'CREATE_TIME'          => Carbon::now(),
       'MODIFY_BY'            => Auth::user()->name,
       'MODIFY_TIME'          => Carbon::now(),
@@ -99,6 +100,7 @@ class PersonalController extends Controller
 
   }
   public function Update(Request $request,$UNID){
+    
       $data_EMPNAME = EMPName::where('UNID',$UNID)->first();
       $last_img = $data_EMPNAME->EMP_ICON;
     if ($request->hasFile('EMP_ICON')) {
@@ -116,6 +118,7 @@ class PersonalController extends Controller
     'EMP_ICON'         => $last_img,
     'EMP_GROUP'        => $request->EMP_GROUP,
     'EMP_NOTE'         => $request->EMP_NOTE,
+    'POSITION'             => $request->POSITION,
     'EMP_STATUS'           => $request->EMP_STATUS,
     'MODIFY_BY'            => Auth::user()->name,
     'MODIFY_TIME'          => Carbon::now(),

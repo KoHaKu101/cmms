@@ -96,11 +96,11 @@
 											</div>
 											<div class="form-group col-md-12 has-error">
 												<lebel>ตำแหน่งงาน</lebel>
-												<select class="form-control form-control" id="" name="">
+												<select class="form-control form-control" id="POSITION" name="POSITION" required>
 												<option value>--แสดงทั้งหมด--</option>
-												<option value>หัวหน้างาน</option>
-												<option value>พนักงานประจำ</option>
-												<option value>พนักงานรายวัน</option>
+												<option value="SUPER" {{$dataset->POSITION == 'SUPER' ? 'selected' : ''}}>หัวหน้างาน</option>
+												<option value="FULLTIME" {{$dataset->POSITION == 'FULLTIME' ? 'selected' : ''}}>พนักงานประจำ</option>
+												<option value="DAILY" {{$dataset->POSITION == 'DAILY' ? 'selected' : ''}}>พนักงานรายวัน</option>
 												</select>
 											</div>
 										</div>
