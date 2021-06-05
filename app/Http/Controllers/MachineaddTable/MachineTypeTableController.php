@@ -37,11 +37,12 @@ class MachineTypeTableController extends Controller
     return $number;
   }
 
-  public function Index(){
+  public function Index(Request $request){
+    $SEARCH = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '%';
 
-    $dataset = MachineTypeTable::paginate(10);
-
-    return View('machine/add/typemachine/typemachinelist',compact('dataset'));
+    $dataset = MachineTypeTable::where('TYPE_NAME','like',$SEARCH)->paginate(8);
+    $SEARCH = str_replace('%','',$SEARCH);
+    return View('machine/add/typemachine/typemachinelist',compact('dataset','SEARCH'));
   }
   public function Create(){
     return View('machine/add/typemachine/form');

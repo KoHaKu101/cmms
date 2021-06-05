@@ -42,25 +42,21 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="card ">
-                	@if(session('success'))
-                  	<div class="alert alert-success alert-dismissible fade show" role="alert">
-  											<strong>{{ session('success') }}</strong>
-  											<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    										<span aria-hidden="true">&times;</span>
-  											</button>
-										</div>
-									@endif
-									<div class="card-header bg-primary form-inline ">
+									<form action="{{ route('machinetypetable.list') }}" method="POST" enctype="multipart/form-data">
+										@method('GET')
+										@csrf
+										<div class="card-header bg-primary form-inline ">
 											<h4 class="ml-3 mt-2 " style="color:white;" ><i class="fas fa-industry fa-lg mr-1"></i> ประเภทเครื่องจักร </h4>
 												<div class="input-group ml-4">
-													<input type="text" id="search_text"  name="search_text"onkeyup="myFunction()" class="form-control form-control-sm">
+													<input type="text" id="SEARCH"  name="SEARCH" class="form-control form-control-sm" value="{{ $SEARCH }}">
 													<div class="input-group-prepend">
 														<button type="submit" class="btn btn-search pr-1 btn-xs	">
 															<i class="fa fa-search search-icon"></i>
 														</button>
 													</div>
 												</div>
-									</div>
+											</div>
+										</form>
 
 									<div id="result"class="card-body">
 										<div class="container-fluid ml-4">
@@ -82,7 +78,6 @@
 									                             <div class="cbp-caption-defaultWrap">
 									                               <a href="{{url('machine/machinetypetable/edit/'.$dataitem->UNID)}}">
 									                                 <img src="{{asset($TYPE_ICON)}}" alt="img3">
-
 									                               </a> </div>
 																								 <style>
 																								 .cbp-item .btn {

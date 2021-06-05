@@ -89,7 +89,7 @@
 																			<tr>
 																				<td class="text-center"> {{ $key+1 }}</td>
 																				<td>{{$dataitem->PM_TEMPLATELIST_NAME}}</td>
-																				<td class="text-center">{{($dataitem->PM_TEMPLATELIST_DAY/30).' เดือน' }}</td>
+																				
 																				<td>
 																					<div class="form-inline">
 																						<a href="{{ url('/machine/pm/templatelist/edit/'.$dataitem->UNID) }}">
@@ -97,7 +97,6 @@
 																							<i class="fas fa-edit fa-2x"></i> </button>
 																						</a>
 																						<button class="btn btn-danger btn-link btn-sm my-1" type="button" onclick="deletecheckbox('{{ $dataitem->UNID }}','{{ $dataitem->PM_TEMPLATELIST_NAME }}')" >
-																							{{-- onclick="deletecheckbox('{{ $dataitem->UNID }}')" --}}
 																							<i class="fas fa-trash" style="font-size:20px"> </i>
 																						</button>
 																					</div>
