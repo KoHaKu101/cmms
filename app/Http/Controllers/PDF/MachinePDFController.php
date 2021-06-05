@@ -49,8 +49,8 @@ class MachinePDFController extends Controller
         $limit = 40;
         $i = 1;
           foreach($dataset as $index => $row){
-            $this->pdf->Cell(22,6,iconv('UTF-8', 'cp874', $row->MACHINE_CODE),1,0,'');
-            $this->pdf->Cell(32,6,iconv('UTF-8//IGNORE', 'cp874//IGNORE', $row->MACHINE_NAME),1,0,'');
+            $this->pdf->Cell(16,6,iconv('UTF-8', 'cp874', $row->MACHINE_CODE),1,0,'');
+            $this->pdf->Cell(34,6,iconv('UTF-8//IGNORE', 'cp874//IGNORE', $row->MACHINE_NAME),1,0,'');
             $this->pdf->Cell(10,6,iconv('UTF-8', 'cp874', $row->MACHINE_LINE),1,0,'C');
             $this->pdf->Cell(25,6,iconv('UTF-8', 'cp874', ($row->MACHINE_CHECK == '1' ? 'หยุดทำงาน'
                                           :( $row->MACHINE_CHECK == '2' ? 'เครื่องทำงาน'
@@ -61,7 +61,7 @@ class MachinePDFController extends Controller
             $this->pdf->SetFont('THSarabunNew','',11);
             $this->pdf->Cell(53,6,iconv('UTF-8//IGNORE', 'cp874//IGNORE', $row->PURCHASE_FORM),1,0,'');
             $this->pdf->SetFont('THSarabunNew','',12);
-            $this->pdf->Cell(30,6,iconv('UTF-8//IGNORE', 'cp874//IGNORE', $row->MACHINE_TYPE),1,0,'');
+            $this->pdf->Cell(34,6,iconv('UTF-8//IGNORE', 'cp874//IGNORE', $row->MACHINE_TYPE),1,0,'');
             $this->pdf->Ln();
           if ($i == $limit) {
             $limit = $limit+39;

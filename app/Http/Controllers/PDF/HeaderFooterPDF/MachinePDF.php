@@ -39,13 +39,13 @@ class MachinePDF extends Fpdf
         $this->Text(185,27,iconv('UTF-8', 'cp874', $dataset));
       //data header
       $this->SetFont('THSarabunNew','B',13);
-       $this->Cell(22,8,iconv('UTF-8', 'cp874', 'รหัสเครื่องจักร'),1,0,'C');
-       $this->Cell(32,8,iconv('UTF-8', 'cp874', 'ชื่อเครื่องจกัร'),1,0,'C');
+       $this->Cell(16,8,iconv('UTF-8', 'cp874', 'MC-CODE'),1,0,'C');
+       $this->Cell(34,8,iconv('UTF-8', 'cp874', 'MC-NAME'),1,0,'C');
        $this->Cell(10,8,iconv('UTF-8', 'cp874', 'Line'),1,0,'C');
        $this->Cell(25,8,iconv('UTF-8', 'cp874', 'สถานะเครื่องจักร'),1,0,'C');
        $this->Cell(22,8,iconv('UTF-8', 'cp874', 'วันที่เริ่มใช้งาน'),1,0,'C');
        $this->Cell(53,8,iconv('UTF-8', 'cp874', 'ซื้อจากบริษัท'),1,0,'C');
-       $this->Cell(30,8,iconv('UTF-8', 'cp874', 'ชนิดเครื่องจักร'),1,0,'C');
+       $this->Cell(34,8,iconv('UTF-8', 'cp874', 'ชนิดเครื่องจักร'),1,0,'C');
        $this->Ln();
      }
     //end head ****************************************************************
