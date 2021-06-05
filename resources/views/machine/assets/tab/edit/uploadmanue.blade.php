@@ -52,7 +52,7 @@
                   <a href="{{ url('machine/assets/uploadpdf/'.$uploaditem->UNID) }}" class="btn btn-primary btn-link">
                     <i class="fas fa-eye fa-lg "></i>
                   </a>
-                  <a href="{{ url('machine/upload/download/'.$uploaditem->UNID) }}">
+                  <a href="{{ url('upload/manual/'.$dataset->MACHINE_CODE.'/'.$uploaditem->UNID) }}">
                     <button type="button"class="btn btn-success btn-link"><i class="fas fa-download fa-lg"></i>	</button>
                   </a>
                   <a href="{{ url('machine/upload/edit/'.$uploaditem->UNID) }}">

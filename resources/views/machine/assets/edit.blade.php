@@ -243,9 +243,9 @@
 													<li>
 	    											<a id="planpdm" data-toggle="tab" href="#planpdm" class="tabselect">เปลี่ยนอะไหล่</a>
 	  											</li>
-													<li>
+													{{-- <li>
 	    											<a id="uploadmanue" data-toggle="tab" href="#uploadmanue" class="tabselect" >Upload</a>
-	  											</li>
+	  											</li> --}}
 	  										</ul>
 	  										<div class="tab-content clearfix">
 														<!-- ข้อมูลทั่วไป -->
@@ -262,7 +262,7 @@
 														<!-- อะไหล่ที่ต้องเปลี่ยน -->
 														@include('machine.assets.tab.edit.planpdm')
 														<!-- upload -->
-														@include('machine.assets.tab.edit.uploadmanue')
+														{{-- @include('machine.assets.tab.edit.uploadmanue') --}}
 												</div>
 											</div>
 										</div>

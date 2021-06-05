@@ -36,42 +36,29 @@ class MachineUploadController extends Controller
   }
 
   public function StoreUpload(Request $request){
-
-    //ตัวแปร ชื่อ
+    $last_upload = '';
     $TOPIC_NAME = $request->TOPIC_NAME;
     $MACHINE_CODE = $request->MACHINE_CODE;
     $UPLOAD_UNID_REF = $request->UPLOAD_UNID_REF;
-    //ตัวแปรไฟล์
     $FILE_UPLOAD = request()->file('FILE_UPLOAD');
-    // $path = Storage::
-    //ตัวแปร size
     $FILE_SIZE = 0;
-    //ส่วนของไฟล์
-    //ส่วนของชื่อไฟล์
      $FILE_NAME = basename($request->file('FILE_UPLOAD')->getClientOriginalName());
-    //ส่วนของนามสกุลไฟล์
      $FILE_EXTENSION = $request->file('FILE_UPLOAD')->getClientOriginalExtension();
-    //ส่วนของ size ไฟล์
      $FILE_SIZE = $request->file('FILE_UPLOAD')->getSize();
-       //ส่วนของกำหนดการแสดงsizeไฟล์
      if ($FILE_SIZE >0 ) {
        $FILE_SIZE = number_format($FILE_SIZE /100000, 2);
      }
-      //ส่วนของวันที่ไฟล์
      $FILE_UPLOADDATETIME = Carbon::now()->format('Y-m-d');
-     //pathfile
       $filenamemaster = uniqid().basename($request->file('FILE_UPLOAD')->getClientOriginalName());
+       $path_file = public_path('upload/manual/'.$MACHINE_CODE);
+       $last_upload = move($path_file.'/'.$filenamemaster);
 
-       $last_upload = $request->file('FILE_UPLOAD')->storeAs('upload/manual',$filenamemaster,'public');
-       // dd($last_upload);
+       $last_upload = $filenamemaster;
 
-     //สิ้นสุดส่วนของไฟล์
-     //ชื่อ
     if(!empty($TOPIC_NAME)) {
         $TOPIC_NAME = $TOPIC_NAME;
     } else {
       $TOPIC_NAME = $FILE_NAME;
-      // dd($TOPIC_NAME);
     }
     //สิ้นสุดชื่อ
     MachineUpload::insert([
@@ -87,7 +74,7 @@ class MachineUploadController extends Controller
       'CREATE_TIME'          => Carbon::now(),
       // 'MODIFY_BY'            => Auth::user()->name,
       // 'MODIFY_TIME'          => Carbon::now(),
-      'UNID'                 => $this->randUNID('PMCS_MACHINE_UPLOAD'),
+      'UNID'                 => $this->randUNID('PMCS_MACHINES_UPLOAD'),
     ]);
     // $FILE_UPLOAD->move($up_location,$filenamemaster);
 
@@ -103,40 +90,25 @@ class MachineUploadController extends Controller
   }
   public function Update(Request $request,$UNID){
 
-    //ตัวแปร ชื่อ
       $TOPIC_NAME = $request->TOPIC_NAME;
     $MACHINE_CODE = $request->MACHINE_CODE;
-    //ตัวแปรไฟล์
       $update = $request->FILE_UPDATE;
       $fileupdate = $request->FILE_SIZE;
       $nameupdate = $request->FILE_NAME;
       $extensionupdate = $request->FILE_EXTENSION;
       $datetimeupdate = $request->FILE_UPLOADDATETIME;
-
-    // $nameupdate =
-        // $FILE_UPLOAD = request()->file('FILE_UPLOAD');
     if ($request->hasFile('FILE_UPLOAD')) {
       if ($request->file('FILE_UPLOAD')->isValid()) {
-        //ตัวแปร size
-        $FILE_SIZE = 0;
-        //ส่วนของไฟล์
-        //ส่วนของชื่อไฟล์
+         $FILE_SIZE = 0;
          $FILE_NAME = basename($request->file('FILE_UPLOAD')->getClientOriginalName(), '.'.$request->file('FILE_UPLOAD')->getClientOriginalExtension());
-        //ส่วนของนามสกุลไฟล์
          $FILE_EXTENSION = $request->file('FILE_UPLOAD')->getClientOriginalExtension();
-        //ส่วนของ size ไฟล์
          $FILE_SIZE = $request->file('FILE_UPLOAD')->getSize();
-           //ส่วนของกำหนดการแสดงsizeไฟล์
-         if ($FILE_SIZE >0 ) {
+         if ($FILE_SIZE > 0 ) {
            $FILE_SIZE = number_format($FILE_SIZE /100000, 2);
          }
-          //ส่วนของวันที่ไฟล์
          $filenamemaster = uniqid().basename($request->file('FILE_UPLOAD')->getClientOriginalName());
          $FILE_UPLOADDATETIME = Carbon::now()->format('Y-m-d');
-         //pathfile
-          $last_upload = $request->file('FILE_UPLOAD')->storeAs('upload/manual',$filenamemaster,'public');
-         //สิ้นสุดส่วนของไฟล์
-         // dd($filenamemaster);
+          $last_upload = $request->file('FILE_UPLOAD')->move('upload/manual',$filenamemaster,'public');
 
       }
   }  else {
