@@ -31,7 +31,7 @@
                                 <th width="50px">จำนวน</th>
                                 <th width="50px">Unit</th>
                                 <th width="100px">ราคา(Unit)</th>
-                                <th width="120px">Action</th>
+                                <th width="130px">Action</th>
 
                                 </tr>
                               </thead>

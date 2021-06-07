@@ -40,11 +40,7 @@
 								<a href="{{ route('repair.repairsearch') }}"><button class="btn btn-primary  btn-xs">
 									<span class="fas fa-file fa-lg">	New	</span>
 								</button></a>
-								<a href="{{ url('users/export/') }}">
-								<button class="btn btn-primary  btn-xs">
-									<span class="fas fa-file-export fa-lg">	Export	</span>
-								</button>
-								</a>
+								
 							</div>
 						</div>
           </div>
@@ -160,7 +156,7 @@
 								                @endif
 								              </tr>
 								            @endforeach
-								            
+
 
 								        </tbody>
 								    </table>
