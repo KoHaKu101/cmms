@@ -69,7 +69,7 @@
 												@endphp
 												<div class="col-md-6 col-lg-3">
 													<div class="card card-post card-round">
-														<img class="card-img-top" src="{{ asset($EMP_ICON) }}" height="185px"alt="Card image cap">
+														<img class="card-img-top" src="{{ asset($EMP_ICON) }}" width="50px" height="220px"alt="Card image cap">
 														<div class="card-body">
 															<div class="separator-solid"></div>
 																<h3 class="card-text my-1">{{ $dataitem->EMP_NAME2 }}</h3>
