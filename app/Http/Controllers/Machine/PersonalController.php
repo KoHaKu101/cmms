@@ -141,12 +141,7 @@ class PersonalController extends Controller
     $img_widht   = ImagesX($img_master);
     $img_height  = ImagesY($img_master);
     $img_create  = $img_master;
-    if ($img_widht < $img_height ) {
-      $img_master = imagerotate($img_master,90,0,true);
-      $img_widht = ImagesX($img_master);
-      $img_height = ImagesY($img_master);
-      $img_create  = $img_master;
-    }
+
     if ($img_widht > $width) {
       $img_create  = ImageCreateTrueColor($width, $height);
       ImageCopyResampled($img_create, $img_master, 0, 0, 0, 0, $width+1, $height+1, $img_widht, $img_height);
