@@ -153,7 +153,7 @@
 								        </tbody>
 
 								    </table>
-								    {{ $machine->appends( ['SEARCH' => $SEARCH])->links() }}
+								    {{ $machine->appends( ['SEARCH' => $SEARCH])->links('pagination.default') }}
 
 								  </div>
 								    </div>

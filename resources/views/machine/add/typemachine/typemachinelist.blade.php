@@ -130,7 +130,7 @@
 												 </div>
 
 										</div>
-										{{ $dataset->links() }}
+										{{ $dataset->appends(['SEARCH'=>$SEARCH])->links('pagination.default') }}
 
 								</div>
 

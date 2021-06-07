@@ -40,7 +40,7 @@
 								<a href="{{ route('repair.repairsearch') }}"><button class="btn btn-primary  btn-xs">
 									<span class="fas fa-file fa-lg">	New	</span>
 								</button></a>
-								
+
 							</div>
 						</div>
           </div>
@@ -162,7 +162,7 @@
 								    </table>
 
 								  </div>
-									{{$dataset->appends(['SEARCH' => $SEARCH])->links()}}
+									{{$dataset->appends(['SEARCH' => $SEARCH])->links('pagination.default')}}
 								    </div>
 								</div>
 								</div>
