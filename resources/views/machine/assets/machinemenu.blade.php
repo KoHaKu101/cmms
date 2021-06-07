@@ -46,10 +46,10 @@
                           <div class="cbp-caption">
                               <div class="cbp-caption-defaultWrap">
                                 <a href="{{url('machine/assets/machinelist')}}">
-                                  <img src="{{asset('assets/img/bg-404.jpeg')}}" alt="img3">
+                                  <img src="{{asset('assets/img/bg-404.jpg')}}" alt="img3">
                                 </a> </div>
                               <div class="cbp-caption-activeWrap">
-                                  <a href="{{url('machine/assets/machinelist/')}}" style="width:275px" class=" btn" rel="nofollow" data-cbp-singlePage="projects">ทะเบียนเครื่องจักร</a>
+                                  <a href="{{url('machine/assets/machinelist/')}}" style="width:254px" class=" btn" rel="nofollow" data-cbp-singlePage="projects">ทะเบียนเครื่องจักร</a>
                               </div>
                           </div>
                           <div class="cbp-l-grid-projects-title uppercase text-center uppercase text-center">เครื่องจักรทั้งหมด</div>
@@ -64,11 +64,11 @@
                             <div class="cbp-caption">
                                 <div class="cbp-caption-defaultWrap">
                                   <a href="{{url('machine/assets/machinelist/'.$dataitem->LINE_CODE)}}">
-                                    <img src="{{asset('assets/img/bg-404.jpeg')}}" alt="img3">
+                                    <img src="{{asset('assets/img/bg-404.jpg')}}" alt="img3">
                                   </a>
                                   </div>
                                   <div class="cbp-caption-activeWrap">
-                                      <a href="{{url('machine/assets/machinelist/'.$dataitem->LINE_CODE)}}" style="width:275px" class=" btn" rel="nofollow" data-cbp-singlePage="projects">ทะเบียนเครื่องจักร</a>
+                                      <a href="{{url('machine/assets/machinelist/'.$dataitem->LINE_CODE)}}" style="width:254px" class=" btn" rel="nofollow" data-cbp-singlePage="projects">ทะเบียนเครื่องจักร</a>
                                   </div>
                             </div>
                             <div class="cbp-l-grid-projects-title uppercase text-center uppercase text-center">เครื่องจักร {{ $dataitem->LINE_NAME }}</div>
