@@ -78,7 +78,7 @@
 																<h5 >ประจำ {{ $dataitem->EMP_GROUP }} </h5>
 																<div class="row">
 																	<a href="{{ url('machine/personal/edit/'.$dataitem->UNID) }}">
-																		<span style="color: green;">
+																		<span class="text-primary">
 																			<i class="fas fa-edit fa-lg mx-1 my-1">แก้ไขข้อมูล</i>
 																		</span>
 																	</a>

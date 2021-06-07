@@ -96,7 +96,6 @@ class SysCheckController extends Controller
           if ($saveresult) {
             $totalloop          = 0;
             $totalmonth         = MailSetup::select('AUTOPLAN')->first();
-            $
             $preiodmonth        = $machine->MACHINE_RANK_MONTH;
 
             $pm_lastdate        = Carbon::now();

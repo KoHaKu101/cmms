@@ -77,13 +77,9 @@
 									                         <div class="cbp-caption">
 									                             <div class="cbp-caption-defaultWrap">
 									                               <a href="{{url('machine/machinetypetable/edit/'.$dataitem->UNID)}}">
-									                                 <img src="{{asset($TYPE_ICON)}}" alt="img3">
+									                                 <img src="{{asset($TYPE_ICON)}}" alt="img3" style="height:185px">
 									                               </a> </div>
-																								 <style>
-																								 .cbp-item .btn {
-    																					 					width: 100%;
-																											}
-																								 </style>
+
 									                             <div class="cbp-caption-activeWrap">
 									                                 <div class="cbp-l-caption-alignCenter">
 									                                     <div class="cbp-l-caption-body">
