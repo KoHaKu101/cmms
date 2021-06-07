@@ -94,11 +94,18 @@
 									                                 </div>
 									                             </div>
 									                         </div>
-									                         <div class="cbp-l-grid-projects-title uppercase text-center uppercase text-center">ประเภทเครื่อง : {{$dataitem->TYPE_NAME}}</div>
-																					 <div class="cbp-l-grid-projects-desc uppercase text-left uppercase text-left ml-3">สถานะ : {{ $dataitem->TYPE_STATUS == "9" ? 'เปิด' : 'ปิด' }}</div>
-									                         <div class="cbp-l-grid-projects-desc uppercase text-center uppercase text-center bg-danger ">
-																					 <a href="{{ url('machine/machinetypetable/delete/'.$dataitem->UNID) }}" class="btn btn-danger btn-lg mt--2"><span class="fas fa-trash ">Delete</span></a>
-																					 </div>
+									                         <div class="cbp-l-grid-projects-title uppercase text-left uppercase  mx-2">ประเภทเครื่อง : {{$dataitem->TYPE_NAME}}</div>
+																					 <div class="cbp-l-grid-projects-desc uppercase text-left uppercase  mx-2">สถานะ : {{ $dataitem->TYPE_STATUS == "9" ? 'เปิด' : 'ปิด' }}</div>
+																						 <div class="row">
+																							 <div>
+																								 <a href="{{ url('machine/machinetypetable/edit/'.$dataitem->UNID) }}" class="btn btn-primary btn-lg mx-1 my-2" style="width:100px"><span class="fas fa-trash ">Edit</span></a>
+																							 </div>
+																								<div>
+																								 <a href="{{ url('machine/machinetypetable/delete/'.$dataitem->UNID) }}" class="btn btn-danger btn-lg mx-1 my-2" style="width:100px"><span class="fas fa-trash ">Delete</span></a>
+																							</div>
+																						 </div>
+
+
 																			 </div>
 									                 </div>
 																	 @endforeach

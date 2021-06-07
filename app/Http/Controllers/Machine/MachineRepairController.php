@@ -88,13 +88,21 @@ class MachineRepairController extends Controller
       $DATA_SELECTSUBREPAIR = SelectSubRepair::where('UNID','=',$SELECT_SUB_EPAIR_UNID)->first();
       $DATA_EMP = MachineEMP::where('EMP_CODE','=',$EMP_CODE)->where('REF_UNID','=',$MACHINE_UNID)->first();
       $UNID = $this->randUNID('PMCS_CMMS_REPAIR_REQ');
-      $count = 1;
-      $rowcount = MachineRepairREQ::selectraw('max(DOC_NO)count')->first();
-      if ($rowcount->count() > 0) {
-        $count = $rowcount->count()+1;
-      }
+
+      $rowcount = MachineRepairREQ::selectraw('max(DOC_NO)DOC_NO,max(DOC_DATE)DOC_DATE')->get();
+
+      $DOC_NO_RESET = date('Y-m', strtotime($rowcount[0]->DOC_DATE));
+
+
       $DOC_YY = date('y')+543;
-      $DOC_NO = 'RE'.$DOC_YY.date('m').'-'.$count;
+      $DOC_NO = $rowcount[0]->DOC_NO;
+      dd($rowcount->DOC_NO+1);
+      if ($DOC_NO_RESET > date('Y-m')) {
+        $DOC_NO = 'RE'.$DOC_YY.date('m').'-'. 0001;
+      }else {
+        $DOC_NO = $rowcount[0]->DOC_NO+1;
+      }
+
 
       MachineRepairREQ::insert([
         'UNID'=> $UNID
