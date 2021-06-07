@@ -72,6 +72,7 @@
 																		 @php
 																		 	$TYPE_ICON = $dataitem->TYPE_ICON != '' ? 'image/machinetype/'.$dataitem->TYPE_ICON : '/assets/img/no_image1200_900.png'
 																		 @endphp
+
 									                 <div class="cbp-item movie">
 									                     <div class="cbp-item-wrap">
 									                         <div class="cbp-caption">
@@ -79,7 +80,11 @@
 									                               <a href="{{url('machine/machinetypetable/edit/'.$dataitem->UNID)}}">
 									                                 <img src="{{asset($TYPE_ICON)}}" alt="img3" style="height:166.5px">
 									                               </a> </div>
-
+																								 <style>
+																								 .cbp-item .btn {
+																												width: 100%;
+																											}
+																								 </style>
 									                             <div class="cbp-caption-activeWrap">
 									                                 <div class="cbp-l-caption-alignCenter">
 									                                     <div class="cbp-l-caption-body">
