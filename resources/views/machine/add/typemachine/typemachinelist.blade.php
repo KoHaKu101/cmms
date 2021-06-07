@@ -77,7 +77,7 @@
 									                         <div class="cbp-caption">
 									                             <div class="cbp-caption-defaultWrap">
 									                               <a href="{{url('machine/machinetypetable/edit/'.$dataitem->UNID)}}">
-									                                 <img src="{{asset($TYPE_ICON)}}" alt="img3" style="height:185px">
+									                                 <img src="{{asset($TYPE_ICON)}}" alt="img3" style="height:166.5px">
 									                               </a> </div>
 
 									                             <div class="cbp-caption-activeWrap">
