@@ -29,24 +29,10 @@
           <div class="container">
 						<div class="row">
 							<div class="col-md-12 gx-4">
-								<a href="{{ url('/machine/dashboard/dashboard') }}">
-									<button class="btn btn-warning  btn-xs ">
-										<span class="fas fa-arrow-left fa-lg">Back </span>
-									</button>
-								</a>
+
 								<a href="{{ route('personal.form') }}"><button class="btn btn-primary  btn-xs">
 									<span class="fas fa-file fa-lg">	New	</span>
 								</button></a>
-								<a href="{{ url('users/export/') }}">
-								<button class="btn btn-primary  btn-xs">
-									<span class="fas fa-file-export fa-lg">	Export	</span>
-								</button>
-								</a>
-								<a href="{{url('machine/pdf/machinepdf')}}">
-								<button class="btn btn-primary  btn-xs">
-									<span class="fas fa-print fa-lg">	Print	</span>
-								</button>
-								</a>
 							</div>
 						</div>
           </div>
@@ -56,11 +42,13 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="card ">
-
+									<form action="{{ route('personal.list')}}" method="POST" enctype="multipart/form-data">
 									<div class="card-header bg-primary form-inline ">
+											@method('GET')
+											@csrf
 											<h4 class="ml-3 mt-2 " style="color:white;" ><i class="fas fa-cog fa-lg mr-1"></i> พนักงานซ่อมบำรุง </h4>
 												<div class="input-group ml-4">
-													<input type="text" id="search_text"  name="search_text"onkeyup="myFunction()" class="form-control form-control-sm">
+													<input type="text" id="SEARCH"  name="SEARCH"  class="form-control form-control-sm" value="{{ $SEARCH }}">
 													<div class="input-group-prepend">
 														<button type="submit" class="btn btn-search pr-1 btn-xs	">
 															<i class="fa fa-search search-icon"></i>
@@ -68,6 +56,7 @@
 													</div>
 												</div>
 									</div>
+								</form>
 
 									{{-- content --}}
 									<div class="container mt-4">
@@ -78,28 +67,29 @@
 												$POSITION = array(''=>'','SUPER'=>'หัวหน้างาน','FULLTIME'=>'พนักงานประจำ','DAILY'=>'พนักงานรายวัน');
 
 												@endphp
-												<div class="col-md-6 col-lg-4">
+												<div class="col-md-6 col-lg-3">
 													<div class="card card-post card-round">
-														<img class="card-img-top" src="{{ asset($EMP_ICON) }}" alt="Card image cap">
+														<img class="card-img-top" src="{{ asset($EMP_ICON) }}" height="185px"alt="Card image cap">
 														<div class="card-body">
 															<div class="separator-solid"></div>
-																<h3 class="card-title my-1">{{ $dataitem->EMP_NAME2 }}</h3>
+																<h3 class="card-text my-1">{{ $dataitem->EMP_NAME2 }}</h3>
 																<h5 >รหัสพนักงาน : {{ $dataitem->EMP_CODE }}</h5>
 																<h5 >ตำแหน่งงาน : {{ $POSITION[$dataitem->POSITION] }}</h5>
 																<h5 >ประจำ {{ $dataitem->EMP_GROUP }} </h5>
-																<a href="{{ url('machine/personal/edit/'.$dataitem->UNID) }}">
-																	<span style="color: green;">
-																		<i class="fas fa-edit fa-lg">แก้ไขข้อมูล</i>
-																	</span>
-																</a>
-																<a style="cursor:pointer"
-																data-unid="{{ $dataitem->UNID }}"	onclick="deletepersonal(this)"
-																	 class="ml-3 float-right">
-																	<span style="color: Tomato;">
-																		<i class="fas fa-trash fa-lg ml-2">	Delete</i>
-																	</span>
-																</a>
-																<input type="hidden" value="{{ $dataitem->UNID }}">
+																<div class="row">
+																	<a href="{{ url('machine/personal/edit/'.$dataitem->UNID) }}">
+																		<span style="color: green;">
+																			<i class="fas fa-edit fa-lg mx-1 my-1">แก้ไขข้อมูล</i>
+																		</span>
+																	</a>
+																	<a style="cursor:pointer"
+																	data-unid="{{ $dataitem->UNID }}"	onclick="deletepersonal(this)"
+																		 class="ml-3 float-right">
+																		<span style="color: Tomato;">
+																			<i class="fas fa-trash fa-lg mx-1 my-1">	Delete</i>
+																		</span>
+																	</a>
+																</div>
 														</div>
 
 													</div>

@@ -132,8 +132,12 @@ var FormPlugins = function() {
         });
       }
 
-
-
   $('#MACHINE_LINE').on('change',function(){
+    $("#FRM_CHECKSHEET").submit();
+  })
+  $('#YEAR').on('change',function(){
+    $("#FRM_CHECKSHEET").submit();
+  })
+  $('#MONTH').on('change',function(){
     $("#FRM_CHECKSHEET").submit();
   })

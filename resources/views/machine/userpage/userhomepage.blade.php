@@ -39,7 +39,7 @@
 									</div>
 									<a href="{{ route('repair.repairsearch') }}">
 										<div class="card-body">
-											<img src="{{ asset('image/user/repair.png') }}" class="ml-4"style="width:150px;height:150px">
+											<img src="{{ asset('assets/img/userhomepage/repair.png') }}" class="ml-4"style="width:150px;height:150px">
 										</div>
 									</a>
 								</div>
@@ -51,7 +51,7 @@
 										</div>
 										<a href="{{ route('pm.planlist') }}">
 											<div class="card-body">
-												<img src="{{ asset('image/user/ss.png') }}" class="ml-4"style="width:150px;height:150px">
+												<img src="{{ asset('assets/img/userhomepage/pm.png') }}" class="ml-4"style="width:150px;height:150px">
 											</div>
 										</a>
 									</div>

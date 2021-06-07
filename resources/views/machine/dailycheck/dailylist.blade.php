@@ -24,8 +24,6 @@
 	{{-- ส่วนเนื้อหาและส่วนท้า --}}
 @section('contentandfooter')
 	@php
-	$MONTH = Session::get('MONTH');
-	$YEAR =  Session::get('YEAR');
 
 	$MONTH_NAME_TH = array(0 =>'ALL',1 => "มกราคม",2 => "กุมภาพันธ์",3 =>"มีนาคม",4 => "เมษายน",5 =>"พฤษภาคม",6 =>"มิถุนายน",
 									 7 =>"กรกฎาคม",8 =>"สิงหาคม",9 =>"กันยายน",10 =>"ตุลาคม",11 => "พฤศจิกายน",12 =>"ธันวาคม");
@@ -41,6 +39,7 @@
 								<div class="card">
 									<div class="card-header bg-primary ">
 										<form action='{{ url('machine/daily/list')}}' method="POST" id="FRM_CHECKSHEET" name="FRM_CHECKSHEET" enctype="multipart/form-data">
+											@method('GET')
 											@csrf
 											<div class="row">
 												<div class="col-md-8 form-inline">
@@ -51,6 +50,7 @@
 														@endfor
 													</select>
 													<h4 class="card-title text-white"> เดือน : </h4>
+													
 													<select class="form-control form-control-sm input-group filled text-info mx-3" id="MONTH" name="MONTH">
 															@for ($i=1; $i < 13; $i++)
 																<option value="{{$i}}" {{ $MONTH_NAME_TH[$MONTH] == $MONTH_NAME_TH[$i] ? 'selected' : '' }}>{{$MONTH_NAME_TH[$i]}}</option>
@@ -99,11 +99,11 @@
 									        <thead>
 									          <tr>
 									            <th  width="20px">#</th>
-									            <th  width="120px">Machine NO.</th>
+									            <th  width="100px">Machine NO.</th>
 									            <th  width="300px">Machine Name</th>
 									            <th  width="50px">LINE</th>
 									            <th  width="90px">Upload</th>
-									            <th width="100px">View</th>
+									            <th width="120px">View</th>
 									          </tr>
 									        </thead>
 									        <tbody>

@@ -59,6 +59,7 @@ class DailyCheckController extends Controller
                                           ->get();
       $MACHINE_LINE = str_replace('%','',$MACHINE_LINE);
       $MACHINE_CODE = str_replace('%','',$MACHINE_CODE);
+
       return view('machine.dailycheck.dailylist',compact('DATA_MACHINE','DATA_CHECKSHEET','MONTH','YEAR','MACHINE_LINE','MACHINE_CODE'));
   }
 

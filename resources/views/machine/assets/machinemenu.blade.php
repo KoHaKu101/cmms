@@ -25,6 +25,7 @@
 
 	{{-- ส่วนเนื้อหาและส่วนท้า --}}
 @section('contentandfooter')
+
 	<div class="content">
 		<div class="page-inner">
       <div class="card">
@@ -34,61 +35,49 @@
             </button></a>
         </div>
         <div class="card-body">
+
           <div class="portfolio-content portfolio-1">
+
               <!--portfolio Grid-->
               <div id="js-grid-juicy-projects" class="cbp">
-                <div class="cbp-item movie" style="width:250px">
-                    <div class="cbp-item-wrap">
-                        <div class="cbp-caption">
-                            <div class="cbp-caption-defaultWrap">
-                              <a href="{{url('machine/assets/machinelist')}}">
-                                <img src="{{asset('assets/img/bg-404.jpeg')}}" alt="img3">
-                              </a> </div>
-                            <div class="cbp-caption-activeWrap">
-                                <div class="cbp-l-caption-alignCenter">
-                                    <div class="cbp-l-caption-body">
-                                        <div class="btn-group">
-                                            <a href="{{url('machine/assets/machinelist/')}}" class=" btn" rel="nofollow" data-cbp-singlePage="projects">ทะเบียนเครื่องจักร</a>
-
-                                            <a href="#" class=" btn btn-sm btn-right" data-title="GoPro: HERO3+ Black Edition<br>by GoPro">กำหนดตรวจสอบ</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="cbp-l-grid-projects-title uppercase text-center uppercase text-center">เครื่องจักรทั้งหมด</div>
-                                                  <div class="cbp-l-grid-projects-desc uppercase text-center uppercase text-center"></div>
-                    </div>
-                </div>
-                @foreach ($dataset as $key => $dataitem)
-
-
-                  <!--portfolio 1-->
-                  <div class="cbp-item movie">
+                <div class="row">
+                  <div class="cbp-item movie" style="width:250px">
                       <div class="cbp-item-wrap">
                           <div class="cbp-caption">
                               <div class="cbp-caption-defaultWrap">
-                                <a href="{{url('machine/assets/machinelist/'.$dataitem->LINE_CODE)}}">
+                                <a href="{{url('machine/assets/machinelist')}}">
                                   <img src="{{asset('assets/img/bg-404.jpeg')}}" alt="img3">
-                                </a>
-                                </div>
+                                </a> </div>
                               <div class="cbp-caption-activeWrap">
-                                  <div class="cbp-l-caption-alignCenter">
-                                      <div class="cbp-l-caption-body">
-                                          <div class="btn-group">
-                                              <a href="{{url('machine/assets/machinelist/'.$dataitem->LINE_CODE)}}" class=" btn" rel="nofollow" data-cbp-singlePage="projects">ทะเบียนเครื่องจักร</a>
-                                              <input type="hidden" value="{{ $dataitem->LINE_CODE }}">
-                                              <a href="#" class=" btn btn-sm btn-right" >กำหนดตรวจสอบ</a>
-                                          </div>
-                                      </div>
-                                  </div>
+                                  <a href="{{url('machine/assets/machinelist/')}}" style="width:275px" class=" btn" rel="nofollow" data-cbp-singlePage="projects">ทะเบียนเครื่องจักร</a>
                               </div>
                           </div>
-                          <div class="cbp-l-grid-projects-title uppercase text-center uppercase text-center">เครื่องจักร {{ $dataitem->LINE_NAME }}</div>
-                                                    <div class="cbp-l-grid-projects-desc uppercase text-center uppercase text-center"></div>
+                          <div class="cbp-l-grid-projects-title uppercase text-center uppercase text-center">เครื่องจักรทั้งหมด</div>
+                          <div class="cbp-l-grid-projects-desc uppercase text-center uppercase text-center"></div>
                       </div>
                   </div>
-                  @endforeach
+                  @foreach ($dataset as $key => $dataitem)
+
+                    <!--portfolio 1-->
+                    <div class="cbp-item movie">
+                        <div class="cbp-item-wrap">
+                            <div class="cbp-caption">
+                                <div class="cbp-caption-defaultWrap">
+                                  <a href="{{url('machine/assets/machinelist/'.$dataitem->LINE_CODE)}}">
+                                    <img src="{{asset('assets/img/bg-404.jpeg')}}" alt="img3">
+                                  </a>
+                                  </div>
+                                  <div class="cbp-caption-activeWrap">
+                                      <a href="{{url('machine/assets/machinelist/'.$dataitem->LINE_CODE)}}" style="width:275px" class=" btn" rel="nofollow" data-cbp-singlePage="projects">ทะเบียนเครื่องจักร</a>
+                                  </div>
+                            </div>
+                            <div class="cbp-l-grid-projects-title uppercase text-center uppercase text-center">เครื่องจักร {{ $dataitem->LINE_NAME }}</div>
+                            <div class="cbp-l-grid-projects-desc uppercase text-center uppercase text-center"></div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+
                   <!--/portfolio 1-->
 
               </div>

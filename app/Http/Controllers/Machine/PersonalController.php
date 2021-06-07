@@ -37,11 +37,12 @@ class PersonalController extends Controller
     return $number;
   }
 
-  public function Index(){
-
-    $dataset = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME2')->paginate(6);
-
-    return View('machine/personal/personallist',compact('dataset'));
+  public function Index(Request $request){
+    $SEARCH = isset($request->SEARCH) ?  '%'.$request->SEARCH.'%' : '%';
+    $dataset = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME2')->where('EMP_CODE','like',$SEARCH)
+    ->orderBy('EMP_CODE')->paginate(8);
+    $SEARCH = str_replace('%','',$SEARCH);
+    return View('machine/personal/personallist',compact('dataset','SEARCH'));
   }
   public function Create(){
 
