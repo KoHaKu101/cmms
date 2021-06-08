@@ -77,12 +77,12 @@
 																<h5 >ตำแหน่งงาน : {{ $POSITION[$dataitem->POSITION] }}</h5>
 																<h5 >ประจำ {{ $dataitem->EMP_GROUP }} </h5>
 																<div class="row">
-																	<div class="col-8 col-md-7">
+																	<div class="col-8 col-md-6">
 																		<a href="{{ url('machine/personal/edit/'.$dataitem->UNID) }}" class="btn btn-primary btn-sm ">
 																				<i class="fas fa-edit fa-lg  my-1"> Eidt</i>
 																		</a>
 																	</div>
-																	<div class="col-4 col-md-5">
+																	<div class="col-4 col-md-6">
 																		<a  class="btn btn-danger btn-sm text-white "
 																		data-unid="{{ $dataitem->UNID }}"	onclick="deletepersonal(this)">
 																				<i class="fas fa-trash fa-lg  my-1">	Delete</i>
