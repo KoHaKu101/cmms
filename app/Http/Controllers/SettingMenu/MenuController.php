@@ -83,7 +83,7 @@ class MenuController extends Controller
 
       ]);
       alert()->success('Update Success')->autoclose('1500');
-      return Redirect()->back();
+      return Redirect()->route('menu.home');
 
     }
 
