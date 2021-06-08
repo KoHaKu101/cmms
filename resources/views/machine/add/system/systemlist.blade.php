@@ -77,7 +77,7 @@
 																<table class="table table-bordered table-head-bg-info table-bordered-bd-info">
 																	<thead>
 																		<tr>
-																			<th>##</th>
+																			<th width="50px">##</th>
 																			<th scope="col">Inspection Item</th>
 
 																			<th style="width:120px">Action</th>
@@ -129,12 +129,19 @@
 																	</thead>
 																	<tbody>
 																		@if ($datamachine)
+																			@php
+																				$machine_name = array();
+																				foreach ($arraymachine as $index => $array_row) {
+																						$machine_name[$array_row->UNID] = $array_row->MACHINE_NAME;
+																						$machine_line[$array_row->UNID] = $array_row->MACHINE_LINE;
+																				}
+																			@endphp
 																			@foreach ($datamachine as $key => $datarow)
 																				<tr>
 																					<td class="text-center"> {{ $key+1 }}</td>
 																					<td>{{$datarow->MACHINE_CODE}}</td>
-																					<td>{{$datarow->MACHINE_NAME}}</td>
-																					<td>{{$datarow->MACHINE_LINE}}</td>
+																					<td>{{$machine_name[$datarow->MACHINE_UNID]}}</td>
+																					<td>{{$machine_line[$datarow->MACHINE_UNID]}}</td>
 																					<td>
 																						<div class="form-inline">
 																							<button class="btn btn-danger btn-link btn-sm my-1" type="button"

@@ -43,22 +43,25 @@ class MachineSysTemTableController extends Controller
   }
 
   public function Index(Request $request,$UNID = NULL){
+
     $datapmtemplate           = MachinePmTemplate::orderBy('PM_TEMPLATE_NAME','ASC')->get();
     $countdetail = 0;
     $datapmtemplatelist       = NULL;
     $datapmtemplatefirst      = NULL;
     $datamachine              = NULL;
+    $arraymachine = Machine::select('MACHINE_LINE','UNID')->selectRaw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME')
+                             ->where('MACHINE_STATUS','!=','4')->get();
     if($UNID){
       $datapmtemplatelist       = MachinePmTemplateList::where('PM_TEMPLATE_UNID_REF','=',$UNID)->orderBy('PM_TEMPLATELIST_INDEX','ASC')->get();
       $datapmtemplatefirst      = MachinePmTemplate::where('UNID',$UNID)->first();
-      $datamachine                     = MasterIMPS::leftJoin('PMCS_MACHINE','PMCS_CMMS_MASTER_IMPS.MACHINE_UNID','=','PMCS_MACHINE.UNID')
-                                            ->where('PM_TEMPLATE_UNID_REF',$UNID)
-                                            ->orderBy('PMCS_MACHINE.MACHINE_CODE','ASC')
-                                            ->paginate(10);
+
+      $datamachine                = MasterIMPS::where('PM_TEMPLATE_UNID_REF',$UNID)
+                                      ->orderBy('MACHINE_CODE','ASC')
+                                      ->paginate(10);
       $countdetail = $datapmtemplatefirst->count();
 
     }
-    return View('machine/add/system/systemlist',compact('datamachine','datapmtemplate','datapmtemplatelist','countdetail','datapmtemplatefirst'));
+    return View('machine/add/system/systemlist',compact('datamachine','datapmtemplate','datapmtemplatelist','countdetail','datapmtemplatefirst','arraymachine'));
   }
   public function StoreTemplate(Request $request){
     $validated = $request->validate([
