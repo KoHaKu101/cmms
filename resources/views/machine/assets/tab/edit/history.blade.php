@@ -6,7 +6,7 @@
             <div class="card-header bg-primary">
               <div class="row">
                 <div class="col-md-9 col-lg-10">
-                  <h3 align="center" style="color:white;" class="mt-2">ประวัติการแจ้งซ่อม </h3>
+                  <h3 align="center" style="color:white;" class="mt-2">ประวัติเครื่อง </h3>
                 </div>
                 <div class="col-md-3 col-lg-2">
                   <button type="button" class="btn btn-secondary btn-sm mt-1"

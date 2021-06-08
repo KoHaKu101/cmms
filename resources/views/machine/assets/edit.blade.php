@@ -259,7 +259,7 @@
 	    											<a id="home" data-toggle="tab" href="#home" class="tabselect active" >ข้อมูลทั่วไป</a>
 	  											</li>
 	  											<li>
-	    											<a id="history" data-toggle="tab" href="#history" class="tabselect"  >ประวัติการแจ้งซ่อม</a>
+	    											<a id="history" data-toggle="tab" href="#history" class="tabselect"  >ประวัติเครื่อง</a>
 	  											</li>
 	  											<li>
 	    											<a id="plan" data-toggle="tab" href="#plan"  class="tabselect" >ชิ้นงานที่ผลิต</a>
@@ -271,7 +271,7 @@
 	    											<a id="planpm" data-toggle="tab" href="#planpm" class="tabselect" >ตรวจเช็คเครื่องจักร</a>
 	  											</li>
 													<li>
-	    											<a id="planpdm" data-toggle="tab" href="#planpdm" class="tabselect">เปลี่ยนอะไหล่</a>
+	    											<a id="planpdm" data-toggle="tab" href="#planpdm" class="tabselect">อะไหล่</a>
 	  											</li>
 													{{-- <li>
 	    											<a id="uploadmanue" data-toggle="tab" href="#uploadmanue" class="tabselect" >Upload</a>
