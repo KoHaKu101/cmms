@@ -249,7 +249,12 @@ class ReportSparePartController extends Controller
     return Response()->json(['html'=>$html]);
   }
   public function SaveImg(Request $request){
-
+    $validated = $request->validate([
+      'IMG_SPAREPART_FILE_NAME' => 'mimes:jpeg,png,jpg',
+      ],
+      [
+      'IMG_SPAREPART_FILE_NAME.mimes'   => 'เฉพาะไฟล์ jpeg, png, jpg',
+      ]);
     $PLAN_UNID = $request->IMG_SPAREPART_UNID;
     $DATA_SPAREPART_PLAN = SparePartPlan::where('UNID','=',$PLAN_UNID)->first();
 
@@ -310,7 +315,7 @@ class ReportSparePartController extends Controller
         ,'MODIFY_BY' =>             Auth::user()->name
         ,'MODIFY_TIME' =>           Carbon::now()
       ]);
-      
+
       alert()->success('บันทึกภาพสำเร็จ')->autoclose('1500');
     }
 

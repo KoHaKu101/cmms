@@ -358,6 +358,12 @@ class MachinePlanController extends Controller
 
         }
   public function PMPlanListUpload(Request $request){
+    $validated = $request->validate([
+      'FILE_NAME' => 'mimes:jpeg,png,jpg',
+      ],
+      [
+      'FILE_NAME.mimes'   => 'เฉพาะไฟล์ jpeg, png, jpg',
+      ]);
       $plan_unid = $request->IMG_PLAN_UNID;
 
         $image = $request->file('FILE_NAME');

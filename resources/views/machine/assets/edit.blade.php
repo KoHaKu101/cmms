@@ -132,7 +132,7 @@
 												?>
 												 width="200" height="200px" class="mt-4">
 												  <input type="hidden" id="MACHINE_UPDATE" name="MACHINE_UPDATE" value="{{$dataset->MACHINE_ICON}}">
-													<input type="file" class="form-control mt-4" id="MACHINE_ICON" name="MACHINE_ICON"  >
+													<input type="file" class="form-control mt-4" id="MACHINE_ICON" name="MACHINE_ICON"  accept="image/*">
 
 											</div>
 										</div>

@@ -55,11 +55,15 @@ class PersonalController extends Controller
 
     $validated = $request->validate([
       'EMP_CODE'           => 'required|max:50',
-      'EMP_NAME'           => 'required|max:200'
+      'EMP_NAME'           => 'required|max:200',
+      'EMP_ICON' => 'mimes:jpeg,png,jpg',
+
       ],
       [
       'EMP_CODE.required'  => 'กรุณราใส่รหัสพนักงาน',
-      'EMP_NAME.required'  => 'กรุณราใส่ชื่อพนักงาน'
+      'EMP_NAME.required'  => 'กรุณราใส่ชื่อพนักงาน',
+      'EMP_ICON.mimes'   => 'เฉพาะไฟล์ jpeg, png, jpg',
+
       ]);
 
       $UNID = $this->randUNID('PMCS_EMP_NAME');
@@ -100,7 +104,12 @@ class PersonalController extends Controller
 
   }
   public function Update(Request $request,$UNID){
-
+    $validated = $request->validate([
+      'EMP_ICON' => 'mimes:jpeg,png,jpg',
+      ],
+      [
+      'EMP_ICON.mimes'   => 'เฉพาะไฟล์ jpeg, png, jpg',
+      ]);
       $data_EMPNAME = EMPName::where('UNID',$UNID)->first();
       $last_img = $data_EMPNAME->EMP_ICON;
     if ($request->hasFile('EMP_ICON')) {
@@ -125,7 +134,7 @@ class PersonalController extends Controller
 
   ]);
   alert()->success('อัพเดทรายการสำเร็จ')->autoclose('1500');
-  return Redirect()->back()->with('success','');
+  return Redirect()->back();
   }
   public function Delete($UNID){
       $data_up = EMPName::where('UNID','=',$UNID)->delete();

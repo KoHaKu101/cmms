@@ -50,11 +50,14 @@ class MachineTypeTableController extends Controller
 
   public function Store(Request $request){
     $UNID = $this->randUNID('PMCS_MACHINE_TYPE');
+
     $validated = $request->validate([
       'TYPE_CODE'           => 'required|unique:PMCS_MACHINE_TYPE|max:50',
       'TYPE_NAME'           => 'required|unique:PMCS_MACHINE_TYPE|max:200',
+      'TYPE_ICON'            => 'mimes:jpeg,png,jpg',
       ],
       [
+      'TYPE_ICON.mimes'   => 'เฉพาะไฟล์ jpeg, png, jpg',
       'TYPE_CODE.required'  => 'กรุณราใส่รหัสประเภทเครื่องจักร',
       'TYPE_CODE.unique'    => 'มีรหัสประเภทเครื่องจักรนี้แล้ว',
       'TYPE_NAME.required'  => 'กรุณาใสรายการประเภทครื่องจักร',
@@ -89,6 +92,12 @@ class MachineTypeTableController extends Controller
     return view('machine/add/typemachine/edit',compact('dataset'));
 }
 public function Update(Request $request,$UNID) {
+  $validated = $request->validate([
+    'TYPE_ICON' => 'mimes:jpeg,png,jpg',
+    ],
+    [
+    'TYPE_ICON.mimes'   => 'เฉพาะไฟล์ jpeg, png, jpg',
+    ]);
   $DATA_MACHINE_TYPE = MachineTypeTable::where('UNID','=',$UNID)->first();
   $last_img = $DATA_MACHINE_TYPE->TYPE_ICON;
   if ($request->hasFile('TYPE_ICON')) {

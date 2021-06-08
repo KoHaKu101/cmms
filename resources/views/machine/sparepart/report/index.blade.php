@@ -14,7 +14,7 @@
     height: 2.5rem;
     font-size: 0.85rem;
 }
-.deleteimg {	
+.deleteimg {
 	color: #fff;
 	position: absolute;
 	padding: 10px;
@@ -316,7 +316,8 @@ button.mfp-close{
 							<div class="col col-lg-12 form-inline">
 								<div class="form-group mx-1">
 									<label for="exampleFormControlFile1">แนบรูปภาพปฏิบัติงาน</label>
-									<input type="file" class="form-control-file my-1" id="IMG_SPAREPART_FILE_NAME" name="IMG_SPAREPART_FILE_NAME"required>
+									<input type="file" class="form-control-file my-1" id="IMG_SPAREPART_FILE_NAME"
+									name="IMG_SPAREPART_FILE_NAME" accept="image/*" required>
 									<input type="hidden" id="IMG_SPAREPART_UNID"name="IMG_SPAREPART_UNID"value="">
 								</div>
 							</div>

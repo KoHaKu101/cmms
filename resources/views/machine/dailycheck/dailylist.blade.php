@@ -50,7 +50,7 @@
 														@endfor
 													</select>
 													<h4 class="card-title text-white"> เดือน : </h4>
-													
+
 													<select class="form-control form-control-sm input-group filled text-info mx-3" id="MONTH" name="MONTH">
 															@for ($i=1; $i < 13; $i++)
 																<option value="{{$i}}" {{ $MONTH_NAME_TH[$MONTH] == $MONTH_NAME_TH[$i] ? 'selected' : '' }}>{{$MONTH_NAME_TH[$i]}}</option>
@@ -184,7 +184,7 @@
 									<div class="form-group">
 										<div class="input-group">
 												<input type="file" class="form-control form-control-sm" placeholder="" aria-label="" aria-describedby="basic-addon1"
-												id="FILE_NAME" name="FILE_NAME" required>
+												id="FILE_NAME" name="FILE_NAME" accept="image/*" required>
 											<div class="input-group-prepend">
 												<button class="btn btn-primary btn-border btn-sm" type="submit"><i class="fa fa-fw fa-upload fa-lg"></i></button>
 											</div>

@@ -60,7 +60,7 @@
 										<div class="col-md-6 col-lg-3">
 											<div class="form-group mt-4">
 												<img src="/assets/img/nobody.jpg" width="200" height="200px" class="mt-4">
-													<input type="file" class="form-control mt-4" id="TYPE_ICON" name="TYPE_ICON" >
+													<input type="file" class="form-control mt-4" id="TYPE_ICON" name="TYPE_ICON" accept="image/*">
 											</div>
 										</div>
 										<!-- ช่อง2-->
@@ -85,7 +85,7 @@
 											<div class="form-group has-error">
 												<label for="TYPE_NAME">ชื่อประเภทเครื่องจักร</label>
 												<input type="text" class="form-control" id="TYPE_NAME" name="TYPE_NAME" placeholder="ชื่อประเภทเครื่องจักร" required autofocus>
-											
+
 											</div>
 											<div class="form-check has-error">
 												<label for="TYPE_STATUS">เปิด/ปิด</label><br>

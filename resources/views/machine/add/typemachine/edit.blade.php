@@ -63,7 +63,7 @@
 													$TYPE_ICON = $dataset->TYPE_ICON != '' ? '/image/machinetype/'.$dataset->TYPE_ICON :'/assets/img/nobody.jpg';
 												@endphp
 												<img src="{{asset($TYPE_ICON)}}" width="250" height="200px" class="mt-4">
-												<input type="file" class="form-control mt-4" id="TYPE_ICON" name="TYPE_ICON" >
+												<input type="file" class="form-control mt-4" id="TYPE_ICON" name="TYPE_ICON" accept="image/*">
 												<input type="hidden" class="form-control mt-4" id="imgupdate" name="imgupdate" value="{{$dataset->TYPE_ICON}}">
 
 											</div>

@@ -349,7 +349,8 @@ left: auto;
 															<div class="col col-lg-12 form-inline">
 																<div class="form-group mx-1">
 																	<label for="exampleFormControlFile1">แนบรูปภาพปฏิบัติงาน</label>
-																	<input type="file" class="form-control-file" id="FILE_NAME" name="FILE_NAME"required>
+																	<input type="file" class="form-control-file" id="FILE_NAME" name="FILE_NAME"
+																	accept="image/*"required>
 																	<input type="hidden" id="IMG_PLAN_UNID"name="IMG_PLAN_UNID"value="{{$PM_PLANSHOW->UNID}}" >
 																</div>
 															</div>

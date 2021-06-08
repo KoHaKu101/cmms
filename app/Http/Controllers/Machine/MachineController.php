@@ -93,12 +93,15 @@ class MachineController extends Controller
     return View('machine/assets/form',compact('machineline','machinetype','machinestatus','machinerank'));
   }
   public function Store(Request $request){
+
     $validated = $request->validate([
       'MACHINE_CODE'           => 'required|unique:PMCS_MACHINE|max:50',
+      'MACHINE_ICON' => 'mimes:jpeg,png,jpg',
       ],
       [
       'MACHINE_CODE.required'  => 'กรุณราใส่รหัสเครื่องจักร',
       'MACHINE_CODE.unique'    => 'มีรหัสเครื่องแล้ว',
+      'MACHINE_ICON.mimes'   => 'เฉพาะไฟล์ jpeg, png, jpg',
       ]);
       if ($request->hasFile('MACHINE_ICON')) {
         if ($request->file('MACHINE_ICON')->isValid()) {
@@ -200,6 +203,12 @@ class MachineController extends Controller
   }
   public function Update(Request $request,$UNID){
     $update = $request->MACHINE_UPDATE;
+    $validated = $request->validate([
+      'MACHINE_ICON' => 'mimes:jpeg,png,jpg',
+      ],
+      [
+      'MACHINE_ICON.mimes'   => 'เฉพาะไฟล์ jpeg, png, jpg',
+      ]);
     if ($request->hasFile('MACHINE_ICON')) {
       if ($request->file('MACHINE_ICON')->isValid()) {
         $image = $request->file('MACHINE_ICON');
