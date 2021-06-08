@@ -174,7 +174,7 @@
 													<div class="col col-lg-4">
 														<button type="button" class="btn btn-warning btn-sm mx-1 my-1 float-right"
 														 data-mainunid="{{$SELECTMAINREPAIR_FIRST->UNID }}"
-														 id="BTN_SUBNEW" name="BTN_SUBNEW"><i class="fas fa-plus fa-lg">รายละเอียดแจ้งซ้อม</i></button>
+														 id="BTN_SUBNEW" name="BTN_SUBNEW"><i class="fas fa-plus fa-lg"> รายละเอียดแจ้งซ้อม</i></button>
 													</div>
 												</div>
 											 </div>
