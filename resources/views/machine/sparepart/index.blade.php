@@ -332,7 +332,8 @@ $(document).ready(function() {
 									title: 'ลบสำเร็จ',
 									icon: 'success',
 									confirmButtonColor: '#3085d6',
-									confirmButtonText: 'Confirm'
+									confirmButtonText: 'Confirm',
+									timer: 1000
 							}).then(() => {
 								location.reload();
 								});
@@ -342,7 +343,7 @@ $(document).ready(function() {
 									text: 'ไม่สามารถลบได้!',
 									icon: 'error',
 									confirmButtonColor: '#3085d6',
-									confirmButtonText: 'Confirm'
+									confirmButtonText: 'OK'
 							});
 						}
 					}
@@ -456,7 +457,8 @@ $(document).ready(function() {
 								 title: 'ลบสำเร็จ',
 								 icon: 'success',
 								 confirmButtonColor: '#3085d6',
-								 confirmButtonText: 'Confirm'
+								 confirmButtonText: 'Confirm',
+								 timer: 1000
 						 }).then(() => {
 							 location.reload();
 							 });
@@ -466,7 +468,7 @@ $(document).ready(function() {
 								 text: 'ไม่สามารถลบได้!',
 								 icon: 'error',
 								 confirmButtonColor: '#3085d6',
-								 confirmButtonText: 'Confirm'
+								 confirmButtonText: 'OK'
 						 });
 					 }
 				 }
