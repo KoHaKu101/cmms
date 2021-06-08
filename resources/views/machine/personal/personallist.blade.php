@@ -77,18 +77,19 @@
 																<h5 >ตำแหน่งงาน : {{ $POSITION[$dataitem->POSITION] }}</h5>
 																<h5 >ประจำ {{ $dataitem->EMP_GROUP }} </h5>
 																<div class="row">
-																	<a href="{{ url('machine/personal/edit/'.$dataitem->UNID) }}">
-																		<span class="text-primary">
-																			<i class="fas fa-edit fa-lg mx-1 my-1">แก้ไขข้อมูล</i>
-																		</span>
-																	</a>
-																	<a style="cursor:pointer"
-																	data-unid="{{ $dataitem->UNID }}"	onclick="deletepersonal(this)"
-																		 class="ml-3 float-right">
-																		<span style="color: Tomato;">
-																			<i class="fas fa-trash fa-lg mx-1 my-1">	Delete</i>
-																		</span>
-																	</a>
+																	<div class="col-8 col-md-7">
+																		<a href="{{ url('machine/personal/edit/'.$dataitem->UNID) }}" class="btn btn-primary btn-sm ">
+																				<i class="fas fa-edit fa-lg  my-1"> Eidt</i>
+																		</a>
+																	</div>
+																	<div class="col-4 col-md-5">
+																		<a  class="btn btn-danger btn-sm text-white "
+																		data-unid="{{ $dataitem->UNID }}"	onclick="deletepersonal(this)">
+																				<i class="fas fa-trash fa-lg  my-1">	Delete</i>
+																		</a>
+																	</div>
+
+
 																</div>
 														</div>
 

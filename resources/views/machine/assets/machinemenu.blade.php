@@ -42,7 +42,7 @@
               <div id="js-grid-juicy-projects" class="cbp">
                 <div class="row">
                   <div class="cbp-item movie" style="width:250px">
-                      <div class="cbp-item-wrap">
+                      <div class="cbp-item-wrap" style="background-color: #aedee8b8;">
                           <div class="cbp-caption">
                               <div class="cbp-caption-defaultWrap">
                                 <a href="{{url('machine/assets/machinelist')}}">
@@ -60,7 +60,7 @@
 
                     <!--portfolio 1-->
                     <div class="cbp-item movie">
-                        <div class="cbp-item-wrap">
+                        <div class="cbp-item-wrap" style="background-color: #aedee8b8;">
                             <div class="cbp-caption">
                                 <div class="cbp-caption-defaultWrap">
                                   <a href="{{url('machine/assets/machinelist/'.$dataitem->LINE_CODE)}}">
@@ -71,8 +71,11 @@
                                       <a href="{{url('machine/assets/machinelist/'.$dataitem->LINE_CODE)}}" style="width:254px" class=" btn" rel="nofollow" data-cbp-singlePage="projects">ทะเบียนเครื่องจักร</a>
                                   </div>
                             </div>
-                            <div class="cbp-l-grid-projects-title uppercase text-center uppercase text-center">เครื่องจักร {{ $dataitem->LINE_NAME }}</div>
+                            <a href="{{url('machine/assets/machinelist/'.$dataitem->LINE_CODE)}}" style="color:black">
+                            <div class="cbp-l-grid-projects-title uppercase text-center uppercase text-center">
+                              เครื่องจักร {{ $dataitem->LINE_NAME }}</div>
                             <div class="cbp-l-grid-projects-desc uppercase text-center uppercase text-center"></div>
+                            </a>
                         </div>
                     </div>
                     @endforeach
