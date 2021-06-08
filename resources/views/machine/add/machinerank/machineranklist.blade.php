@@ -107,6 +107,7 @@
 
 																	</tbody>
 																</table>
+																{{$datamachine->links('pagination.default')}}
 															</div>
 														</div>
 													</div>

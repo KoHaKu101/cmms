@@ -41,7 +41,7 @@ class MachineRankTableController extends Controller
 
     if ($UNID != NULL) {
       $datafirst   = MachineRankTable::where('UNID',$UNID)->first();
-      $datamachine = Machine::where('MACHINE_RANK_CODE',$datafirst->MACHINE_RANK_CODE )->get();
+      $datamachine = Machine::where('MACHINE_RANK_CODE',$datafirst->MACHINE_RANK_CODE )->paginate(36);
       $open = '1';
     }else {
       $open = '0';

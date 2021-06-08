@@ -152,6 +152,8 @@ class MachineController extends Controller
           'SPAR_PART_DATE'       => '',
           'CREATE_BY'            => Auth::user()->name,
           'CREATE_TIME'          => Carbon::now(),
+          'MODIFY_BY'            => Auth::user()->name,
+          'MODIFY_TIME'          => Carbon::now(),
           'UNID'                 => $UNID,
           'MACHINE_RANK_MONTH'   => $request->MACHINE_RANK_MONTH,
           'MACHINE_RANK_CODE'    => $rankcode->MACHINE_RANK_CODE,
