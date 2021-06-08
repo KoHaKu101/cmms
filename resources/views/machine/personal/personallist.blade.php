@@ -70,8 +70,7 @@
 												<div class="col-md-6 col-lg-3">
 													<div class="card card-post card-round">
 														<img class="card-img-top" src="{{ asset($EMP_ICON) }}" width="50px" height="220px"alt="Card image cap">
-														<div class="card-body">
-															<div class="separator-solid"></div>
+														<div class="card-body" style="background: #d2d2d2;">
 																<h3 class="card-text my-1">{{ $dataitem->EMP_NAME2 }}</h3>
 																<h5 >รหัสพนักงาน : {{ $dataitem->EMP_CODE }}</h5>
 																<h5 >ตำแหน่งงาน : {{ $POSITION[$dataitem->POSITION] }}</h5>
