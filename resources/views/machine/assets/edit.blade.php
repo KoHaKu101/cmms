@@ -123,7 +123,7 @@
 									<div class="row">
 										<!-- ช่อง1-->
 										<div class="col-md-6 col-lg-3">
-											<div class="form-group mt-4">
+											<div class="form-group mt-4 text-center">
 												<img
 												<?php
 												$noimg = asset("assets/img/nobody.jpg");
@@ -232,7 +232,7 @@
 	    											<a id="history" data-toggle="tab" href="#history" class="tabselect"  >ประวัติการแจ้งซ่อม</a>
 	  											</li>
 	  											<li>
-	    											<a id="plan" data-toggle="tab" href="#plan"  class="tabselect" >แผนการปฎิบัติการ</a>
+	    											<a id="plan" data-toggle="tab" href="#plan"  class="tabselect" >ชิ้นงานที่ผลิต</a>
 								  				</li>
 								  				<li>
 	    											<a id="personal" data-toggle="tab" href="#personal" class="tabselect" >พนักงานประจำเครื่อง</a>

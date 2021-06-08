@@ -65,7 +65,7 @@
                         <div class="cbp-item-wrap" style="background-color: #aedee8b8;">
                             <div class="cbp-caption">
                                 <div class="cbp-caption-defaultWrap">
-                                  <a href="{{url('machine/assets/machinelist/'.$dataitem->LINE_CODE)}}">
+                                  <a href="{{url('machine/assets/machinelist/?LINE='.$dataitem->LINE_CODE)}}">
                                     <img src="{{asset('assets/img/bg-404.jpg')}}" alt="img3">
                                   </a>
                                   </div>

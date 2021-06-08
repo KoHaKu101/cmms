@@ -106,7 +106,7 @@ Route::get('machine/repair/notificaitoncount' ,[DashboardController::class,'Noti
 Route::get('machine/export', [MachineExportController::class,'export']);
 
 //assets
-Route::get('machine/assets/machinelist/{LINE_CODE?}'     ,[MachineController::class,'All'])  ->name('machine.list');
+Route::get('machine/assets/machinelist'     ,[MachineController::class,'All'])  ->name('machine.list');
   Route::get('machine/assets/machine'            ,[MachineController::class,'Index'])  ->name('machine');
   Route::get('machine/assets/form'            ,[MachineController::class,'Create']) ->name('machine.form');
   Route::post('machine/assets/store'          ,[MachineController::class,'Store'])  ->name('machine.store');

@@ -61,52 +61,83 @@
 							<div class="col-md-12">
 								<div class="card ">
 								  <div class="card-header bg-primary  ">
+										<form action="{{ route('machine.list',$MACHINE_LINE) }}" method="POST" enctype="multipart/form-data" id="FRM_SEARCH">
+											@method('GET')
+											@csrf
 								    <div class="row ">
-								      <div class="col-md-3 col-lg-2">
-								        <h4 class="ml-3 mt-2 " style="color:white;" ><i class="fas fa-wrench fa-lg mr-1"></i> เครื่องจักร {{ ': '.$MACHINE_LINE }} </h4>
+								      <div class="col-md-2 ">
+								        <h4 class="ml-3 mt-2 " style="color:white;" ><i class="fas fa-wrench fa-lg mr-1"></i> เครื่องจักร </h4>
 								      </div>
-								      <div class="col-md-3">
-												<form action="{{ route('machine.list',$MACHINE_LINE) }}" method="POST" enctype="multipart/form-data">
-													@method('GET')
-													@csrf
+											<div class="col-md-6 form-inline ">
+												<label class="text-white">Line : </label>
+												 <select class="form-control form-control-sm mt-1 mx-1" id="LINE" name="LINE" onchange="changeline()">
+													 <option value >ทั้งหมด</option>
+
+													 @foreach ($LINE as $index => $row_line)
+														 <option value="{{ $row_line->LINE_CODE }}" {{ $MACHINE_LINE == $row_line->LINE_CODE ? 'selected' : '' }}>{{ $row_line->LINE_NAME }}</option>
+													 @endforeach
+												 </select>
+
+
+												<label class="text-white mx-2">Rank : </label>
+												 <select class="form-control form-control-sm mt-1 mx-1" id="MACHINE_RANK_CODE" name="MACHINE_RANK_CODE" onclick="changerank()">
+													 <option value >ทั้งหมด</option>
+													 @foreach ($RANK as $index => $row_rank)
+														 <option value="{{ $row_rank->MACHINE_RANK_CODE }}" {{ $MACHINE_RANK_CODE == $row_rank->MACHINE_RANK_CODE ? 'selected' : '' }}>{{ $row_rank->MACHINE_RANK_CODE }}</option>
+													 @endforeach
+												 </select>
+											</div>
+								      <div class="col-md-4 form-inline">
+												<label class="text-white mx-2">SEARCH : </label>
 								          <div class="input-group mt-1">
 								            <input type="search" id="SEARCH"  name="SEARCH" class="form-control form-control-sm"
 														value="{{ isset($SEARCH) ? $SEARCH : '' }}">
 								            <div class="input-group-prepend">
-								              <button type="submit" class="btn btn-search pr-1 btn-xs	">
+								              <button type="submit" class="btn btn-search pr-1 btn-xs	SEARCH">
 								                <i class="fa fa-search search-icon"></i>
 								              </button>
 								            </div>
 								          </div>
-												</form>
 								      </div>
 								    </div>
+									</form>
+
 								  </div>
 								  <div id="result"class="card-body">
 								    <div class="table-responsive">
-								      <table class="display table table-striped table-hover">
+									      <table class=" table table-bordered table-head-bg-info table-bordered-bd-info  table-hover ">
 								        <thead class="thead-light">
 								          <tr>
-								            <th >ลำดับ</th>
-								            <th ></th>
-								            <th scope="col">LINE</th>
-								            <th scope="col">Name</th>
-
-
-								            <th scope="col">แผนการผลิต</th>
-								            <th scope="col">ประวัติการซ่อม</th>
+								            <th width="25px">ลำดับ</th>
+														<th width="25px">LINE</th>
+								            <th width="130px">MC-CODE</th>
+								            <th width="330px">Name</th>
+														<th width="30px">Rank</th>
+														<th >ตรวจเช็คล่าสุด</th>
+														<th >ซ่อมล่าสุด</th>
+								            <th >ประวัติการซ่อม</th>
 								            <th>แจ้งซ่อม</th>
-
 								          </tr>
 								        </thead>
 
 								        <tbody >
 								          @foreach ($machine as $key => $row)
+														@php
+														$PLAN_LAST_DATE = '';
+														$REPAIR_LAST_DATE = '';
+														  if (isset($row->PLAN_LAST_DATE)) {
+															 $PLAN_LAST_DATE = $row->PLAN_LAST_DATE == '1900-01-01' ? '' : $row->PLAN_LAST_DATE;
+														  }
+															if (isset($row->REPAIR_LAST_DATE)) {
+																$REPAIR_LAST_DATE = $row->REPAIR_LAST_DATE == '1900-01-01' ? '' : $row->REPAIR_LAST_DATE;
+															}
+														@endphp
 								            <tr class="mt-4">
-								              <td style="width:25px">
+								              <td >
 								                <center>{{ $key+1 }}</center>
 								              </td>
-								                <td style="width:170px;">
+															<td >  {{ $row->MACHINE_LINE }}  </td>
+								                <td >
 								                <a href="{{ url('machine/assets/edit/'.$row->UNID) }}">
 								                  <button type="button" class="btn btn-secondary btn-sm btn-block my-1" style="width:130px">
 								                    <span class="float-left">
@@ -115,19 +146,11 @@
 								                  </button>
 								                </a>
 								              </td>
-								              <td >  {{ $row->MACHINE_LINE }}  </td>
-								              <td style="width:400px;">              {{ $row->MACHINE_NAME_V2 }}  </td>
-								              <td style="width:100px;">
-								                <a href="#">
-								                  <button type="button" class="btn btn-secondary btn-sm btn-block my-1" style="width:80px">
-								                    <span class="float-left">
-								                      <i  style="font-size:17px"class="icon-printer mx-1 mt-1"></i>
-								                      Print
-								                    </span>
-								                  </button>
-								                </a>
-								              </td>
-								              <td style="width:120px;">
+								              <td> {{ $row->MACHINE_NAME_V2 }}  </td>
+															<td> {{ $row->MACHINE_RANK_CODE }}  </td>
+															<td> {{ $PLAN_LAST_DATE }}  </td>
+															<td> {{ $REPAIR_LAST_DATE }}  </td>
+								              <td>
 								                  <button type="button" class="btn btn-secondary btn-sm btn-block my-1"
 								                  onclick="printhistory( '{{$row->UNID}}' )" id="button" style="width:120px">
 								                    <span class="float-left">
@@ -139,10 +162,10 @@
 								              </td>
 								              <td>
 								                <a href="{{ url('machine/repair/form/'.$row->UNID) }}">
-								                  <button type="button" class="btn btn-danger btn-sm btn-block my-1" style="width:130px">
+								                  <button type="button" class="btn btn-danger btn-sm btn-block my-1" style="width:100px">
 								                    <span class="float-left">
 								                      <i class="fas fa-wrench fa-lg mx-1 mt-1"></i>
-								                      แจ้งซ่อม: {{ $row->MACHINE_CODE }}
+								                      แจ้งซ่อม
 								                    </span>
 								                  </button>
 								                </a>
@@ -153,7 +176,7 @@
 								        </tbody>
 
 								    </table>
-								    {{ $machine->appends( ['SEARCH' => $SEARCH])->links('pagination.default') }}
+								    {{ $machine->appends( ['SEARCH' => $SEARCH,'MACHINE_LINE' => $MACHINE_LINE,'MACHINE_RANK_CODE' => $MACHINE_RANK_CODE])->links('pagination.default') }}
 
 								  </div>
 								    </div>
@@ -175,6 +198,14 @@
 
 	<script src="{{ asset('assets/js/useinproject/machine/machineprintlist.js') }}">
 
+	</script>
+	<script>
+		function changeline(){
+			$('.SEARCH').click();
+		}
+		function changerank(){
+			$('.SEARCH').click();
+		}
 	</script>
 
 

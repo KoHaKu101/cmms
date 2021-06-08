@@ -7,7 +7,7 @@
           <div class="card-header bg-primary">
             <div class="row">
               <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                <h3 align="center" style="color:white;" class="mt-2">แผนการปฎิบัติการ</h3>
+                <h3 align="center" style="color:white;" class="mt-2">ชิ้นงานที่ผลิต</h3>
               </div>
             </div>
           </div>

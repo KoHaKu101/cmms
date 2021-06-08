@@ -64,25 +64,24 @@ class MachineController extends Controller
     return View('machine/assets/machinemenu',compact(['dataset']),['dataset' => $dataset]);
   }
 
-  public function All(Request $request,$LINE_CODE = NULL) {
+  public function All(Request $request) {
 
-    $MACHINE_LINE = $LINE_CODE;
-    $SEARCH = $request->SEARCH;
-    if ($MACHINE_LINE != NULL) {
+    $SEARCH = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '%';
+    $LINE = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->get();
+    $RANK = MachineRankTable::where('MACHINE_RANK_STATUS','=','9')->get();
+
+    $MACHINE_LINE = isset($request->LINE) ? $request->LINE : '%';
+    $MACHINE_RANK_CODE = isset($request->MACHINE_RANK_CODE) ? $request->MACHINE_RANK_CODE : '%';
+
       $machine = Machine::select('*')->selectRaw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_V2')
-                        ->where('MACHINE_CODE','like', '%'.$SEARCH.'%')
-                        ->where('MACHINE_LINE',$MACHINE_LINE)
+                        ->where('MACHINE_CODE', 'like', $SEARCH)
+                        ->where('MACHINE_LINE','like',$MACHINE_LINE)
+                        ->where('MACHINE_RANK_CODE','like',$MACHINE_RANK_CODE)
                         ->where('MACHINE_STATUS','!=','4')
                         ->orderBy('MACHINE_CODE','ASC')->paginate(10);
-    }else {
-      $machine = Machine::select('*')->selectRaw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_V2')
-                        ->where(function ($query) use ($SEARCH) {
-                             $query->where('MACHINE_CODE', 'like', '%'.$SEARCH.'%')
-                                   ->orWhere('MACHINE_LINE', 'like', '%'.$SEARCH.'%');})
-                        ->where('MACHINE_STATUS','!=','4')
-                        ->orderBy('MACHINE_CODE','ASC')->paginate(10);
-    }
-    return view('machine/assets/machinelist',compact('MACHINE_LINE','machine','SEARCH'));
+      $MACHINE_LINE = str_replace('%','',$MACHINE_LINE);
+      $MACHINE_RANK_CODE = str_replace('%','',$MACHINE_RANK_CODE);
+    return view('machine/assets/machinelist',compact('MACHINE_LINE','machine','SEARCH','LINE','RANK','MACHINE_RANK_CODE'));
   }
 
   public function Create(){

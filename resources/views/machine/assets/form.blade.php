@@ -146,7 +146,7 @@
     											<a id="profile-tab" data-toggle="tab" href="#history" >ประวัติการแจ้งซ่อม</a>
   											</li>
   											<li>
-    											<a id="messages-tab" data-toggle="tab" href="#plan" >แผนการปฎิบัติการ</a>
+    											<a id="messages-tab" data-toggle="tab" href="#plan" >ชิ้นงานที่ผลิต</a>
 							  				</li>
 							  				<li>
     											<a id="settings-tab" data-toggle="tab" href="#personal">พนักงานประจำเครื่อง</a>

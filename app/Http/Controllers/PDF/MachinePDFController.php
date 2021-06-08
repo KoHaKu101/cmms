@@ -22,8 +22,9 @@ class MachinePDFController extends Controller
       $this->pdf = $Machineheaderfooter;
   }
 
-  public function MachinePDF($LINE = NULL)
+  public function MachinePDF(Request $request)
     {
+      $LINE = $request->LINE;
       $group_LINE = Machine::select('MACHINE_LINE')->groupBy('MACHINE_LINE')->orderBy('MACHINE_LINE')->get();
 
       if ($LINE != NULL) {
