@@ -21,6 +21,7 @@ use App\Models\Machine\MachineRepairREQ;
 use App\Models\Machine\MasterIMPS;
 use App\Models\Machine\MasterIMPSGroup;
 use App\Models\Machine\MachineSparePart;
+use App\Models\Machine\BomMachine;
 
 use App\Models\MachineaddTable\MachinePmTemplate;
 use App\Models\MachineaddTable\MachinePmTemplateDetail;
@@ -65,24 +66,43 @@ class MachineController extends Controller
   }
 
   public function All(Request $request) {
+    $LINE = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
+    $RANK = MachineRankTable::where('MACHINE_RANK_STATUS','=','9')->orderBy('MACHINE_RANK_CODE')->get();
+    $MACHINE_CHECK = isset($request->MACHINE_CHECK) ? $request->MACHINE_CHECK : '';
+    $SEARCH = isset($request->SEARCH) ? $request->SEARCH : "" ;
+    $MACHINE_LINE = isset($request->LINE) ? $request->LINE : '';
+    $MACHINE_RANK_CODE = isset($request->MACHINE_RANK_CODE) ? $request->MACHINE_RANK_CODE : '';
+    $MACHINE_STATUS = isset($request->MACHINE_STATUS) ? $request->MACHINE_STATUS : 9 ;
+      $machine = Machine::select('*')->selectRaw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
+                        ->where(function ($query) use ($MACHINE_LINE) {
+                               if ($MACHINE_LINE != '') {
+                                  $query->where('MACHINE_LINE', '=', $MACHINE_LINE);
+                                }
+                               })
+                        ->where(function ($query) use ($SEARCH) {
+                              if ($SEARCH != "") {
+                                 $query->where('MACHINE_CODE', 'like', '%'.$SEARCH.'%')
+                                       ->orwhere('MACHINE_TYPE','like','%'.$SEARCH.'%')
+                                       ->orwhere('MACHINE_NAME','like','%'.$SEARCH.'%')
+                                       ->orwhere('MACHINE_MODEL','like','%'.$SEARCH.'%');
+                               }
+                              })
+                        ->where(function ($query) use ($MACHINE_RANK_CODE) {
+                             if ($MACHINE_RANK_CODE != ""){
+                               $query->where('MACHINE_RANK_CODE', '=', $MACHINE_RANK_CODE);
+                             }
+                           })
+                           ->where(function ($query) use ($MACHINE_CHECK) {
+                                if ($MACHINE_CHECK != ""){
+                                  $query->where('MACHINE_CHECK', '=', $MACHINE_CHECK);
+                                }
+                              })
+                        ->where('MACHINE_TYPE_STATUS','=','9')
+                        ->where('MACHINE_STATUS','=',$MACHINE_STATUS)
+                        ->orderBy('MACHINE_LINE','ASC')
+                        ->orderBy('MACHINE_CODE')->paginate(10);
 
-    $SEARCH = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : 'L'.'%';
-    $LINE = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->get();
-    $RANK = MachineRankTable::where('MACHINE_RANK_STATUS','=','9')->get();
-
-    $MACHINE_LINE = isset($request->LINE) ? $request->LINE : '%';
-    $MACHINE_RANK_CODE = isset($request->MACHINE_RANK_CODE) ? $request->MACHINE_RANK_CODE : '%';
-
-      $machine = Machine::select('*')->selectRaw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_V2')
-                        ->where('MACHINE_CODE', 'like', $SEARCH)
-                        ->where('MACHINE_LINE','like',$MACHINE_LINE)
-                        ->where('MACHINE_RANK_CODE','like',$MACHINE_RANK_CODE)
-                        ->where('MACHINE_STATUS','!=','4')
-                        ->orderBy('MACHINE_CODE','ASC')->paginate(10);
-      $MACHINE_LINE = str_replace('%','',$MACHINE_LINE);
-      $MACHINE_RANK_CODE = str_replace('%','',$MACHINE_RANK_CODE);
-      $SEARCH = str_replace('%','',$SEARCH);
-    return view('machine/assets/machinelist',compact('MACHINE_LINE','machine','SEARCH','LINE','RANK','MACHINE_RANK_CODE'));
+    return view('machine/assets/machinelist',compact('MACHINE_LINE','machine','SEARCH','LINE','RANK','MACHINE_RANK_CODE','MACHINE_STATUS','MACHINE_CHECK'));
   }
 
   public function Create(){
@@ -198,7 +218,19 @@ class MachineController extends Controller
     $machinepmtemplateremove     = MachinePmTemplate::whereIn('PM_TEMPLATE_NAME',MasterIMPS::select('PM_TEMPLATE_NAME')->where('MACHINE_UNID',$UNID))->orderBy('CREATE_TIME','ASC')->paginate(6);
     $machinepmtemplate           = MachinePmTemplate::whereNotIn('PM_TEMPLATE_NAME',MasterIMPS::select('PM_TEMPLATE_NAME')->where('MACHINE_UNID',$UNID))->orderBy('CREATE_TIME','ASC')->paginate(6);
 
-    return view('machine/assets/edit',compact('machinepmtemplate','machinepmtemplateremove','masterimps','masterimpsgroup','pmlistdetail','machinerank'
+
+    $DATA_PRODUCT             = BomMachine::select('MACHINE_CODE','MACHINE_NAME','PDCS_BOM_MACHINE.PRODUCT_CODE','PDCS_BOM_MACHINE.FORMULA_CODE'
+                                                      ,'BASE_PRODUCTS.PRODUCT_NAME_TH','PROCESS_NO','PROCESS_CODE','PROCESS_NAME'
+                                                      ,'ON_CT','ON_CT_HR','ON_CT_DAY','ON_PLAN_STATUS','WORKING_HR')
+                                            ->leftjoin('PDCS_BOM_MASTER','PDCS_BOM_MASTER.PRODUCT_CODE','=','PDCS_BOM_MACHINE.PRODUCT_CODE')
+                                            ->leftjoin('BASE_PRODUCTS','PDCS_BOM_MACHINE.PRODUCT_CODE','=','BASE_PRODUCTS.PRODUCT_CODE')
+                                            ->where('MACHINE_CODE','=','MC-058')
+                                            ->where('BOM_STATUS','=','9')
+                                            ->orderBy('PDCS_BOM_MACHINE.PRODUCT_CODE')
+                                            ->orderBy('PROCESS_NO')
+                                            ->get();
+
+    return view('machine/assets/edit',compact('DATA_PRODUCT','machinepmtemplate','machinepmtemplateremove','masterimps','masterimpsgroup','pmlistdetail','machinerank'
     ,'dataset','machineupload','machinetype','machineline','machinestatus','machineemp','machinerepair','machinesparepart'));
   }
   public function Update(Request $request,$UNID){

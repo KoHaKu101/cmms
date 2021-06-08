@@ -65,14 +65,11 @@
 											@method('GET')
 											@csrf
 								    <div class="row ">
-								      <div class="col-md-2 ">
-								        <h4 class="ml-3 mt-2 " style="color:white;" ><i class="fas fa-wrench fa-lg mr-1"></i> เครื่องจักร </h4>
-								      </div>
-											<div class="col-md-6 form-inline ">
+
+											<div class="col-md-8 form-inline ">
 												<label class="text-white">Line : </label>
 												 <select class="form-control form-control-sm mt-1 mx-1" id="LINE" name="LINE" onchange="changeline()">
 													 <option value >ทั้งหมด</option>
-
 													 @foreach ($LINE as $index => $row_line)
 														 <option value="{{ $row_line->LINE_CODE }}" {{ $MACHINE_LINE == $row_line->LINE_CODE ? 'selected' : '' }}>{{ $row_line->LINE_NAME }}</option>
 													 @endforeach
@@ -86,6 +83,21 @@
 														 <option value="{{ $row_rank->MACHINE_RANK_CODE }}" {{ $MACHINE_RANK_CODE == $row_rank->MACHINE_RANK_CODE ? 'selected' : '' }}>{{ $row_rank->MACHINE_RANK_CODE }}</option>
 													 @endforeach
 												 </select>
+												<label class='text-white mx-2'>สถานะการใช้งาน : </label>
+												<select class="form-control form-control-sm mt-1 mx-1" name="MACHINE_CHECK" id="MACHINE_CHECK" onchange="changerank()">
+														<option value="">-ทั้งหมด-</option>
+														<option value="1" {{ $MACHINE_CHECK == "1" ? 'selected': '' }}>หยุด/เสีย</option>
+														<option value="2" {{ $MACHINE_CHECK == "2" ? 'selected': '' }}>ทำงาน</option>
+														<option value="3" {{ $MACHINE_CHECK == "3" ? 'selected': '' }}>รอผลิต</option>
+														<option value="4" {{ $MACHINE_CHECK == "4" ? 'selected': '' }}>แผนผลิต</option>
+													</select>
+
+														<label class="text-white mx-2">สถานะ : </label>
+														<select class="form-control form-control-sm mt-1 mx-1" id="MACHINE_STATUS" name="MACHINE_STATUS" >
+															<option value="9" {{ $MACHINE_STATUS == "9" ? 'selected' : "" }}>แสดง</option>
+															<option value="1" {{ $MACHINE_STATUS == "1" ? 'selected' : "" }}>ซ่อน</option>
+														</select>
+
 											</div>
 								      <div class="col-md-4 form-inline">
 												<label class="text-white mx-2">SEARCH : </label>
@@ -111,11 +123,12 @@
 								            <th width="25px">ลำดับ</th>
 														<th width="25px">LINE</th>
 								            <th width="130px">MC-CODE</th>
-								            <th width="330px">Name</th>
+								            <th width="330px">Machine Name</th>
+														<th width="100px">MC-TYPE</th>
 														<th width="30px">Rank</th>
-														<th >ตรวจเช็คล่าสุด</th>
-														<th >ซ่อมล่าสุด</th>
-								            <th >ประวัติการซ่อม</th>
+														<th >เช็คเมื่อ</th>
+														<th >ซ่อมเมื่อ</th>
+								            <th >ประวัติ</th>
 								            <th>แจ้งซ่อม</th>
 								          </tr>
 								        </thead>
@@ -146,26 +159,26 @@
 								                  </button>
 								                </a>
 								              </td>
-								              <td> {{ $row->MACHINE_NAME_V2 }}  </td>
+								              <td> {{ $row->MACHINE_NAME_TH }}  </td>
+															<td> {{ $row->MACHINE_TYPE }}  </td>
 															<td> {{ $row->MACHINE_RANK_CODE }}  </td>
 															<td> {{ $PLAN_LAST_DATE }}  </td>
 															<td> {{ $REPAIR_LAST_DATE }}  </td>
 								              <td>
 								                  <button type="button" class="btn btn-secondary btn-sm btn-block my-1"
-								                  onclick="printhistory( '{{$row->UNID}}' )" id="button" style="width:120px">
+								                  onclick="printhistory( '{{$row->UNID}}' )" id="button" style="width:80px">
 								                    <span class="float-left">
 
 								                      <i  style="font-size:17px"class="icon-printer mx-1 mt-1"></i>
-								                      Print ประวัติ
+								                      Print
 								                    </span>
 								                  </button>
 								              </td>
 								              <td>
 								                <a href="{{ url('machine/repair/form/'.$row->UNID) }}">
-								                  <button type="button" class="btn btn-danger btn-sm btn-block my-1" style="width:100px">
+								                  <button type="button" class="btn btn-danger btn-sm btn-block my-1" style="width:70px">
 								                    <span class="float-left">
-								                      <i class="fas fa-wrench fa-lg mx-1 mt-1"></i>
-								                      แจ้งซ่อม
+								                      แจ้ง <i class="fas fa-wrench fa-lg mx-1 mt-1"></i>
 								                    </span>
 								                  </button>
 								                </a>

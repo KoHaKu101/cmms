@@ -14,28 +14,29 @@
       </div>
         <div class="col-12 col-sm-12 col-md-12 col-lg-12">
           <div class="table table-responsive">
-            <table class="table table-hover table-bordered" >
+            <table class="table table-striped table-hover table-bordered" >
               <thead>
                 <tr>
-                  <th>Line</th>
-                  <th>Machine Code</th>
-                  <th>Product Code</th>
+                  <th>##</th>
+                  <th>BOM REV</th>
                   <th>Product Name</th>
-                  <th>Part Code</th>
-                  <th>Part Name</th>
-                  <th>Section Name</th>
+                  <th>Process</th>
+                  <th>CT (วินาที)</th>
+                  <th>ชิ้นต่อวัน</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                </tr>
+                @foreach ($DATA_PRODUCT as $key => $row)
+                  <tr>
+                    <td>{{ $key+1 }}</td>
+                      <td class="text-center">{{ $row->FORMULA_CODE }}</td>
+                    <td>{{ $row->PRODUCT_NAME_TH }}</td>
+                    <td>{{ $row->PROCESS_NAME }}</td>
+                    <td>{{ $row->ON_CT }} </td>
+                    <td>{{ $row->ON_CT_DAY }}</td>
+                  </tr>
+                @endforeach
+
               </tbody>
             </table>
           </div>

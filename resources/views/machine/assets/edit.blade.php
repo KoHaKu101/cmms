@@ -132,7 +132,7 @@
 												?>
 												 width="200" height="200px" class="mt-4">
 												  <input type="hidden" id="MACHINE_UPDATE" name="MACHINE_UPDATE" value="{{$dataset->MACHINE_ICON}}">
-													<input type="file" class="form-control mt-4" id="MACHINE_ICON" name="MACHINE_ICON"  accept="image/*">
+													<input type="file" class="form-control form-control-sm mt-4" id="MACHINE_ICON" name="MACHINE_ICON"  accept="image/*">
 
 											</div>
 										</div>
@@ -140,7 +140,7 @@
 										<div class="col-md-6 col-lg-4">
 											<div class="form-group has-error">
 												<label for="MACHINE_CODE">รหัสเครื่องจักร</label>
-													<input type="text" class="form-control " id="MACHINE_CODE" name="MACHINE_CODE" value="{{ $dataset->MACHINE_CODE }}">
+													<input type="text" class="form-control form-control-sm " id="MACHINE_CODE" name="MACHINE_CODE" value="{{ $dataset->MACHINE_CODE }}">
 													<input type="hidden"  id="MACHINE_UNID" name="MACHINE_UNID"  value="{{ $dataset->UNID }}">
 
 													{{-- <input type="hidden"  wire:model="dataset"  value="{{ $dataset->MACHINE_CODE }}"> --}}
@@ -148,16 +148,16 @@
 
 											<div class="form-group">
 												<label for="MACHINE_STARTDATE">วันที่เริ่มใช้งาน	</label>
-												<input type="date" class="form-control" id="MACHINE_STARTDATE" name="MACHINE_STARTDATE" value="{{ $dataset->MACHINE_STARTDATE }}">
+												<input type="date" class="form-control form-control-sm" id="MACHINE_STARTDATE" name="MACHINE_STARTDATE" value="{{ $dataset->MACHINE_STARTDATE }}">
 											</div>
 											<div class="form-group" >
 												<label for="PM_LAST_DATE">ตรวจเช็คระบบ ล่าสุด	</label>
-												<input type="date" class="form-control changedateedit" id="PM_LAST_DATE" name="PM_LAST_DATE" value="{{ $dataset->PLAN_LAST_DATE == '1900-01-01' ? "" : $dataset->PLAN_LAST_DATE }}" readonly>
+												<input type="date" class="form-control form-control-sm changedateedit" id="PM_LAST_DATE" name="PM_LAST_DATE" value="{{ $dataset->PLAN_LAST_DATE == '1900-01-01' ? "" : $dataset->PLAN_LAST_DATE }}" readonly>
 											</div>
 											<div class="row ml-1 mt-2">
 												<div class="form-group col-md-6 col-lg-6 has-error">
-													<lebel>สถานะ</lebel>
-													<select class="form-control form-control" id="MACHINE_CHECK" name="MACHINE_CHECK" >
+													<lebel>สถานะใช้งาน</lebel>
+													<select class="form-control form-control-sm form-control form-control-sm" id="MACHINE_CHECK" name="MACHINE_CHECK" >
 														<option value>-แสดงทั้งหมด-</option>
 														@foreach ($machinestatus as $key => $srow)
 															<option value="{{ $srow->STATUS_CODE}}"
@@ -169,7 +169,7 @@
 												</div>
 												<div class="form-group col-md-6 col-lg-6 has-error">
 													<lebel>ตำแหน่งเครื่อง</lebel>
-													<select class="form-control form-control" id="MACHINE_LINE" name="MACHINE_LINE">
+													<select class="form-control form-control-sm form-control form-control-sm" id="MACHINE_LINE" name="MACHINE_LINE">
 													<option value>--แสดงทั้งหมด--</option>
 													@foreach($machineline as $dataline)
 													<option value="{{ $dataline->LINE_CODE}}"
@@ -178,45 +178,75 @@
 												</select>
 						  				</div>
 											</div>
-											<div class="form-group has-error mt-1">
-												<label for="MACHINE_TYPE">ชนิดเครื่องจักร</label>
-												<select class="form-control form-control" id="MACHINE_TYPE" name="MACHINE_TYPE">
-													<option value>--แสดงทั้งหมด--</option>
-													@foreach($machinetype as $datatype)
-														<option value="{{ $datatype->TYPE_CODE}}"
-														{{ $dataset->MACHINE_TYPE == $datatype->TYPE_CODE ? 'selected' : ''}} > {{$datatype->TYPE_CODE}} </option>
-															@endforeach
-												</select>
+											<div class="form-group has-error col-lg-12 from-inline">
+												<div class="row">
+													<div class="col-6 col-sm-6 col-lg-6">
+
+															<label for="MACHINE_TYPE">ชนิดเครื่องจักร</label>
+															<select class="form-control form-control-sm form-control form-control-sm-sm" id="MACHINE_TYPE" name="MACHINE_TYPE">
+																<option value>--แสดงทั้งหมด--</option>
+																@foreach($machinetype as $datatype)
+																	<option value="{{ $datatype->TYPE_CODE}}"
+																	{{ $dataset->MACHINE_TYPE == $datatype->TYPE_CODE ? 'selected' : ''}} > {{$datatype->TYPE_CODE}} </option>
+																		@endforeach
+															</select>
+
+													</div>
+													<div class="col-6 col-sm-6 col-lg-6">
+
+															<label class="text-white">สถานะการผลิต : </label>
+															<select class="form-control form-control-sm form-control form-control-sm-sm" id="MACHINE_STATUS" name="MACHINE_STATUS" >
+																<option value="9" {{ $dataset->MACHINE_TYPE_STATUS == "9" ? 'selected' : "" }}>Machine</option>
+																<option value="1" {{ $dataset->MACHINE_TYPE_STATUS == "1" ? 'selected' : "" }}>โต๊ะ Support</option>
+															</select>
+
+													</div>
+												</div>
 											</div>
 										</div>
 										<!-- ช่อง3-->
 										<div class="col-md-12 col-lg-4">
 											<div class="form-group has-error">
 												<label for="MACHINE_NAME">ชื่อเครื่องจักร</label>
-												<input type="text" class="form-control" id="MACHINE_NAME" name="MACHINE_NAME"  value="{{ $dataset->MACHINE_NAME }}">
+												<input type="text" class="form-control form-control-sm" id="MACHINE_NAME" name="MACHINE_NAME"  value="{{ $dataset->MACHINE_NAME }}">
 											</div>
 											<div class="form-group has-error">
 												<label for="MACHINE_RVE_DATE">วันที่ ซ่อมแซม 	</label>
-												<input type="date" class="form-control" id="" name=""  value="{{ $dataset->REPAIR_LAST_DATE == '1900-01-01' ? "" : $dataset->REPAIR_LAST_DATE }}" readonly>
+												<input type="date" class="form-control form-control-sm" id="" name=""  value="{{ $dataset->REPAIR_LAST_DATE == '1900-01-01' ? "" : $dataset->REPAIR_LAST_DATE }}" readonly>
 											</div>
 											<div class="form-group">
 												<label for="MACHINE_RVE_DATE">วันที่ เปลี่ยนอะไหล่ 	</label>
-												<input type="date" class="form-control" id="" name=""  value="{{ $dataset->SPAR_PART_DATE == '1900-01-01' ? "" : $dataset->SPAR_PART_DATE }}" readonly>
+												<input type="date" class="form-control form-control-sm" id="" name=""  value="{{ $dataset->SPAR_PART_DATE == '1900-01-01' ? "" : $dataset->SPAR_PART_DATE }}" readonly>
 											</div>
 											<div class="form-group has-error">
 												<label for="PURCHASE_FORM">ซื้อจากบริษัท	</label>
-												<input type="text" class="form-control" id="PURCHASE_FORM" name="PURCHASE_FORM"  value="{{ $dataset->PURCHASE_FORM }}">
+												<input type="text" class="form-control form-control-sm" id="PURCHASE_FORM" name="PURCHASE_FORM"  value="{{ $dataset->PURCHASE_FORM }}">
 											</div>
-											<div class="form-group has-error">
-												<label for="PURCHASE_FORM">Machine Rank	</label>
-												<select class="form-control" id="MACHINE_RANK_MONTH" name="MACHINE_RANK_MONTH" required>
-													<option value>กรุณาเลือก Rank</option>
-													@foreach ($machinerank as $key => $datamachinerank)
-														<option value="{{$datamachinerank->MACHINE_RANK_MONTH}}" {{ $dataset->MACHINE_RANK_MONTH == $datamachinerank->MACHINE_RANK_MONTH ? 'selected' : ''}} >{{$datamachinerank->MACHINE_RANK_CODE}}</option>
-													@endforeach
+												<div class="form-group has-error col-lg-12 from-inline">
+													<div class="row">
+														<div class="col-6 col-sm-6 col-lg-6">
+															<label for="PURCHASE_FORM">Rank	</label>
+															<select class="form-control form-control-sm" id="MACHINE_RANK_MONTH" name="MACHINE_RANK_MONTH" required>
+																<option value>กรุณาเลือก Rank</option>
+																@foreach ($machinerank as $key => $datamachinerank)
+																	<option value="{{$datamachinerank->MACHINE_RANK_MONTH}}" {{ $dataset->MACHINE_RANK_MONTH == $datamachinerank->MACHINE_RANK_MONTH ? 'selected' : ''}} >{{$datamachinerank->MACHINE_RANK_CODE}}</option>
+																@endforeach
 
-												</select>
-											</div>
+															</select>
+														</div>
+														<div class="col-6 col-sm-6 col-lg-6">
+															<label for="PURCHASE_FORM">สถานะ	</label>
+															<select class="form-control form-control-sm" id="MACHINE_STATUS" name="MACHINE_STATUS" required>
+																<option value="9">แสดง</option>
+																<option value="1">ซ่อน</option>
+															</select>
+														</div>
+
+													</div>
+
+
+
+												</div>
 
 										</div>
 									</div>
@@ -254,7 +284,7 @@
 														<!-- ประวัติการแจ้งซ่อม -->
 														@include('machine.assets.tab.edit.history')
 
-														@include('machine.assets.tab.edit.plan')
+														@include('machine.assets.tab.edit.product')
 
 														@include('machine.assets.tab.edit.personal')
 														<!-- ตรวจสอบระบบ -->
