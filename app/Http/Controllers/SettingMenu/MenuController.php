@@ -61,7 +61,7 @@ class MenuController extends Controller
     }
     public function Home()
     {
-      $data = Mainmenu::paginate(6);
+      $data = Mainmenu::orderBy()->paginate(6);
       return View('machine.setting.menu.home',compact('data'));
     }
     public function Edit($UNID){

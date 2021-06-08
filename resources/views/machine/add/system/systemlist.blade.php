@@ -44,7 +44,7 @@
 												<ul class="nav nav-tab flex-column col-md-6 col-lg-12" id="tabActive" >
 													@foreach ($datapmtemplate as $key => $dataset)
 														<li>
-															<a href="{{ url('machine/pm/template/list/'.$dataset->UNID) }}"  class="btn btn-primary btn-sm my-2" style="width:190px" > {{ $dataset->PM_TEMPLATE_NAME }} </a>
+															<a href="{{ url('machine/pm/template/list/'.$dataset->UNID) }}"  class="btn btn-primary text-left btn-sm my-2" style="width:190px" > {{ $dataset->PM_TEMPLATE_NAME }} </a>
 															<button class="btn btn-primary btn-link btn-sm" type="button" data-toggle="modal" data-target="#Edittemplate" onclick="datapmachine('{{ $dataset->UNID}}','{{$dataset->PM_TEMPLATE_NAME }}')">
 															<i class="fas fa-edit fa-2x"></i> </button>
 															<button class="btn btn-danger btn-link btn-sm" type="button	" onclick="deletecheckboxpm('{{ $dataset->UNID }}')">
