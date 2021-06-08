@@ -52,8 +52,10 @@
                                   <a href="{{url('machine/assets/machinelist/')}}" style="width:254px" class=" btn" rel="nofollow" data-cbp-singlePage="projects">ทะเบียนเครื่องจักร</a>
                               </div>
                           </div>
+                          <a href="{{url('machine/assets/machinelist')}}" style="color:black">
                           <div class="cbp-l-grid-projects-title uppercase text-center uppercase text-center">เครื่องจักรทั้งหมด</div>
                           <div class="cbp-l-grid-projects-desc uppercase text-center uppercase text-center"></div>
+                          </a>
                       </div>
                   </div>
                   @foreach ($dataset as $key => $dataitem)
