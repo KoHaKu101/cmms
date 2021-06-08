@@ -66,7 +66,7 @@ class MachineController extends Controller
 
   public function All(Request $request) {
 
-    $SEARCH = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '%';
+    $SEARCH = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : 'L%';
     $LINE = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->get();
     $RANK = MachineRankTable::where('MACHINE_RANK_STATUS','=','9')->get();
 
