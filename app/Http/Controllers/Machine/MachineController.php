@@ -156,7 +156,8 @@ class MachineController extends Controller
           'MACHINE_RANK_MONTH'   => $request->MACHINE_RANK_MONTH,
           'MACHINE_RANK_CODE'    => $rankcode->MACHINE_RANK_CODE,
       ]);
-      return Redirect()->route('machine.edit',$UNID)->with('success','ลงทะเบียน สำเร็จ');
+      alert()->success('ลงทะเบียน สำเร็จ')->autoclose('1500');
+      return Redirect()->route('machine.edit',$UNID);
   }
   public function Edit($UNID) {
     //ใช้
@@ -252,8 +253,8 @@ class MachineController extends Controller
 
 
     ]);
-
-    return Redirect()->back()->with('success','อัพเดทรายการสำเร็จ');
+    alert()->success('อัพเดทรายการสำเร็จ')->autoclose('1500');
+    return Redirect()->back();
   }
 
   public function Delete($UNID){
@@ -268,8 +269,8 @@ class MachineController extends Controller
         'MODIFY_TIME'          => Carbon::now(),
         ]);
 
-
-      return Redirect()->back()-> with('success','จำหน่ายเครื่องสำเร็จ ');
+      alert()->success('จำหน่ายเครื่องสำเร็จ')->autoclose('1500');
+      return Redirect()->back();
 
   }
 

@@ -54,7 +54,7 @@ class MachineSysTemTableController extends Controller
       $datamachine                     = MasterIMPS::leftJoin('PMCS_MACHINE','PMCS_CMMS_MASTER_IMPS.MACHINE_UNID','=','PMCS_MACHINE.UNID')
                                             ->where('PM_TEMPLATE_UNID_REF',$UNID)
                                             ->orderBy('PMCS_MACHINE.MACHINE_CODE','ASC')
-                                            ->get();
+                                            ->paginate(10);
       $countdetail = $datapmtemplatefirst->count();
 
     }
@@ -75,7 +75,8 @@ class MachineSysTemTableController extends Controller
       'CREATE_TIME'            => Carbon::now(),
       'UNID'                   => $this->randUNID('PMCS_CMMS_PM_TEMPLATE'),
     ]);
-    return Redirect()->back()->with('success','เพิ่มระบบ สำเร็จ');
+    alert()->success('เพิ่มระบบ สำเร็จ')->autoclose('1500');
+    return Redirect()->back();
   }
   public function UpdateTemplate(Request $request) {
    MachinePmTemplate::where('UNID',$request->UNID)->update([
@@ -84,7 +85,8 @@ class MachineSysTemTableController extends Controller
         'MODIFY_TIME'            => Carbon::now(),
     ]);
     MasterIMPS::where('PM_TEMPLATE_UNID_REF',$request->UNID)->update(['PM_TEMPLATE_NAME' => $request->PM_TEMPLATE_NAME]);
-    return Redirect()->back()->with('success','อัพเดทรายการสำเร็จ');
+    alert()->success('อัพเดทรายการสำเร็จ')->autoclose('1500');
+    return Redirect()->back();
   }
   public function DeleteTemplate($UNID) {
       $datamachinepmtemplatelist =  MachinePmTemplateList::where('PM_TEMPLATE_UNID_REF',$UNID)->get();
@@ -99,8 +101,8 @@ class MachineSysTemTableController extends Controller
       MachinePmTemplate::where('UNID',$UNID)->delete();
 
 
-
-      return Redirect(url('machine/pm/template/list'))->with('success','ลบข้อมูลสำเร็จ');
+      alert()->success('ลบข้อมูลสำเร็จ')->autoclose('1500');
+      return Redirect(url('machine/pm/template/list'));
 
   }
   public function DeleteMachinePm($MC,$UNID) {
@@ -111,7 +113,8 @@ class MachineSysTemTableController extends Controller
                   ->delete();
     MasterIMPSGroup::where('MACHINE_UNID',$MC)->where('PM_TEMPLATE_UNID_REF',$UNID)->delete();
     MasterIMPS::where('MACHINE_UNID',$MC)->where('PM_TEMPLATE_UNID_REF',$UNID)->delete();
-      return Redirect()->back()->with('success','ลบข้อมูลสำเร็จ');
+    alert()->success('ลบข้อมูลสำเร็จ')->autoclose('1500');
+      return Redirect()->back();
 
   }
 
@@ -164,7 +167,8 @@ class MachineSysTemTableController extends Controller
       ]);
     }
     if ($request->save == "new") {
-      return Redirect()->back()->with('success','เพิ่มระบบ สำเร็จ');
+      alert()->success('เพิ่มระบบ สำเร็จ')->autoclose('1500');
+      return Redirect()->back();
     }else {
       $data = MachinePmTemplateList::where('PM_TEMPLATE_UNID_REF',$request->PM_TEMPLATE_UNID_REF)->orderBy('CREATE_TIME','DESC')->first();
           return Redirect('machine/pm/templatelist/edit/'.$data->UNID);
@@ -206,20 +210,23 @@ class MachineSysTemTableController extends Controller
       'PM_TEMPLATELIST_STATUS'    => $request->PM_TEMPLATELIST_STATUS,
     ]);
 
-        return Redirect()->back()->with('success','อัพเดทรายการสำเร็จ');
+        alert()->success('อัพเดทรายการสำเร็จ')->autoclose('1500');
+        return Redirect()->back();
     }
   public function DeletePMList($UNID) {
         MachinePmTemplateList::where('UNID',$UNID)->delete();
         MachinePmTemplateDetail::where('PM_TEMPLATELIST_UNID_REF',$UNID)->delete();
-      return Redirect()->back()->with('success','ลบข้อมูลสำเร็จ');
+        alert()->success('ลบข้อมูลสำเร็จ')->autoclose('1500');
+      return Redirect()->back();
   }
   public function DeletePMListAll($UNID) {
 
         MachinePmTemplateList::where('UNID',$UNID)->delete();
         MachinePmTemplateDetail::where('PM_TEMPLATELIST_UNID_REF',$UNID)->delete();
-        MasterIMPSGroup::where('PM_TEMPLATELIST_UNID_REF',$UNID)->delete();
 
-      return Redirect()->back()->with('success','ลบข้อมูลทั้งหมดสำเร็จ');
+        MasterIMPSGroup::where('PM_TEMPLATELIST_UNID_REF',$UNID)->delete();
+        alert()->success('ลบข้อมูลทั้งหมดสำเร็จ')->autoclose('1500');
+      return Redirect()->back();
   }
 
   public function PmTemplateDetailStore(Request $request){
@@ -255,7 +262,8 @@ class MachineSysTemTableController extends Controller
       'CREATE_TIME'              => Carbon::now(),
       'UNID'                     => $this->randUNID('PMCS_CMMS_PM_TEMPLATE_DETAIL'),
     ]);
-    return Redirect()->back()->with('success','เพิ่มระบบ สำเร็จ');
+    alert()->success('เพิ่มระบบ สำเร็จ')->autoclose('1500');
+    return Redirect()->back();
   }
   public function PmTemplateDetailUpdate(Request $request){
     $PM_DETAIL_STD_MAX = $request->PM_DETAIL_STD_MAX != NULL ? $request->PM_DETAIL_STD_MAX : 0;
@@ -274,11 +282,13 @@ class MachineSysTemTableController extends Controller
       'MODIFY_BY'              => Auth::user()->name,
       'MODIFY_TIME'            => Carbon::now(),
     ]);
-    return Redirect()->back()->with('success','เพิ่มระบบ สำเร็จ');
+    alert()->success('เพิ่มระบบ สำเร็จ')->autoclose('1500');
+    return Redirect()->back();
   }
   public function DeletePMDetail($UNID) {
     $dataset = MachinePmTemplateDetail::where('UNID','=',$UNID)->delete();
-    return Redirect()->back()->with('success','ลบสำเร็จ');
+    alert()->success('ลบสำเร็จ')->autoclose('1500');
+    return Redirect()->back();
   }
 
 

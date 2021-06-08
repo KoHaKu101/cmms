@@ -70,7 +70,8 @@ class MailConfigController extends Controller
         'CREATE_BY'       => Auth::user()->name,
         'CREATE_TIME'     => Carbon::now(),
       ]);
-      return Redirect()->back()->with('success','บันทึกข้อมูลสำเร็จ');
+      alert()->success('บันทึกข้อมูลสำเร็จ')->autoclose('1500');
+      return Redirect()->back();
     }elseif (MailSetup::count() == 1) {
 
       MailSetup::where('UNID',$request->UNID)->Update([
@@ -83,7 +84,8 @@ class MailConfigController extends Controller
         'MODIFY_BY'       => Auth::user()->name,
         'MODIFY_TIME'     => Carbon::now(),
       ]);
-      return Redirect()->back()->with('success','บันทึกข้อมูลสำเร็จ');
+      alert()->success('บันทึกข้อมูลสำเร็จ')->autoclose('1500');
+      return Redirect()->back();
     }
 
   }
@@ -126,7 +128,8 @@ class MailConfigController extends Controller
         'MODIFY_TIME'     => Carbon::now(),
       ]);
     }
-    return Redirect()->back()->with('success','บันทึกข้อมูลสำเร็จ');
+    alert()->success('บันทึกข้อมูลสำเร็จ')->autoclose('1500');
+    return Redirect()->back();
   }
 
   public function Update(Request $request){
@@ -136,7 +139,8 @@ class MailConfigController extends Controller
           'AUTOMAIL'        =>  $request->AUTOMAIL,
           'AUTOPLAN'        =>  $request->AUTOPLAN,
             ]);
-            return Redirect()->back()->with('success','บันทึกข้อมูลสำเร็จ');
+            alert()->success('บันทึกข้อมูลสำเร็จ')->autoclose('1500');
+            return Redirect()->back();
           }elseif (MailSetup::count() == 1) {
 
             MailSetup::where('UNID',$request->UNID)->Update([
@@ -145,13 +149,11 @@ class MailConfigController extends Controller
               'MODIFY_BY'       => Auth::user()->name,
               'MODIFY_TIME'     => Carbon::now(),
               ]);
-              return Redirect()->back()->with('success','บันทึกข้อมูลสำเร็จ');
+              alert()->success('บันทึกข้อมูลสำเร็จ')->autoclose('1500');
+              return Redirect()->back();
             }
   }
-  public function Delete(){
 
-    return View('machine/setting/config/home');
-  }
 
 
 

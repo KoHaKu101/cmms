@@ -52,33 +52,27 @@ class MenuSubController extends Controller
           'UNID'=>$this->randUNID('PMCS_CMMS_MENUSUBITEM'),
           'CREATE_BY'=>Auth::user()->name,
           'CREATE_TIME'=> Carbon::now(),
+          'MODIFY_BY' =>Auth::user()->name,
+          'MODIFY_TIME' => Carbon::now(),
       ]);
-    return Redirect()->back()->with('success','insert success');
+      alert()->success('insert success')->autoclose('1500');
+    return Redirect()->back();
 
 
   }
 
 
   public function Subhome($UNID){
-      // $data = Menusubitem::where('UNID','=',$UNID)->first();
       $mainmenu=array();
       $mainmenu["UNID"]=$UNID;
     $datasubmenu = Menusubitem::where('SUBUNID_REF','=',$UNID)->orderby('SUBMENU_INDEX','ASC')->get();
-      // $datasubmenu = Menusubitem::where();
   return View('machine.setting.submenu.home',compact('datasubmenu','mainmenu'));
-
 }
-
   public function Edit($UNID){
-
     $data_set = Menusubitem::find($UNID);
-    // $data = Menusubitem::where('UNID','=',$UNID)->first();
-
     return view('machine.setting.submenu.edit',compact('data_set'));
 
   }
-
-
 
   public function Update(Request $request,$UNID){
 
@@ -102,7 +96,8 @@ class MenuSubController extends Controller
   // ส่วนลบ
     public function Delete($UNID){
       $delete = Menusubitem::where('UNID','=',$UNID)->delete();
-      return Redirect()->back()-> with('success','Confirm Delete Success');
+      alert()->success('Confirm Delete Success')->autoclose('1500');
+      return Redirect()->back();
 
 
     }

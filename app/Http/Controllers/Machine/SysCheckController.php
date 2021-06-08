@@ -117,7 +117,8 @@ class SysCheckController extends Controller
           DB::commit();
           } catch (Exception $e) {
               DB::rollback();
-              Alert::error('เกิดข้อผิดพลาด', 'ระบบไม่สามารถบันทึกข้อมูลได้');
+
+              Alert::error('เกิดข้อผิดพลาด', 'ระบบไม่สามารถบันทึกข้อมูลได้')->autoclose('1500');
               return redirect()->back();
           }
         }

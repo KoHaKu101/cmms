@@ -75,8 +75,9 @@ class MachineRankTableController extends Controller
         'CREATE_BY'            => Auth::user()->name,
         'CREATE_TIME'          => Carbon::now(),
       ]);
+      alert()->success('ลงทะเบียน สำเร็จ')->autoclose('1500');
 
-    return Redirect()->back()->with('success','ลงทะเบียน สำเร็จ');
+    return Redirect()->back();
   }
 
   public function Update(Request $request) {
@@ -102,16 +103,19 @@ class MachineRankTableController extends Controller
         'MODIFY_BY'            => Auth::user()->name,
         'MODIFY_TIME'          => Carbon::now(),
       ]);
+      alert()->success('อัพเดทรายการสำเร็จ')->autoclose('1500');
 
-  return Redirect()->back()->with('success','อัพเดทรายการสำเร็จ');
+  return Redirect()->back();
   }
   public function Delete($UNID) {
       $data = MachineRankTable::where('UNID',$UNID)->first();
       if (Machine::where('MACHINE_RANK_CODE',$data->MACHINE_RANK_CODE)->first() != NULL) {
-        return Redirect()->back()->withErrors('ลบไม่สำเร็จมีรายการเชื่อมต่ออยู่');
+        alert()->error('ลบไม่สำเร็จมีรายการเชื่อมต่ออยู่')->autoclose('1500');
+        return Redirect()->back();
       }else {
         $data->delete();
-        return Redirect()->back()->with('success','ลบสำเร็จ สำเร็จ');
+        alert()->success('ลบสำเร็จ สำเร็จ')->autoclose('1500');
+        return Redirect()->back();
       }
 
   }

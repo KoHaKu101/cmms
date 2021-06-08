@@ -195,7 +195,6 @@ class MachineSparePartController extends Controller
         ,'MODIFY_TIME'          => Carbon::now()
       ]);
       $MACHINE_UNID = $machinesparepart->MACHINE_UNID;
-      // $DATESTART = $machinesparepart->LAST_CHANGE;
       $SPARTPART_UNID = $machinesparepart->SPAREPART_UNID;
       $SPAREPART_COST = $machinesparepart->COST_STD;
       $whereplan = ['MACHINE_UNID'=> $MACHINE_UNID,
@@ -211,9 +210,10 @@ class MachineSparePartController extends Controller
                       ->update([
                         'STATUS_OPEN' => $STATUS
                       ]);
-        return redirect()->back()->with('success','อัพเดทข้อมูลสำเร็จ');
+               alert()->success('อัพเดทข้อมูลสำเร็จ')->autoclose('1500');
+        return redirect()->back();
     }else {
-      alert()->error('ไม่พบข้อมูลที่จะบันทึก');
+      alert()->error('ไม่พบข้อมูลที่จะบันทึก')->autoclose('1500');
        return redirect()->back();
     }
 

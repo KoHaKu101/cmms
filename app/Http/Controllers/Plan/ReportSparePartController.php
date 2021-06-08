@@ -310,7 +310,8 @@ class ReportSparePartController extends Controller
         ,'MODIFY_BY' =>             Auth::user()->name
         ,'MODIFY_TIME' =>           Carbon::now()
       ]);
-      alert()->success('บันทึกภาพสำเร็จ');
+      
+      alert()->success('บันทึกภาพสำเร็จ')->autoclose('1500');
     }
 
       return Response()->json(['res'=>true,'planunid' => $PLAN_UNID ]);

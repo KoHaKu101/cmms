@@ -52,23 +52,20 @@ class MenuController extends Controller
             'UNID'        => $this->randUNID('PMCS_CMMS_MENU'),
             'CREATE_BY'   => Auth::user()->name,
             'CREATE_TIME' => Carbon::now(),
+            'MODIFY_BY'   => Auth::user()->name,
+            'MODIFY_TIME' => Carbon::now(),
 
         ]);
-
-          return Redirect()->back()->with('success','insert success');
-
-
+        alert()->success('insert success')->autoclose('1500');
+          return Redirect()->back();
     }
     public function Home()
     {
       $data = Mainmenu::paginate(6);
-      // $data = DB::table('PMCS_CMMS_MENU')->latest()->paginate(3);
       return View('machine.setting.menu.home',compact('data'));
     }
     public function Edit($UNID){
       $data = Mainmenu::where("UNID",$UNID)->first();
-      // $data = Mainmenu::where('UNID','=',$UNID)->first();
-
       return view('machine/setting/menu/edit',compact('data'));
     }
     public function Update(Request $request,$UNID){
@@ -85,20 +82,16 @@ class MenuController extends Controller
         'MODIFY_TIME' => Carbon::now(),
 
       ]);
-
-      return Redirect()->route('menu.home')->with('success','Update Success');
+      alert()->success('Update Success')->autoclose('1500');
+      return Redirect()->back();
 
     }
 
 
       public function Delete($UNID){
-  
           $delete = Mainmenu::where('UNID','=',$UNID)->delete();
-          return Redirect()->back()-> with('success','Confirm Delete Success');
-
-
-
-
+          alert()->success('Confirm Delete Success')->autoclose('1500');
+          return Redirect()->back();
       }
 
 

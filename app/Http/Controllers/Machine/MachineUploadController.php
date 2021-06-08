@@ -72,8 +72,8 @@ class MachineUploadController extends Controller
       'FILE_UPLOADDATETIME'    => $FILE_UPLOADDATETIME,
       'CREATE_BY'            => Auth::user()->name,
       'CREATE_TIME'          => Carbon::now(),
-      // 'MODIFY_BY'            => Auth::user()->name,
-      // 'MODIFY_TIME'          => Carbon::now(),
+      'MODIFY_BY'            => Auth::user()->name,
+      'MODIFY_TIME'          => Carbon::now(),
       'UNID'                 => $this->randUNID('PMCS_MACHINES_UPLOAD'),
     ]);
     // $FILE_UPLOAD->move($up_location,$filenamemaster);
@@ -108,8 +108,9 @@ class MachineUploadController extends Controller
          }
          $filenamemaster = uniqid().basename($request->file('FILE_UPLOAD')->getClientOriginalName());
          $FILE_UPLOADDATETIME = Carbon::now()->format('Y-m-d');
-          $last_upload = $request->file('FILE_UPLOAD')->move('upload/manual',$filenamemaster,'public');
-
+         $path = public('upload/manual');
+          $last_upload = $request->file('FILE_UPLOAD')->move($path.'/'.$filenamemaster);
+          $last_upload = $filenamemaster;
       }
   }  else {
         $last_upload = $update;
@@ -132,19 +133,17 @@ class MachineUploadController extends Controller
     return Redirect()->back();
   }
   public function Delete($UNID){
-    // dd($UNID);
-      $data_set = MachineUpload::where('UNID','=',$UNID)->delete();
 
-      return Redirect()->back()-> with('success','Confirm Delete Success');
+      $data_set = MachineUpload::where('UNID','=',$UNID)->delete();
+      alert()->success('ลบรายการสำเร็จ')->autoclose('1500');
+      return Redirect()->back();
 
   }
   public static function Download($UNID){
-    // dd($UNID);
       $dataset = MachineUpload::find($UNID);
-      $download = $dataset->FILE_UPLOAD;
-      // $data_set = Upload::where('UNID','=',$UNID)->first();
-      // return Response::disk('public')->file($download);
-      return Storage::disk('public')->download($download);
+      $FILE_UPLOAD = $dataset->FILE_UPLOAD;
+      $path = public('upload/manual');
+      return Response::download($path./.$FILE_UPLOAD);
 
   }
 

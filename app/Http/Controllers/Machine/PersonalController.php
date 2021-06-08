@@ -89,7 +89,8 @@ class PersonalController extends Controller
       'UNID'                 => $UNID,
 
     ]);
-    return Redirect()->route('personal.edit',$UNID)->with('success','ลงทะเบียน สำเร็จ');
+    alert()->success('ลงทะเบียน สำเร็จ')->autoclose('1500');
+    return Redirect()->route('personal.edit',$UNID);
 
   }
   public function Edit($UNID) {
@@ -123,13 +124,13 @@ class PersonalController extends Controller
     'MODIFY_TIME'          => Carbon::now(),
 
   ]);
-
-  return Redirect()->back()->with('success','อัพเดทรายการสำเร็จ');
+  alert()->success('อัพเดทรายการสำเร็จ')->autoclose('1500');
+  return Redirect()->back()->with('success','');
   }
   public function Delete($UNID){
       $data_up = EMPName::where('UNID','=',$UNID)->delete();
-
-      return Redirect()->back()-> with('success','Confirm Delete Success');
+      alert()->success('ลบรายการสำเร็จ')->autoclose('1500');
+      return Redirect()->back();
 
   }
   public function saveimg($image=NULL,$new_name=NULL){

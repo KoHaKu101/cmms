@@ -97,7 +97,7 @@ class SparPartController extends Controller
     $SPAREPART_CODE = $request->SPAREPART_CODE;
     $STATUS = $request->STATUS != '' ? $request->STATUS : 1;
     if ($SPAREPART_CODE == '') {
-      alert()->error('กรุณากรอก รหัสอะไหล่');
+      alert()->error('กรุณากรอก รหัสอะไหล่')->autoclose('2000');
       return redirect()->route('SparPart.List');
     }
     SparePart::where('SPAREPART_CODE','=',$SPAREPART_CODE)->update([
@@ -124,7 +124,8 @@ class SparPartController extends Controller
       SparePartPlan::where('SPAREPART_UNID','=',$SPAREPART_UNID)->update([
         'STATUS_OPEN' => $STATUS
       ]);
-    return redirect()->route('SparPart.List')->with('success','อัพเดทข้อมูลสำเร็จ');
+      alert()->success('อัพเดทข้อมูลสำเร็จ')->autoclose('1500');
+    return redirect()->route('SparPart.List');
   }
   public function Delete(Request $request){
     $SPAREPART_UNID = $request->SPAREPART_UNID;

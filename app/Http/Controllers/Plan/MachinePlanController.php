@@ -128,7 +128,8 @@ class MachinePlanController extends Controller
     $PLAN_NEXT            = MailSetup::select('PLAN_CHECK')->first();
     $PLAN_NEXT_INTEVAL            = $PLAN_NEXT->PLAN_CHECK > 0 ? $PLAN_NEXT->PLAN_CHECK : 1;
     if ($PLAN_DATE_DIFF > $PLAN_NEXT_INTEVAL) {
-      alert()->warning('แผนงานยังไม่ถึงกำหนด');
+
+      alert()->warning('แผนงานยังไม่ถึงกำหนด')->autoclose('1500');
       return redirect(route('pm.planlist'));
     }
 
@@ -209,7 +210,8 @@ class MachinePlanController extends Controller
       $LIMIT_RETURN_DATE = Carbon::parse($PM_PLAN_DATE)->diffInMonths(Carbon::parse($CHECK_DATE),false);
 
       if ($LIMIT_RETURN_DATE < 0) {
-        alert()->error('เกิดข้อผิดพลาด','ไม่สามารถบันทึกเวลาย้อนหลังได้ไม่เกิน 1 เดือน');
+
+        alert()->error('เกิดข้อผิดพลาด','ไม่สามารถบันทึกเวลาย้อนหลังได้ไม่เกิน 1 เดือน')->autoclose('1500');
         return redirect()->back();
       }
 
@@ -217,7 +219,8 @@ class MachinePlanController extends Controller
       $countpmplaresult = Pmplanresult::where('PM_PLAN_UNID','=',$PM_PLAN_UNID)->count();
         if ($countpmplaresult > 0) {
           $pmplanresult = Pmplanresult::where('PM_PLAN_UNID',$PM_PLAN_UNID)->get();
-          alert()->error('เกิดข้อผิดพลาด','ไม่สามารถบันบึกได้');
+
+          alert()->error('เกิดข้อผิดพลาด','ไม่สามารถบันบึกได้')->autoclose('1500');
           return redirect('machine/pm/plancheck/'.$PM_PLAN_UNID)->with(compact('pmplanresult'));
         }else {
           DB::beginTransaction();
@@ -278,7 +281,7 @@ class MachinePlanController extends Controller
                 }
                 catch (Exception $e) {
                   DB::rollback();
-                  Alert::error('เกิดข้อผิดพลาด', 'ระบบไม่สามารถบันทึกข้อมูลได้');
+                  Alert::error('เกิดข้อผิดพลาด', 'ระบบไม่สามารถบันทึกข้อมูลได้')->autoclose('1500');
                   return redirect()->back();
                 }
                 $pmplanresult = Pmplanresult::where('PM_PLAN_UNID',$PM_PLAN_UNID)->get();
@@ -303,7 +306,8 @@ class MachinePlanController extends Controller
     $LIMIT_RETURN_DATE = Carbon::parse($PM_PLAN_DATE)->diffInMonths(Carbon::parse($CHECK_DATE),false);
 
       if ($LIMIT_RETURN_DATE < 0) {
-        alert()->error('เกิดข้อผิดพลาด','ไม่สามารถบันทึกเวลาย้อนหลังได้ไม่เกิน 1 เดือน');
+
+        alert()->error('เกิดข้อผิดพลาด','ไม่สามารถบันทึกเวลาย้อนหลังได้ไม่เกิน 1 เดือน')->autoclose('1500');
         return redirect()->back();
       }
       DB::beginTransaction();
@@ -345,11 +349,12 @@ class MachinePlanController extends Controller
           }
            catch (Exception $e) {
               DB::rollback();
-              Alert::error('เกิดข้อผิดพลาด', 'ระบบไม่สามารถบันทึกข้อมูลได้');
+              Alert::error('เกิดข้อผิดพลาด', 'ระบบไม่สามารถบันทึกข้อมูลได้')->autoclose('1500');
               return redirect()->back();
           }
           $pmplanresult = Pmplanresult::where('PM_PLAN_UNID',$PM_PLAN_UNID)->get();
-          return redirect('machine/pm/plancheck/'.$PM_PLAN_UNID)->with('success','อัพเดทข้อมูลสำเร็จ');
+          alert()->success('อัพเดทข้อมูลสำเร็จ')->autoclose('1500');
+          return redirect('machine/pm/plancheck/'.$PM_PLAN_UNID);
 
         }
   public function PMPlanListUpload(Request $request){
@@ -391,7 +396,8 @@ class MachinePlanController extends Controller
       if ($checkimg_saved) {
         $saveimg = new UploadImgController;
         $dataimgshow = $saveimg->SaveImg($plan_unid,$new_name,$img_ext);
-        alert()->success('บันทึกภาพสำเร็จ');
+        alert()->success('บันทึกภาพสำเร็จ')->autoclose('1500');
+
       }
       $dataimg = Uploadimg::where('UNID_REF','=',$plan_unid)->get();
       $PMPLANRESULT = Pmplanresult::where('PM_PLAN_UNID',$plan_unid)->count();

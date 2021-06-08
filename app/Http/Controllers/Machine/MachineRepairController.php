@@ -103,7 +103,6 @@ class MachineRepairController extends Controller
         $DOC_NO = $rowcount[0]->DOC_NO+1;
       }
 
-
       MachineRepairREQ::insert([
         'UNID'=> $UNID
         ,'MACHINE_UNID'          => $DATA_MACHINE->UNID
@@ -204,7 +203,8 @@ class MachineRepairController extends Controller
           'MODIFY_BY'             => Auth::user()->name,
           'MODIFY_TIME'           => Carbon::now(),
       ]);
-            return Redirect()->route('repair.edit',[$UNID])->with('success','อัพเดทรายการ สำเร็จ');
+        alert()->success('อัพเดทรายการ สำเร็จ')->autoclose('1500');
+            return Redirect()->route('repair.edit',[$UNID]);
           }
   public function Delete($UNID){
             $CLOSE_STATUS = '1';
@@ -214,7 +214,8 @@ class MachineRepairController extends Controller
                 'MODIFY_BY'            => Auth::user()->name,
                 'MODIFY_TIME'          => Carbon::now(),
                 ]);
-              return Redirect()->back()-> with('success','ปิดเอกสารเสำเร็จ ');
+                alert()->success('ปิดเอกสารเสำเร็จ')->autoclose('1500');
+              return Redirect()->back();
           }
   public function SelectRepairDetail(Request $request){
 

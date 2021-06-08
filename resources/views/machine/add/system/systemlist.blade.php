@@ -79,7 +79,7 @@
 																		<tr>
 																			<th>##</th>
 																			<th scope="col">Inspection Item</th>
-																			<th scope="col">ระยะเวลา</th>
+
 																			<th style="width:120px">Action</th>
 																		</tr>
 																	</thead>
@@ -89,7 +89,7 @@
 																			<tr>
 																				<td class="text-center"> {{ $key+1 }}</td>
 																				<td>{{$dataitem->PM_TEMPLATELIST_NAME}}</td>
-																				
+
 																				<td>
 																					<div class="form-inline">
 																						<a href="{{ url('/machine/pm/templatelist/edit/'.$dataitem->UNID) }}">
@@ -148,6 +148,7 @@
 																		@endif
 																	</tbody>
 																</table>
+																{{ $datamachine->links('pagination.default') }}
 															</div>
 														</div>
 													</div>

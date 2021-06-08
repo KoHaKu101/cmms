@@ -62,7 +62,8 @@ class MachineStatusTableController extends Controller
       'MODIFY_TIME'       => Carbon::now(),
       'UNID'            => $this->randUNID('PMCS_CMMS_MACHINE_STATUS'),
     ]);
-    return Redirect()->back()->with('success','ลงทะเบียน สำเร็จ');
+    alert()->success('ลงทะเบียน สำเร็จ')->autoclose('1500');
+    return Redirect()->back();
   }
 
 public function Update(Request $request,$UNID) {
@@ -75,14 +76,16 @@ public function Update(Request $request,$UNID) {
     'MODIFY_TIME'       => Carbon::now(),
 
   ]);
+  alert()->success('อัพเดทรายการสำเร็จ')->autoclose('1500');
 
-  return Redirect()->back()->with('success','อัพเดทรายการสำเร็จ');
+  return Redirect()->back();
 
 }  public function Delete($UNID) {
 
 
     $dataset = MachineStatusTable::where('UNID','=',$UNID)->delete();
+    alert()->success('ลบสำเร็จ สำเร็จ')->autoclose('1500');
 
-    return Redirect()->back()->with('success','ลบสำเร็จ สำเร็จ');
+    return Redirect()->back();
 }
 }

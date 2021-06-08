@@ -111,15 +111,13 @@ public function Update(Request $request,$UNID) {
     'MODIFY_TIME'     => Carbon::now(),
 
   ]);
-
-  return Redirect()->back()->with('success','อัพเดทรายการสำเร็จ');
-
-}  public function Delete($UNID) {
-
-
+  alert()->success('อัพเดทรายการสำเร็จ')->autoclose('1500');
+  return Redirect()->back();
+}
+  public function Delete($UNID) {
     $dataset = MachineTypeTable::where('UNID','=',$UNID)->delete();
-
-    return Redirect()->back()->with('success','ลบสำเร็จ สำเร็จ');
+    alert()->success('ลบสำเร็จ สำเร็จ')->autoclose('1500');
+    return Redirect()->back();
 }
   function saveimg($image = NUll,$new_name = NULL){
 

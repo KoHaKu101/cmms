@@ -91,7 +91,8 @@ class MachineRepairTableController extends Controller
       SelectSubRepair::where('REPAIR_MAINSELECT_UNID','=',$UNID)->update([
         'STATUS'=> $STATUS
       ]);
-    return Redirect()->back()->with('success','อัพเดทรายการสำเร็จ');
+      alert()->success('อัพเดทรายการสำเร็จ')->autoclose('1500');
+    return Redirect()->back();
   }
 
   public function Delete(Request $request) {
@@ -99,10 +100,11 @@ class MachineRepairTableController extends Controller
     $UNID = $request->UNID;
     $row_count = SelectSubRepair::where('REPAIR_MAINSELECT_UNID','=',$UNID)->count();
     if ($row_count > 0) {
-      alert()->error('ไม่สามารถลบได้ มีข้อมูลที่ใช้งานอยู่');
+      alert()->error('ไม่สามารถลบได้ มีข้อมูลที่ใช้งานอยู่')->autoclose('2000');
       return Response()->json(['res'=>false,'title'=> 'ไม่สามารถลบได้ มีข้อมูลที่ใช้งานอยู่','icon'=>'error']);
     }
       SelectMainRepair::where('UNID','=',$UNID)->delete();
+
     return Response()->json(['res'=>true,'title'=> 'ลบสำเร็จ สำเร็จ','icon'=>'success']);
   }
 
@@ -128,7 +130,8 @@ class MachineRepairTableController extends Controller
       ,'MODIFY_BY'=> Auth::user()->name
       ,'MODIFY_TIME'=> Carbon::now()
     ]);
-    return Redirect()->back()->with('success','บันทึกสำเร็จ');
+      alert()->success('บันทึกสำเร็จ')->autoclose('1500');
+    return Redirect()->back();
   }
 
   public function SubUpdate(Request $request) {
@@ -143,10 +146,10 @@ class MachineRepairTableController extends Controller
         ,'MODIFY_BY'=> Auth::user()->name
         ,'MODIFY_TIME'=> Carbon::now()
     ]);
-
-    return Redirect()->back()->with('success','อัพเดทรายการสำเร็จ');
+    alert()->success('อัพเดทรายการสำเร็จ')->autoclose('1500');
+    return Redirect()->back();
   }
-  
+
   public function SubDelete(Request $request) {
 
     $UNID = $request->UNID;
