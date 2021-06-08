@@ -35,7 +35,7 @@
 							<div class="col-md-6 text-black text-center">
 								<div class="card">
 									<div class="card-header bg-primary text-white">
-										<h4 class="my-2">แจ้งซ่อม</h4>
+										<h4 class="my-2">Repair/แจ้งซ่อม</h4>
 									</div>
 									<a href="{{ route('repair.repairsearch') }}">
 										<div class="card-body">
@@ -47,7 +47,7 @@
 								<div class="col-md-6 text-black text-center">
 									<div class="card">
 										<div class="card-header bg-primary text-white">
-											<h4 class="my-2">Preventive Maintenance</h4>
+											<h4 class="my-2">Preventive Maintenance/ตรวจเช็คประจำเดือน</h4>
 										</div>
 										<a href="{{ route('pm.planlist') }}">
 											<div class="card-body">
