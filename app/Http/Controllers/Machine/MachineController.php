@@ -81,6 +81,7 @@ class MachineController extends Controller
                         ->orderBy('MACHINE_CODE','ASC')->paginate(10);
       $MACHINE_LINE = str_replace('%','',$MACHINE_LINE);
       $MACHINE_RANK_CODE = str_replace('%','',$MACHINE_RANK_CODE);
+      $SEARCH = str_replace('%','',$SEARCH);
     return view('machine/assets/machinelist',compact('MACHINE_LINE','machine','SEARCH','LINE','RANK','MACHINE_RANK_CODE'));
   }
 
