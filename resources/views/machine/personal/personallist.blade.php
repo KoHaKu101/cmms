@@ -74,7 +74,7 @@
 																<h3 class="card-text my-1"><b>{{ $dataitem->EMP_NAME2 }}</b></h3>
 																<h5 >รหัสพนักงาน : {{ $dataitem->EMP_CODE }}</h5>
 																<h5 >ตำแหน่ง : {{ $POSITION[$dataitem->POSITION] }}</h5>
-																<h5 >ประจำ {{ $dataitem->EMP_GROUP }} </h5>
+																<h5 >ประจำ : {{ $dataitem->EMP_GROUP }} </h5>
 																<div class="row">
 																	<div class="col-6 col-md-6">
 																		<a href="{{ url('machine/personal/edit/'.$dataitem->UNID) }}" class=" my-1 btn btn-primary btn-sm  btn-block">
