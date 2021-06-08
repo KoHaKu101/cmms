@@ -110,7 +110,7 @@
 													<h4 class="ml-3 my-2" style="color:white;" ><i class="fas fa-toolbox fa-lg mr-1"></i> ประเภทการแจ้งซ่อม </h4>
 												</div>
 												<div class="col col-lg-6">
-													<button type="button" class="btn btn-warning btn-sm mx-1 my-1 float-right" id="BTN_NEW" name="BTN_NEW">NEW</button>
+													<button type="button" class="btn btn-warning btn-sm mx-1 my-1 float-right" id="BTN_NEW" name="BTN_NEW"><i class="fas fa-plus fa-lg"> ประเภท</i></button>
 												</div>
 											</div>
 										 </div>
@@ -174,7 +174,7 @@
 													<div class="col col-lg-4">
 														<button type="button" class="btn btn-warning btn-sm mx-1 my-1 float-right"
 														 data-mainunid="{{$SELECTMAINREPAIR_FIRST->UNID }}"
-														 id="BTN_SUBNEW" name="BTN_SUBNEW">เพิ่มรายละเอียดแจ้งซ้อม</button>
+														 id="BTN_SUBNEW" name="BTN_SUBNEW"><i class="fas fa-plus fa-lg">รายละเอียดแจ้งซ้อม</i></button>
 													</div>
 												</div>
 											 </div>
