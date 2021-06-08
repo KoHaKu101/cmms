@@ -230,7 +230,7 @@
   			</div>
 			</div>
 			<div class="modal fade" id="NEW_MAINREPAIR" tabindex="-1" role="dialog" aria-labelledby="exampleModalLalavel" aria-hidden="true">
-			  <div class="modal-dialog modal-sm" role="document">
+			  <div class="modal-dialog " role="document">
 			    <div class="modal-content">
 			      <div class="modal-header">
 			        <h5 class="modal-title" id="Title_MAINREPAIR">เพิ่มรายการ</h5>
@@ -247,11 +247,12 @@
 			                <input type="text" class="form-control" id="REPAIR_MAINSELECT_NAME" name="REPAIR_MAINSELECT_NAME" required>
 			              </div>
 			            </div>
-									<div class="row">
-										<div class="form-group ml-2">
-												<label for="comment">คำอธิบาย</label>
-												<textarea class="form-control" id="REMARK" name="REMARK"rows="2"></textarea>
-											</div>
+									<div class="row my-2">
+										<div class="col-md-12">
+													<label for="comment">คำอธิบาย</label>
+													<textarea class="form-control" id="REMARK" name="REMARK"rows="3"></textarea>
+										</div>
+
 									</div>
 
 									<div class="row mt-3">
