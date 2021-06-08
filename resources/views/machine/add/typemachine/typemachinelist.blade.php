@@ -108,19 +108,19 @@
 									                                 </div>
 									                             </div>
 									                         </div>
-									                         <div class="cbp-l-grid-projects-desc uppercase text-left uppercase  mx-2">ประเภทเครื่อง : {{$dataitem->TYPE_NAME}}</div>
-																					 <div class="cbp-l-grid-projects-desc uppercase text-left uppercase  mx-2">สถานะ : {{ $dataitem->TYPE_STATUS == "9" ? 'เปิด' : 'ปิด' }}</div>
+									                         <div class="cbp-l-grid-projects-desc uppercase text-left uppercase  mx-2 my-3">ประเภทเครื่อง : {{$dataitem->TYPE_NAME}}</div>
+																					 <div class="cbp-l-grid-projects-desc uppercase text-left uppercase  mx-2 my--3">สถานะ : {{ $dataitem->TYPE_STATUS == "9" ? 'เปิด' : 'ปิด' }}</div>
 																						 <div class="row">
 																							 <div class="col col-md-5 my-2">
 																								 <a href="{{ url('machine/machinetypetable/edit/'.$dataitem->UNID) }}"
-																									 class="btn btn-primary btn-sm " style="height: 40px;width:90px;font-size:13px;line-height:40px;"><span class="fas fa-trash ">Edit</span></a>
+																									 class="btn btn-primary btn-sm " style="height: 40px;width:90px;font-size:13px;line-height:40px;"><span class="fas fa-edit "> Edit</span></a>
 																							 </div>
 																							 <div class="col col-md-6 my-2">
 																								 <button type="button" onclick="deletemachinetype(this)"
 																								data-unid="{{ $dataitem->UNID }}"
 																								data-name="{{ $dataitem->TYPE_NAME }}"
 																								class="btn btn-danger btn-sm mx-2 "
-																								style="height: 40px; width:90px;font-size:13px;line-height:40px;"><span class="fas fa-trash">Delete</span></button>
+																								style="height: 40px; width:90px;font-size:13px;line-height:40px;"><span class="fas fa-trash"> Delete</span></button>
 
 																							 </div>
 
