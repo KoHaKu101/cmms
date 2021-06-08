@@ -30,9 +30,7 @@
           <div class="container">
 						<div class="row">
 							<div class="col-md-12 gx-4">
-								<a href="{{ route('machinetypetable.form') }}"><button class="btn btn-primary  btn-xs">
-									<span class="fas fa-file fa-lg">	New	</span>
-								</button></a>
+
 							</div>
 						</div>
           </div>
@@ -45,16 +43,31 @@
 									<form action="{{ route('machinetypetable.list') }}" method="POST" enctype="multipart/form-data">
 										@method('GET')
 										@csrf
-										<div class="card-header bg-primary form-inline ">
-											<h4 class="ml-3 mt-2 " style="color:white;" ><i class="fas fa-industry fa-lg mr-1"></i> ประเภทเครื่องจักร </h4>
-												<div class="input-group ml-4">
-													<input type="text" id="SEARCH"  name="SEARCH" class="form-control form-control-sm" value="{{ $SEARCH }}">
-													<div class="input-group-prepend">
-														<button type="submit" class="btn btn-search pr-1 btn-xs	">
-															<i class="fa fa-search search-icon"></i>
-														</button>
-													</div>
+										<div class="card-header bg-primary ">
+											<div class="row">
+												<div class="col-md-7 form-inline">
+													<h4 class="mx-2 my-2" style="color:white;" ><i class="fas fa-industry fa-lg mr-1"></i> ประเภทเครื่องจักร </h4>
+
+														<div class="input-group mx-2 my-2">
+															<input type="text" id="SEARCH"  name="SEARCH" class="form-control form-control-sm" value="{{ $SEARCH }}">
+															<div class="input-group-prepend">
+																<button type="submit" class="btn btn-search pr-1 btn-xs	">
+																	<i class="fa fa-search search-icon"></i>
+																</button>
+															</div>
+														</div>
+
 												</div>
+
+												<div class="col-md-5">
+													<a href="{{ route('machinetypetable.form') }}"><button class="btn btn-warning  btn-xs my-2 float-right">
+														<span class="fas fa-file fa-lg">	New	</span>
+													</button></a>
+												</div>
+											</div>
+
+
+
 											</div>
 										</form>
 
@@ -74,7 +87,7 @@
 																		 @endphp
 
 									                 <div class="cbp-item movie">
-									                     <div class="cbp-item-wrap">
+									                     <div class="cbp-item-wrap" style="    border-style: solid;border-color: cadetblue;">
 									                         <div class="cbp-caption">
 									                             <div class="cbp-caption-defaultWrap">
 									                               <a href="{{url('machine/machinetypetable/edit/'.$dataitem->UNID)}}">
@@ -95,18 +108,20 @@
 									                                 </div>
 									                             </div>
 									                         </div>
-									                         <div class="cbp-l-grid-projects-title uppercase text-left uppercase  mx-2">ประเภทเครื่อง : {{$dataitem->TYPE_NAME}}</div>
+									                         <div class="cbp-l-grid-projects-desc uppercase text-left uppercase  mx-2">ประเภทเครื่อง : {{$dataitem->TYPE_NAME}}</div>
 																					 <div class="cbp-l-grid-projects-desc uppercase text-left uppercase  mx-2">สถานะ : {{ $dataitem->TYPE_STATUS == "9" ? 'เปิด' : 'ปิด' }}</div>
 																						 <div class="row">
-																							 <div>
-																								 <a href="{{ url('machine/machinetypetable/edit/'.$dataitem->UNID) }}" class="btn btn-primary btn-lg mx-1 my-2" style="width:100px"><span class="fas fa-trash ">Edit</span></a>
-																							 </div>
-																								<div>
+
+																								 <a href="{{ url('machine/machinetypetable/edit/'.$dataitem->UNID) }}"
+																									 class="btn btn-primary btn-sm mx-1 my-2" style="height: 40px;width:100px;font-size:13px;line-height:40px;"><span class="fas fa-trash ">Edit</span></a>
+
+
 																								 <button type="button" onclick="deletemachinetype(this)"
 																								 data-unid="{{ $dataitem->UNID }}"
 																						 	 	 data-name="{{ $dataitem->TYPE_NAME }}"
-																								 class="btn btn-danger btn-lg mx-1 my-2" style="width:100px"><span class="fas fa-trash">Delete</span></a>
-																							</div>
+																								 class="btn btn-danger btn-sm mx-1 my-2"
+																								 style="height: 40px; width:100px;font-size:13px;line-height:40px;"><span class="fas fa-trash">Delete</span></a>
+
 																						 </div>
 
 
