@@ -87,7 +87,7 @@
 																		 @endphp
 
 									                 <div class="cbp-item movie">
-									                     <div class="cbp-item-wrap" style="    border-style: solid;border-color: cadetblue;">
+									                     <div class="cbp-item-wrap" style="border-style: solid;border-color: cadetblue;background: #c9fff0;">
 									                         <div class="cbp-caption">
 									                             <div class="cbp-caption-defaultWrap">
 									                               <a href="{{url('machine/machinetypetable/edit/'.$dataitem->UNID)}}">
