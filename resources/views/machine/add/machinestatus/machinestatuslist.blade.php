@@ -143,7 +143,12 @@
 														</button>
 													</td>
 												<td><button type="button" class="btn {{ $dataitem->STATUS == "9" ? 'btn-success' : 'btn-mute' }}
-													btn-block btn-sm my-1"style="cursor:default">{{ $dataitem->STATUS == "9" ? 'เปิด' : 'ปิด' }}</button></td>
+													btn-block btn-sm my-1"
+													onclick="editstatus(this)"
+													data-unid="{{ $dataitem->UNID}}"
+													data-name="{{ $dataitem->STATUS_NAME}}"
+													data-code="{{ $dataitem->STATUS_CODE}}"
+													data-status="{{ $dataitem->STATUS}}">{{ $dataitem->STATUS == "9" ? 'เปิด' : 'ปิด' }}</button></td>
 												<td>
 													<button type="button" class="btn btn-danger btn-block btn-sm my-1" style="width:40px"
 													onclick="deletestatus(this)"
