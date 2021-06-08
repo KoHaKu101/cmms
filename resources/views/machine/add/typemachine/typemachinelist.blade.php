@@ -60,7 +60,7 @@
 												</div>
 
 												<div class="col-md-5">
-													<a href="{{ route('machinetypetable.form') }}"><button class="btn btn-warning  btn-xs my-2 float-right">
+													<a href="{{ route('machinetypetable.form') }}"><button type="button" class="btn btn-warning  btn-xs my-2 float-right">
 														<span class="fas fa-file fa-lg">	New	</span>
 													</button></a>
 												</div>
