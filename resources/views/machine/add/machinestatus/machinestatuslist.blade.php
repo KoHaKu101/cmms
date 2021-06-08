@@ -114,10 +114,16 @@
 												<th scope="col">CODE</th>
 												<th scope="col">สถานะ</th>
 												<th scope="col">เปิด/ปิด</th>
-												<th scope="col"></th>
+												<th scope="col">action</th>
 											</tr>
 										</thead>
 										<tbody>
+											<style>
+											.btn-mute {
+												background: #a2a2a2!important;
+												border-color: #a2a2a2!important;
+											}
+											</style>
 											@foreach ($dataset as $key => $dataitem)
 
 											<tr>
@@ -136,7 +142,8 @@
 															</span>
 														</button>
 													</td>
-												<td>{{ $dataitem->STATUS == "9" ? 'เปิด' : 'ปิด' }}</td>
+												<td><button type="button" class="btn {{ $dataitem->STATUS == "9" ? 'btn-success' : 'btn-mute' }}
+													btn-block btn-sm my-1"style="cursor:default">{{ $dataitem->STATUS == "9" ? 'เปิด' : 'ปิด' }}</button></td>
 												<td>
 													<button type="button" class="btn btn-danger btn-block btn-sm my-1" style="width:40px"
 													onclick="deletestatus(this)"
