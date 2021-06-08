@@ -80,7 +80,7 @@
 
 
 												<label class="text-white mx-2">Rank : </label>
-												 <select class="form-control form-control-sm mt-1 mx-1" id="MACHINE_RANK_CODE" name="MACHINE_RANK_CODE" onclick="changerank()">
+												 <select class="form-control form-control-sm mt-1 mx-1" id="MACHINE_RANK_CODE" name="MACHINE_RANK_CODE" onchange="changerank()">
 													 <option value >ทั้งหมด</option>
 													 @foreach ($RANK as $index => $row_rank)
 														 <option value="{{ $row_rank->MACHINE_RANK_CODE }}" {{ $MACHINE_RANK_CODE == $row_rank->MACHINE_RANK_CODE ? 'selected' : '' }}>{{ $row_rank->MACHINE_RANK_CODE }}</option>
