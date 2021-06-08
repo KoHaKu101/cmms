@@ -331,8 +331,8 @@ $(document).ready(function() {
 							Swal.fire({
 									title: 'ลบสำเร็จ',
 									icon: 'success',
-									confirmButtonColor: '#3085d6',
-									confirmButtonText: 'Confirm',
+									showCancelButton: false,
+									showConfirmButton: false,
 									timer: 1000
 							}).then(() => {
 								location.reload();
@@ -456,8 +456,8 @@ $(document).ready(function() {
 						 Swal.fire({
 								 title: 'ลบสำเร็จ',
 								 icon: 'success',
-								 confirmButtonColor: '#3085d6',
-								 confirmButtonText: 'Confirm',
+								 showCancelButton: false,
+								 showConfirmButton: false,
 								 timer: 1000
 						 }).then(() => {
 							 location.reload();
