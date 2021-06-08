@@ -102,7 +102,10 @@
 																								 <a href="{{ url('machine/machinetypetable/edit/'.$dataitem->UNID) }}" class="btn btn-primary btn-lg mx-1 my-2" style="width:100px"><span class="fas fa-trash ">Edit</span></a>
 																							 </div>
 																								<div>
-																								 <a href="{{ url('machine/machinetypetable/delete/'.$dataitem->UNID) }}" class="btn btn-danger btn-lg mx-1 my-2" style="width:100px"><span class="fas fa-trash ">Delete</span></a>
+																								 <button type="button" onclick="deletemachinetype(this)"
+																								 data-unid="{{ $dataitem->UNID }}"
+																						 	 	 data-name="{{ $dataitem->TYPE_NAME }}"
+																								 class="btn btn-danger btn-lg mx-1 my-2" style="width:100px"><span class="fas fa-trash">Delete</span></a>
 																							</div>
 																						 </div>
 
@@ -151,5 +154,24 @@
 	<script src="{{ asset('assets/js/porfolio/jquery.cubeportfolio.js') }}"></script>
 	<script src="{{ asset('assets/js/porfolio/portfolio-1.js') }}"></script>
 	<script src="{{ asset('assets/js/porfolio/retina.min.js') }}"></script>
+	<script>
+	function deletemachinetype(thisdata){
+		var unid = $(thisdata).data('unid');
+		var name = $(thisdata).data('name');
+		var url = '/machine/machinetypetable/delete/'+unid;
+		Swal.fire({
+				title: 'ต้องการลบ '+name+' นี้มั้ย?',
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'ใช่!'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					window.location.href = url;
+				}
+			});
+	}
+	</script>
 @stop
 {{-- ปิดส่วนjava --}}
