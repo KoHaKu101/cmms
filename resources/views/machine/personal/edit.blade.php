@@ -95,12 +95,13 @@
 												<input type="text" class="form-control" id="EMP_NAME" name="EMP_NAME" value="{{ $dataset->EMP_NAME }}">
 											</div>
 											<div class="form-group col-md-12 has-error">
-												<lebel>ตำแหน่งงาน</lebel>
+												<lebel>ตำแหน่ง</lebel>
 												<select class="form-control form-control" id="POSITION" name="POSITION" required>
 												<option value>--แสดงทั้งหมด--</option>
 												<option value="SUPER" {{$dataset->POSITION == 'SUPER' ? 'selected' : ''}}>หัวหน้างาน</option>
 												<option value="FULLTIME" {{$dataset->POSITION == 'FULLTIME' ? 'selected' : ''}}>พนักงานประจำ</option>
 												<option value="DAILY" {{$dataset->POSITION == 'DAILY' ? 'selected' : ''}}>พนักงานรายวัน</option>
+												<option value="STUDENT"{{$dataset->POSITION == 'STUDENT' ? 'selected' : ''}}>นักศึกษา</option>
 												</select>
 											</div>
 										</div>

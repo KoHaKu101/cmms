@@ -73,8 +73,9 @@
 										<div class="row">
 											@foreach ($dataset as $key => $dataitem)
 												@php
+												
 												$EMP_ICON = $dataitem->EMP_ICON != '' ?	'image/emp/'.$dataitem->EMP_ICON : 'assets/img/no_image1200_900.png';
-												$POSITION = array(''=>'','SUPER'=>'หัวหน้างาน','FULLTIME'=>'พนักงานประจำ','DAILY'=>'พนักงานรายวัน');
+												$POSITION = array(''=>'','SUPER'=>'หัวหน้างาน','FULLTIME'=>'พนักงานประจำ','DAILY'=>'พนักงานรายวัน','STUDENT' => 'นักศึกษา');
 
 												@endphp
 												<div class="col-md-6 col-lg-3">

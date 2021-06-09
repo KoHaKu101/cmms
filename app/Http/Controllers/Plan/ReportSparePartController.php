@@ -91,7 +91,8 @@ class ReportSparePartController extends Controller
       　    END AS classtext")->where('DOC_YEAR','=',$DOC_YEAR)->where('DOC_MONTH','=',$DOC_MONTH)
                                     ->where(function ($query) use ($SEARCH) {
                                         $query->where('MACHINE_CODE', 'like', $SEARCH)
-                                              ->orWhere('SPAREPART_NAME', 'like', $SEARCH);})
+                                              ->orWhere('SPAREPART_NAME', 'like', $SEARCH)
+                                              ->orwhere('SPAREPART_CODE','like',$SEARCH);})
                                        ->where('MACHINE_LINE','like',$MACHINE_LINE)
                                        ->where('STATUS_OPEN','=','9')
                                        ->orderBy('PLAN_DATE')

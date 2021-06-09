@@ -93,12 +93,13 @@
 												<input type="text" class="form-control" id="EMP_NAME" name="EMP_NAME" placeholder="ชื่อพนักงาน" required autofocus>
 											</div>
 											<div class="form-group col-md-12 has-error">
-												<lebel>ตำแหน่งงาน</lebel>
+												<lebel>ตำแหน่ง</lebel>
 												<select class="form-control form-control" id="POSITION" name="POSITION" required>
 												<option value>--แสดงทั้งหมด--</option>
 												<option value="SUPER">หัวหน้างาน</option>
 												<option value="FULLTIME">พนักงานประจำ</option>
 												<option value="DAILY">พนักงานรายวัน</option>
+												<option value="STUDENT">นักศึกษา</option>
 												</select>
 											</div>
 
