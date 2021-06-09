@@ -221,8 +221,9 @@ class MachineController extends Controller
 
 
     $DATA_PRODUCT             = BomMachine::select('MACHINE_CODE','MACHINE_NAME','PDCS_BOM_MACHINE.PRODUCT_CODE','PDCS_BOM_MACHINE.FORMULA_CODE'
-                                                      ,'BASE_PRODUCTS.PRODUCT_NAME_TH','PROCESS_NO','PROCESS_CODE','PROCESS_NAME'
+                                                      ,'BASE_PRODUCTS.PRODUCT_NAME_TH','PROCESS_NO','PROCESS_CODE'
                                                       ,'ON_CT','ON_CT_HR','ON_CT_DAY','ON_PLAN_STATUS','WORKING_HR')
+                                            ->selectRaw('dbo.decode_utf8(PROCESS_NAME) as PROCESS_NAME')
                                             ->leftjoin('PDCS_BOM_MASTER','PDCS_BOM_MASTER.PRODUCT_CODE','=','PDCS_BOM_MACHINE.PRODUCT_CODE')
                                             ->leftjoin('BASE_PRODUCTS','PDCS_BOM_MACHINE.PRODUCT_CODE','=','BASE_PRODUCTS.PRODUCT_CODE')
                                             ->where('MACHINE_CODE','=','MC-058')
