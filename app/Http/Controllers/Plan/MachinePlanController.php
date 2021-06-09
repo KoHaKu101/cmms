@@ -69,7 +69,9 @@ class MachinePlanController extends Controller
     　 WHEN PLAN_STATUS != 'COMPLETE' and DATEDIFF(DAY, GETDATE(),PLAN_DATE ) <= -( SELECT PLAN_CHECK FROM PMCS_CMMS_SETUP_MAIL) THEN 'icon-danger'
     　 WHEN PLAN_STATUS != 'COMPLETE' and DATEDIFF(DAY, GETDATE(),PLAN_DATE ) > -( SELECT PLAN_CHECK FROM PMCS_CMMS_SETUP_MAIL) THEN 'icon-warning'
     　    END AS classtext")->where('PLAN_YEAR','=',$PLAN_YEAR)
-                        ->where('MACHINE_CODE','like',$MACHINE_CODE)
+                            ->where(function ($query) use ($MACHINE_CODE) {
+                                $query->where('MACHINE_CODE', 'like', $MACHINE_CODE)
+                                      ->orWhere('PM_MASTER_NAME', 'like', $MACHINE_CODE);})
                         ->where('MACHINE_LINE','like',$MACHINE_LINE)
                         ->where('PLAN_STATUS','like',$PLAN_STATUS != '' ? $PLAN_STATUS :'%')
                         ->where('PLAN_MONTH','like',$PLAN_MONTH > 0 ? $PLAN_MONTH : '%')
