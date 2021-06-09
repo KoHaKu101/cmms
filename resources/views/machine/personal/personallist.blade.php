@@ -30,9 +30,7 @@
 						<div class="row">
 							<div class="col-md-12 gx-4">
 
-								<a href="{{ route('personal.form') }}"><button class="btn btn-primary  btn-xs">
-									<span class="fas fa-file fa-lg">	New	</span>
-								</button></a>
+
 							</div>
 						</div>
           </div>
@@ -43,18 +41,30 @@
 							<div class="col-md-12">
 								<div class="card ">
 									<form action="{{ route('personal.list')}}" method="POST" enctype="multipart/form-data">
-									<div class="card-header bg-primary form-inline ">
+									<div class="card-header bg-primary  ">
 											@method('GET')
 											@csrf
-											<h4 class="ml-3 mt-2 " style="color:white;" ><i class="fas fa-cog fa-lg mr-1"></i> พนักงานซ่อมบำรุง </h4>
-												<div class="input-group ml-4">
-													<input type="text" id="SEARCH"  name="SEARCH"  class="form-control form-control-sm" value="{{ $SEARCH }}">
-													<div class="input-group-prepend">
-														<button type="submit" class="btn btn-search pr-1 btn-xs	">
-															<i class="fa fa-search search-icon"></i>
-														</button>
+											<div class="row">
+												<div class="col-md-10 form-inline">
+													<h4 class="ml-3 mt-2 " style="color:white;" ><i class="fas fa-cog fa-lg mr-1"></i> พนักงานซ่อมบำรุง </h4>
+
+													<div class="input-group ml-4  mt-1">
+														<input type="text" id="SEARCH"  name="SEARCH"  class="form-control form-control-sm" value="{{ $SEARCH }}">
+														<div class="input-group-prepend">
+															<button type="submit" class="btn btn-search pr-1 btn-xs	">
+																<i class="fa fa-search search-icon"></i>
+															</button>
+														</div>
 													</div>
 												</div>
+												<div class="col-md-2 text-right">
+													<a href="{{ route('personal.form') }}" class="btn btn-warning btn-xs mt-2">
+														<span class="fas fa-file fa-lg">	New	</span>
+													</a>
+												</div>
+											</div>
+
+
 									</div>
 								</form>
 
@@ -71,7 +81,7 @@
 													<div class="card card-post card-round">
 														<img class="card-img-top" src="{{ asset($EMP_ICON) }}" width="50px" height="220px"alt="Card image cap">
 														<div class="card-body" style="background: #eef1c5;">
-																<h3 class="card-text my-1"><b>{{ $dataitem->EMP_NAME2 }}</b></h3>
+																<h3 class="card-text my-1"><b>{{ $dataitem->EMP_NAME_TH }}</b></h3>
 																<h5 >รหัสพนักงาน : {{ $dataitem->EMP_CODE }}</h5>
 																<h5 >ตำแหน่ง : {{ $POSITION[$dataitem->POSITION] }}</h5>
 																<h5 >ประจำ : {{ $dataitem->EMP_GROUP }} </h5>

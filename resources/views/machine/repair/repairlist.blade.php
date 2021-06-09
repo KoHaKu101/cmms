@@ -32,14 +32,8 @@
           <div class="container">
 						<div class="row">
 							<div class="col-md-12 gx-4">
-								<a href="{{ route('dashboard') }}">
-								<button class="btn btn-warning  btn-xs ">
-									<span class="fas fa-arrow-left fa-lg">Back </span>
-								</button>
-								</button></a>
-								<a href="{{ route('repair.repairsearch') }}"><button class="btn btn-primary  btn-xs">
-									<span class="fas fa-file fa-lg">	New	</span>
-								</button></a>
+
+
 
 							</div>
 						</div>
@@ -51,17 +45,17 @@
 							<div class="col-md-12">
 								<div class="card ">
 
-								  <div class="card-header bg-primary form-inline ">
+								  <div class="card-header bg-primary  ">
 										<form action="{{ route('repair.list') }}" method="POST" enctype="multipart/form-data">
 											@method('GET')
 											@csrf
 								        <div class="row ">
-								          <div class="col-md-5">
+								          <div class="col-md-2">
 								            <h4 class="ml-3 mt-2 " style="color:white;" ><i class="fas fa-toolbox fa-lg mr-1"></i> แจ้งซ่อม </h4>
 								          </div>
-								          <div class="col-md-7">
+								          <div class="col-md-8">
 								              <div class="input-group mt-1">
-								                <input  type="search" id="SEARCH"  name="SEARCH" class="form-control form-control-sm" placeholder="ค้นหา........."
+								                <input  type="search" id="SEARCH"  name="SEARCH" class="form-control form-control-sm col-md-3" placeholder="ค้นหา........."
 																value="{{ $SEARCH }}">
 								                <div class="input-group-prepend">
 								                  <button type="submit" class="btn btn-search pr-1 btn-xs	">
@@ -70,8 +64,15 @@
 								                </div>
 								              </div>
 								          </div>
+													<div class="col-md-2 text-right">
+														<a href="{{ route('repair.repairsearch') }}"class="btn btn-warning  btn-xs mt-1">
+															<span class="fas fa-file fa-lg">	New	</span>
+														</a>
+													</div>
+
 								        </div>
 											</form>
+
 								  </div>
 								  <div id="result"class="card-body">
 								    <div class="table-responsive" id="dynamic_content">

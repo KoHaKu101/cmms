@@ -15,7 +15,7 @@ use App\Http\Controllers\Dashboard\CalendarController;
 use App\Http\Controllers\Machine\MachineController;
 use App\Http\Controllers\Machine\PersonalController;
 use App\Http\Controllers\Machine\MachineRepairController;
-use App\Http\Controllers\Machine\MachineUploadController;
+
 use App\Http\Controllers\Machine\MachineManualController;
 use App\Http\Controllers\Machine\SysCheckController;
 use App\Http\Controllers\Machine\MailConfigController;
@@ -83,13 +83,6 @@ Route::get('/machine/assets/machineall/{LINE?}', [MachinePDFController::class,'M
 Route::get('/cookie/set',[CookieController::class,'setCookie'])->name('cookie.set');
 Route::get('/cookie/get',[CookieController::class,'getCookie'])->name('cookie.get');
 
-
-// Route::get('/machine/repair/search',function(){
-//   if(Request::ajax()){
-//     return Response::json(Request::all());
-//   }});
-
-
 Route::middleware(['auth:sanctum', 'verified']);
 //Dashboard
 Route::get('/machine/dashboard/sumaryline',[DashboardController::class,'Sumaryline'])->name('dashboard.sumaryline');
@@ -113,21 +106,15 @@ Route::get('machine/assets/machinelist'     ,[MachineController::class,'All'])  
   Route::get('machine/assets/edit/{UNID}'     ,[MachineController::class,'Edit'])   ->name('machine.edit');
   Route::post('machine/assets/update/{UNID}'  ,[MachineController::class,'Update']);
   Route::get('machine/assets/delete/{UNID}'   ,[MachineController::class,'Delete']) ->name('machine.delete');
-//upload
-Route::post('machine/assets/storeupload'      ,[MachineUploadController::class,'StoreUpload']) ->name('machine.storeupload');
-  Route::get('machine/upload/edit/{UNID}'     ,[MachineUploadController::class,'Edit'])   ->name('manual.edit');
-  Route::post('machine/upload/update/{UNID}'  ,[MachineUploadController::class,'Update']);
-  Route::get('machine/assets/uploadpdf/{UNID}',[UploadPdfController::class,'Uploadpdf']);
-  Route::get('machine/assets/showpdf/{UNID}'  ,[UploadPdfController::class,'Showpdf'])->name('show.pdf');
-  Route::get('machine/upload/delete/{UNID}'   ,[MachineUploadController::class,'Delete']) ->name('upload.delete');
-  Route::get('machine/upload/download/{UNID}'  ,[MachineUploadController::class,'Download']) ->name('upload.download');
-  Route::get('machine/upload/view/{UNID}'     ,[MachineUploadController::class,'View']) ->name('upload.view');
 //manual
-Route::get('machine/manual/manuallist'      ,[MachineManualController::class,'Index'])  ->name('manual.list');
+Route::get('machine/manual/manuallist'        ,[MachineManualController::class,'Index'])  ->name('manual.list');
   Route::get('machine/manual/show/{UNID}'     ,[MachineManualController::class,'Show'])   ->name('manual.Show');
-  Route::post('machine/manual/update/{UNID}'  ,[MachineManualController::class,'Update']);
-  Route::get('machine/manual/delete/{UNID}'   ,[MachineManualController::class,'Delete']) ->name('manual.delete');
 
+  Route::post('machine/upload/storeupload'     ,[MachineManualController::class,'StoreUpload']) ->name('machine.storeupload');
+  Route::get('machine/upload/view/{UNID}'      ,[MachineManualController::class,'View']) ->name('upload.view');
+  Route::get('machine/upload/download/{UNID}'  ,[MachineManualController::class,'Download']) ->name('upload.download');
+  Route::post('machine/upload/update'          ,[MachineManualController::class,'Update']);
+  Route::get('machine/upload/delete/{UNID}'    ,[MachineManualController::class,'Delete']) ->name('upload.delete');
 //personal
 Route::get('machine/personal/personallist'   ,[PersonalController::class,'Index'])  ->name('personal.list');
   Route::get('machine/personal/form'            ,[PersonalController::class,'Create']) ->name('personal.form');

@@ -38,9 +38,20 @@ class PersonalController extends Controller
   }
 
   public function Index(Request $request){
-    $SEARCH = isset($request->SEARCH) ?  '%'.$request->SEARCH.'%' : '%';
-    $dataset = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME2')->where('EMP_CODE','like',$SEARCH)
-    ->orderBy('EMP_CODE')->paginate(8);
+    $SEARCH = isset($request->SEARCH) ?  '%'.$request->SEARCH.'%' : '';
+
+    $encode = EMPName::selectRaw("dbo.encode_utf8('$SEARCH') as SEARCH")->first();
+
+
+    $dataset = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
+                                   ->where(function($query) use ($SEARCH,$encode){
+                                      if ($SEARCH != '') {
+                                         $query->where('EMP_CODE', 'like', $SEARCH)
+                                               ->orwhere('EMP_NAME', 'like', $SEARCH)
+                                               ->orwhere('EMP_NAME','like' ,$encode->SEARCH) ;
+                                       }
+                                   })
+                                   ->orderBy('EMP_CODE')->paginate(8);
     $SEARCH = str_replace('%','',$SEARCH);
     return View('machine/personal/personallist',compact('dataset','SEARCH'));
   }
@@ -77,10 +88,12 @@ class PersonalController extends Controller
     } else {
         $last_img = "";
     }
+    $encode = EMPName::selectRaw("dbo.encode_utf8('$request->EMP_NAME') as EMP_NAME")->first();
+    $EMP_NAME = $encode->EMP_NAME;
     EMPName::insert([
 
       'EMP_CODE'         => $request->EMP_CODE,
-      'EMP_NAME'         => $request->EMP_NAME,
+      'EMP_NAME'         => $EMP_NAME,
       'EMP_ICON'         => $last_img,
       'EMP_GROUP'        => $request->EMP_GROUP,
       'EMP_NOTE'         => $request->EMP_NOTE,
@@ -120,10 +133,12 @@ class PersonalController extends Controller
             $last_img = $new_name;
       }
   }
+  $encode = EMPName::selectRaw("dbo.encode_utf8('$request->EMP_NAME') as EMP_NAME")->first();
+  $EMP_NAME = $encode->EMP_NAME;
    EMPName::where('UNID',$UNID)->update([
 
     'EMP_CODE'         => $request->EMP_CODE,
-    'EMP_NAME'         => $request->EMP_NAME,
+    'EMP_NAME'         => $EMP_NAME,
     'EMP_ICON'         => $last_img,
     'EMP_GROUP'        => $request->EMP_GROUP,
     'EMP_NOTE'         => $request->EMP_NOTE,

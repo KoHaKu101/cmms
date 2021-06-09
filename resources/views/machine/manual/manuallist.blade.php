@@ -29,11 +29,7 @@
           <div class="container">
 						<div class="row">
 							<div class="col-md-12 gx-4">
-								<a href="{{ url('/machine/dashboard/dashboard') }}">
-									<button class="btn btn-warning  btn-xs ">
-										<span class="fas fa-arrow-left fa-lg">Back </span>
-									</button>
-								</a>
+
 							</div>
 						</div>
           </div>
@@ -43,16 +39,37 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="card ">
-									<div class="card-header bg-primary form-inline ">
-											<h4 class="ml-3 mt-2 " style="color:white;" ><i class="fas fa-book-open fa-lg mr-1"></i> คู่มือ </h4>
-												<div class="input-group ml-4">
-													<input type="text" id="search_text"  name="search_text"onkeyup="myFunction()" class="form-control form-control-sm">
-													<div class="input-group-prepend">
-														<button type="submit" class="btn btn-search pr-1 btn-xs	">
-															<i class="fa fa-search search-icon"></i>
-														</button>
-													</div>
+									<div class="card-header bg-primary ">
+										<form action="{{ url('machine/manual/manuallist') }}" method="POST" id="FRM_MANUALLIST">
+											@method('GET')
+											@csrf
+											<div class="row text-white">
+												<div class="col-md-8 form-inline">
+													<h4 class="ml-3 mt-2 " ><i class="fas fa-book-open fa-lg mr-1"></i> คู่มือ </h4>
+													<label class="text-white mx-3">LINE : </label>
+													<select class="form-control form-control-sm col-md-2 mx-2" id="MACHINE_LINE" name="MACHINE_LINE"
+													onchange="changeline()">
+															<option value> ทั้งหมด</option>
+														@foreach ($LINE as $key => $row_line)
+															<option value="{{ $row_line->LINE_CODE }}" {{ $MACHINE_LINE == $row_line->LINE_CODE ? 'selected' : ''}}>
+																 {{ $row_line->LINE_NAME }}</option>
+														@endforeach
+													</select>
 												</div>
+												<div class="col-md-4 form-inline">
+													<label class="text-white mx-3">SEARCH : </label>
+													<div class="input-group ">
+														<input type="text" id="SEARCH"  name="SEARCH" class="form-control form-control-sm" value="{{ $SEARCH }}">
+														<div class="input-group-prepend">
+															<button type="submit" class="btn btn-search pr-1 btn-xs SEARCH">
+																<i class="fa fa-search search-icon"></i>
+															</button>
+														</div>
+													</div>
+
+												</div>
+											</div>
+											</form>
 									</div>
 
 									<div id="result"class="card-body">
@@ -60,47 +77,31 @@
                       <table class="display table table-striped table-hover">
                       	<thead class="thead-light">
                         	<tr>
-
-														<th scope="col" style=""></th>
-                            <th scope="col">Code</th>
-                          	<th scope="col">ชื่อเครื่อง</th>
-                          	<th scope="col">LINE</th>
-
+														<th>LINE</th>
+                            <th>MC-CODE	</th>
+                          	<th>Machine Name	</th>
+														<th>MC-TYPE</th>
+														<th>จำนวนไฟล์คู่มือ</th>
                         	</tr>
                       	</thead>
-
                       	<tbody >
-                          {{-- @php($i = 1) --}}
 													@foreach ($dataset as $key => $row)
-
                         		<tr>
-
-															<td width="13%">
-																<a href="{{ url('machine/manual/show/'.$row->UNID) }}">
-																	<span style="color: #2C94FC;">
-																		<i class="fas fa-eye fa-lg"></i>
-																	</span>
-																</a>
-
-							                  <a href="#" class="btn btn-success btn-link"><i class="fas fa-download fa-lg"></i>	</a>
-															</td>
-															<td scope="row" style="white-space:nowrap" class="name">  {{ $row->MACHINE_CODE }}  </td>
-															<td style="white-space:nowrap" class="born">              {{ $row->MACHINE_NAME }}  </td>
-															<td style="white-space:nowrap">  						 {{ $row->MACHINE_LINE }}     </td>
+															<td width="50px">{{ $row->MACHINE_LINE }}</td>
+															<td width="100px">
+																<a href="{{ url('machine/manual/show/'.$row->UNID) }}"
+																	class="btn btn-secondary btn-block btn-sm mx-1 my-1 text-left">
+																	<i class="fas fa-eye fa-lg mr-1"></i>{{ $row->MACHINE_CODE }}</a>  </td>
+															<td >{{ $row->MACHINE_NAME_TH }}  </td>
+															<td width="200px">{{ $row->MACHINE_TYPE }}  </td>
+															<td width="120px" class="text-center">{{ $data_upload->where('UPLOAD_UNID_REF','=',$row->UNID)->count() }}</td>
                         			</tr>
                         	@endforeach
-
-
-
                       	</tbody>
                     </table>
-
-
-
 									</div>
-
 										</div>
-										{{ $dataset->links() }}
+										{{ $dataset->appends(['SEARCH' => $SEARCH,'MACHINE_LINE' => $MACHINE_LINE])->links('pagination.default') }}
 
 								</div>
 
@@ -118,28 +119,12 @@
 
 {{-- ส่วนjava --}}
 @section('javascript')
-{{-- <script>
-$(document).ready(function(){
-	var table = $('datatable').DataTable({
-			'processing' : true,
-			'serverSide' : true,
-			'ajax': "{{ route('machine.list') }}",
-			'column':[
-				{'data': 'MACHINE_LOCATION'},
-				{'data': 'MACHINE_NAME'},
-				{'data': 'MACHINE_CODE'}
-			],
-	});
+	<script>
+		function changeline(){
+			$('.SEARCH').click();
+		}
 
-  $("#myInput").keyup (function() {
-		table.column($)
-    var value = $(this).val().toLowerCase();
-    $("#myTable tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-  });
-});
-</script> --}}
+	</script>
 
 
 @stop

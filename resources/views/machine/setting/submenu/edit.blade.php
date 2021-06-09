@@ -64,12 +64,12 @@
                       			<div class="form-group">
 															<label for="SUBMENU_ICON">SUBMENU Icon</label>
 															<input type="text" class="form-control" id="SUBMENU_ICON" name="SUBMENU_ICON"  placeholder="SUBMENU Icon" value="{{ $data_set->SUBMENU_ICON }}">
-                        			
+
 														</div>
 
 
 
-
+														<a href="{{ url()->previous() }}" class="btn btn-danger">Cancel</a>
 														<button tpye="submit" class="btn btn-success">Update</button>
 
 
@@ -83,38 +83,6 @@
   			</div>
 			</div>
 		</div>
-
-
-
-
-
-		{{-- ส่วนท้าย --}}
-	  {{-- <footer class="footer">
-	    <div class="container-fluid">
-	      <nav class="pull-left">
-	        <ul class="nav">
-	          <li class="nav-item">
-	            <a class="nav-link" href="https://www.themekita.com">
-	              ThemeKita
-	            </a>
-	          </li>
-	          <li class="nav-item">
-	            <a class="nav-link" href="#">
-	              Help
-	            </a>
-	          </li>
-	          <li class="nav-item">
-	            <a class="nav-link" href="#">
-	              Licenses
-	            </a>
-	          </li>
-	        </ul>
-	      </nav>
-	      <div class="copyright ml-auto">
-	        2018, made with <i class="fa fa-heart heart text-danger"></i> by <a href="https://www.themekita.com">ThemeKita</a>
-	      </div>
-	    </div>
-	  </footer> --}}
 		{{-- ปิดส่วนท้าย --}}
 @stop
 {{-- ปิดส่วนเนื้อหาและส่วนท้า --}}

@@ -44,11 +44,14 @@ class MachineRepairController extends Controller
 
   public function Index(Request $request){
 
-    $SEARCH = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '%';
+    $SEARCH = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
 
     $dataset = MachineRepairREQ::where(function ($query) use ($SEARCH) {
-              $query->where('MACHINE_CODE', 'like', $SEARCH)
-                  ->orWhere('DOC_NO', 'like', $SEARCH);})
+              if ($SEARCH != '') {
+                $query->where('MACHINE_CODE', 'like', $SEARCH)
+                      ->orWhere('DOC_NO', 'like', $SEARCH)
+                      ->orWhere('MACHINE_NAME','like',$SEARCH);
+              }})
                             ->orderby('CLOSE_STATUS','DESC')
                             ->orderBy('DOC_DATE','DESC')
                             ->paginate(10);

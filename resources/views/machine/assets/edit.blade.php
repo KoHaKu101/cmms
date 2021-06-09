@@ -154,34 +154,34 @@
 												<label for="PM_LAST_DATE">ตรวจเช็คระบบ ล่าสุด	</label>
 												<input type="date" class="form-control form-control-sm changedateedit" id="PM_LAST_DATE" name="PM_LAST_DATE" value="{{ $dataset->PLAN_LAST_DATE == '1900-01-01' ? "" : $dataset->PLAN_LAST_DATE }}" readonly>
 											</div>
-											<div class="row ml-1 mt-2">
-												<div class="form-group col-md-6 col-lg-6 has-error">
-													<lebel>สถานะใช้งาน</lebel>
-													<select class="form-control form-control-sm form-control form-control-sm" id="MACHINE_CHECK" name="MACHINE_CHECK" >
-														<option value>-แสดงทั้งหมด-</option>
-														@foreach ($machinestatus as $key => $srow)
-															<option value="{{ $srow->STATUS_CODE}}"
-																{{ $dataset->MACHINE_CHECK == $srow->STATUS_CODE ? 'selected' : ''}} > {{$srow->STATUS_NAME}} </option>
-
-														@endforeach
-													</select>
-
-												</div>
-												<div class="form-group col-md-6 col-lg-6 has-error">
-													<lebel>ตำแหน่งเครื่อง</lebel>
-													<select class="form-control form-control-sm form-control form-control-sm" id="MACHINE_LINE" name="MACHINE_LINE">
-													<option value>--แสดงทั้งหมด--</option>
-													@foreach($machineline as $dataline)
-													<option value="{{ $dataline->LINE_CODE}}"
-														{{ $dataset->MACHINE_LINE == $dataline->LINE_CODE ? 'selected' : ''}} > {{$dataline->LINE_NAME}} </option>
-													@endforeach
-												</select>
-						  				</div>
-											</div>
 											<div class="form-group has-error col-lg-12 from-inline">
 												<div class="row">
 													<div class="col-6 col-sm-6 col-lg-6">
+														<label >สถานะการใช้งาน</label>
+														<select class=" form-control form-control-sm " id="MACHINE_CHECK" name="MACHINE_CHECK" required autofocus>
+															<option value>-แสดงทั้งหมด-</option>
+															@foreach ($machinestatus as $key => $srow)
+																<option value="{{ $srow->STATUS_CODE }}"
+																	{{ $dataset->MACHINE_CHECK == $srow->STATUS_CODE ? 'selected' : ''}}>{{$srow->STATUS_NAME}}</option>
+															@endforeach
+														</select>
+													</div>
+													<div class="col-6 col-sm-6 col-lg-6">
+														<label>ตำแหน่งเครื่อง</label>
+														<select class=" form-control form-control-sm " id="MACHINE_LINE" name="MACHINE_LINE" required autofocus>
+															<option value> -แสดงทั้งหมด- </option>
+															@foreach($machineline as $dataline)
+															<option value="{{ $dataline->LINE_CODE  }}"
+																{{ $dataset->MACHINE_LINE == $dataline->LINE_CODE ? 'selected' : ''}}> {{$dataline->LINE_NAME}} </option>
+															@endforeach
+														</select>
+													</div>
+												</div>
+											</div>
 
+											<div class="form-group has-error col-lg-12 from-inline">
+												<div class="row">
+													<div class="col-6 col-sm-6 col-lg-6">
 															<label for="MACHINE_TYPE">ชนิดเครื่องจักร</label>
 															<select class="form-control form-control-sm form-control form-control-sm-sm" id="MACHINE_TYPE" name="MACHINE_TYPE">
 																<option value>--แสดงทั้งหมด--</option>
@@ -190,16 +190,13 @@
 																	{{ $dataset->MACHINE_TYPE == $datatype->TYPE_CODE ? 'selected' : ''}} > {{$datatype->TYPE_CODE}} </option>
 																		@endforeach
 															</select>
-
 													</div>
 													<div class="col-6 col-sm-6 col-lg-6">
-
-															<label class="text-white">สถานะการผลิต : </label>
-															<select class="form-control form-control-sm form-control form-control-sm-sm" id="MACHINE_STATUS" name="MACHINE_STATUS" >
+															<label class="text-white">สถานะการผลิต</label>
+															<select class="form-control form-control-sm form-control form-control-sm-sm" id="MACHINE_TYPE_STATUS" name="MACHINE_TYPE_STATUS" >
 																<option value="9" {{ $dataset->MACHINE_TYPE_STATUS == "9" ? 'selected' : "" }}>Machine</option>
 																<option value="1" {{ $dataset->MACHINE_TYPE_STATUS == "1" ? 'selected' : "" }}>โต๊ะ Support</option>
 															</select>
-
 													</div>
 												</div>
 											</div>
@@ -237,15 +234,11 @@
 														<div class="col-6 col-sm-6 col-lg-6">
 															<label for="PURCHASE_FORM">สถานะ	</label>
 															<select class="form-control form-control-sm" id="MACHINE_STATUS" name="MACHINE_STATUS" required>
-																<option value="9">แสดง</option>
-																<option value="1">ซ่อน</option>
+																<option value="9" {{ $dataset->MACHINE_STATUS == '9' ? 'selected' : ''}}>แสดง</option>
+																<option value="1" {{ $dataset->MACHINE_STATUS == '1' ? 'selected' : ''}}>ซ่อน</option>
 															</select>
 														</div>
-
 													</div>
-
-
-
 												</div>
 
 										</div>
@@ -365,6 +358,41 @@
 
 				 });
 	 });
+	 function edituploadfile(thisdata){
+		 var uploadtopicname = $(thisdata).data('uploadtopicname');
+		 var uploadunid = $(thisdata).data('uploadunid');
+		 var url = '/machine/upload/update';
+		 $('#FRM_UPLOAD_MANUAL').attr('action',url);
+		 $('#FILE_UPLOAD').attr('required',false);
+		 $('#TOPIC_NAME').val(uploadtopicname);
+		 $('#UPLOAD_MANUAL_UNID').val(uploadunid);
+		 if (uploadunid != '') {
+			  $('#UPLOAD_MANUAL').modal('show');
+		 }
+	 }
+	 $('#UPLOAD_MANUAL').on('hidden.bs.modal', function (e) {
+		 var url = "{{ route('machine.storeupload') }}";
+		 $('#FRM_UPLOAD_MANUAL').attr('action',url);
+		 $('#FILE_UPLOAD').attr('required',true);
+		 $('#TOPIC_NAME').val('');
+		 $('#UPLOAD_MANUAL_UNID').val('');
+	 });
+	 function	deleteupload(thisdata){
+		 var uploadunid = $(thisdata).data('uploadunid');
+		  var url = "/machine/upload/delete/"+uploadunid;
+			Swal.fire({
+			  title: 'คุณต้องการลบคู่มือนี้ ?',
+			  icon: 'warning',
+			  showCancelButton: true,
+			  confirmButtonColor: '#3085d6',
+			  cancelButtonColor: '#d33',
+			  confirmButtonText: 'ใช่!'
+			}).then((result) => {
+			  if (result.isConfirmed) {
+			    window.location.href = url;
+			  }
+			});
+	 }
  </script>
 @stop
 {{-- ปิดส่วนjava --}}

@@ -60,74 +60,96 @@
 										<div class="col-md-6 col-lg-3">
 											<div class="form-group mt-4">
 												<img src="/assets/img/nobody.jpg" width="200" height="200px" class="mt-4">
-													<input type="file" class="form-control mt-4" id="MACHINE_ICON" name="MACHINE_ICON" accept="image/*">
+													<input type="file" class=" form-control form-control-sm  mt-4" id="MACHINE_ICON" name="MACHINE_ICON" accept="image/*">
 											</div>
 										</div>
 										<!-- ช่อง2-->
 										<div class="col-md-6 col-lg-4">
 											<div class="form-group has-error">
 												<label for="MACHINE_CODE">รหัสเครื่องจักร</label>
-													<input type="text" class="form-control" id="MACHINE_CODE" name="MACHINE_CODE" placeholder="รหัสเครื่องจักร" required autofocus>
+													<input type="text" class=" form-control form-control-sm " id="MACHINE_CODE" name="MACHINE_CODE" placeholder="รหัสเครื่องจักร" required autofocus>
 											</div>
 
 											<div class="form-group">
 												<label for="MACHINE_STARTDATE">วันที่เริ่มใช้งาน	</label>
-												<input type="date" class="form-control" id="MACHINE_STARTDATE" name="MACHINE_STARTDATE" placeholder="วันที่เริ่มใช้งาน">
+												<input type="date" class=" form-control form-control-sm " id="MACHINE_STARTDATE" name="MACHINE_STARTDATE" placeholder="วันที่เริ่มใช้งาน">
 											</div>
-											<div class="row ml-1 mt-2">
-												<div class="form-group col-md-6 col-lg-6 has-error">
-													<lebel>สถานะ</lebel>
-													<select class="form-control" id="MACHINE_CHECK" name="MACHINE_CHECK" required autofocus>
-														<option value>-แสดงทั้งหมด-</option>
-														@foreach ($machinestatus as $key => $srow)
-															<option value="{{ $srow->STATUS_CODE }}">{{$srow->STATUS_NAME}}</option>
-														@endforeach
-													</select>
+												<div class="form-group col-lg-12 has-error">
+													<div class="row">
+														<div class="col-6 col-sm-6 col-lg-6">
+															<label>สถานะการใช้งาน</label>
+															<select class=" form-control form-control-sm " id="MACHINE_CHECK" name="MACHINE_CHECK" required autofocus>
+																<option value>-แสดงทั้งหมด-</option>
+																@foreach ($machinestatus as $key => $srow)
+																	<option value="{{ $srow->STATUS_CODE }}">{{$srow->STATUS_NAME}}</option>
+																@endforeach
+															</select>
+														</div>
+														<div class="col-6 col-sm-6 col-lg-6">
+															<label>ตำแหน่งเครื่อง</label>
+															<select class=" form-control form-control-sm " id="MACHINE_LINE" name="MACHINE_LINE" required autofocus>
+																<option value> -แสดงทั้งหมด- </option>
+																@foreach($machineline as $dataline)
+																<option value="{{ $dataline->LINE_CODE  }}"> {{$dataline->LINE_NAME}} </option>
+																@endforeach
+															</select>
+														</div>
+													</div>
+						  					</div>
+											<div class="form-group has-error col-lg-12 from-inline">
+												<div class="row">
+													<div class="col-6 col-sm-6 col-lg-6">
+															<label for="MACHINE_TYPE">ชนิดเครื่องจักร</label>
+															<select class="   form-control form-control-sm " id="MACHINE_TYPE" name="MACHINE_TYPE">
+																<option value>--แสดงทั้งหมด--</option>
+																@foreach($machinetype as $datatype)
+																	<option value="{{ $datatype->TYPE_CODE}}"> {{$datatype->TYPE_CODE}} </option>
+																		@endforeach
+															</select>
+													</div>
+													<div class="col-6 col-sm-6 col-lg-6">
+															<label class="text-white">สถานะการผลิต</label>
+															<select class="form-control form-control-sm " id="MACHINE_TYPE_STATUS" name="MACHINE_TYPE_STATUS" >
+																<option value="9" >Machine</option>
+																<option value="1" >โต๊ะ Support</option>
+															</select>
+													</div>
 												</div>
-												<div class="form-group col-md-6 has-error">
-													<lebel>ตำแหน่งเครื่อง</lebel>
-													<select class="form-control" id="MACHINE_LINE" name="MACHINE_LINE" required autofocus>
-														<option value> -แสดงทั้งหมด- </option>
-														@foreach($machineline as $dataline)
-														<option value="{{ $dataline->LINE_CODE  }}"> {{$dataline->LINE_NAME}} </option>
-														@endforeach
-
-												</select>
-						  				</div>
-											</div>
-											<div class="form-group has-error ">
-												<label for="MACHINE_TYPE">ชนิดเครื่องจักร</label>
-												<select class="form-control form-control" id="MACHINE_TYPE" name="MACHINE_TYPE" required autofocus>
-													<option value>--แสดงทั้งหมด--</option>
-													@foreach($machinetype as $datatype)
-													<option value="{{ $datatype->TYPE_CODE  }}"> {{$datatype->TYPE_NAME}} </option>
-													@endforeach
-												</select>
 											</div>
 										</div>
 										<!-- ช่อง3-->
 										<div class="col-md-12 col-lg-4">
 											<div class="form-group has-error">
 												<label for="MACHINE_NAME">ชื่อเครื่องจักร</label>
-												<input type="text" class="form-control" id="MACHINE_NAME" name="MACHINE_NAME" placeholder="ชื่อเครื่องจักร" required autofocus>
+												<input type="text" class=" form-control form-control-sm " id="MACHINE_NAME" name="MACHINE_NAME" placeholder="ชื่อเครื่องจักร" required autofocus>
 											</div>
 											<div class="form-group has-error">
 												<label for="MACHINE_RVE_DATE">วันที่ Maintenance 	</label>
-												<input type="date" class="form-control" id="MACHINE_RVE_DATE" name="MACHINE_RVE_DATE" placeholder="วันที่ Maintenance" required autofocus>
+												<input type="date" class=" form-control form-control-sm " id="MACHINE_RVE_DATE" name="MACHINE_RVE_DATE" placeholder="วันที่ Maintenance" required autofocus>
 											</div>
 											<div class="form-group has-error">
 												<label for="PURCHASE_FORM">ซื้อจากบริษัท	</label>
-												<input type="text" class="form-control" id="PURCHASE_FORM" name="PURCHASE_FORM" placeholder="ซื้อจากบริษัท" required autofocus>
+												<input type="text" class=" form-control form-control-sm " id="PURCHASE_FORM" name="PURCHASE_FORM" placeholder="ซื้อจากบริษัท" required autofocus>
 											</div>
-											<div class="form-group has-error">
-												<label for="PURCHASE_FORM">Machine Rank	</label>
-												<select class="form-control" id="MACHINE_RANK_MONTH" name="MACHINE_RANK_MONTH" required>
-													<option value>กรุณาเลือก Rank</option>
-													@foreach ($machinerank as $key => $datamachinerank)
-														<option value="{{$datamachinerank->MACHINE_RANK_MONTH}}" >{{$datamachinerank->MACHINE_RANK_CODE}}</option>
-													@endforeach
-
-												</select>
+											<div class="form-group has-error col-lg-12 from-inline">
+												<div class="row">
+													<div class="col-6 col-sm-6 col-lg-6">
+														<label for="PURCHASE_FORM">Rank	</label>
+														<select class=" form-control form-control-sm  " id="MACHINE_RANK_MONTH" name="MACHINE_RANK_MONTH" required>
+															<option value>กรุณาเลือก Rank</option>
+															@foreach ($machinerank as $key => $datamachinerank)
+																<option value="{{$datamachinerank->MACHINE_RANK_MONTH}}"  >{{$datamachinerank->MACHINE_RANK_CODE}}</option>
+															@endforeach
+														</select>
+													</div>
+													<div class="col-6 col-sm-6 col-lg-6">
+														<label for="PURCHASE_FORM">สถานะ	</label>
+														<select class=" form-control form-control-sm  " id="MACHINE_STATUS" name="MACHINE_STATUS" required>
+															<option value="9">แสดง</option>
+															<option value="1">ซ่อน</option>
+														</select>
+													</div>
+												</div>
 											</div>
 
 										</div>

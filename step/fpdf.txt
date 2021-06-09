@@ -92,3 +92,19 @@ private $UNID;
      }
 in controller
      $this->pdf->header($UNID);
+******************************************** use file upload show *****************************************
+$path = $_SERVER['DOCUMENT_ROOT'].folder_name.'/resources/uploads/pdf/pdf_label_'.$order['id'].'.pdf'; ตำแหน่งไฟล์
+สามารถใช้แบบนี้ได้
+$path = public_path('ตำแหน่งของไฟล์เช่น' upload/manual/machine-code/ชื่อไฟล์);
+
+$filename = 'pdf_label_'.$order['id'].'.pdf'; ชื่อไฟล์
+
+$file = $path;
+$filename = $filename;
+
+  header('Content-type: application/pdf'); ประเภท ของข้อมูลที่จะนำมาใช้ เช่นถ้าหากเปลี่ยยนเป็น text/html ก็จะดึงข้อมูลมาแปลงเป็น html ซึ่งถ้าหาก ดึงไฟล์มาแล้วไม่ใช่ภาษามันจะทำให้เกิดการเพี้ยน
+  header('Content-Disposition: inline; filename="' . $filename . '"'); คือการให้ borwer ดาวโหลดไฟล์ของเรามาแล้วทำการเปิด ซึ่งจะทำให้เมื่อเราดาวโหลดไฟล์กับมาใช้ก็จะได้ชื่อตามที่เราตั้งแต่แรก และอาจจะมีผลทำให้ทำงานเร็วขึ้น
+  header('Content-Transfer-Encoding: binary');
+  header('Accept-Ranges: bytes'); 
+  
+  echo file_get_contents($file); file_get_contents คือการเก็บข้อมูลจากไฟล์มาใช้งาน

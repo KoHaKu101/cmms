@@ -134,9 +134,7 @@ class MachineController extends Controller
         $last_img = "";
       }
       $UNID = $this->randUNID('PMCS_MACHINE');
-      $machine_type_status = MachineLine::select('LINE_TYPE')->where('LINE_CODE',$request->MACHINE_LINE)->first();
       $MACHINE_CODE = strtoupper($request->MACHINE_CODE);
-      $request->MACHINE_STATUS = '9';
       $rankcode = MachineRankTable::select('MACHINE_RANK_CODE')->where('MACHINE_RANK_MONTH',$request->MACHINE_RANK_MONTH)->first();
       Machine::insert([
           'MACHINE_CODE'         => $MACHINE_CODE,
@@ -144,7 +142,7 @@ class MachineController extends Controller
           'MACHINE_CHECK'        => $request->MACHINE_CHECK,
           'MACHINE_MANU'         => $request->MACHINE_MANU,
           'MACHINE_TYPE'         => $request->MACHINE_TYPE,
-          'MACHINE_TYPE_STATUS'  => $machine_type_status->LINE_TYPE,
+          'MACHINE_TYPE_STATUS'  => $request->MACHINE_TYPE_STATUS,
           'MACHINE_STARTDATE'    => $request->MACHINE_STARTDATE,
           'MACHINE_RVE_DATE'     => $request->MACHINE_RVE_DATE,
           'MACHINE_ICON'         => $last_img,
@@ -192,7 +190,9 @@ class MachineController extends Controller
     $machineupload               = MachineUpload::where('MACHINE_CODE',$dataset->MACHINE_CODE)->get();
     $machinetype                 = MachineTypeTable::where('TYPE_STATUS','=','9')->get();
     $machinestatus               = MachineStatusTable::where('STATUS','=','9')->get();
-    $machineemp                  = MachineEMP::where('MACHINE_CODE','=',$dataset->MACHINE_CODE)->get();
+    $machineemp                  = MachineEMP::select('*')->selectRaw('dbo.decode_utf8(EMP_NAME) as EMP_NAME,
+                                                                      dbo.decode_utf8(EMP_NAME_LAST) as EMP_NAME_LAST')
+                                                          ->where('MACHINE_CODE','=',$dataset->MACHINE_CODE)->get();
     $machineline                 = MachineLine::select('LINE_CODE','LINE_NAME')
                                               ->where('LINE_STATUS','=','9')
                                               ->get();
@@ -251,10 +251,8 @@ class MachineController extends Controller
     } else {
       $last_img = $update;
     }
-    $machine_type_status = MachineLine::select('LINE_TYPE')->where('LINE_CODE',$request->MACHINE_LINE)->first();
-
     $rankcode = MachineRankTable::select('MACHINE_RANK_CODE')->where('MACHINE_RANK_MONTH',$request->MACHINE_RANK_MONTH)->first();
-    $MACHINE_STATUS = $request->MACHINE_CHECK == "1" ? 1 : 9 ;
+
     $MACHINE_CODE = strtoupper($request->MACHINE_CODE);
      Machine::where('UNID',$UNID)->update([
 
@@ -263,7 +261,7 @@ class MachineController extends Controller
       'MACHINE_CHECK'        => $request->MACHINE_CHECK,
       'MACHINE_MANU'         => $request->MACHINE_MANU,
       'MACHINE_TYPE'         => $request->MACHINE_TYPE,
-      'MACHINE_TYPE_STATUS'  => $machine_type_status->LINE_TYPE,
+      'MACHINE_TYPE_STATUS'  => $request->MACHINE_TYPE_STATUS,
       'MACHINE_STARTDATE'    => $request->MACHINE_STARTDATE,
       'MACHINE_RVE_DATE'     => $request->MACHINE_RVE_DATE,
       'MACHINE_ICON'         => $last_img,
@@ -279,7 +277,7 @@ class MachineController extends Controller
       'MACHINE_POWER'        => $request->MACHINE_POWER,
       'MACHINE_WEIGHT'       => $request->MACHINE_WEIGHT,
       'MACHINE_TARGET'       => $request->MACHINE_TARGET,
-      'MACHINE_STATUS'       => $MACHINE_STATUS,
+      'MACHINE_STATUS'       => $request->MACHINE_STATUS,
       'MACHINE_POSTED'       => $request->MACHINE_POSTED,
       'PCDS_MACHINE_CODE'    => $request->PCDS_MACHINE_CODE,
       'WAREHOUSE_CODE'       => $request->WAREHOUSE_CODE,
