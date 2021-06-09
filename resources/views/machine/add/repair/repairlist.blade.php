@@ -169,12 +169,12 @@
 											<div class="card-header bg-primary ">
 												<div class="row">
 													<div class="col-8 col-lg-8">
-														<h4 class="ml-3 my-2" style="color:white;" ><i class="fas fa-toolbox fa-lg mr-1"></i> รายละเอียดแจ้งซ้อม : {{ $SELECTMAINREPAIR_FIRST->REPAIR_MAINSELECT_NAME }} </h4>
+														<h4 class="ml-3 my-2" style="color:white;" ><i class="fas fa-toolbox fa-lg mr-1"></i> รายละเอียดแจ้งซ่อม : {{ $SELECTMAINREPAIR_FIRST->REPAIR_MAINSELECT_NAME }} </h4>
 													</div>
 													<div class="col col-lg-4">
 														<button type="button" class="btn btn-warning btn-sm mx-1 my-1 float-right"
 														 data-mainunid="{{$SELECTMAINREPAIR_FIRST->UNID }}"
-														 id="BTN_SUBNEW" name="BTN_SUBNEW"><i class="fas fa-plus fa-lg"> รายละเอียดแจ้งซ้อม</i></button>
+														 id="BTN_SUBNEW" name="BTN_SUBNEW"><i class="fas fa-plus fa-lg"> รายละเอียดแจ้งซ่อม</i></button>
 													</div>
 												</div>
 											 </div>
