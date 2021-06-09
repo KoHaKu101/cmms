@@ -226,7 +226,7 @@ class MachineController extends Controller
                                             ->selectRaw('dbo.decode_utf8(PROCESS_NAME) as PROCESS_NAME')
                                             ->leftjoin('PDCS_BOM_MASTER','PDCS_BOM_MASTER.PRODUCT_CODE','=','PDCS_BOM_MACHINE.PRODUCT_CODE')
                                             ->leftjoin('BASE_PRODUCTS','PDCS_BOM_MACHINE.PRODUCT_CODE','=','BASE_PRODUCTS.PRODUCT_CODE')
-                                            ->where('MACHINE_CODE','=','MC-058')
+                                            ->where('MACHINE_CODE','=',$dataset->MACHINE_CODE)
                                             ->where('BOM_STATUS','=','9')
                                             ->orderBy('PDCS_BOM_MACHINE.PRODUCT_CODE')
                                             ->orderBy('PROCESS_NO')
