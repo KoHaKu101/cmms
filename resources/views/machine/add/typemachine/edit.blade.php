@@ -78,7 +78,7 @@
 											<div class="col-md-6 col-lg-12">
 												<div class="form-group ">
 													<label for="EMP_NAME">อธิบายเพิ่มเติม</label>
-													<textarea class="form-control" id="TYPE_NOTE" name="TYPE_NOTE" rows="6" value="{{$dataset->TYPE_NOTE }}"></textarea>
+													<textarea class="form-control" id="TYPE_NOTE" name="TYPE_NOTE" rows="6" >{{$dataset->TYPE_NOTE }}</textarea>
 												</div>
 
 											</div>

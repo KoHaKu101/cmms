@@ -1,9 +1,11 @@
 @extends('masterlayout.masterlayout')
 @section('tittle','homepage')
 @section('css')
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<link href="{{asset('assets\css\cubeportfolio.css')}}" rel="stylesheet" type="text/css">
   	  <link href="{{asset('assets\css\portfolio.min.css')}}" rel="stylesheet" type="text/css">
- 	 <link href="{{asset('assets\css\customize.css')}}" rel="stylesheet" type="text/css">@endsection
+ 	 <link href="{{asset('assets\css\customize.css')}}" rel="stylesheet" type="text/css">
+ @endsection
 {{-- ส่วนหัว --}}
 @section('Logoandnavbar')
 
@@ -23,6 +25,70 @@
 
 	{{-- ส่วนเนื้อหาและส่วนท้า --}}
 @section('contentandfooter')
+	<style>
+		/* The switch - the box around the slider */
+		.switch {
+		  position: relative;
+		  display: inline-block;
+			width: 48px;
+	    height: 22px;
+		}
+
+		/* Hide default HTML checkbox */
+		.switch input {
+		  opacity: 0;
+		  width: 0;
+		  height: 0;
+		}
+
+		/* The slider */
+		.slider {
+		  position: absolute;
+		  cursor: pointer;
+		  top: 0;
+		  left: 0;
+		  right: 0;
+		  bottom: 0;
+		  background-color: #ccc;
+		  -webkit-transition: .4s;
+		  transition: .4s;
+		}
+
+		.slider:before {
+		    position: absolute;
+		    content: "";
+		    height: 15px;
+		    width: 15px;
+		    left: 4px;
+		    bottom: 3px;
+		    background-color: white;
+		    -webkit-transition: .4s;
+		    transition: .4s;
+		}
+
+		input:checked + .slider {
+		  background-color: #2196F3;
+		}
+
+		input:focus + .slider {
+		  box-shadow: 0 0 1px #2196F3;
+		}
+
+		input:checked + .slider:before {
+		  -webkit-transform: translateX(26px);
+		  -ms-transform: translateX(26px);
+		  transform: translateX(26px);
+		}
+
+		/* Rounded sliders */
+		.slider.round {
+		  border-radius: 34px;
+		}
+
+		.slider.round:before {
+		  border-radius: 50%;
+		}
+	</style>
 
 	  <div class="content">
       <div class="page-inner">
@@ -109,7 +175,16 @@
 									                             </div>
 									                         </div>
 									                         <div class="cbp-l-grid-projects-desc uppercase text-left uppercase  mx-2 my-3">ประเภทเครื่อง : {{$dataitem->TYPE_NAME}}</div>
-																					 <div class="cbp-l-grid-projects-desc uppercase text-left uppercase  mx-2 my--3">สถานะ : {{ $dataitem->TYPE_STATUS == "9" ? 'เปิด' : 'ปิด' }}</div>
+																					 <div class="cbp-l-grid-projects-desc uppercase text-left uppercase  mx-2 my--3">
+																						 สถานะ :
+																						 <label class="switch">
+															                 <input type="checkbox" id="STATUS_{{ $dataitem->UNID }}" name="STATUS_{{ $dataitem->UNID }}" value="9"
+																							 onchange="changestatus(this)"
+																							 data-unid="{{ $dataitem->UNID }}"
+																							  {{ $dataitem->TYPE_STATUS == '9' ? 'checked' : ''}}>
+															                 <span class="slider round"></span>
+															               </label></div>
+
 																						 <div class="row">
 																							 <div class="col col-md-5 my-2">
 																								 <a href="{{ url('machine/machinetypetable/edit/'.$dataitem->UNID) }}"
@@ -123,13 +198,7 @@
 																								style="height: 40px; width:90px;font-size:13px;line-height:40px;"><span class="fas fa-trash"> Delete</span></button>
 
 																							 </div>
-
-
-
-
 																						 </div>
-
-
 																			 </div>
 									                 </div>
 																	 @endforeach
@@ -174,6 +243,7 @@
 	<script src="{{ asset('assets/js/porfolio/jquery.cubeportfolio.js') }}"></script>
 	<script src="{{ asset('assets/js/porfolio/portfolio-1.js') }}"></script>
 	<script src="{{ asset('assets/js/porfolio/retina.min.js') }}"></script>
+	<script src={{ asset('assets/js/ajax/ajax-csrf.js') }}></script>
 	<script>
 	function deletemachinetype(thisdata){
 		var unid = $(thisdata).data('unid');
@@ -190,6 +260,20 @@
 				if (result.isConfirmed) {
 					window.location.href = url;
 				}
+			});
+	}
+	function changestatus(thisdata){
+		var unid =  $(thisdata).data('unid');
+		var changestatus = $('#STATUS_'+unid+':checked').val();
+		$.ajax({
+				type:'POST',
+				url: '/machine/machinetypetable/changestatus/'+unid,
+				datatype: 'json',
+				data: {
+					"_token": "{{ csrf_token() }}",
+					"TYPE_STATUS" : changestatus,
+				} ,
+
 			});
 	}
 	</script>

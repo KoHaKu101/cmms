@@ -162,4 +162,11 @@ public function Update(Request $request,$UNID) {
       ImageDestroy($img_master);
       ImageDestroy($img_create);
   }
+  function ChangeStatusButton(Request $request,$UNID){
+  $TYPE_STATUS = isset($request->TYPE_STATUS) ? 9 : 1;
+
+    MachineTypeTable::where('UNID','=',$UNID)->update([
+      "TYPE_STATUS" => $TYPE_STATUS
+    ]);
+  }
 }

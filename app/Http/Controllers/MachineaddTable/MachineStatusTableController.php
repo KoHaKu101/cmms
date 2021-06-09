@@ -34,9 +34,9 @@ class MachineStatusTableController extends Controller
 
   public function Index(){
 
-    $dataset = MachineStatusTable::paginate(10);
-
-    return View('machine/add/machinestatus/machinestatuslist',compact('dataset'));
+    $dataset = MachineStatusTable::orderBy('STATUS_CODE')->paginate(10);
+    $datacount = MachineStatusTable::selectraw('max(STATUS_CODE)count')->first();
+    return View('machine/add/machinestatus/machinestatuslist',compact('dataset','datacount'));
   }
 
   public function Store(Request $request){
@@ -52,8 +52,10 @@ class MachineStatusTableController extends Controller
       'STATUS_NAME.unique'    => 'มีสถานะเครื่องจักรนี้แล้ว'
       ]);
     $STATUS = isset($request->STATUS) ? '9' : '1' ;
+    $datacount = MachineStatusTable::selectraw('max(STATUS_CODE)count')->first();
+    $STATUS_CODE = ($datacount->count)+1;
     MachineStatusTable::insert([
-      'STATUS_CODE'     => $request->STATUS_CODE,
+      'STATUS_CODE'     => $STATUS_CODE,
       'STATUS_NAME'     => $request->STATUS_NAME,
       'STATUS'          => $STATUS,
       'CREATE_BY'       => Auth::user()->name,

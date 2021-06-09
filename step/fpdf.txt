@@ -103,7 +103,7 @@ $file = $path;
 $filename = $filename;
 
   header('Content-type: application/pdf'); ประเภท ของข้อมูลที่จะนำมาใช้ เช่นถ้าหากเปลี่ยยนเป็น text/html ก็จะดึงข้อมูลมาแปลงเป็น html ซึ่งถ้าหาก ดึงไฟล์มาแล้วไม่ใช่ภาษามันจะทำให้เกิดการเพี้ยน
-  header('Content-Disposition: inline; filename="' . $filename . '"'); คือการให้ borwer ดาวโหลดไฟล์ของเรามาแล้วทำการเปิด ซึ่งจะทำให้เมื่อเราดาวโหลดไฟล์กับมาใช้ก็จะได้ชื่อตามที่เราตั้งแต่แรก และอาจจะมีผลทำให้ทำงานเร็วขึ้น
+  header('Content-Disposition: inline; filename="' . $filename . '"'); คือการให้ borwer ดาวโหลดไฟล์ของเรามาแล้วทำการเปิด ซึ่งการให้ บราวเซอ ดาวโหลดไฟล์เรา จะทำให้สามารถรองรับไฟล์ที่ บราวเซออื่นไม่รองรับได้ 
   header('Content-Transfer-Encoding: binary');
   header('Accept-Ranges: bytes'); 
   

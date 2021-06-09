@@ -175,7 +175,7 @@
 
 												<div class="form-group has-error">
 													<label for="STATUS_CODE">CODE</label>
-													<input type="text"  class="form-control" id="STATUS_CODE" name="STATUS_CODE" placeholder="CODE" required autofocus>
+													<input type="text"  class="form-control" id="STATUS_CODE" name="STATUS_CODE" placeholder="CODE" readonly value="{{ ($datacount->count)+1 }}">
 												</div>
 												<div class="form-group has-error">
 													<label for="STATUS_NAME">สถานะเครื่องจักร</label>

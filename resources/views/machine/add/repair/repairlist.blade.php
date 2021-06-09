@@ -308,7 +308,7 @@
 				              <label for="comment" class="mr-2">Status</label>
 				              <!-- Rounded switch -->
 				              <label class="switch">
-				                <input type="checkbox" id="STATUS" name="STATUS" value="9" checked>
+				                <input type="checkbox" class="STATUS" id="STATUS" name="STATUS" value="9" checked>
 				                <span class="slider round"></span>
 				              </label>
 				            </div>
@@ -343,12 +343,14 @@
 				var url = "{{ route('repairtemplate.subsave') }}";
 				$('#Title_SUBREPAIR').html('เพิ่มรายการ');
 				$('#FRM_SAVESUB').attr('action', url);
+				$('.STATUS').attr('checked',true);
 				$('#FRM_SAVESUB')[0].reset();
 			});
 			$('#NEW_MAINREPAIR').on('hidden.bs.modal', function (e) {
 				var url = "{{ route('repairtemplate.save') }}";
 				$('#Title_MAINREPAIR').html('เพิ่มรายการ');
 				$('#FRM_SAVEMAIN').attr('action', url);
+				$('#STATUS').attr('checked',true);
 			  $('#FRM_SAVEMAIN')[0].reset();
 			});
 			function BTN_EDIT(thisdata){
@@ -415,7 +417,7 @@
 
 				$('#REPAIR_SUBSELECT_NAME').val(repair_subname);
 				$('#REPAIR_SUBSELECT_UNIDREF').val(unid);
-				$('#STATUS').attr('checked',checkstatus);
+				$('.STATUS').attr('checked',checkstatus);
 				$("div.CHECKSTATUS select").val(machinestatus);
 
 				$('#NEW_SUBREPAIR').modal('show');
