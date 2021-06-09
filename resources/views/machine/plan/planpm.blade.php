@@ -37,10 +37,12 @@
 								<div class="card-body text-center">
 									<div class="row ">
 										@for ($m=date('Y')-2; $m < date('Y')+2; $m++)
-											<div class="col-sm-6 col-md-3" onclick="window.open('{{ route('plan.yearpdf',$m) }}', '_blank', 'width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');"
-												style="cursor:pointer;" >
+											<div class="col-sm-6 col-md-3"
+												 >
 												<div class="card card-stats card-round">
-													<div class="card-body">
+													<div class="card-body"
+													style="cursor:pointer;"
+													onclick="window.open('{{ route('plan.yearpdf',$m) }}', '_blank', 'width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');">
 														<div class="row align-items-center">
 															<div class="col-icon">
 																<div class="icon-big text-center icon-success bubble-shadow-small">
@@ -81,8 +83,8 @@
 												@endphp
 												@for ($i=1; $i < 13; $i++)
 
-													<div class="col-sm-6 col-lg-2 text-center" onclick="planmonthpdf('{{ $i }}')" style="cursor:pointer;">
-														<div class="card">
+													<div class="col-sm-6 col-lg-2 text-center" >
+														<div class="card" onclick="planmonthpdf('{{ $i }}')" style="cursor:pointer;">
 															<div class="p-2">
 																<img class="card-img-top rounded" src="{{asset('../assets/img/12zodiac/'.$i.'.png')}}" alt="Product 5" style="width:100px">
 															</div>
