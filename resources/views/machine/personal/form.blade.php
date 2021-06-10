@@ -73,8 +73,7 @@
 
 
 											<div class="row ml-1 mt-2">
-
-												<div class="form-group col-md-12 has-error">
+												<div class="form-group col-md-6 has-error">
 													<lebel>ประจำ LINE</lebel>
 													<select class="form-control form-control" id="EMP_GROUP" name="EMP_GROUP">
 													<option value>--แสดงทั้งหมด--</option>
@@ -82,8 +81,18 @@
 													<option value="{{ $dataline->LINE_NAME}}"> {{$dataline->LINE_NAME}} </option>
 													@endforeach
 												</select>
-						  				</div>
-											</div>
+													</div>
+												<div class="form-group col-md-6 has-error">
+													<lebel>สถานะ</lebel>
+													<select class="form-control form-control" id="EMP_STATUS" name="EMP_STATUS">
+													<option value>--แสดงทั้งหมด--</option>
+													<option value="9"> แสดง </option>
+													<option value="1"> ซ่อน </option>
+
+												</select>
+						  					</div>
+
+										</div>
 
 										</div>
 										<!-- ช่อง3-->

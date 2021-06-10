@@ -70,31 +70,65 @@
 										</div>
 									</div>
 									<div class="tab-content my-4">
-										<div class="tab-pane active " id="repair">
+										<div class="tab-pane active " >
 											<div class="row">
-												@foreach ($dataset as $index => $row)
-														<div class="col-sm-6 col-md-3">
-															<a  onclick="selectrepair(this)"  data-unid="{{ $row->UNID }}"
-																style="cursor:pointer">
-															<div class="card card-stats card-primary card-round">
-																<div class="card-body">
-																	<div class="row">
-																		<div class="col-5">
-																			<div class="icon-big text-center">
-																				<i class="fas fa-briefcase"></i>
+												<table class="table step1">
+													<thead>
+														<tr>
+															<th></th>
+															<th></th>
+															<th></th>
+															<th></th>
+														</tr>
+													</thead>
+													<tbody>
+														{{-- @foreach ($dataset as $index => $row) --}}
+															<?php
+															$i=1;
+															foreach ($dataset as $index => $row)
+															{
+																if ($i == 1) {
+																	echo '<tr>';
+																}
+
+
+																echo '<td width="200px">
+																	<div class="col-sm-12 col-md-12">
+																		<a  onclick="selectrepair(this)"  data-unid=" '.$row->UNID.' "
+																			style="cursor:pointer">
+																		<div class="card card-stats card-primary card-round">
+																			<div class="card-body">
+																				<div class="row">
+																					<div class="col-5">
+																						<div class="icon-big text-center">
+																							<i class="fas fa-briefcase"></i>
+																						</div>
+																					</div>
+																					<div class="col-7 col-stats">
+																						<div class="numbers">
+																							<p class="card-category">'.$row->REPAIR_MAINSELECT_NAME.'</p>
+																						</div>
+																					</div>
+																				</div>
 																			</div>
 																		</div>
-																		<div class="col-7 col-stats">
-																			<div class="numbers">
-																				<p class="card-category">{{$row->REPAIR_MAINSELECT_NAME}}</p>
-																			</div>
-																		</div>
+																		</a>
 																	</div>
-																</div>
-															</div>
-														</a >
-														</div>
-												@endforeach
+																</td>';
+																if ($i == 4) {
+																	$i=1;
+																	echo '<tr>';
+																}
+																$i++;
+															}
+															 ?>
+
+														{{-- @endforeach --}}
+													</tbody>
+												</table>
+
+
+
 											</div>
 											<div class="card-action text-center">
 												<a href="{{ route('repair.repairsearch') }}" class="btn btn-warning mx-1 my-1"
@@ -245,6 +279,7 @@
 {{-- ส่วนjava --}}
 @section('javascript')
 	<script src="{{ asset('assets/js/ajax/ajax-csrf.js') }}"></script>
+	<script src="{{ asset('../../assets/js/plugin/datatables/datatables.min.js')}}"></script>
 	<script>
 	$(".tabactive").each(function(){
 		$(this).click(function(){
@@ -338,6 +373,19 @@
 			var step = $(thisdata).data('step');
 			$('#'+step).click();
 		}
+	$(document).ready(function(){
+		var table =	$('.step1').DataTable({
+				"pageLength": 10,
+				"bLengthChange": false,
+				"bFilter": true,
+				"bInfo": false,
+				"bAutoWidth": false,
+				columnDefs: [
+				{ orderable: false, targets:[0,1,2,3,4] }
+			]
+			});
+	});
+
 	</script>
 
 

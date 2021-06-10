@@ -164,6 +164,7 @@
 										<div class="card-tools">
 											<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
 												<li class="nav-item">
+
 													<a class="nav-link active" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">Today</a>
 												</li>
 											</ul>
@@ -185,13 +186,18 @@
 									</div>
 									<div class="flex-1 ml-3 pt-1 col-md-6 col-lg-7">
 										<h4 class="text-uppercase fw-bold mb-1">{{$dataitem->MACHINE_CODE}}
-										<span class="{{$dataitem->MACHINE_STATUS == '1' ? 'text-danger' : 'text-warning'}} pl-3">	{{$dataitem->MACHINE_STATUS == '1' ? 'หยุดทำงาน' : 'ทำงานปกติ'}}
+										<span class="{{$dataitem->MACHINE_STATUS == '1' ? 'text-danger' : 'text-warning'}} pl-3">
+											@if ($dataitem->PRIORITY == '9')
+												<img src="{{asset('assets/css/flame.png')}}" class="mt--2" width="20px" height="20px">
+											@endif
+											 	{{$dataitem->MACHINE_STATUS == '1' ? 'หยุดทำงาน' : 'ทำงานปกติ'}}
 										</span></h4>
 
 										<span class="text-muted" >{{ $dataitem->REPAIR_SUBSELECT_NAME }}</span>
 									</div>
 									<div class="float-right pt-1 col-md-6 col-lg-3">
 										<h5 class="text-muted">{{$dataitem->DOC_DATE}}</h5>
+
 									</div>
 									</div>
 									<hr>

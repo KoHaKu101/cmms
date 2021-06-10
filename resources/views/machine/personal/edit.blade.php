@@ -75,7 +75,7 @@
 
 											</div>
 											<div class="row ml-1 mt-2">
-												<div class="form-group col-md-12 has-error">
+												<div class="form-group col-md-6 has-error">
 													<lebel>ประจำ LINE</lebel>
 													<select class="form-control form-control" id="EMP_GROUP" name="EMP_GROUP">
 													<option value>--แสดงทั้งหมด--</option>
@@ -85,9 +85,21 @@
 														{{ $dataset->EMP_GROUP == $dataline->LINE_NAME ? 'selected' : ''}} > {{$dataline->LINE_NAME}} </option>
 													@endforeach
 												</select>
-						  				</div>
-											</div>
+													</div>
+												<div class="form-group col-md-6 has-error">
+													<lebel>สถานะ</lebel>
+													<select class="form-control form-control" id="EMP_STATUS" name="EMP_STATUS">
+													<option value>--แสดงทั้งหมด--</option>
+													<option value="9"
+														{{ $dataset->EMP_STATUS == '9' ? 'selected' : ''}} > แสดง </option>
+													<option value="1"
+														{{ $dataset->EMP_STATUS == '1' ? 'selected' : ''}} > ซ่อน </option>
+
+												</select>
+						  					</div>
+
 										</div>
+									</div>
 										<!-- ช่อง3-->
 										<div class="col-md-6 col-lg-4">
 											<div class="form-group has-error">
