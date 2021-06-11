@@ -5,7 +5,7 @@ namespace App\Models\Machine;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EMPName extends Model
+class PositionEMP extends Model
 {
     use HasFactory;
 
@@ -15,9 +15,18 @@ class EMPName extends Model
     public $incrementing = false;
     public $timestamps = false;
     protected $primaryKey = "UNID";
-    protected $keyType = 'string';
-    public $table ='PMCS_EMP_NAME';
+    protected $keyType = 'BigInteger';
+    public $table ='PMCS_EMP_POSITION';
 
-    protected $fillable = ['POSITION','EMP_CODE','EMP_NAME','EMP_ICON','EMP_GROUP','EMP_NOTE','EMP_STATUS','CREATE_BY'
-    ,'CREATE_TIME','MODIFY_BY','MODIFY_TIME','UNID','EMP_LINE'];
+    protected $fillable = ['UNID'
+,'EMP_POSITION_INDEX'
+,'EMP_POSITION_CODE'
+,'EMP_POSITION_NAME'
+,'EMP_POSITION_LIMIT'
+,'REMARK'
+,'STATUS'
+,'CREATE_BY'
+,'CREATE_TIME'
+,'MODIFY_BY'
+,'MODIFY_TIME'];
 }

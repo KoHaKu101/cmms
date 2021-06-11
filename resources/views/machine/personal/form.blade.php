@@ -70,30 +70,27 @@
 													<input type="text" class="form-control" id="EMP_CODE" name="EMP_CODE" placeholder="รหัสพนักงาน" required autofocus>
 
 											</div>
-
-
-											<div class="row ml-1 mt-2">
-												<div class="form-group col-md-6 has-error">
-													<lebel>ประจำ LINE</lebel>
-													<select class="form-control form-control" id="EMP_GROUP" name="EMP_GROUP">
-													<option value>--แสดงทั้งหมด--</option>
-													@foreach($datalineselect as $dataline)
-													<option value="{{ $dataline->LINE_NAME}}"> {{$dataline->LINE_NAME}} </option>
-													@endforeach
-												</select>
-													</div>
-												<div class="form-group col-md-6 has-error">
-													<lebel>สถานะ</lebel>
-													<select class="form-control form-control" id="EMP_STATUS" name="EMP_STATUS">
-													<option value>--แสดงทั้งหมด--</option>
-													<option value="9"> แสดง </option>
-													<option value="1"> ซ่อน </option>
-
-												</select>
-						  					</div>
-
-										</div>
-
+											<div class="form-group">
+												<div class="row">
+													<div class="col-md-6 has-error">
+														<lebel>ประจำ LINE</lebel>
+														<select class="form-control form-control" id="EMP_LINE" name="EMP_LINE">
+														<option value>--แสดงทั้งหมด--</option>
+														@foreach($datalineselect as $dataline)
+														<option value="{{ $dataline->LINE_CODE}}"> {{$dataline->LINE_NAME}} </option>
+														@endforeach
+													</select>
+														</div>
+													<div class="col-md-6 has-error">
+														<lebel>สถานะ</lebel>
+														<select class="form-control form-control" id="EMP_STATUS" name="EMP_STATUS">
+														<option value>--แสดงทั้งหมด--</option>
+														<option value="9"> แสดง </option>
+														<option value="1"> ซ่อน </option>
+													</select>
+							  					</div>
+											</div>
+											</div>
 										</div>
 										<!-- ช่อง3-->
 										<div class="col-md-6 col-lg-4">

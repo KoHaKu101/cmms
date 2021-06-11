@@ -72,33 +72,34 @@
 												<label for="EMP_CODE">รหัสพนักงาน</label>
 													<input type="text" class="form-control" id="EMP_CODE" name="EMP_CODE" value="{{ $dataset->EMP_CODE }}">
 														<input type="hidden" id="UNID" name="UNID" value="{{ $dataset->UNID }}">
-
 											</div>
-											<div class="row ml-1 mt-2">
-												<div class="form-group col-md-6 has-error">
-													<lebel>ประจำ LINE</lebel>
-													<select class="form-control form-control" id="EMP_GROUP" name="EMP_GROUP">
-													<option value>--แสดงทั้งหมด--</option>
-													@foreach($datalineselect as $dataline)
+											<div class="form-group">
+												<div class="row ">
+													<div class="col-lg-6 has-error">
+														<lebel>ประจำ LINE</lebel>
+														<select class="form-control form-control" id="EMP_LINE" name="EMP_LINE">
+														<option value>--แสดงทั้งหมด--</option>
+														@foreach($datalineselect as $dataline)
 
-													<option value="{{ $dataline->LINE_NAME}}"
-														{{ $dataset->EMP_GROUP == $dataline->LINE_NAME ? 'selected' : ''}} > {{$dataline->LINE_NAME}} </option>
-													@endforeach
-												</select>
-													</div>
-												<div class="form-group col-md-6 has-error">
-													<lebel>สถานะ</lebel>
-													<select class="form-control form-control" id="EMP_STATUS" name="EMP_STATUS">
-													<option value>--แสดงทั้งหมด--</option>
-													<option value="9"
-														{{ $dataset->EMP_STATUS == '9' ? 'selected' : ''}} > แสดง </option>
-													<option value="1"
-														{{ $dataset->EMP_STATUS == '1' ? 'selected' : ''}} > ซ่อน </option>
+														<option value="{{ $dataline->LINE_CODE}}"
+															{{ $dataset->EMP_LINE == $dataline->LINE_CODE ? 'selected' : ''}} > {{$dataline->LINE_NAME}} </option>
+														@endforeach
+													</select>
+														</div>
+													<div class="col-lg-6 has-error">
+														<lebel>สถานะ</lebel>
+														<select class="form-control form-control" id="EMP_STATUS" name="EMP_STATUS">
+														<option value>--แสดงทั้งหมด--</option>
+														<option value="9"
+															{{ $dataset->EMP_STATUS == '9' ? 'selected' : ''}} > แสดง </option>
+														<option value="1"
+															{{ $dataset->EMP_STATUS == '1' ? 'selected' : ''}} > ซ่อน </option>
 
-												</select>
-						  					</div>
+													</select>
+							  					</div>
+											</div>
+											</div>
 
-										</div>
 									</div>
 										<!-- ช่อง3-->
 										<div class="col-md-6 col-lg-4">
@@ -110,10 +111,11 @@
 												<lebel>ตำแหน่ง</lebel>
 												<select class="form-control form-control" id="POSITION" name="POSITION" required>
 												<option value>--แสดงทั้งหมด--</option>
-												<option value="SUPER" {{$dataset->POSITION == 'SUPER' ? 'selected' : ''}}>หัวหน้างาน</option>
-												<option value="FULLTIME" {{$dataset->POSITION == 'FULLTIME' ? 'selected' : ''}}>พนักงานประจำ</option>
-												<option value="DAILY" {{$dataset->POSITION == 'DAILY' ? 'selected' : ''}}>พนักงานรายวัน</option>
-												<option value="STUDENT"{{$dataset->POSITION == 'STUDENT' ? 'selected' : ''}}>นักศึกษา</option>
+												@foreach ($data_position as $key => $row_position)
+													<option value="{{$row_position->EMP_POSITION_CODE}}"
+														{{$dataset->POSITION == $row_position->EMP_POSITION_CODE ? 'selected' : ''}}>{{$row_position->EMP_POSITION_NAME}}</option>
+												@endforeach
+
 												</select>
 											</div>
 										</div>

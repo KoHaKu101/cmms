@@ -71,12 +71,17 @@
 									{{-- content --}}
 									<div class="container mt-4">
 										<div class="row">
+											@php
+												$EMP_POSITION = array();
+												foreach ($data_position as $key => $row_position){
+													$EMP_POSITION[$row_position->EMP_POSITION_CODE] = $row_position->EMP_POSITION_NAME;
+												}
+											@endphp
 											@foreach ($dataset as $key => $dataitem)
 												@php
+											   $EMP_ICON = $dataitem->EMP_ICON != '' ?	'image/emp/'.$dataitem->EMP_ICON : 'assets/img/no_image1200_900.png';
 
-												$EMP_ICON = $dataitem->EMP_ICON != '' ?	'image/emp/'.$dataitem->EMP_ICON : 'assets/img/no_image1200_900.png';
-												$POSITION = array(''=>'','SUPER'=>'หัวหน้างาน','FULLTIME'=>'พนักงานประจำ','DAILY'=>'พนักงานรายวัน','STUDENT' => 'นักศึกษา');
-
+												 $POSITION = $dataitem->POSITION != '' ? $EMP_POSITION[$dataitem->POSITION] : '';
 												@endphp
 												<div class="col-md-6 col-lg-3">
 													<div class="card card-post card-round">
@@ -86,8 +91,8 @@
 														<div class="card-body" style="background: #eef1c5;">
 																<h3 class="card-text my-1"><b>{{ $dataitem->EMP_NAME_TH }}</b></h3>
 																<h5 >รหัสพนักงาน : {{ $dataitem->EMP_CODE }}</h5>
-																<h5 >ตำแหน่ง : {{ $POSITION[$dataitem->POSITION] }}</h5>
-																<h5 >ประจำ : {{ $dataitem->EMP_GROUP }} </h5>
+																<h5 >ตำแหน่ง : {{ $POSITION }}</h5>
+																<h5 >ประจำ : {{ $dataitem->EMP_LINE }} </h5>
 																<div class="row">
 																	<div class="col-6 col-md-6">
 																		<a href="{{ url('machine/personal/edit/'.$dataitem->UNID) }}" class=" my-1 btn btn-primary btn-sm  btn-block">

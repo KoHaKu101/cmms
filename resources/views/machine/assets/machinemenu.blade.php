@@ -70,10 +70,10 @@
                                   </a>
                                   </div>
                                   <div class="cbp-caption-activeWrap">
-                                      <a href="{{url('machine/assets/machinelist/'.$dataitem->LINE_CODE)}}" style="width:254px" class=" btn" rel="nofollow" data-cbp-singlePage="projects">ทะเบียนเครื่องจักร</a>
+                                      <a href="{{url('machine/assets/machinelist/?LINE='.$dataitem->LINE_CODE)}}" style="width:254px" class=" btn" rel="nofollow" data-cbp-singlePage="projects">ทะเบียนเครื่องจักร</a>
                                   </div>
                             </div>
-                            <a href="{{url('machine/assets/machinelist/'.$dataitem->LINE_CODE)}}" style="color:black">
+                            <a href="{{url('machine/assets/machinelist/?LINE='.$dataitem->LINE_CODE)}}" style="color:black">
                             <div class="cbp-l-grid-projects-title uppercase text-center uppercase text-center">
                               เครื่องจักร {{ $dataitem->LINE_NAME }}</div>
                             <div class="cbp-l-grid-projects-desc uppercase text-center uppercase text-center"></div>

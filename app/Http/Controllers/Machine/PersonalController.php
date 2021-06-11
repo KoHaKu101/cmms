@@ -10,6 +10,7 @@ use File;
 use Illuminate\Http\Request;
 //******************** model ***********************
 use App\Models\Machine\EMPName;
+use App\Models\Machine\PositionEMP;
 use App\Models\Machine\MachineEMP;
 use App\Models\Machine\MachineLine;
 //************** Package form github ***************
@@ -42,7 +43,8 @@ class PersonalController extends Controller
 
     $encode = EMPName::selectRaw("dbo.encode_utf8('$SEARCH') as SEARCH")->first();
 
-
+    $data_position = PositionEMP::select('*')->selectraw('dbo.decode_utf8(EMP_POSITION_NAME) as EMP_POSITION_NAME')
+                                ->where('STATUS','=','9')->get();
     $dataset = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
                                    ->where(function($query) use ($SEARCH,$encode){
                                       if ($SEARCH != '') {
@@ -53,7 +55,7 @@ class PersonalController extends Controller
                                    })
                                    ->orderBy('EMP_CODE')->paginate(8);
     $SEARCH = str_replace('%','',$SEARCH);
-    return View('machine/personal/personallist',compact('dataset','SEARCH'));
+    return View('machine/personal/personallist',compact('dataset','SEARCH','data_position'));
   }
   public function Create(){
 
@@ -95,7 +97,7 @@ class PersonalController extends Controller
       'EMP_CODE'         => $request->EMP_CODE,
       'EMP_NAME'         => $EMP_NAME,
       'EMP_ICON'         => $last_img,
-      'EMP_GROUP'        => $request->EMP_GROUP,
+      'EMP_LINE'         => $request->EMP_LINE,
       'EMP_NOTE'         => $request->EMP_NOTE,
       'EMP_STATUS'           => $request->EMP_STATUS,
       'POSITION'             => $request->POSITION,
@@ -111,9 +113,11 @@ class PersonalController extends Controller
 
   }
   public function Edit($UNID) {
+    $data_position = PositionEMP::select('*')->selectraw('dbo.decode_utf8(EMP_POSITION_NAME) as EMP_POSITION_NAME')
+                                ->where('STATUS','=','9')->get();
     $dataset = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME')->where('UNID','=',$UNID)->first();
     $datalineselect = MachineLine::where('LINE_NAME','like','%'.'Line'.'%')->get();
-    return view('machine/personal/edit',compact('dataset','datalineselect'));
+    return view('machine/personal/edit',compact('dataset','datalineselect','data_position'));
 
   }
   public function Update(Request $request,$UNID){
@@ -140,7 +144,7 @@ class PersonalController extends Controller
     'EMP_CODE'         => $request->EMP_CODE,
     'EMP_NAME'         => $EMP_NAME,
     'EMP_ICON'         => $last_img,
-    'EMP_GROUP'        => $request->EMP_GROUP,
+    'EMP_LINE'         => $request->EMP_LINE,
     'EMP_NOTE'         => $request->EMP_NOTE,
     'POSITION'             => $request->POSITION,
     'EMP_STATUS'           => $request->EMP_STATUS,
