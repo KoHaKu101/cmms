@@ -80,8 +80,13 @@
 											@foreach ($dataset as $key => $dataitem)
 												@php
 											   $EMP_ICON = $dataitem->EMP_ICON != '' ?	'image/emp/'.$dataitem->EMP_ICON : 'assets/img/no_image1200_900.png';
+												 $POSITION = $dataitem->POSITION;
+												 if (array_key_exists($POSITION,$EMP_POSITION)) {
+													 $POSITION =  $EMP_POSITION[$dataitem->POSITION] ;
+												 }else {
+												 	$POSITION = "";
+												 }
 
-												 $POSITION = $dataitem->POSITION != '' ? $EMP_POSITION[$dataitem->POSITION] : '';
 												@endphp
 												<div class="col-md-6 col-lg-3">
 													<div class="card card-post card-round">

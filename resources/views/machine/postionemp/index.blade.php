@@ -128,7 +128,7 @@
                           @foreach ($DATA_POSITION as $index => $row)
                             @php
                               $STATUS_COLOR = $row->STATUS == 9 ?  "btn-success" : "btn-mute";
-                              $STATUS_TEXT  = $row->STATUS == 9 ?  "แสดง" : "ซ่อน";
+                              $STATUS_TEXT  = $row->STATUS == 9 ?  "เปิด" : "ซ่อน";
                             @endphp
                             <tr>
       												<td>{{$row->EMP_POSITION_INDEX}}</td>

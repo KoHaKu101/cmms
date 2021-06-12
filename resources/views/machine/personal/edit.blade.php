@@ -110,11 +110,23 @@
 											<div class="form-group col-md-12 has-error">
 												<lebel>ตำแหน่ง</lebel>
 												<select class="form-control form-control" id="POSITION" name="POSITION" required>
-												<option value>--แสดงทั้งหมด--</option>
+												@php
+												$check = array();
+												foreach ($data_position as $key => $row_position){
+													$check[$row_position->EMP_POSITION_CODE] = $row_position->EMP_POSITION_CODE;
+												}
+												@endphp
+												@if (!array_key_exists($dataset->EMP_POSITION_CODE,$check))
+													<option value="{{ $dataset->EMP_POSITION_CODE != '' ? $dataset->EMP_POSITION_CODE : ''}}" selected>
+														{{ $dataset->EMP_POSITION_NAME != '' ? $dataset->EMP_POSITION_NAME : '--แสดงทั้งหมด--' }}</option>
+												@else
+													<option value>--แสดงทั้งหมด--</option>
+												@endif
 												@foreach ($data_position as $key => $row_position)
 													<option value="{{$row_position->EMP_POSITION_CODE}}"
 														{{$dataset->POSITION == $row_position->EMP_POSITION_CODE ? 'selected' : ''}}>{{$row_position->EMP_POSITION_NAME}}</option>
 												@endforeach
+
 
 												</select>
 											</div>

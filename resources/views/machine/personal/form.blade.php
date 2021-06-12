@@ -102,10 +102,11 @@
 												<lebel>ตำแหน่ง</lebel>
 												<select class="form-control form-control" id="POSITION" name="POSITION" required>
 												<option value>--แสดงทั้งหมด--</option>
-												<option value="SUPER">หัวหน้างาน</option>
-												<option value="FULLTIME">พนักงานประจำ</option>
-												<option value="DAILY">พนักงานรายวัน</option>
-												<option value="STUDENT">นักศึกษา</option>
+
+												@foreach ($data_position as $key => $row_position)
+													<option value="{{$row_position->EMP_POSITION_CODE}}">{{$row_position->EMP_POSITION_NAME}}</option>
+												@endforeach
+
 												</select>
 											</div>
 
