@@ -7,11 +7,23 @@ use Illuminate\Http\Request;
 use App\Models\Machine\Machine;
 use App\Models\Machine\MachineRepairREQ;
 use Carbon\Carbon;
+use Auth;
 use Illuminate\Support\Facades\DB;
 class DashboardController extends Controller
 {
   public function __construct(){
     $this->middleware('auth');
+    $this->middleware(function ($request, $next) {
+        $checkuser = Auth::user();
+
+        if ($checkuser->role == 'user') {
+
+          return Redirect()->route('user.homepage');
+        }else {
+          return $next($request);
+        }
+
+    });
   }
   public function Sumaryline(){
     //dd($data_set);

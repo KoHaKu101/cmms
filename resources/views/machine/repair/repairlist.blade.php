@@ -9,8 +9,8 @@
 {{-- ส่วนหัว --}}
 @section('Logoandnavbar')
 
-	@include('masterlayout.logomaster')
-	@include('masterlayout.navbar.navbarmaster')
+		{{-- @include('masterlayout.logomaster') --}}
+		{{--  @include('masterlayout.navbar.navbarmaster')  --}}
 
 @stop
 {{-- ปิดท้ายส่วนหัว --}}
@@ -18,7 +18,7 @@
 {{-- ส่วนเมนู --}}
 @section('sidebar')
 
-	@include('masterlayout.sidebar.sidebarmaster0')
+		{{--   @include('masterlayout.sidebar.sidebarmaster')  --}}
 
 @stop
 {{-- ปิดส่วนเมนู --}}
@@ -32,9 +32,13 @@
           <div class="container">
 						<div class="row">
 							<div class="col-md-12 gx-4">
-
-
-
+								@can('isUser')
+									<a href="{{ url('/machine/user/homepage') }}">
+										<button class="btn btn-warning  btn-xs ">
+											<span class="fas fa-arrow-left fa-lg">Back </span>
+										</button>
+									</a>
+	              @endcan
 							</div>
 						</div>
           </div>
@@ -125,13 +129,26 @@
 								                    </button>
 								                  </td>
 								                  <td style="width:90px">
-								                    <button  id="popup" type="button" class="btn btn-danger btn-block btn-sm my-1" data-toggle="modal" data-target="#CloseRepair"
-								                    style="width:90px;height:30px">
+																		@can('isAdmin')
+																			<button  id="popup" type="button" class="btn btn-danger btn-block btn-sm my-1" data-toggle="modal" data-target="#CloseRepair"
+																		 style="width:90px;height:30px">
 
-								                      <span class="btn-label">
-								                        <i class="fas fa-clipboard-check mx-1"></i>ปิดเอกสาร
-								                      </span>
-								                    </button>
+																			 <span class="btn-label">
+																				 <i class="fas fa-clipboard-check mx-1"></i>ปิดเอกสาร
+																			 </span>
+																		 </button>
+																		@elsecan('isManager')
+																			<button  id="popup" type="button" class="btn btn-danger btn-block btn-sm my-1" data-toggle="modal" data-target="#CloseRepair"
+																		 style="width:90px;height:30px">
+
+																			 <span class="btn-label">
+																				 <i class="fas fa-clipboard-check mx-1"></i>ปิดเอกสาร
+																			 </span>
+																		 </button>
+																		@else
+
+																		@endcan
+
 								                @elseif ($row->CLOSE_STATUS === '1')
 								                  <td style="width:100px">
 								                    <button type="button" class="btn btn-primary btn-block btn-sm my-1 " style="width:120px;height:30px">

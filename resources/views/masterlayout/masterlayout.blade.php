@@ -46,11 +46,27 @@
 		@endif
 		<div class="main-header">
 
-      @yield('Logoandnavbar')
+			@can('isAdmin')
+				@include('masterlayout.logomaster')
+				@include('masterlayout.navbar.navbarmaster')
+			@elsecan('isManager')
+				@include('masterlayout.logomaster')
+				@include('masterlayout.navbar.navbarmaster')
+			@else
+				@include('masterlayout.navbar.navbarmasterforuser')
+			@endcan
+			@yield('Logoandnavbar')
 
 		</div>
+		@yield('sidebar')
+		@can('isAdmin')
+			@include('masterlayout.sidebar.sidebarmaster')
+	  @elsecan('isManager')
+			@include('masterlayout.sidebar.sidebarmaster')
+	  @else
 
-    @yield('sidebar')
+	  @endcan
+
 
     <div class="main-panel">
 
@@ -81,8 +97,14 @@
 	<script type="text/javascript" src="{{ asset('/assets/js/plugin/datatables/datatables.min.js') }}"></script>
 
 	<script type="text/javascript" src="{{ asset('/assets/js/plugin/sweetalert/sweetalert2.js') }}"></script>
+	@can('isAdmin')
+		<script type="text/javascript" src="{{ asset('assets/js/useinproject/dashboard/notifity.js') }}"></script>
+	@elsecan('isManager')
+		<script type="text/javascript" src="{{ asset('assets/js/useinproject/dashboard/notifity.js') }}"></script>
+	@else
 
-	<script type="text/javascript" src="{{ asset('assets/js/useinproject/dashboard/notifity.js') }}"></script>
+	@endcan
+
 	@include('/errorsweetalert/errormessed')
 
 

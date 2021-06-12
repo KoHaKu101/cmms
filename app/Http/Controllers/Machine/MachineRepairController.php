@@ -83,28 +83,30 @@ class MachineRepairController extends Controller
       $MACHINE_UNID = $MACHINE_UNID;
 
       $EMP_CODE = $request->cookie('empcode');
-      $SELECT_MAIN_EPAIR_UNID = $request->cookie('selectmainrepair');
-      $SELECT_SUB_EPAIR_UNID = $request->cookie('selectsubrepair');
+      $SELECT_MAIN_REPAIR_UNID = $request->cookie('selectmainrepair');
+      $SELECT_SUB_REPAIR_UNID = $request->cookie('selectsubrepair');
       $PRIORITY = $request->cookie('priority');
       $DATA_MACHINE = Machine::where('UNID','=',$MACHINE_UNID)->first();
-      $DATA_SELECTMACHINEREPAIR = SelectMainRepair::where('UNID','=',$SELECT_MAIN_EPAIR_UNID)->first();
-      $DATA_SELECTSUBREPAIR = SelectSubRepair::where('UNID','=',$SELECT_SUB_EPAIR_UNID)->first();
+      $DATA_SELECTMACHINEREPAIR = SelectMainRepair::where('UNID','=',$SELECT_MAIN_REPAIR_UNID)->first();
+      $DATA_SELECTSUBREPAIR = SelectSubRepair::where('UNID','=',$SELECT_SUB_REPAIR_UNID)->first();
       $DATA_EMP = MachineEMP::where('EMP_CODE','=',$EMP_CODE)->where('REF_UNID','=',$MACHINE_UNID)->first();
       $UNID = $this->randUNID('PMCS_CMMS_REPAIR_REQ');
 
-      $rowcount = MachineRepairREQ::selectraw('max(DOC_NO)DOC_NO,max(DOC_DATE)DOC_DATE')->get();
+      $rowcount = MachineRepairREQ::selectraw('max(DOC_NO)DOC_NO,max(DOC_DATE)DOC_DATE')->first();
 
-      $DOC_NO_RESET = date('Y-m', strtotime($rowcount[0]->DOC_DATE));
+      $DOC_NO_RESET = date('Y-m', strtotime($rowcount->DOC_DATE));
+      $DOC_YY = date('y')+43;
+      $DOC_NO = $rowcount->DOC_NO;
+      $EXPLOT = str_replace('RE'.$DOC_YY.date('m').'-','',$DOC_NO);
 
 
-      $DOC_YY = date('y')+543;
-      $DOC_NO = $rowcount[0]->DOC_NO;
-      dd($rowcount->DOC_NO+1);
+
       if ($DOC_NO_RESET > date('Y-m')) {
         $DOC_NO = 'RE'.$DOC_YY.date('m').'-'. 0001;
       }else {
-        $DOC_NO = $rowcount[0]->DOC_NO+1;
+        $DOC_NO = 'RE'.$DOC_YY.date('m').'-'.'00'.$EXPLOT+1;
       }
+
 
       MachineRepairREQ::insert([
         'UNID'=> $UNID
@@ -136,7 +138,7 @@ class MachineRepairController extends Controller
       foreach ($cookie_array as $index => $row) {
         Cookie::queue(Cookie::forget($row));
       }
-      return redirect()->route('repair.list');
+      return redirect()->route('repair.edit',$UNID);
 
   }
   public function Edit($UNID) {
@@ -210,6 +212,12 @@ class MachineRepairController extends Controller
             return Redirect()->route('repair.edit',[$UNID]);
           }
   public function Delete($UNID){
+
+        $checkuser = Auth::user();
+        if ($checkuser->role == 'user') {
+          alert()->error('ไม่สิทธิ์การเข้าถึง')->autoclose('1500');
+          return Redirect()->route('user.homepage');
+        }
             $CLOSE_STATUS = '1';
               $data_set = MachineRepairREQ::where('UNID',$UNID)->update([
                       'CLOSE_STATUS'          => $CLOSE_STATUS,

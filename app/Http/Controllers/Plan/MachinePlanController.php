@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Auth;
 use File;
+use Gate;
 //******************** model ***********************
 use App\Models\Machine\Machine;
 use App\Models\Machine\MachinePlanPm;
@@ -38,6 +39,20 @@ class MachinePlanController extends Controller
 
   public function __construct(){
     $this->middleware('auth');
+    $this->middleware(function ($request, $next) {
+        $checkuser = Auth::user();
+
+        if ($checkuser->role == 'user') {
+          alert()->error('ไม่สิทธิ์การเข้าถึง')->autoclose('1500');
+          return Redirect()->route('user.homepage');
+        }else {
+          return $next($request);
+        }
+
+    });
+
+
+
   }
   public function randUNID($table){
     $number = date("ymdhis", time());
@@ -53,6 +68,7 @@ class MachinePlanController extends Controller
     return $number;
   }
   public function PMPlanList(Request $request){
+
     $PLAN_YEAR = $request->PLAN_YEAR > 0 ? $request->PLAN_YEAR : date('Y');
     $MACHINE_CODE = $request->MACHINE_CODE;
     $MACHINE_LINE = $request->MACHINE_LINE;

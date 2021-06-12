@@ -45,6 +45,8 @@ class MachineController extends Controller
 {
   public function __construct(){
     $this->middleware('auth');
+    
+
   }
   public function randUNID($table){
     $number = date("ymdhis", time());
@@ -320,6 +322,7 @@ class MachineController extends Controller
   public function UserHomePage(){
     return View('machine.userpage.userhomepage');
   }
+
   public function SaveImg($image = NULL,$new_name = NULL,$MACHINE_LINE = NULL){
     $img_ext = $image->getClientOriginalExtension();
     $width = 450;

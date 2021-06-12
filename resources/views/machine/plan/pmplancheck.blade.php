@@ -62,8 +62,8 @@ left: auto;
 {{-- ส่วนหัว --}}
 @section('Logoandnavbar')
 
-	@include('masterlayout.logomaster')
-	@include('masterlayout.navbar.navbarmaster')
+		{{-- @include('masterlayout.logomaster') --}}
+		{{--  @include('masterlayout.navbar.navbarmaster')  --}}
 
 @stop
 {{-- ปิดท้ายส่วนหัว --}}
@@ -71,7 +71,7 @@ left: auto;
 {{-- ส่วนเมนู --}}
 @section('sidebar')
 
-	@include('masterlayout.sidebar.sidebarmaster0')
+		{{--   @include('masterlayout.sidebar.sidebarmaster')  --}}
 
 @stop
 {{-- ปิดส่วนเมนู --}}

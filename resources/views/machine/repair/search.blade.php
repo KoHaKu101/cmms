@@ -10,8 +10,8 @@
 {{-- ส่วนหัว --}}
 @section('Logoandnavbar')
 
-	@include('masterlayout.logomaster')
-	@include('masterlayout.navbar.navbarmaster')
+		{{-- @include('masterlayout.logomaster') --}}
+		{{--  @include('masterlayout.navbar.navbarmaster')  --}}
 
 @stop
 {{-- ปิดท้ายส่วนหัว --}}
@@ -19,7 +19,7 @@
 {{-- ส่วนเมนู --}}
 @section('sidebar')
 
-	@include('masterlayout.sidebar.sidebarmaster0')
+		{{--   @include('masterlayout.sidebar.sidebarmaster')  --}}
 
 @stop
 {{-- ปิดส่วนเมนู --}}
@@ -34,11 +34,26 @@
 					<div class="container">
 						<div class="row">
 							<div class="col-md-1">
+              @can('isAdmin')
 								<a href="{{ url('machine/repair/repairlist') }}">
 									<button class="btn btn-warning  btn-xs ">
 										<span class="fas fa-arrow-left fa-lg">Back </span>
 									</button>
 								</a>
+              @elsecan('isManager')
+								<a href="{{ url('machine/repair/repairlist') }}">
+									<button class="btn btn-warning  btn-xs ">
+										<span class="fas fa-arrow-left fa-lg">Back </span>
+									</button>
+								</a>
+              @else
+								<a href="{{ url('/machine/user/homepage') }}">
+									<button class="btn btn-warning  btn-xs ">
+										<span class="fas fa-arrow-left fa-lg">Back </span>
+									</button>
+								</a>
+              @endcan
+
 							</div>
 						</div>
 					</div>
@@ -91,7 +106,7 @@
 						        </div>
 						        @endforeach
 						      @else
-						        
+
 						      @endif
 						    </div>
 						  </div>

@@ -22,6 +22,7 @@ use App\Http\Controllers\Machine\MailConfigController;
 use App\Http\Controllers\Machine\DailyCheckController;
 use App\Http\Controllers\Machine\MachineSparePartController;
 use App\Http\Controllers\Machine\CookieController;
+use App\Http\Controllers\Machine\PerMissionController;
 //************************* Plan *************************************
 use App\Http\Controllers\Plan\MachinePlanController;
 use App\Http\Controllers\Plan\Report\PlanYearMachinePm;
@@ -66,24 +67,43 @@ use App\Models\SettingMenu\Menusubitem;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::get('/', function () {
     return redirect('/machine/user/homepage');
 })->middleware('auth');
 //Logout
 Route::get('/user/logout/',[MenuController::class,'Logout'])->name('user.logout');
-
+Route::middleware(['auth:sanctum', 'verified']);
 //user Page
 Route::get('/machine/user/homepage',[MachineController::class,'UserHomePage'])->name('user.homepage');
-//PDF FILE
-Route::get('/machine/repairhistory/pdf/{UNID}', 'App\Http\Controllers\PDF\MachineHistoryRepairPDFController@RepairHistory');
 Route::get('/machine/repair/pdf/{UNID}',        'App\Http\Controllers\PDF\MachineRepairPDFController@RepairPdf');
-Route::get('/machine/systemcheck/pdf/{UNID}',   'App\Http\Controllers\PDF\MachineSystemCheckPDFController@SystemCheckPdf');
-Route::get('/machine/assets/machineall/{LINE?}', [MachinePDFController::class,'MachinePDF']);
+
 //Cookie
 Route::get('/cookie/set',[CookieController::class,'setCookie'])->name('cookie.set');
 Route::get('/cookie/get',[CookieController::class,'getCookie'])->name('cookie.get');
+//repair
 
-Route::middleware(['auth:sanctum', 'verified']);
+Route::get('machine/repair/repairlist'             ,[MachineRepairController::class,'Index'])->name('repair.list');
+
+  Route::get('machine/repair/form/{MACHINE_CODE}'  ,[MachineRepairController::class,'Create'])       ->name('repair.form');
+  Route::get('machine/repair/repairsearch'         ,[MachineRepairController::class,'PrepareSearch'])->name('repair.repairsearch');
+
+  Route::post('machine/repair/store/{MACHINE_UNID}',[MachineRepairController::class,'Store'])        ->name('repair.store');
+  Route::get('machine/repair/edit/{UNID}'          ,[MachineRepairController::class,'Edit'])         ->name('repair.edit');
+  Route::post('machine/repair/update/{UNID}'       ,[MachineRepairController::class,'Update']);
+  Route::get('machine/repair/delete/{UNID}'        ,[MachineRepairController::class,'Delete'])       ->name('repair.delete');
+
+  Route::post('machine/repair/select/selectrepairdetail',[MachineRepairController::class,'SelectRepairDetail'])->name('repair.selectrepairdetail');
+
+
+//group not user
+Route::middleware('can:isAdminandManager')->group(function () {
+//PDF FILE
+Route::get('/machine/repairhistory/pdf/{UNID}', 'App\Http\Controllers\PDF\MachineHistoryRepairPDFController@RepairHistory');
+
+Route::get('/machine/systemcheck/pdf/{UNID}',   'App\Http\Controllers\PDF\MachineSystemCheckPDFController@SystemCheckPdf');
+Route::get('/machine/assets/machineall/{LINE?}', [MachinePDFController::class,'MachinePDF']);
+
 //Dashboard
 Route::get('/machine/dashboard/sumaryline',[DashboardController::class,'Sumaryline'])->name('dashboard.sumaryline');
 Route::get('/machine/dashboard/dashboard',[DashboardController::class,'Dashboard']);
@@ -122,19 +142,8 @@ Route::get('machine/personal/personallist'   ,[PersonalController::class,'Index'
   Route::get('machine/personal/edit/{UNID}'            ,[PersonalController::class,'Edit'])   ->name('personal.edit');
   Route::post('machine/personal/update/{UNID}'  ,[PersonalController::class,'Update']);
   Route::get('machine/personal/delete/{UNID}'   ,[PersonalController::class,'Delete']) ->name('personal.delete');
-//repair
-Route::get('machine/repair/repairlist'             ,[MachineRepairController::class,'Index'])        ->name('repair.list');
-  Route::get('machine/repair/form/{MACHINE_CODE}'  ,[MachineRepairController::class,'Create'])       ->name('repair.form');
-  Route::get('machine/repair/repairsearch'         ,[MachineRepairController::class,'PrepareSearch'])->name('repair.repairsearch');
 
-  Route::post('machine/repair/store/{MACHINE_UNID}',[MachineRepairController::class,'Store'])        ->name('repair.store');
-  Route::get('machine/repair/edit/{UNID}'          ,[MachineRepairController::class,'Edit'])         ->name('repair.edit');
-  Route::post('machine/repair/update/{UNID}'       ,[MachineRepairController::class,'Update']);
-  Route::get('machine/repair/delete/{UNID}'        ,[MachineRepairController::class,'Delete'])       ->name('repair.delete');
-  Route::post('machine/repair/form/searchempcode'   ,[MachineRepairController::class,'SearchEMPCode'])->name('repair.searchempcode');
-  Route::post('machine/repair/select/selectemp'     ,[MachineRepairController::class,'SelectEmp'])       ->name('repair.selectemp');
 
-  Route::post('machine/repair/select/selectrepairdetail',[MachineRepairController::class,'SelectRepairDetail'])->name('repair.selectrepairdetail');
 
 //daily checksheet
 Route::get('machine/daily/list'                     ,[DailyCheckController::class,'DailyList'])  ->name('daily.list');
@@ -150,6 +159,8 @@ Route::get('machine/machinetypetable/list'      ,[MachineTypeTableController::cl
   Route::post('machine/machinetypetable/changestatus/{UNID}'  ,[MachineTypeTableController::class,'ChangeStatusButton']);
   Route::get('machine/machinetypetable/delete/{UNID}'   ,[MachineTypeTableController::class,'Delete']) ->name('machinetypetable.delete');
 //repair
+
+
 Route::get('machine/repairtemplate/list/{UNID?}'        ,[MachineRepairTableController::class,'Index'])  ->name('repairtemplate.list');
   Route::post('machine/repairtemplate/save'          ,[MachineRepairTableController::class,'Save']) ->name('repairtemplate.save');
   Route::post('machine/repairtemplate/update'          ,[MachineRepairTableController::class,'Update']) ->name('repairtemplate.update');
@@ -220,7 +231,7 @@ Route::post('machine/plan/planpmpdf'                         ,[MachinePlanContro
 Route::get('machine/pdf/plan/planpm/{YEAR}'                  ,[PlanYearMachinePm::class,'PlanYearPDF']) ->name('plan.yearpdf');
 Route::get('machine/pdf/plan/planpmmonth/{YEAR}/{MONTH?}'    ,[PlanMonthMachinePm::class,'PlanMonthPDF']) ->name('plan.monthpdf');
 Route::get('machine/pm/planlist'                             ,[MachinePlanController::class,'PMPlanList'])  ->name('pm.planlist');
-Route::post('machine/pm/planlist'                            ,[MachinePlanController::class,'PMPlanList']);
+Route::post('machine/pm/planlist'                            ,[MachinePlanController::class,'PMPlanList'])->middleware('can:isAdmin','can:isManager');
 Route::get('machine/pm/plancheck/{UNID}'                     ,[MachinePlanController::class,'PMPlanCheckForm']) ->name('pm.plancheck');
 Route::get('machine/pm/planedit/{UNID}'                      ,[MachinePlanController::class,'PMPlanEditForm']) ->name('pm.planedit');
 Route::post('machine/pm/planlist/save'                       ,[MachinePlanController::class,'PMPlanListSave']) ->name('pm.planlistsave');
@@ -233,7 +244,7 @@ Route::get('machine/pm/planlist/print/{UNID}'                ,[FormPMMachine::cl
   Route::post('machine/system/check/storelist'          ,[SysCheckController::class,'StoreList'])   ->name('syscheck.storelist');
   Route::get('machine/system/remove/{UNID}/{MC}'        ,[SysCheckController::class,'DeletePMMachine'])   ->name('syscheck.remove');
   Route::post('machine/system/check/storedate'          ,[SysCheckController::class,'StoreDate']);
-
+});
   //***************************** SETTING ****************************************
 //config
   Route::get('machine/config/home'                  ,[MailConfigController::class,'Index'])->name('machine.config');
@@ -252,3 +263,11 @@ Route::get('machine/setting/submenu/home/{UNID}'    ,[MenuSubController::class,'
   Route::get('machine/setting/submenu/edit/{UNID}'    ,[MenuSubController::class,'Edit']);
   Route::post('machine/setting/submenu/update/{UNID}' ,[MenuSubController::class,'Update']);
   Route::get('machine/setting/submenu/delete/{UNID}'   ,[MenuSubController::class,'Delete']);
+// admin config permisssion
+Route::middleware('can:isAdmin')->group(function () {
+    Route::get('machine/config/permission'                ,[PerMissionController::class,'Home'])->name('permission.home');
+    Route::post('machine/config/permission/store'           ,[PerMissionController::class,'Store'])->name('permission.store');
+    Route::post('machine/config/permission/update'        ,[PerMissionController::class,'Update'])->name('permission.update');
+    Route::get('machine/config/permission/confirm'        ,[PerMissionController::class,'Confirm'])->name('permission.confirm');
+    Route::get('machine/config/permission/delete'        ,[PerMissionController::class,'Delete'])->name('permission.delete');
+});

@@ -18,7 +18,7 @@ class empposition extends Migration
         $table->BigInteger('UNID')->primary();
         $table->integer('EMP_POSITION_INDEX')->nullable()->default(0);
         $table->string('EMP_POSITION_CODE',50)->nullable();
-        $table->string('EMP_POSITION_NAME',200)->nullable();
+        $table->string('EMP_POSITION_NAME',200)->nullable()->unique();
         $table->integer('EMP_POSITION_LIMIT')->nullable()->default(0);
 
         $table->string('REMARK',500)->nullable();
