@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class empposition extends Migration
+class addempposition extends Migration
 {
     /**
      * Run the migrations.
