@@ -93,14 +93,25 @@ class PerMissionController extends Controller
    }
    $time = Carbon::now();
    $data = User::where('id','=',$request->id)->first();
-   $password = isset($request->password) ? Hash::make($request->password) : $data->password;
-   $data->update([
-     'name' => $request->name,
-     'email' => $request->email,
-     'password' => $password,
-     'role' => $role,
-     'updated_at'=> $time,
-   ]);
+
+   if (isset($request->password)) {
+    $password = isset($request->password) ? Hash::make($request->password) : $data->password;
+    $data->update([
+      'name' => $request->name,
+      'email' => $request->email,
+      'password' => $password,
+      'role' => $role,
+      'updated_at'=> $time,
+    ]);
+  }else {
+    $data->update([
+      'name' => $request->name,
+      'email' => $request->email,
+      'role' => $role,
+      'updated_at'=> $time,
+    ]);
+  }
+
    alert()->success('เพิ่มผู้ใช้งานสำเร็จ')->autoclose('1000');
    return redirect()->back();
  }

@@ -59,13 +59,13 @@
 
 		</div>
 		@yield('sidebar')
-		@can('isAdmin')
+		{{-- @can('isAdmin')
 			@include('masterlayout.sidebar.sidebarmaster')
 	  @elsecan('isManager')
 			@include('masterlayout.sidebar.sidebarmaster')
 	  @else
 
-	  @endcan
+	  @endcan --}}
 
 
     <div class="main-panel">
