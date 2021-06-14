@@ -44,16 +44,17 @@ class PersonalController extends Controller
     $SEARCH = isset($request->SEARCH) ?  '%'.$request->SEARCH.'%' : '';
 
     $encode = EMPName::selectRaw("dbo.encode_utf8('$SEARCH') as SEARCH")->first();
-    $dataset = EMPName::select('PMCS_EMP_NAME.*','EMP_TYPE','POSITION_CODE')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
-                                   ->leftjoin('EMCS_EMPLOYEE','EMCS_EMPLOYEE.EMP_CODE','=','PMCS_EMP_NAME.EMP_CODE')
-                                   ->where(function($query) use ($SEARCH,$encode){
-                                      if ($SEARCH != '') {
-                                         $query->where('PMCS_EMP_NAME.EMP_CODE', 'like', $SEARCH)
-                                               ->orwhere('PMCS_EMP_NAME.EMP_NAME', 'like', $SEARCH)
-                                               ->orwhere('PMCS_EMP_NAME.EMP_NAME','like' ,$encode->SEARCH) ;
-                                       }
-                                   })
-                                   ->orderBy('EMP_CODE')->paginate(8);
+    $dataset = EMPName::select('PMCS_EMP_NAME.*','EMP_TYPE','POSITION_CODE')
+                      ->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
+                      ->leftjoin('EMCS_EMPLOYEE','EMCS_EMPLOYEE.EMP_CODE','=','PMCS_EMP_NAME.EMP_CODE')
+                      ->where(function($query) use ($SEARCH,$encode){
+                         if ($SEARCH != '') {
+                            $query->where('PMCS_EMP_NAME.EMP_CODE', 'like', $SEARCH)
+                                  ->orwhere('PMCS_EMP_NAME.EMP_NAME', 'like', $SEARCH)
+                                  ->orwhere('PMCS_EMP_NAME.EMP_NAME','like' ,$encode->SEARCH) ;
+                          }
+                      })
+                      ->orderBy('PMCS_EMP_NAME.EMP_CODE')->paginate(8);
 
     $data_emppaytype = EMPPAYTYPE::select('*')->selectraw('dbo.decode_utf8(TYPE_NAME) as TYPE_NAME')->where('TYPE_STATUS','=',9)->get();
     $data_emppostion = EMPPOSTION::select('*')->selectraw('dbo.decode_utf8(POSITION_NAME) as POSITION_NAME')->where('POSITION_STATUS','=',9)->get();
