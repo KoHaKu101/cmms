@@ -9,10 +9,12 @@ use Auth;
 use File;
 use Illuminate\Http\Request;
 //******************** model ***********************
-use App\Models\Machine\EMPName;
 use App\Models\Machine\PositionEMP;
 use App\Models\Machine\MachineEMP;
 use App\Models\Machine\MachineLine;
+use App\Models\Machine\EMPName;
+use App\Models\Machine\EMPPAYTYPE;
+use App\Models\Machine\EMPPOSTION;
 //************** Package form github ***************
 use App\Exports\MachineExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -42,20 +44,21 @@ class PersonalController extends Controller
     $SEARCH = isset($request->SEARCH) ?  '%'.$request->SEARCH.'%' : '';
 
     $encode = EMPName::selectRaw("dbo.encode_utf8('$SEARCH') as SEARCH")->first();
-
-    $data_position = PositionEMP::select('*')->selectraw('dbo.decode_utf8(EMP_POSITION_NAME) as EMP_POSITION_NAME')
-                                ->where('STATUS','=','9')->get();
-    $dataset = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
+    $dataset = EMPName::select('PMCS_EMP_NAME.*','EMP_TYPE','POSITION_CODE')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
+                                   ->leftjoin('EMCS_EMPLOYEE','EMCS_EMPLOYEE.EMP_CODE','=','PMCS_EMP_NAME.EMP_CODE')
                                    ->where(function($query) use ($SEARCH,$encode){
                                       if ($SEARCH != '') {
-                                         $query->where('EMP_CODE', 'like', $SEARCH)
-                                               ->orwhere('EMP_NAME', 'like', $SEARCH)
-                                               ->orwhere('EMP_NAME','like' ,$encode->SEARCH) ;
+                                         $query->where('PMCS_EMP_NAME.EMP_CODE', 'like', $SEARCH)
+                                               ->orwhere('PMCS_EMP_NAME.EMP_NAME', 'like', $SEARCH)
+                                               ->orwhere('PMCS_EMP_NAME.EMP_NAME','like' ,$encode->SEARCH) ;
                                        }
                                    })
                                    ->orderBy('EMP_CODE')->paginate(8);
+
+    $data_emppaytype = EMPPAYTYPE::select('*')->selectraw('dbo.decode_utf8(TYPE_NAME) as TYPE_NAME')->where('TYPE_STATUS','=',9)->get();
+    $data_emppostion = EMPPOSTION::select('*')->selectraw('dbo.decode_utf8(POSITION_NAME) as POSITION_NAME')->where('POSITION_STATUS','=',9)->get();
     $SEARCH = str_replace('%','',$SEARCH);
-    return View('machine/personal/personallist',compact('dataset','SEARCH','data_position'));
+    return View('machine/personal/personallist',compact('dataset','SEARCH','data_emppaytype','data_emppostion'));
   }
   public function Create(){
 
@@ -70,14 +73,11 @@ class PersonalController extends Controller
       'EMP_CODE'           => 'required|max:50',
       'EMP_NAME'           => 'required|max:200',
       'EMP_ICON' => 'mimes:jpeg,png,jpg',
-      'POSITION' => 'required',
-
       ],
       [
       'EMP_CODE.required'  => 'กรุณราใส่รหัสพนักงาน',
       'EMP_NAME.required'  => 'กรุณราใส่ชื่อพนักงาน',
       'EMP_ICON.mimes'   => 'เฉพาะไฟล์ jpeg, png, jpg',
-      'POSITION.required'=> 'กรุณาเลือกตำแหน่งงาน',
       ]);
 
       $UNID = $this->randUNID('PMCS_EMP_NAME');
@@ -92,12 +92,12 @@ class PersonalController extends Controller
               $last_img = "";
           }
 
-      $POSITION = $request->POSITION;
-      $DATA_POSITIONEMP = PositionEMP::where('EMP_POSITION_CODE','=',$POSITION)->first();
-        if ($DATA_POSITIONEMP->LITMIT_STOCK > $DATA_POSITIONEMP->EMP_POSITION_LIMIT) {
-          alert()->error('ตำแหน่งงานเต็ม')->autoclose('1000');
-          return Redirect()->back();
-        }
+      // $POSITION = $request->POSITION;
+      // $DATA_POSITIONEMP = PositionEMP::where('EMP_POSITION_CODE','=',$POSITION)->first();
+      //   if ($DATA_POSITIONEMP->LITMIT_STOCK > $DATA_POSITIONEMP->EMP_POSITION_LIMIT) {
+      //     alert()->error('ตำแหน่งงานเต็ม')->autoclose('1000');
+      //     return Redirect()->back();
+      //   }
     $ENCODE = EMPName::selectRaw("dbo.encode_utf8('$request->EMP_NAME') as EMP_NAME")->first();
     $EMP_NAME = $ENCODE->EMP_NAME;
     EMPName::insert([
@@ -107,7 +107,7 @@ class PersonalController extends Controller
       'EMP_LINE'         => $request->EMP_LINE,
       'EMP_NOTE'         => $request->EMP_NOTE,
       'EMP_STATUS'           => $request->EMP_STATUS,
-      'POSITION'             => $POSITION,
+      'POSITION'             => '',
       'CREATE_BY'            => Auth  ::user()->name,
       'CREATE_TIME'          => Carbon::now(),
       'MODIFY_BY'            => Auth::user()->name,
@@ -116,10 +116,10 @@ class PersonalController extends Controller
 
     ]);
 
-        $LITMIT_STOCK = $DATA_POSITIONEMP->LITMIT_STOCK > 0 ? $DATA_POSITIONEMP->LITMIT_STOCK+1 : 1;
-        $DATA_POSITIONEMP->update([
-          'LITMIT_STOCK' => $LITMIT_STOCK
-        ]);
+        // $LITMIT_STOCK = $DATA_POSITIONEMP->LITMIT_STOCK > 0 ? $DATA_POSITIONEMP->LITMIT_STOCK+1 : 1;
+        // $DATA_POSITIONEMP->update([
+        //   'LITMIT_STOCK' => $LITMIT_STOCK
+        // ]);
 
     alert()->success('ลงทะเบียน สำเร็จ')->autoclose('1500');
     return Redirect()->route('personal.edit',$UNID);
@@ -127,35 +127,30 @@ class PersonalController extends Controller
   }
   public function Edit($UNID) {
 
-    $data_position = PositionEMP::select('*')->selectraw('dbo.decode_utf8(EMP_POSITION_NAME) as EMP_POSITION_NAME')
-                                ->whereraw('EMP_POSITION_LIMIT != LITMIT_STOCK')->where('STATUS','=','9')->get();
-
-    $EMP_POSTION = 'PMCS_EMP_POSITION';
-    $EMP_NAME = 'PMCS_EMP_NAME';
-    $dataset = EMPName::select($EMP_NAME.'.*','EMP_POSITION_CODE')
-                        ->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME,
-                                    dbo.decode_utf8(EMP_POSITION_NAME) as EMP_POSITION_NAME')
-                        ->leftJoin($EMP_POSTION, $EMP_NAME.'.POSITION' , '=',$EMP_POSTION.'.EMP_POSITION_CODE' )
-                        ->where($EMP_NAME.'.UNID','=',$UNID)->first();
+    $EMCS_EMPLOYEE = 'EMCS_EMPLOYEE';
+    $PMCS_EMP_NAME = 'PMCS_EMP_NAME';
+    $dataset = EMPName::select($PMCS_EMP_NAME.'.*','EMP_TYPE','POSITION_CODE')
+                        ->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME')
+                        ->leftJoin($EMCS_EMPLOYEE, $EMCS_EMPLOYEE.'.EMP_CODE' , '=',$PMCS_EMP_NAME.'.EMP_CODE' )
+                        ->where($PMCS_EMP_NAME.'.UNID','=',$UNID)->first();
+    $data_emppaytype = EMPPAYTYPE::select('*')->selectraw('dbo.decode_utf8(TYPE_NAME) as TYPE_NAME')
+                                  ->where('TYPE_CODE','=',$dataset->EMP_TYPE)->where('TYPE_STATUS','=',9)->first();
+    $data_emppostion = EMPPOSTION::select('*')->selectraw('dbo.decode_utf8(POSITION_NAME) as POSITION_NAME')
+                                  ->where('POSITION_CODE','=',$dataset->POSITION_CODE)->where('POSITION_STATUS','=',9)->first();
     $datalineselect = MachineLine::where('LINE_NAME','like','%'.'Line'.'%')->get();
-    return view('machine/personal/edit',compact('dataset','datalineselect','data_position'));
+    return view('machine/personal/edit',compact('dataset','datalineselect','data_emppaytype','data_emppostion'));
 
   }
   public function Update(Request $request,$UNID){
     $validated = $request->validate([
       'EMP_ICON' => 'mimes:jpeg,png,jpg',
-      'POSITION' => 'required',
+
       ],
       [
       'EMP_ICON.mimes'   => 'เฉพาะไฟล์ jpeg, png, jpg',
-      'POSITION.required' => 'กรุณาเลือกตำแหน่งงาน',
+
       ]);
-      $POSITION = $request->POSITION;
-      $DATA_POSITIONEMP = PositionEMP::where('EMP_POSITION_CODE','=',$POSITION)->first();
-        if ($DATA_POSITIONEMP->LITMIT_STOCK > $DATA_POSITIONEMP->EMP_POSITION_LIMIT) {
-          alert()->error('ตำแหน่งงานเต็ม')->autoclose('1000');
-          return Redirect()->back();
-        }
+
       $DATA_EMPNAME = EMPName::where('UNID',$UNID)->first();
       $last_img = $DATA_EMPNAME->EMP_ICON;
         if ($request->hasFile('EMP_ICON')) {
@@ -164,7 +159,7 @@ class PersonalController extends Controller
               $this->saveimg($image,$new_name);
                 $last_img = $new_name;
               }
-      $DATA_POSITIONEMP_CHANGE = PositionEMP::where('EMP_POSITION_CODE','=',$DATA_EMPNAME->POSITION)->first();
+
       $ENCODE = EMPName::selectRaw("dbo.encode_utf8('$request->EMP_NAME') as EMP_NAME")->first();
       $EMP_NAME = $ENCODE->EMP_NAME;
        EMPName::where('UNID',$UNID)->update([
@@ -173,33 +168,19 @@ class PersonalController extends Controller
         'EMP_ICON'         => $last_img,
         'EMP_LINE'         => $request->EMP_LINE,
         'EMP_NOTE'         => $request->EMP_NOTE,
-        'POSITION'             => $POSITION,
+        'POSITION'             => '',
         'EMP_STATUS'           => $request->EMP_STATUS,
         'MODIFY_BY'            => Auth::user()->name,
         'MODIFY_TIME'          => Carbon::now(),
       ]);
-      $LITMIT_STOCK = $DATA_POSITIONEMP->LITMIT_STOCK > 0 ? $DATA_POSITIONEMP->LITMIT_STOCK+1 : 1 ;
-      $DATA_POSITIONEMP->update([
-        'LITMIT_STOCK' => $LITMIT_STOCK
-      ]);
-      if (isset($DATA_POSITIONEMP_CHANGE->LITMIT_STOCK)) {
-        $LITMIT_STOCK_CHANGE =  $DATA_POSITIONEMP_CHANGE->LITMIT_STOCK > 0 ? $DATA_POSITIONEMP_CHANGE->LITMIT_STOCK-1 : 0;
-        $DATA_POSITIONEMP_CHANGE->update([
-          'LITMIT_STOCK' => $LITMIT_STOCK_CHANGE
-        ]);
-      }
+
   alert()->success('อัพเดทรายการสำเร็จ')->autoclose('1500');
   return Redirect()->back();
   }
 
   public function Delete($UNID){
       $DATA_EMPNAME = EMPName::where('UNID','=',$UNID)->first();
-      $DATA_POSITIONEMP = PositionEMP::where('EMP_POSITION_CODE','=',$DATA_EMPNAME->POSITION)->first();
-    if (isset($DATA_POSITIONEMP->LITMIT_STOCK)){
-      $LITMITE_STOCK = $DATA_POSITIONEMP->LITMIT_STOCK > 0 ? $DATA_POSITIONEMP->LITMIT_STOCK-1 : 0 ;
-      $DATA_POSITIONEMP->update([
-        'LITMIT_STOCK' => $LITMITE_STOCK,
-      ]);}
+
       $DATA_EMPNAME->delete();
       alert()->success('ลบรายการสำเร็จ')->autoclose('1500');
       return Redirect()->back();

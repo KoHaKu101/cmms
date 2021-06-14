@@ -99,6 +99,18 @@
 												<input type="text" class="form-control" id="EMP_NAME" name="EMP_NAME" placeholder="ชื่อพนักงาน" required autofocus>
 											</div>
 											<div class="form-group col-md-12 has-error">
+												<div class="row">
+													<div class="col-md-6">
+														<lebel>ตำแหน่ง</lebel>
+														<input type="text" class="form-control" value="" disabled>
+													</div>
+													<div class="col-md-6">
+														<lebel>ประเภท</lebel>
+														<input type="text" class="form-control" value="" disabled>
+													</div>
+												</div>
+											</div>
+											{{-- <div class="form-group col-md-12 has-error">
 												<lebel>ตำแหน่ง</lebel>
 												<select class="form-control form-control" id="POSITION" name="POSITION" required>
 												<option value>--แสดงทั้งหมด--</option>
@@ -108,7 +120,7 @@
 												@endforeach
 
 												</select>
-											</div>
+											</div> --}}
 
 
 										</div>

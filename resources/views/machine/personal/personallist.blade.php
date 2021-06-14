@@ -71,21 +71,33 @@
 									{{-- content --}}
 									<div class="container mt-4">
 										<div class="row">
+
 											@php
 												$EMP_POSITION = array();
-												foreach ($data_position as $key => $row_position){
-													$EMP_POSITION[$row_position->EMP_POSITION_CODE] = $row_position->EMP_POSITION_NAME;
+												$EMP_PAY_TYPE =array();
+												foreach ($data_emppostion as  $row_position){
+													$EMP_POSITION[$row_position->POSITION_CODE] = $row_position->POSITION_NAME;
 												}
+												foreach ($data_emppaytype as $row_paytype) {
+													$EMP_PAY_TYPE[$row_paytype->TYPE_CODE]= $row_paytype->TYPE_NAME;
+												}
+
 											@endphp
 											@foreach ($dataset as $key => $dataitem)
 												@php
 											   $EMP_ICON = $dataitem->EMP_ICON != '' ?	'image/emp/'.$dataitem->EMP_ICON : 'assets/img/no_image1200_900.png';
-												 $POSITION = $dataitem->POSITION;
-												 if (array_key_exists($POSITION,$EMP_POSITION)) {
-													 $POSITION =  $EMP_POSITION[$dataitem->POSITION] ;
+												 $POSITION = $dataitem->POSITION_CODE;
+												 $PAY_TYPE = $dataitem->EMP_TYPE;
+												 // dd($PAY_TYPE);
+												 if (array_key_exists($POSITION,$EMP_POSITION) && array_key_exists($PAY_TYPE,$EMP_PAY_TYPE)) {
+													 $POSITION = $EMP_POSITION[$dataitem->POSITION_CODE];
+													 $PAY_TYPE = $EMP_PAY_TYPE[$dataitem->EMP_TYPE];
 												 }else {
 												 	$POSITION = "";
+													$PAY_TYPE = "";
 												 }
+												 // dd($dataitem->POSITION_CODE);
+
 
 												@endphp
 												<div class="col-md-6 col-lg-3">
@@ -98,6 +110,7 @@
 																<h5 >รหัสพนักงาน : {{ $dataitem->EMP_CODE }}</h5>
 																<h5 >ตำแหน่ง : {{ $POSITION }}</h5>
 																<h5 >ประจำ : {{ $dataitem->EMP_LINE }} </h5>
+																<h5 >ประเภท : {{ $PAY_TYPE }} </h5>
 																<div class="row">
 																	<div class="col-6 col-md-6">
 																		<a href="{{ url('machine/personal/edit/'.$dataitem->UNID) }}" class=" my-1 btn btn-primary btn-sm  btn-block">

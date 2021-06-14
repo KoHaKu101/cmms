@@ -77,10 +77,9 @@
 												<div class="row ">
 													<div class="col-lg-6 has-error">
 														<lebel>ประจำ LINE</lebel>
-														<select class="form-control form-control" id="EMP_LINE" name="EMP_LINE">
+														<select class="form-control form-control" id="EMP_LINE" name="EMP_LINE" required>
 														<option value>--แสดงทั้งหมด--</option>
 														@foreach($datalineselect as $dataline)
-
 														<option value="{{ $dataline->LINE_CODE}}"
 															{{ $dataset->EMP_LINE == $dataline->LINE_CODE ? 'selected' : ''}} > {{$dataline->LINE_NAME}} </option>
 														@endforeach
@@ -88,7 +87,7 @@
 														</div>
 													<div class="col-lg-6 has-error">
 														<lebel>สถานะ</lebel>
-														<select class="form-control form-control" id="EMP_STATUS" name="EMP_STATUS">
+														<select class="form-control form-control" id="EMP_STATUS" name="EMP_STATUS" required>
 														<option value>--แสดงทั้งหมด--</option>
 														<option value="9"
 															{{ $dataset->EMP_STATUS == '9' ? 'selected' : ''}} > แสดง </option>
@@ -108,6 +107,18 @@
 												<input type="text" class="form-control" id="EMP_NAME" name="EMP_NAME" value="{{ $dataset->EMP_NAME }}">
 											</div>
 											<div class="form-group col-md-12 has-error">
+												<div class="row">
+													<div class="col-md-6">
+														<lebel>ตำแหน่ง</lebel>
+														<input type="text" class="form-control" value="{{$data_emppaytype->TYPE_NAME}}" readonly>
+													</div>
+													<div class="col-md-6">
+														<lebel>ประเภท</lebel>
+														<input type="text" class="form-control" value="{{$data_emppostion->POSITION_NAME}}" readonly>
+													</div>
+												</div>
+											</div>
+											{{-- <div class="form-group col-md-12 has-error">
 												<lebel>ตำแหน่ง</lebel>
 												<select class="form-control form-control" id="POSITION" name="POSITION" required>
 												@php
@@ -129,7 +140,7 @@
 
 
 												</select>
-											</div>
+											</div> --}}
 										</div>
 									</div>
 								</form>
