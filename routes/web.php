@@ -264,7 +264,7 @@ Route::get('machine/setting/submenu/home/{UNID}'    ,[MenuSubController::class,'
   Route::post('machine/setting/submenu/update/{UNID}' ,[MenuSubController::class,'Update']);
   Route::get('machine/setting/submenu/delete/{UNID}'   ,[MenuSubController::class,'Delete']);
 // admin config permisssion
-Route::middleware('can:isAdmin')->group(function () {
+Route::middleware('can:isUser')->group(function () {
     Route::get('machine/config/permission'                ,[PerMissionController::class,'Home'])->name('permission.home');
     Route::post('machine/config/permission/store'           ,[PerMissionController::class,'Store'])->name('permission.store');
     Route::post('machine/config/permission/update'        ,[PerMissionController::class,'Update'])->name('permission.update');
