@@ -97,7 +97,7 @@ Route::get('machine/repair/repairlist'             ,[MachineRepairController::cl
 
 
 //group not user
-Route::middleware('can:isAdminandManager')->group(function () {
+Route::middleware('can:isUser')->group(function () {
 //PDF FILE
 Route::get('/machine/repairhistory/pdf/{UNID}', 'App\Http\Controllers\PDF\MachineHistoryRepairPDFController@RepairHistory');
 

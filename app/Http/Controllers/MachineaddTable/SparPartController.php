@@ -244,7 +244,7 @@ class SparPartController extends Controller
     $pm_lastdate        = $DATESTART;
     $MACHINE            = Machine::where('UNID','=',$MACHINE_UNID)->first();
     $SPAREPART          = SparePart::where('UNID','=',$SPARTPART_UNID)->first();
-
+  
     $TOTAL_COST = 0;
     if ($SPAREPART_QTY > 0 && $SPAREPART_COST > 0) {
       $TOTAL_COST = $SPAREPART_QTY * $SPAREPART_COST;

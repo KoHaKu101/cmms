@@ -254,8 +254,6 @@ $(document).on('click','.delete-confirm', function (event) {
               var machineunid = $(this).val();
 
               $('.PM_TEMPLATE_UNID_REFREMOVE:checked').each(function(){
-
-
                   pmmaster_template_unid.push($(this).val());
 
                   window.location.href = '/machine/system/remove/'+pmmaster_template_unid+'/'+machineunid;
@@ -320,12 +318,22 @@ $(document).on('click','.delete-confirm', function (event) {
           var sparepart_qty = $("#SPAREPART_QTY_"+tr.id).val();
           var machine_unid = $("#MACHINE_UNID").val();
           var machine_code = $("#MACHINE_CODE").val();
+          $('#SPAREPART_UNID'+sparepart_unid).attr('disabled',true);
           if (checkbox_val) {
             if (sparepart_qty == 0 || sparepart_qty < 0 ) {
              $("#SPAREPART_QTY_"+sparepart_unid).val(1);
              sparepart_qty = 1 ;
            }
-           savemachine(sparepart_unid,machine_unid,machine_code,period,datestart,sparepart_qty);
+           if (period != '') {
+             savemachine(sparepart_unid,machine_unid,machine_code,period,datestart,sparepart_qty);
+           }else {
+             Swal.fire({
+              icon: 'error',
+              title: 'กรุณาระยุวาระการเปลี่ยน',
+              timer: 1500,
+            })
+           }
+
           }
         });
       }

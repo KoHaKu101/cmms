@@ -129,6 +129,7 @@ class MachineSparePartController extends Controller
 
     $SPAREPART_COST = $SPAREPART->SPAREPART_COST ;
     $SPAREPART_PLAN = new SparPartController;
+
     if ($count_sparepart > 0) {
       MachineSparePart::where('MACHINE_UNID','=',$MACHINE->UNID)
                       ->where('SPAREPART_UNID','=',$SPAREPART->UNID)
