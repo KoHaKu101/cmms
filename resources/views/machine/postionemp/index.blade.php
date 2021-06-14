@@ -135,7 +135,8 @@
       												<td>{{$row->EMP_POSITION_NAME}}</td>
       												<td class="text-center">{{$row->EMP_POSITION_LIMIT}} คน</td>
       												<td class="text-center">{{$COUNT_EMP->where('POSITION','=',$row->EMP_POSITION_CODE)->count()}} คน</td>
-                              <td><button type="button" class="btn {{ $STATUS_COLOR }} btn-block btn-sm my-1 text-white">{{ $STATUS_TEXT }}</button></td>
+                              <td><button type="button" class="btn {{ $STATUS_COLOR }}
+																btn-block btn-sm my-1 text-white">{{ $STATUS_TEXT }}</button></td>
                               <td>
                                 <div class="row">
                                   <div class="col-md-12 form-inline">
