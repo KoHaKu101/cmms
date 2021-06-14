@@ -51,7 +51,7 @@ class PositionEmpController extends Controller
   }
   public function Save(Request $request){
     $INDEX = PositionEMP::selectraw("max(EMP_POSITION_CODE)count
-                                     max(EMP_POSITION_INDEX)countindex
+                                    ,max(EMP_POSITION_INDEX)countindex
                                     ,dbo.encode_utf8('$request->EMP_POSITION_NAME') as EMP_POSITION_NAME
                                     ,dbo.encode_utf8('$request->REMARK') as REMARK")->first();
     $EMP_POSITION_INDEX = 1;
