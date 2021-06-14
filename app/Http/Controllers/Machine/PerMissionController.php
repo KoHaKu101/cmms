@@ -27,17 +27,17 @@ class PerMissionController extends Controller
 {
   public function __construct(){
     $this->middleware('auth');
-    // $this->middleware(function ($request, $next) {
-    //     $checkuser = Auth::user();
-    //
-    //     if ($checkuser->role != 'admin') {
-    //       alert()->error('ไม่สิทธิ์การเข้าถึง')->autoclose('1500');
-    //       return Redirect()->route('user.homepage');
-    //     }else {
-    //       return $next($request);
-    //     }
-    //
-    // });
+    $this->middleware(function ($request, $next) {
+        $checkuser = Auth::user();
+
+        if ($checkuser->role != 'admin') {
+          alert()->error('ไม่สิทธิ์การเข้าถึง')->autoclose('1500');
+          return Redirect()->route('user.homepage');
+        }else {
+          return $next($request);
+        }
+
+    });
 
   }
   public function randUNID($table){

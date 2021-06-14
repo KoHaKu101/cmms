@@ -45,9 +45,8 @@
 			</div>
 		@endif
 		<div class="main-header">
-			@include('masterlayout.logomaster')
-			@include('masterlayout.navbar.navbarmaster')
-			{{-- @can('isAdmin')
+
+			@can('isAdmin')
 				@include('masterlayout.logomaster')
 				@include('masterlayout.navbar.navbarmaster')
 			@elsecan('isManager')
@@ -55,19 +54,18 @@
 				@include('masterlayout.navbar.navbarmaster')
 			@else
 				@include('masterlayout.navbar.navbarmasterforuser')
-			@endcan --}}
+			@endcan
 			@yield('Logoandnavbar')
 
 		</div>
 		@yield('sidebar')
-			@include('masterlayout.sidebar.sidebarmaster')
-		{{-- @can('isAdmin')
+		@can('isAdmin')
 			@include('masterlayout.sidebar.sidebarmaster')
 	  @elsecan('isManager')
 			@include('masterlayout.sidebar.sidebarmaster')
 	  @else
 
-	  @endcan --}}
+	  @endcan
 
 
     <div class="main-panel">

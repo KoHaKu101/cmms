@@ -28,11 +28,11 @@
                  <ul class="nav nav-collapse">
              ';
 
-             // if (Gate::allows('isManager')) {
-             //      $MenuSubitem=Menusubitem::where('SUBUNID_REF',$_UNID)->where('SUBMENU_STATUS','=',9)->orderby('SUBMENU_INDEX','ASC')->get();
-             //  } else {
+             if (Gate::allows('isManager')) {
+                  $MenuSubitem=Menusubitem::where('SUBUNID_REF',$_UNID)->where('SUBMENU_STATUS','=',9)->orderby('SUBMENU_INDEX','ASC')->get();
+              } else {
                   $MenuSubitem = Menusubitem::where('SUBUNID_REF',$_UNID)->orderby('SUBMENU_INDEX','ASC')->get();
-             //  }
+              }
 
             foreach ($MenuSubitem as $subvalue) {
 
