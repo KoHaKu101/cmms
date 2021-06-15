@@ -90,9 +90,10 @@ Route::get('machine/repair/repairlist'             ,[MachineRepairController::cl
 
   Route::post('machine/repair/store/{MACHINE_UNID}',[MachineRepairController::class,'Store'])        ->name('repair.store');
   Route::get('machine/repair/edit/{UNID}'          ,[MachineRepairController::class,'Edit'])         ->name('repair.edit');
-  Route::post('machine/repair/update/{UNID}'       ,[MachineRepairController::class,'Update']);
+  Route::post('machine/repair/update/{UNID}'       ,[MachineRepairController::class,'Update'])       ->name('repair.update');
   Route::get('machine/repair/delete/{UNID}'        ,[MachineRepairController::class,'Delete'])       ->name('repair.delete');
 
+  Route::post('machine/repair/stepclose'            ,[MachineRepairController::class,'StepCloseForm']) ->name('repair.stepclose');
   Route::post('machine/repair/select/selectrepairdetail',[MachineRepairController::class,'SelectRepairDetail'])->name('repair.selectrepairdetail');
 
 
@@ -159,8 +160,6 @@ Route::get('machine/machinetypetable/list'      ,[MachineTypeTableController::cl
   Route::post('machine/machinetypetable/changestatus/{UNID}'  ,[MachineTypeTableController::class,'ChangeStatusButton']);
   Route::get('machine/machinetypetable/delete/{UNID}'   ,[MachineTypeTableController::class,'Delete']) ->name('machinetypetable.delete');
 //repair
-
-
 Route::get('machine/repairtemplate/list/{UNID?}'        ,[MachineRepairTableController::class,'Index'])  ->name('repairtemplate.list');
   Route::post('machine/repairtemplate/save'          ,[MachineRepairTableController::class,'Save']) ->name('repairtemplate.save');
   Route::post('machine/repairtemplate/update'          ,[MachineRepairTableController::class,'Update']) ->name('repairtemplate.update');
@@ -168,6 +167,7 @@ Route::get('machine/repairtemplate/list/{UNID?}'        ,[MachineRepairTableCont
   Route::post('machine/repairtemplate/subsave'          ,[MachineRepairTableController::class,'SubSave']) ->name('repairtemplate.subsave');
   Route::post('machine/repairtemplate/subupdate'          ,[MachineRepairTableController::class,'SubUpdate']) ->name('repairtemplate.subupdate');
   Route::post('machine/repairtemplate/subdelete'          ,[MachineRepairTableController::class,'SubDelete']) ->name('repairtemplate.subdelete');
+
 
 //status
 Route::get('machine/machinestatustable/list'      ,[MachineStatusTableController::class,'Index'])  ->name('machinestatustable.list');

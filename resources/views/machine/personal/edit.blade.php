@@ -39,7 +39,7 @@
 							<div class="col-md-11 ">
 								<form action="{{ url('machine/personal/update/'.$dataset->UNID) }}" method="POST" enctype="multipart/form-data">
 									@csrf
-									<button class="btn btn-primary btn-xs" type="submit">
+									<button class="btn btn-primary btn-xs" type="button" onclick="submitForm()">
 										<span class="fas fa-save fa-lg">	Save	</span>
 									</button>
 							</div>
@@ -188,6 +188,13 @@
 
 {{-- ส่วนjava --}}
 @section('javascript')
-
+	<script>
+	    function submitForm(btn) {
+	        // disable the button
+	        btn.disabled = true;
+	        // submit the form
+	        btn.form.submit();
+	    }
+	</script>
 @stop
 {{-- ปิดส่วนjava --}}

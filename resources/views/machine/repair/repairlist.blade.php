@@ -130,7 +130,8 @@
 								                  </td>
 								                  <td style="width:90px">
 																		@can('isAdmin')
-																			<button  id="popup" type="button" class="btn btn-danger btn-block btn-sm my-1" data-toggle="modal" data-target="#CloseRepair"
+																			<button onclick="btn_closeform()" type="button"
+																			class="btn btn-danger btn-block btn-sm my-1"
 																		 style="width:90px;height:30px">
 
 																			 <span class="btn-label">
@@ -138,9 +139,9 @@
 																			 </span>
 																		 </button>
 																		@elsecan('isManager')
-																			<button  id="popup" type="button" class="btn btn-danger btn-block btn-sm my-1" data-toggle="modal" data-target="#CloseRepair"
+																			<button  onclick="btn_closeform()" type="button"
+																			class="btn btn-danger btn-block btn-sm my-1"
 																		 style="width:90px;height:30px">
-
 																			 <span class="btn-label">
 																				 <i class="fas fa-clipboard-check mx-1"></i>ปิดเอกสาร
 																			 </span>
@@ -198,9 +199,104 @@
 
 {{-- ส่วนjava --}}
 @section('javascript')
-
+<script src="{{ asset('assets/js/ajax/ajax-csrf.js') }}"></script>
 <script>
+	$(".tabactive").each(function(){
+		$(this).click(function(){
+			id = $(this).attr('id');
+			url = window.location.href;
+			$(".nav-link").removeClass("active");
+			$(this).addClass("active show");
+			$('.tab-pane').removeClass("active");
+			$("#"+id).addClass("active");
 
+		});
+	});
+	$(document).ready(function(){
+		$('#RepairForm').modal({backdrop: 'static', keyboard: false});
+		$('#RepairForm').modal('show');
+
+	});
+	$('#closestep_1').on('click',function(){
+		$('#CloseForm').modal({backdrop: 'static', keyboard: false});
+		$('#RepairForm').modal('hide');
+		$('#CloseForm').modal('show');
+	});
+	$('#step2_in').on('click',function(){
+		$('#step2').html('<i class="fa fa-file mr-2"></i>ช่างภายใน');
+		$('#step2').attr('href','#WORK_STEP2_IN');
+		$('#step2').removeClass('WORK_STEP2_SUP');
+		$('#step2').addClass('WORK_STEP2_IN');
+		$('#step2').attr('hidden',false);
+		$('#step2').click();
+		$('#step3_partchange').on('click',function(){
+			$('#step3').html('<i class="fa fa-file mr-2"></i>อะไหล่');
+			$('#step3').attr('hidden',false);
+			$('#step3').click();
+		});
+	});
+	$('#step2_sup').on('click',function(){
+		$('#step2').html('<i class="fa fa-file mr-2"></i>ช่างภายนอก');
+		$('#step2').attr('href','#WORK_STEP2_SUP');
+		$('#step2').removeClass('WORK_STEP2_IN');
+		$('#step2').addClass('WORK_STEP2_SUP');
+		$('#step2').attr('hidden',false);
+		$('#step2').click();
+		$('#step3_partchange').on('click',function(){
+			$('#step3').html('<i class="fa fa-file mr-2"></i>อะไหล่');
+			$('#step3').attr('hidden',false);
+			$('#step3').click();
+		});
+	});
+	function cancelform(){
+		jQuery(document).off('focusin.modal');
+		Swal.fire({
+			title: 'สาเหตุการยกเลิก',
+			input: 'text',
+		}).then((result) => {
+				 $('#CloseForm').modal('hide');
+		});
+	}
+	function step_final(){
+		$('#step4').html('<i class="fa fa-file mr-2"></i>ปิดเอกสาร');
+		$('#step4').attr('hidden',false);
+		$('#step4').click();
+	};
+	function step_result(){
+			$('#step5').html('<i class="fa fa-map-signs mr-2"></i> สรุป');
+			$('#step5').attr('hidden',false);
+			$('#step5').click();
+	}
+	function withdraw(thisdata){
+		var unid = $(thisdata).data('unid');
+		jQuery(document).off('focusin.modal');
+		if (unid == '1') {
+			Swal.fire({
+				title: 'จำนวนเบิก',
+				input: 'number',
+			});
+		}else if (unid == '2') {
+			Swal.fire({
+				title: 'อะไหล่หมด',
+				icon: 'error',
+				confirmButtonText:'รอการสั่งซื้อ',
+				timer:'1000',
+			});
+			$('#buypart').attr('hidden',false);
+		}else {
+			Swal.fire({
+				title: 'อะไหล่ใกล้จะหมด',
+				icon: 'warning',
+				confirmButtonText:'OK',
+				timer:'1000',
+			});
+		}
+	}
+ function buypart(){
+	 $('#step3_waitpart').html('<i class="fa fa-file mr-2"></i>รออะไหล่');
+	 $('#step3_waitpart').attr('hidden',false);
+	 $('#step3_waitpart').click();
+ }
  function closework(u){
 
 	var unid = (u);
@@ -220,7 +316,12 @@
 		})
 
 	}
+ function btn_closeform(){
+	 $('#CloseForm').modal({backdrop: 'static', keyboard: false});
+	 $('#CloseForm').modal('show');
+ }
 </script>
+
 <script type="text/javascript">
 // var button = document.getElementById('button');
 	function pdfrepair(m){

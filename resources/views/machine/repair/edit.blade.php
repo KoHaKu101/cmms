@@ -49,7 +49,7 @@
 									<a href="{{ route('repair.list') }}" class="btn btn-warning btn-sm "><span class="fas fa-arrow-left fa-lg mr-1"></span> Back</a>
 								</div>
 								<div class="card-header text-center bg-primary ">
-									<h3 class="card-title text-white"><b>แจ้งซ่อม เครื่อง</b> {{$datamachine->MACHINE_CODE}}</h3>
+									<h3 class="card-title text-white"><b>แจ้งซ่อม เครื่อง</b> {{$data_repairreq->MACHINE_CODE}}</h3>
 								</div>
 							</div>
 								<div class="card-body">
@@ -236,7 +236,7 @@
 											</div>
 										</div>
 										<div class="tab-pane active" id="summary">
-											<form action="{{ route('repair.store',$datamachine->UNID) }}" method="post" id="FRM_SENDREPORT" name="FRM_SENDREPORT">
+											<form action="{{ route('repair.update',$data_repairreq->UNID) }}" method="post" id="FRM_SENDREPORT" name="FRM_SENDREPORT">
 												@csrf
 												<div class="row">
 													<div class="col-md-6 ml-auto mr-auto">
@@ -244,7 +244,7 @@
 																<tbody>
 																	<tr>
 																		<td width="80px" style="background:#aab7c1;color:black;"><h5 class="my-1"> MC-NO </h5></td>
-																		<td> {{$datamachine->MACHINE_CODE}} LINE:{{$datamachine->MACHINE_LINE}}</td>
+																		<td> {{$data_repairreq->MACHINE_CODE}} LINE:{{$data_repairreq->MACHINE_LINE}}</td>
 																	</tr>
 																	<tr>
 																		<td style="background:#aab7c1;color:black;"><h5 class="my-1">พนักงาน</h5>  </td>
