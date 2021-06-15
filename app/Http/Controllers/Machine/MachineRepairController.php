@@ -81,9 +81,6 @@ class MachineRepairController extends Controller
   public function Store(Request $request,$MACHINE_UNID){
       //******************* Request parameter *******************//
             //Get the highest "id" in the table + 1
-
-
-
       $CLOSE_STATUS = '9';
         $MACHINE_UNID = $MACHINE_UNID;
         $EMP_CODE = $request->cookie('empcode');
@@ -108,7 +105,7 @@ class MachineRepairController extends Controller
       //$DATE_DOCNO->format('y');
       //$DATE_DOCNO->format('m');
       //$DATE_DOCNO->format('d');
-      dd($DATE_DOCNO->format('d'));
+      // dd($DATE_DOCNO->format('d'));
       //******************* insert *******************//
       MachineRepairREQ::insert([
         'UNID'=> $UNID
