@@ -55,7 +55,7 @@
 											@csrf
 								        <div class="row ">
 								          <div class="col-md-2">
-								            <h4 class="ml-3 mt-2 " style="color:white;" ><i class="fas fa-toolbox fa-lg mr-1"></i> แจ้งซ่อม </h4>
+								            <h4 class="ml-3 mt-2 " style="color:white;" ><i class="fas fa-toolbox fa-lg mr-1"></i> ค้นหาเอกสาร </h4>
 								          </div>
 								          <div class="col-md-8">
 								              <div class="input-group mt-1">
@@ -70,7 +70,7 @@
 								          </div>
 													<div class="col-md-2 text-right">
 														<a href="{{ route('repair.repairsearch') }}"class="btn btn-warning  btn-xs mt-1">
-															<span class="fas fa-file fa-lg">	New	</span>
+															<span class="fas fa-file fa-lg">	แจ้งซ่อม	</span>
 														</a>
 													</div>
 
@@ -84,14 +84,16 @@
 								        <thead class="thead-light">
 								          <tr>
 								            <th scope="col">เลขที่เอกสาร </th>
-								            <th></th>
+
 								            <th scope="col">รหัสเครื่อง </th>
 								            <th scope="col">ชื่อเครื่องจักร</th>
 								            <th scope="col">Line</th>
 								            <th scope="col">วันที่เอกสาร</th>
 								            <th scope="col">สถานะเครื่องจักร</th>
-								            <th scope="col">สถานะซ่อมแซ่ม</th>
+								            <th scope="col">สถานะงาน</th>
 								            <th scope="col" style="width:100px"></th>
+														<th scope="col" >ผู้รับงาน</th>
+														<th scope="col" >วันที่รับงาน</th>
 								          </tr>
 								        </thead>
 
@@ -107,12 +109,12 @@
 								                </a>
 								              </td>
 								              <td style="width:50px">
-								                <button type="button"class="btn btn-primary btn-block btn-sm my-1 " onclick="pdfrepair('{{ $row->UNID }}')"
+								                {{-- <button type="button"class="btn btn-primary btn-block btn-sm my-1 " onclick="pdfrepair('{{ $row->UNID }}')"
 								                style="width:50px;height:30px">
 								                  <span class="">
 								                    <i  style="font-size:17px"class="icon-printer "></i>
 								                  </span>
-								                </button>
+								                </button> --}}
 								              </td>
 								              <td >  				{{ $row->MACHINE_CODE }}		     </td>
 								              <td >  				{{ $row->MACHINE_NAME }}		    </td>
@@ -123,7 +125,7 @@
 								                @if ($row->CLOSE_STATUS ===  '9')
 								                  <td style="width:120px">
 								                    <button type="button"class="btn btn-success btn-block btn-sm my-1 " style="width:120px;height:30px">
-								                      <span class="btn-label float-left">
+								                      <span class="btn-label text-center">
 								                        <i class="fas  mx-1"></i>รอรับงาน
 								                      </span>
 								                    </button>
@@ -173,6 +175,7 @@
 
 								                      </td>
 								                @endif
+																<td >สุบรรณ</td>
 								              </tr>
 								            @endforeach
 
