@@ -87,7 +87,7 @@
       </div>
       <div class="modal-body modal-body-step">
         <div class="row">
-          <div class="col-12 col-md-10 " id="tabactive">
+          <div class="col-12 col-md-12 " id="tabactive">
             <ul class=" nav nav-pills nav-primary">
               <li class="step">
                 <a class="nav-link active WORK_STEP1"  href="#WORK_STEP1"  aria-expanded="true" id="step1" data-toggle="tab"><i class="fa fa-user mr-0"></i> ตรวจสอบเบื้องต้น</a>
