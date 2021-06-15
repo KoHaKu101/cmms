@@ -91,7 +91,7 @@
 								            <th scope="col">วันที่เอกสาร</th>
 								            <th scope="col">สถานะเครื่องจักร</th>
 								            <th scope="col">สถานะงาน</th>
-								            <th scope="col" style="width:100px"></th>
+								            
 														<th scope="col" >ผู้รับงาน</th>
 														<th scope="col" >วันที่รับงาน</th>
 								          </tr>
@@ -137,7 +137,7 @@
 																		 style="width:90px;height:30px">
 
 																			 <span class="btn-label">
-																				 <i class="fas fa-clipboard-check mx-1"></i>รับงาน
+																				 <i class="fas fa-clipboard-check mx-1"></i>สุบรรณ
 																			 </span>
 																		 </button>
 																		@elsecan('isManager')
@@ -175,7 +175,8 @@
 
 								                      </td>
 								                @endif
-																<td >สุบรรณ</td>
+
+																<td >{{ date('d-m-y H:m') }}</td>
 								              </tr>
 								            @endforeach
 
