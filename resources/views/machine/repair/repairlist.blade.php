@@ -108,14 +108,14 @@
 								                  </span>
 								                </a>
 								              </td>
-								              <td style="width:50px">
+								              {{-- <td style="width:50px"> --}}
 								                {{-- <button type="button"class="btn btn-primary btn-block btn-sm my-1 " onclick="pdfrepair('{{ $row->UNID }}')"
 								                style="width:50px;height:30px">
 								                  <span class="">
 								                    <i  style="font-size:17px"class="icon-printer "></i>
 								                  </span>
 								                </button> --}}
-								              </td>
+								              {{-- </td> --}}
 								              <td >  				{{ $row->MACHINE_CODE }}		     </td>
 								              <td >  				{{ $row->MACHINE_NAME }}		    </td>
 								              <td >  				{{ $row->MACHINE_LINE }}	    </td>
