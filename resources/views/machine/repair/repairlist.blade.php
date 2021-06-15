@@ -124,18 +124,18 @@
 								                  <td style="width:120px">
 								                    <button type="button"class="btn btn-success btn-block btn-sm my-1 " style="width:120px;height:30px">
 								                      <span class="btn-label float-left">
-								                        <i class="fas  mx-1"></i>กำลังดำเนินการ
+								                        <i class="fas  mx-1"></i>รอรับงาน
 								                      </span>
 								                    </button>
 								                  </td>
 								                  <td style="width:90px">
 																		@can('isAdmin')
-																			<button onclick="btn_closeform()" type="button"
+																			<button onclick="REC_WORK()" type="button"
 																			class="btn btn-danger btn-block btn-sm my-1"
 																		 style="width:90px;height:30px">
 
 																			 <span class="btn-label">
-																				 <i class="fas fa-clipboard-check mx-1"></i>ปิดเอกสาร
+																				 <i class="fas fa-clipboard-check mx-1"></i>รับงาน
 																			 </span>
 																		 </button>
 																		@elsecan('isManager')
@@ -212,11 +212,14 @@
 
 		});
 	});
-	$(document).ready(function(){
+	// $(document).ready(function(){
+	function REC_WORK(){
 		$('#RepairForm').modal({backdrop: 'static', keyboard: false});
 		$('#RepairForm').modal('show');
+	}
 
-	});
+
+	// });
 	$('#closestep_1').on('click',function(){
 		$('#CloseForm').modal({backdrop: 'static', keyboard: false});
 		$('#RepairForm').modal('hide');
