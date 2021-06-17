@@ -64,16 +64,16 @@
 																	{{ $MACHINE_LINE == $row_line->LINE_CODE ? 'selected' : '' }}>{{ $row_line->LINE_NAME }}</option>
 															@endforeach
 														</select>
-														<label class="text-white mx-2">สถานะการใช้งาน : </label>
+														<label class="text-white mx-2">สถานะเครื่องจักร : </label>
 														<select class="form-control form-control-sm mt-1 mx-1" name="MACHINE_STATUS" id="MACHINE_STATUS" onchange="changesubmit()">
 																<option value="">-ทั้งหมด-</option>
 																<option value="1" {{ $MACHINE_STATUS == "1" ? 'selected': '' }}>หยุด/เสีย</option>
 																<option value="2" {{ $MACHINE_STATUS == "2" ? 'selected': '' }}>ทำงาน</option>
 															</select>
-															<label class="text-white mx-2">สถานะ : </label>
+															<label class="text-white mx-2">สถานะเอกสาร : </label>
 															<select class="form-control form-control-sm mt-1 mx-1" id="CLOSE_STATUS" name="CLOSE_STATUS" onchange="changesubmit()">
-																<option value="9" {{ $CLOSE_STATUS == "9" ? 'selected' : "" }}>แสดง</option>
-																<option value="1" {{ $CLOSE_STATUS == "1" ? 'selected' : "" }}>ซ่อน</option>
+																<option value="9" {{ $CLOSE_STATUS == "9" ? 'selected' : "" }}>ยังไม่ปิด</option>
+																<option value="1" {{ $CLOSE_STATUS == "1" ? 'selected' : "" }}>ปิดเอกสาร</option>
 															</select>
 													{{-- </div> --}}
 													{{-- <div class="col-md-3 my-1"> --}}
@@ -103,17 +103,18 @@
 								      <table class="display table table-striped table-hover">
 								        <thead class="thead-light">
 								          <tr>
-								            <th scope="col">เลขที่เอกสาร </th>
+														<th>วันที่เอกสาร</th>
+								            <th style="width:160px">เลขที่เอกสาร </th>
+														<th>Line</th>
+								            <th>รหัสเครื่อง </th>
+								            <th>ชื่อเครื่องจักร</th>
 
-								            <th scope="col">รหัสเครื่อง </th>
-								            <th scope="col">ชื่อเครื่องจักร</th>
-								            <th scope="col">Line</th>
-								            <th scope="col">วันที่เอกสาร</th>
-								            <th scope="col">สถานะเครื่องจักร</th>
-								            <th scope="col">สถานะงาน</th>
 
-														<th scope="col" >ผู้รับงาน</th>
-														<th scope="col" >วันที่รับงาน</th>
+								            <th>สถานะเครื่องจักร</th>
+								            <th style="width:100px">สถานะงาน</th>
+
+														<th >ผู้รับงาน</th>
+														<th >วันที่รับงาน</th>
 								          </tr>
 								        </thead>
 
@@ -121,31 +122,28 @@
 								          @foreach ($dataset as $key => $row)
 
 								            <tr>
-								              <td style="width:200px">
-								                <a href="{{ route('repair.edit',[$row->UNID]) }}" class="btn btn-secondary btn-block btn-sm my-1 " style="width:180px;height:30px">
+															<td >{{ $row->DOC_DATE.' '.date('H:m',strtotime($row->REPAIR_REQ_TIME))}}</td>
+								              <td >
+								                <a href="{{ route('repair.edit',[$row->UNID]) }}" class="btn btn-secondary btn-block btn-sm my-1 " style="height:30px">
 								                  <span class="btn-label float-left">
 								                    <i class="fas fa-eye mx-1"></i>{{ $row->DOC_NO }}
 								                  </span>
 								                </a>
 								              </td>
-
+															<td >  				{{ $row->MACHINE_LINE }}	    </td>
 								              <td >  				{{ $row->MACHINE_CODE }}		     </td>
 								              <td >  				{{ $row->MACHINE_NAME }}		    </td>
-								              <td >  				{{ $row->MACHINE_LINE }}	    </td>
-								              <td >      		{{ $row->DOC_DATE }}          </td>
-								              <td >  				{{ $row->MACHINE_STATUS == '1' ? 'เครื่องหยุดทำงาน' : 'เครื่องทำงาน'}}	    </td>
-
+								              <td >  				{{ $row->MACHINE_STATUS == '1' ? 'หยุดทำงาน' : 'ทำงาน'}}	    </td>
 								                @if ($row->CLOSE_STATUS ===  '9')
-								                  <td style="width:120px">
-								                    <button type="button"class="btn btn-success btn-block btn-sm my-1 "
-																		style="width:120px;height:30px">
+								                  <td >
+								                    <button type="button"class="btn btn-success btn-block btn-sm my-1 ">
 								                      <span class="btn-label text-center">
 								                        <i class="fas  mx-1"></i>รอรับงาน
 								                      </span>
 								                    </button>
 								                  </td>
 								                  <td style="width:90px">
-																		@can('isAdmin')
+																		@can('isAdminandManager')
 																			<button onclick="rec_work(this)" type="button"
 																			data-mccode="{{ $row->MACHINE_CODE }}"
 																			data-mcname="{{ $row->MACHINE_NAME }}"
@@ -156,17 +154,8 @@
 																			data-priority="{{ $row->PRIORITY }}"
 																			class="btn btn-danger btn-block btn-sm my-1"
 																		 style="width:90px;height:30px">
-
 																			 <span class="btn-label">
 																				 <i class="fas fa-clipboard-check mx-1"></i>สุบรรณ
-																			 </span>
-																		 </button>
-																		@elsecan('isManager')
-																			<button  onclick="btn_closeform()" type="button"
-																			class="btn btn-danger btn-block btn-sm my-1"
-																		 style="width:90px;height:30px">
-																			 <span class="btn-label">
-																				 <i class="fas fa-clipboard-check mx-1"></i>ปิดเอกสาร
 																			 </span>
 																		 </button>
 																		@else

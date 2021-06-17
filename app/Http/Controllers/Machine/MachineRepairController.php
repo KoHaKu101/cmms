@@ -74,9 +74,10 @@ class MachineRepairController extends Controller
                                                     }
                                                   })
                                             ->where('CLOSE_STATUS','=',$CLOSE_STATUS)
-                                            ->orderBy('DOC_NO','ASC')
                                             ->orderBy('DOC_DATE','DESC')
-                                            ->orderBy('MACHINE_CODE')
+                                            ->orderBy('DOC_NO','DESC')
+                                            ->orderBy('MACHINE_LINE','ASC')
+                                            ->orderBy('MACHINE_CODE','ASC')
                                             ->paginate(8);
    $DATA_SPAREPART = SparePart::where('STATUS','=',9)->get();
    $SEARCH = str_replace('%','',$SEARCH);
@@ -123,17 +124,19 @@ class MachineRepairController extends Controller
       //******************* docno *******************//
       $DATA_MACHINEREPAIRREQ = MachineRepairREQ::selectraw('max(DOC_NO)DOC_NO,max(DOC_DATE)DOC_DATE')->first();
       $DATE_DOCNO            = Carbon::now()->addyears('543');
-      $DATE_RESET_DOCNO      = Carbon::parse($DATA_MACHINEREPAIRREQ->DOC_DATE)->addyears('543');
-      $EXPLOT = str_replace('RE'.$DATE_DOCNO->format('ym').'-','',$DATA_MACHINEREPAIRREQ->DOC_NO)+1;
-      $DOC_NO = 'RE' . $DATE_DOCNO->format('ym'). sprintf('-%04d', $EXPLOT);
-      if ($DATE_DOCNO->format('ym') > $DATE_RESET_DOCNO->format('ym')) {
-        $DOC_NO = 'RE' . $DATE_DOCNO . sprintf('-%04d', 1);
+      $DATE_RESET_DOCNO      = Carbon::parse($DATA_MACHINEREPAIRREQ->DOC_DATE);
+      $DOC_NO = 'RE' . $DATE_DOCNO->format('ym') . sprintf('-%04d', 1);
+
+      if ($DATE_RESET_DOCNO->format('ym') == Carbon::now()->addyears('543')->format('ym') ) {
+        $EXPLOT = str_replace('RE'.$DATE_RESET_DOCNO->format('ym').'-','',$DATA_MACHINEREPAIRREQ->DOC_NO)+1;
+        $DOC_NO = 'RE' . $DATE_RESET_DOCNO->format('ym'). sprintf('-%04d', $EXPLOT);
       }
       //$DATE_DOCNO->format('y');
       //$DATE_DOCNO->format('m');
       //$DATE_DOCNO->format('d');
       // dd($DATE_DOCNO->format('d'));
       //******************* insert *******************//
+
       MachineRepairREQ::insert([
         'UNID'=> $UNID
         ,'MACHINE_UNID'          => $DATA_MACHINE->UNID
@@ -206,6 +209,7 @@ class MachineRepairController extends Controller
         ,'EMP_UNID'              => $DATA_EMP->UNID
         ,'EMP_CODE'              => $DATA_EMP->EMP_CODE
         ,'EMP_NAME'              => $DATA_EMP->EMP_NAME
+
         ,'PRIORITY'              => $PRIORITY
         ,'MODIFY_BY'             => Auth::user()->name
         ,'MODIFY_TIME'           => Carbon::now()
