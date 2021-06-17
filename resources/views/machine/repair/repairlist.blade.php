@@ -60,37 +60,31 @@
 											@csrf
 								        <div class="row ">
 													<div class="col-md-12 col-lg-10 form-inline my-1">
-														<label class="text-white mx-2">Line : </label>
-														<select class="form-control form-control-sm mt-1 mx-1" id="LINE"name='LINE' onchange="changesubmit()">
-															 <option value="0">ทั้งหมด</option>
-															@foreach ($LINE as $index => $row_line)
-																<option value="{{ $row_line->LINE_CODE }}"
-																	{{ $MACHINE_LINE == $row_line->LINE_CODE ? 'selected' : '' }}>{{ $row_line->LINE_NAME }}</option>
-															@endforeach
-														</select>
-														{{-- <label class="text-white mx-2">วันที่ : </label>
-														<select class="form-control form-control-sm mt-1 mx-1"  id="DAY" name="DAY" onchange="changesubmit()">
-																	<option value="all">ทั้งหมด</option>
-																@for ($d=1; $d < date('t',strtotime(date('Y-m')))+1; $d++)
-																	<option value="{{$d}}"{{ $DAY == $d ? 'selected' : ''}}>{{$d}}</option>
-																@endfor
-															</select> --}}
+
 															<label class="text-white mx-2">ปี : </label>
-															<select class="form-control form-control-sm mt-1 mx-1" id="YEAR" name="YEAR" onchange="changesubmit()">
+															<select class="form-control form-control-sm mt-1 mx-1" id="YEAR" name="YEAR" >
 																<option value="0">ทั้งหมด</option>
 																@for ($y=date('Y')-2; $y < date('Y')+1; $y++)
 																	<option value="{{$y}}" {{ $YEAR == $y ?'selected' : ''}}>{{$y}}</option>
 																@endfor
 															</select>
 															<label class="text-white mx-2">เดือน : </label>
-															<select class="form-control form-control-sm mt-1 mx-1" id="MONTH" name="MONTH" onchange="changesubmit()">
+															<select class="form-control form-control-sm mt-1 mx-1" id="MONTH" name="MONTH" >
 																<option value="0">ทั้งหมด</option>
 																@for ($m=1; $m < 13; $m++)
 																	<option value="{{$m}}" {{ $MONTH == $m ?'selected' : ''}}>{{$months[$m]}}</option>
 																@endfor
 															</select>
+															<label class="text-white mx-2">Line : </label>
+															<select class="form-control form-control-sm mt-1 mx-1" id="LINE"name='LINE' >
+																 <option value="">ทั้งหมด</option>
+																@foreach ($LINE as $index => $row_line)
+																	<option value="{{ $row_line->LINE_CODE }}"
+																		{{ $MACHINE_LINE == $row_line->LINE_CODE ? 'selected' : '' }}>{{ $row_line->LINE_NAME }}</option>
+																@endforeach
+															</select>
 															<label class="text-white mx-2">เอกสาร : </label>
-															<select class="form-control form-control-sm mt-1 mx-1" id="CLOSE_STATUS" name="CLOSE_STATUS" onchange="changesubmit()">
+															<select class="form-control form-control-sm mt-1 mx-1" id="CLOSE_STATUS" name="CLOSE_STATUS">
 																<option value="0">ทั้งหมด</option>
 																<option value="9" {{ $DOC_STATUS == "9" ? 'selected' : "" }}>กำลังดำเนินการ</option>
 																<option value="1" {{ $DOC_STATUS == "1" ? 'selected' : "" }}>ปิดเอกสาร</option>
@@ -161,13 +155,8 @@
 								                  <td style="width:90px">
 																		@can('isAdminandManager')
 																			<button onclick="rec_work(this)" type="button"
-																			data-mccode="{{ $row->MACHINE_CODE }}"
-																			data-mcname="{{ $row->MACHINE_NAME }}"
-																			data-mcline="{{ $row->MACHINE_LINE }}"
-																			data-empcode="{{ $row->EMP_CODE }}"
-																			data-empname="{{ $row->EMP_NAME_TH }}"
-																			data-redetail="{{ $row->REPAIR_SUBSELECT_NAME }}"
-																			data-priority="{{ $row->PRIORITY }}"
+																			data-unid="{{ $row->UNID }}"
+																			data-docno="{{ $row->DOC_NO }}"
 																			class="btn btn-danger btn-block btn-sm my-1"
 																		 style="width:90px;height:30px">
 																			 <span class="btn-label">
@@ -284,27 +273,29 @@ function input_totals_parepart(unid){
 //******************************* End function ********************
 
 	function rec_work(thisdata){
-		var mccode = $(thisdata).data('mccode');
-		var	mcline = $(thisdata).data('mcline');
-		var	mcname = $(thisdata).data('mcname');
-		var	empcode = $(thisdata).data('empcode');
-		var	empname = $(thisdata).data('empname');
-		var	redetail = $(thisdata).data('redetail');
-		var	priority = $(thisdata).data('priority');
-		jQuery(document).off('focusin.modal');
-		$('#MC_CODE').html(mccode);
-		$('#MC_LINE').html(mcline);
-		$('#MC_NAME').html(mcname);
-		$('#EMP').html(empcode +' '+empname);
-		$('#RE_DETAIL').html(redetail);
-		$('#PRIORITY').html(priority);
-		$('#RepairForm').modal({backdrop: 'static', keyboard: false});
-		$.fn.modal.Constructor.prototype._enforceFocus = function() {};
-		$('.REC_WORKER_NAME').select2({
-			placeholder: "กรุณาเลือก",
-			width:'100%',
-		 });
-		$('#RepairForm').modal('show');
+		var repair_unid = $(thisdata).data('unid');
+		var docno = $(thisdata).data('docno');
+		var url = "{{ route('repair.empcallajax') }}";
+		$.ajax({
+				 type:'POST',
+				 url: url,
+				 data: {REPAIR_REQ_UNID : repair_unid},
+				 datatype: 'json',
+				 success:function(data){
+					 $('#show_detail').html(data.html_detail);
+					 $('#select_recworker').html(data.html_select);
+					 $('.REC_WORKER_NAME').select2({
+						 placeholder: "กรุณาเลือก",
+						 width:'100%',
+						});
+						$('#TITLE_DOCNO').html('เลขที่เอกสาร : '+docno);
+						$('#RepairForm').modal({backdrop: 'static', keyboard: false});
+						$.fn.modal.Constructor.prototype._enforceFocus = function() {};
+						$('#RepairForm').modal('show');
+
+				 }
+			 });
+
 	}
 	$('#closestep_1').on('click',function(){
 		var detail = $('#RE_DETAIL').first().text();
@@ -443,6 +434,7 @@ function input_totals_parepart(unid){
 	 $('#CloseForm').modal({backdrop: 'static', keyboard: false});
 	 $('#CloseForm').modal('show');
  }
+
 </script>
 
 <script type="text/javascript">

@@ -16,50 +16,19 @@
   <div class="modal-dialog modal-dialog-scrollable" role="document">
     <div class="modal-content">
       <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title" id="exampleModalLabel">การดำเนินงาน</h5>
+        <h5 class="modal-title" id="TITLE_DOCNO">การดำเนินงาน</h5>
       </div>
       <div class="modal-body">
         <div class="row">
-          <div class="col-md-12 ml-auto mr-auto">
-              <table class="table table-bordered table-bordered-bd-info">
-                <tbody>
-                  <tr>
-                    <td width="80px" style="background:#aab7c1;color:black;"><h5 class="my-1"> MC-NO </h5></td>
-                    <td id="MC_CODE">  </td>
-                    <td>LINE</td>
-                    <td id="MC_LINE"></td>
-                  </tr>
-                  <tr>
-                    <td style="background:#aab7c1;color:black;"><h5 class="my-1">พนักงาน</h5>  </td>
-                    <td id="EMP" colspan="3">  </td>
-                  </tr>
-                  <tr>
-                    <td style="background:#aab7c1;color:black;"><h5 class="my-1">อาการ</h5>  </td>
-                    <td id="RE_DETAIL" colspan="3">  </td>
-                  </tr>
-                  <tr>
-                    <td style="background:#aab7c1;color:black;"><h5 class="my-1">ระดับ</h5>  </td>
-                    <td id="PRIORITY" colspan="3"> </td>
-                  </tr>
-                </tbody>
-              </table>
+          <div class="col-md-12 ml-auto mr-auto" id="show_detail">
           </div>
         </div>
         <div class="row">
             <div class="col-3 col-md-2">
               <label> ผู้รับแจ้ง </label>
             </div>
-            <div class="col-9 col-md-10">
-              <select class="form-control form-control-sm col-9 REC_WORKER_NAME" id="REC_WORKER_NAME" name="REC_WORKER_NAME">
-                <option value> กรุณาเลือก </option>
-                @foreach ($DATA_EMPNAME as $index => $row)
-                    <option value="{{ $row->EMP_CODE }}">{{ $row->EMP_CODE. ' ' .$row->EMP_NAME_TH }}</option>
-                @endforeach
-              </select>
+            <div class="col-9 col-md-10" id="select_recworker">
             </div>
-
-
-
         </div>
       </div>
       <div class="card-footer text-right">
@@ -277,9 +246,9 @@
                 <div class="col-5 col-md-6 col-lg-4">
                   <select class="form-control form-control-sm col-9 REC_WORKER_NAME" id="WORKER_SELECT" name="WORKER_SELECT">
                     <option value> กรุณาเลือก </option>
-                    @foreach ($DATA_EMPNAME as $index => $row)
+                    {{-- @foreach ($DATA_EMPNAME as $index => $row)
                         <option value="{{ $row->EMP_CODE }}">{{ $row->EMP_CODE. ' ' .$row->EMP_NAME_TH }}</option>
-                    @endforeach
+                    @endforeach --}}
                   </select>
                 </div>
                 <div class="col-3 col-md-2 col-lg-2 mr-auto">

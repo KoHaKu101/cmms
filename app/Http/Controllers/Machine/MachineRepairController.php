@@ -50,8 +50,7 @@ class MachineRepairController extends Controller
 
     $SEARCH      = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
     $SERACH_TEXT =  $request->SEARCH;
-    $DATA_EMPNAME = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
-                                        ->where('EMP_STATUS','=',9)->get();
+
     $LINE = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
     $MACHINE_LINE = isset($request->LINE) ? $request->LINE : '';
 
@@ -62,7 +61,7 @@ class MachineRepairController extends Controller
     $YEAR = isset($request->YEAR) ? $request->YEAR : date('Y') ;
 
     $dataset = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
-                                          ->where(function ($query) use ($MACHINE_LINE) {
+                                            ->where(function ($query) use ($MACHINE_LINE) {
                                                   if ($MACHINE_LINE != '') {
                                                      $query->where('MACHINE_LINE', '=', $MACHINE_LINE);
                                                    }
@@ -88,14 +87,13 @@ class MachineRepairController extends Controller
                                                   if ($DOC_STATUS > 0) {
                                                       $query->where('CLOSE_STATUS', '=', $DOC_STATUS);
                                                    }
-                                                  })
-                                            ->orderBy('DOC_DATE','DESC')
+                                                 })
+                                            ->orderBy('DOC_YEAR','DESC')
+                                            ->orderBy('DOC_MONTH','DESC')
                                             ->orderBy('DOC_NO','DESC')
-                                            ->orderBy('MACHINE_LINE','ASC')
-                                            ->orderBy('MACHINE_CODE','ASC')
                                             ->paginate(10);
     $SEARCH = $SERACH_TEXT;
-    return View('machine/repair/repairlist',compact('dataset','SEARCH','DATA_EMPNAME','LINE',
+    return View('machine/repair/repairlist',compact('dataset','SEARCH','LINE',
     'MACHINE_LINE','MONTH','YEAR','DOC_STATUS'));
   }
 
@@ -109,7 +107,6 @@ class MachineRepairController extends Controller
     }
     return View('machine/repair/search',compact('machine'));
   }
-
   public function Create($UNID){
 
       $dataset = SelectMainRepair::where('STATUS','=','9')->get();
@@ -235,7 +232,6 @@ class MachineRepairController extends Controller
         alert()->success('อัพเดทรายการ สำเร็จ')->autoclose('1500');
             return Redirect()->route('repair.edit',[$UNID]);
           }
-
   public function Delete($UNID){
 
         $checkuser = Auth::user();
@@ -253,8 +249,49 @@ class MachineRepairController extends Controller
                 alert()->success('ปิดเอกสารเสำเร็จ')->autoclose('1500');
               return Redirect()->back();
           }
-  public function SelectRepairDetail(Request $request){
+  public function EMPCallAjax(Request $request){
+    $REPAIR_REQ_UNID = isset($request->REPAIR_REQ_UNID) ? $request->REPAIR_REQ_UNID : '';
+    $DATA_EMPNAME = EMPName::select('*')->selectraw("dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH")->where('EMP_STATUS','=','9')->get();
+    $html_select = '<select class="form-control form-control-sm col-9 REC_WORKER_NAME" id="REC_WORKER_NAME" name="REC_WORKER_NAME">
+      <option value> กรุณาเลือก </option>';
+      foreach ($DATA_EMPNAME as $index => $row){
+        $html_select.= '<option value="'.$row->EMP_CODE.'">'.$row->EMP_CODE." ".$row->EMP_NAME_TH.'</option>';
+      }
+    $html_select.='</select>';
+    $html_detail = "";
+    if ($REPAIR_REQ_UNID != '') {
+      $REPAIR = MachineRepairREQ::select('*')->selectraw("dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH")
+                                                  ->where('UNID','=',$REPAIR_REQ_UNID)->first();
+      $PRIORITY_TEXT = $REPAIR->PRIORITY == '9' ? 'เร่งด่วน' : 'ไม่เร่งด่วน' ;
+      $html_detail.= '<table class="table table-bordered table-bordered-bd-info">
+        <tbody>
+          <tr>
+            <td width="80px" style="background:#aab7c1;color:black;"><h5 class="my-1"> MC-NO </h5></td>
+            <td > '.$REPAIR->MACHINE_CODE.' </td>
+            <td>LINE</td>
+            <td >'.$REPAIR->MACHINE_LINE.'</td>
+          </tr>
+          <tr>
+            <td style="background:#aab7c1;color:black;"><h5 class="my-1">พนักงาน</h5>  </td>
+            <td  colspan="3"> '.$REPAIR->EMP_CODE." ".$REPAIR->EMP_NAME_TH.' </td>
+          </tr>
+          <tr>
+            <td style="background:#aab7c1;color:black;"><h5 class="my-1">อาการ</h5>  </td>
+            <td  colspan="3"> '.$REPAIR->REPAIR_SUBSELECT_NAME.' </td>
+          </tr>
+          <tr>
+            <td style="background:#aab7c1;color:black;"><h5 class="my-1">ระดับ</h5>  </td>
+            <td  colspan="3">'.$PRIORITY_TEXT.'</td>
+          </tr>
+        </tbody>
+      </table>';
+    }
 
+
+
+    return Response()->json(['html_detail'=>$html_detail,'html_select' => $html_select]);
+  }
+  public function SelectRepairDetail(Request $request){
     $UNID = $request->UNID;
     $data_selectsubrepair = SelectSubRepair::where('REPAIR_MAINSELECT_UNID','=',$UNID)->get();
     $html = '<div class="row">';
