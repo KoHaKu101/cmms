@@ -58,19 +58,19 @@
 													<div class="col-md-12 col-lg-10 form-inline my-1">
 														<label class="text-white mx-2">Line : </label>
 														<select class="form-control form-control-sm mt-1 mx-1" id="LINE"name='LINE' onchange="changesubmit()">
-															 <option value="all">แสดงทั้งหมด</option>
+															 <option value="all">ทั้งหมด</option>
 															@foreach ($LINE as $index => $row_line)
 																<option value="{{ $row_line->LINE_CODE }}"
 																	{{ $MACHINE_LINE == $row_line->LINE_CODE ? 'selected' : '' }}>{{ $row_line->LINE_NAME }}</option>
 															@endforeach
 														</select>
-														<label class="text-white mx-2">วันที่ : </label>
+														{{-- <label class="text-white mx-2">วันที่ : </label>
 														<select class="form-control form-control-sm mt-1 mx-1"  id="DAY" name="DAY" onchange="changesubmit()">
 																	<option value="all">ทั้งหมด</option>
 																@for ($d=1; $d < date('t',strtotime(date('Y-m')))+1; $d++)
 																	<option value="{{$d}}"{{ $DAY == $d ? 'selected' : ''}}>{{$d}}</option>
 																@endfor
-															</select>
+															</select> --}}
 															<label class="text-white mx-2">เดือน : </label>
 															<select class="form-control form-control-sm mt-1 mx-1" id="MONTH" name="MONTH" onchange="changesubmit()">
 																<option value="all">ทั้งหมด</option>
@@ -85,8 +85,11 @@
 																	<option value="{{$y}}" {{ $YEAR == $y ?'selected' : ''}}>{{$y}}</option>
 																@endfor
 															</select>
-													{{-- </div> --}}
-													{{-- <div class="col-md-3 my-1"> --}}
+															<label class="text-white mx-2">เอกสาร : </label>
+															<select class="form-control form-control-sm mt-1 mx-1" id="CLOSE_STATUS" name="CLOSE_STATUS" onchange="changesubmit()">
+																<option value="9" {{ $CLOSE_STATUS == "9" ? 'selected' : "" }}>ดำเนินการ</option>
+																<option value="1" {{ $CLOSE_STATUS == "1" ? 'selected' : "" }}>ปิดเอกสาร</option>
+															</select>
 														<label class="text-white mx-1">ค้นหา : </label>
 								              <div class="input-group mx-1">
 								                <input  type="search" id="SEARCH"  name="SEARCH" class="form-control form-control-sm mt-1" placeholder="ค้นหา........."
@@ -97,9 +100,9 @@
 								                  </button>
 								                </div>
 								              </div>
-								          </div>
-													<div class="col-md-12 col-lg-2 text-right my-1">
-														<a href="{{ route('repair.repairsearch') }}"class="btn btn-warning  btn-xs mt-1">
+														</div>
+														<div class="col-md-12 col-lg-2 text-right">
+														<a href="{{ route('repair.repairsearch') }}"class="btn btn-warning  btn-xs mt-2">
 															<span class="fas fa-file fa-lg">	แจ้งซ่อม	</span>
 														</a>
 													</div>
@@ -203,7 +206,8 @@
 								    </table>
 
 								  </div>
-									{{$dataset->appends(['LINE' => $MACHINE_LINE,'SEARCH' => $SEARCH,'DAY' => $DAY,'MONTH' => $MONTH,'YEAR' => $YEAR])
+									{{$dataset->appends(['LINE' => $MACHINE_LINE,'SEARCH' => $SEARCH
+										,'MONTH' => $MONTH,'YEAR' => $YEAR,'CLOSE_STATUS' => $CLOSE_STATUS])
 														->links('pagination.default')}}
 								    </div>
 								</div>
