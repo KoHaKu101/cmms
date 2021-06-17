@@ -119,7 +119,7 @@
 								        <tbody>
 								          @foreach ($dataset as $key => $row)
 								            <tr>
-															<td >{{ $row->DOC_DATE.' '.date('H:i',strtotime($row->REPAIR_REQ_TIME))}}</td>
+															<td >{{ date('d-m-Y',strtotime($row->DOC_DATE)).' '.date('H:i',strtotime($row->REPAIR_REQ_TIME)) }}</td>
 								              <td >
 								                <a href="{{ route('repair.edit',[$row->UNID]) }}"
 																	class="btn btn-secondary btn-block btn-sm my-1 text-left" style="height:30px">
@@ -184,7 +184,7 @@
 								                      </td>
 								                @endif
 
-																<td >{{ date('H:i') }}</td>
+																<td >{{ date('d-m-Y H:i') }}</td>
 								              </tr>
 								            @endforeach
 
