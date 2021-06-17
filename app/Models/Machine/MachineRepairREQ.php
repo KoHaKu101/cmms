@@ -38,6 +38,8 @@ class MachineRepairREQ extends Model
     ,'YY'
     ,'MM'
     ,'DD'
+    ,'DOC_YEAR'
+    ,'DOC_MONTH'
     ,'REPAIR_REQ_TIME'
     ,'CLOSE_STATUS'
     ,'CLOSE_BY'

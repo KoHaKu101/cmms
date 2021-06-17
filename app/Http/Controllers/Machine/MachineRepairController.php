@@ -164,9 +164,8 @@ class MachineRepairController extends Controller
         ,'PRIORITY'              => $PRIORITY
         ,'DOC_NO'                => $DOC_NO
         ,'DOC_DATE'              => $DATE_DOCNO->format('Y-m-d')
-        ,'YY'                    => $DATE_DOCNO->format('y')
-        ,'MM'                    => $DATE_DOCNO->format('m')
-        ,'DD'                    => $DATE_DOCNO->format('d')
+        ,'DOC_YEAR'              => $DATE_DOCNO->format('y')
+        ,'DOC_MONTH'             => $DATE_DOCNO->format('m')
         ,'REPAIR_REQ_TIME'       => $DATE_DOCNO->format('H:i:s')
         ,'CLOSE_STATUS'          => $CLOSE_STATUS
         ,'CLOSE_BY'              => ''
