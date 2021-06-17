@@ -93,9 +93,10 @@ Route::get('machine/repair/repairlist'             ,[MachineRepairController::cl
   Route::post('machine/repair/update/{UNID}'       ,[MachineRepairController::class,'Update'])       ->name('repair.update');
   Route::get('machine/repair/delete/{UNID}'        ,[MachineRepairController::class,'Delete'])       ->name('repair.delete');
 
-  Route::post('machine/repair/stepclose'            ,[MachineRepairController::class,'StepCloseForm']) ->name('repair.stepclose');
   Route::post('machine/repair/select/selectrepairdetail',[MachineRepairController::class,'SelectRepairDetail'])->name('repair.selectrepairdetail');
-
+  
+  Route::post('machine/repair/addtableworker'           ,[MachineRepairController::class,'AddTableWorker']) ->name('repair.addtableworker');
+  Route::post('machine/repair/addsparepart'             ,[MachineRepairController::class,'AddSparePart'])->name('repair.addsparepart');
 
 //group not user
 Route::middleware('can:isAdminandManager')->group(function () {

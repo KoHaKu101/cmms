@@ -14,6 +14,9 @@ use App\Models\MachineAddTable\SelectMainRepair;
 use App\Models\MachineAddTable\SelectSubRepair;
 use App\Models\Machine\Machine;
 use App\Models\Machine\MachineEMP;
+use App\Models\Machine\EMPName;
+use App\Models\Machine\SparePart;
+
 use App\Models\Machine\MachineRepairREQ;
 //************** Package form github ***************
 use App\Exports\MachineExport;
@@ -45,18 +48,22 @@ class MachineRepairController extends Controller
   public function Index(Request $request){
 
     $SEARCH = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
-
-    $dataset = MachineRepairREQ::where(function ($query) use ($SEARCH) {
-              if ($SEARCH != '') {
-                $query->where('MACHINE_CODE', 'like', $SEARCH)
-                      ->orWhere('DOC_NO', 'like', $SEARCH)
-                      ->orWhere('MACHINE_NAME','like',$SEARCH);
-              }})
-                            ->orderby('CLOSE_STATUS','DESC')
-                            ->orderBy('DOC_DATE','DESC')
-                            ->paginate(10);
+    $DATA_EMPNAME = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
+                                        ->where('EMP_STATUS','=',9)->get();
+    $dataset = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
+                                            ->where(function ($query) use ($SEARCH) {
+                                                if ($SEARCH != '') {
+                                                  $query->where('MACHINE_CODE', 'like', $SEARCH)
+                                                        ->orWhere('DOC_NO', 'like', $SEARCH)
+                                                        ->orWhere('MACHINE_NAME','like',$SEARCH);
+                                                }})
+                                                              ->orderby('CLOSE_STATUS','DESC')
+                                                              ->orderBy('DOC_DATE','DESC')
+                                                              ->paginate(8);
+   $DATA_SPAREPART = SparePart::where('STATUS','=',9)->get();
    $SEARCH = str_replace('%','',$SEARCH);
-    return View('machine/repair/repairlist',compact('dataset','SEARCH'));
+
+    return View('machine/repair/repairlist',compact('dataset','SEARCH','DATA_EMPNAME','DATA_SPAREPART'));
   }
 
   public function PrepareSearch(Request $request){
@@ -246,75 +253,61 @@ class MachineRepairController extends Controller
     </div>';
     return Response()->json(['html' => $html]);
   }
+  public function AddTableWorker(Request $request){
+      $EMP_CODE = $request->EMP_CODE;
+      $html = '';
+      if (is_array($EMP_CODE)) {
+        $DATA_EMP_NAME = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->whereIn('EMP_CODE',$EMP_CODE)->get();
+        foreach ($DATA_EMP_NAME as $index => $row) {
+            $html.= '	<tr>
+                <td>'.$index+1 .'</td>
+                <td>'.$row->EMP_CODE.' '.$row->EMP_NAME_TH.'</td>
+                <td><button type="button" class="btn btn-danger btn-sm btn-block my-1" onclick="deleteworker(this)"
+                data-empcode="'.$row->EMP_CODE.'"
+                data-empname="'.$row->EMP_NAME_TH.'">
+                <i class="fas fa-trash"></i>ลบ</button></td>
+              </tr>';
+        }
+      }
+      return Response()->json(['html' => $html]);
+  }
+  public function AddSparePart(Request $request){
+      $arr_TOTAL_SPAREPART = $request->TOTAL_SPAREPART;
+      $UNID = array();
+      $TOTAL = array();
+      $html = '';
+      if (isset($arr_TOTAL_SPAREPART)) {
+        foreach ($arr_TOTAL_SPAREPART as $key => $row_arr) {
+          $arr_UNID = array_push($UNID,$key);
+          $TOTAL[$key] = $row_arr;
+        }
+        if (is_array($UNID)) {
+          $DATA_SPARPART = SparePart::select('*')->whereIn('UNID',$UNID)->get();
+          foreach ($DATA_SPARPART as $index => $row) {
+              $html.= '  <tr>
+                  <td>
+                    <button type="button" class="btn btn-warning btn-sm mx-1 my-1"
+                    onclick="edittotal(this)"
+                    data-unid="'.$row->UNID.'"><i class="fas fa-edit"></i></button>
+                    <button type="button" class="btn btn-danger btn-sm mx-1 my-1"
+                    onclick="removesparepart(this)"
+                    data-unid="'.$row->UNID.'"><i class="fas fa-trash"></i></button>
+                  </td>
+                  <td>'.$row->SPAREPART_CODE.'</td>
+                  <td>'.$row->SPAREPART_NAME.'</td>
+                  <td>'.$row->SPAREPART_MODEL.'</td>
+                  <td>'.$row->SPAREPART_SIZE.'</td>
+                  <td>'.$row->SPAREPART_COST.'</td>
+                  <td>'.$TOTAL[$row->UNID].'</td>
 
-  public function StepCloseForm(Request $request){
-    if ($request->REPAIR_BY == 1) {
-      $html_step2 = '<div class="form-group">
-                <div class="row">
-                  <div class="col-sm-6 col-md-4">
-                    <label>ช่างซ่อม 1</label>
-                      <select class="form-control form-control-sm my-2">
-                        <option>อนุศักดิ์ ผิวดำ</option>
-                        <option>อนุลักษณ์ รัตนประเสริฐ</option>
-                      </select>
-                  </div>
-                  <div class="col-sm-6 col-md-4">
-                    <label>ช่างซ่อม 2</label>
-                      <select class="form-control form-control-sm my-2">
-                        <option>อนุศักดิ์ ผิวดำ</option>
-                        <option>อนุลักษณ์ รัตนประเสริฐ</option>
-                      </select>
-                  </div>
-                  <div class="col-sm-6 col-md-4">
-                    <label>ช่างซ่อม 3</label>
-                      <select class="form-control form-control-sm my-2">
-                        <option>อนุศักดิ์ ผิวดำ</option>
-                        <option>อนุลักษณ์ รัตนประเสริฐ</option>
-                      </select>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group">
-                <div class="row ">
-                  <div class="col-6 col-md-4 ml-auto">
-                      <div class="card card-stats card-primary card-round">
-                        <div class="card-body" style="cursor: pointer;" id="step4_part">
-                          <div class="row">
-                            <div class="col-5">
-                              <div class="icon-big text-center">
-                                <i class="fas fa-user-cog"></i>
-                              </div>
-                            </div>
-                            <div class="col-7 col-stats">
-                              <div class="numbers">
-                                <h4 class="card-title text-center">เปลี่ยนอะไหล่</h4>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-6 col-md-4  mr-auto">
-                        <div class="card card-stats card-primary card-round">
-                          <div class="card-body" style="cursor: pointer;" id="step4_finish">
-                            <div class="row">
-                              <div class="col-5">
-                                <div class="icon-big text-center">
-                                  <i class="fas fa-clipboard-check"></i>
-                                </div>
-                              </div>
-                              <div class="col-7 col-stats">
-                                <div class="numbers">
-                                  <h4 class="card-title text-center">ปิดเอกสาร</h4>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                </div>
-              </div>';
-      return Response()->json(['html' => $html_step2]);
-    }
+                </tr>';
+          }
+        }
+      }
+
+
+
+
+      return Response()->json(['html' => $html]);
   }
 }

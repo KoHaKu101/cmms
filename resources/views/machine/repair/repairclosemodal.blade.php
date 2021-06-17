@@ -13,48 +13,53 @@
 
 {{-- ปิดเอกสาร --}}
 <div class="modal fade" id="RepairForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLalavel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header bg-primary text-white">
         <h5 class="modal-title" id="exampleModalLabel">การดำเนินงาน</h5>
-
-
       </div>
       <div class="modal-body">
         <div class="row">
-          <div class="col-md-6 ml-auto mr-auto">
+          <div class="col-md-12 ml-auto mr-auto">
               <table class="table table-bordered table-bordered-bd-info">
                 <tbody>
                   <tr>
                     <td width="80px" style="background:#aab7c1;color:black;"><h5 class="my-1"> MC-NO </h5></td>
-                    <td> MC-001 LINE:L1</td>
+                    <td id="MC_CODE">  </td>
+                    <td>LINE</td>
+                    <td id="MC_LINE"></td>
                   </tr>
                   <tr>
                     <td style="background:#aab7c1;color:black;"><h5 class="my-1">พนักงาน</h5>  </td>
-                    <td id="summaryemp"> 590020 เป้ </td>
+                    <td id="EMP" colspan="3">  </td>
                   </tr>
                   <tr>
                     <td style="background:#aab7c1;color:black;"><h5 class="my-1">อาการ</h5>  </td>
-                    <td id="summaryrepair"> เครื่อง Alarm </td>
+                    <td id="RE_DETAIL" colspan="3">  </td>
                   </tr>
                   <tr>
                     <td style="background:#aab7c1;color:black;"><h5 class="my-1">ระดับ</h5>  </td>
-                    <td id="summarypriority">เร่งด่วน </td>
+                    <td id="PRIORITY" colspan="3"> </td>
                   </tr>
                 </tbody>
               </table>
           </div>
         </div>
         <div class="row">
-          <div class="col-md-6 ml-auto mr-auto has-error">
-            <div class="form-inline">
+            <div class="col-3 col-md-2">
               <label> ผู้รับแจ้ง </label>
-              <select class="form-control form-control-sm col-md-10 col-10 ml-2">
-                <option> นาย สุบรรณ</option>
-                <option> นาย อุทัย</option>
+            </div>
+            <div class="col-9 col-md-10">
+              <select class="form-control form-control-sm col-9 REC_WORKER_NAME" id="REC_WORKER_NAME" name="REC_WORKER_NAME">
+                <option value> กรุณาเลือก </option>
+                @foreach ($DATA_EMPNAME as $index => $row)
+                    <option value="{{ $row->EMP_CODE }}">{{ $row->EMP_CODE. ' ' .$row->EMP_NAME_TH }}</option>
+                @endforeach
               </select>
             </div>
-          </div>
+
+
+
         </div>
       </div>
       <div class="card-footer text-right">
@@ -67,39 +72,96 @@
   </div>
 </div>
 <style>
+.card-stats .card-body {
+  padding: 0px!important;
+}
 .modal-body-step{
-    height: 500px;
+    height: 490px;
     overflow-y: auto;
+}
+.sparepart-table .sparepart-action{
+  width: 110px;
 }
   @media all and (max-width: 1000px) {
       .modal-body-step{
-          height: 250px;
+          height: 650px;
           overflow-y: auto;
       }
-      .table-step{
-       width: 160%;
-       overflow-x: auto;
+      .sparepart-table .sparepart-action{
+        width: 110px;
+      }
+      .sparepart-table-responsive{
+        display: block;
+        width: 160%;
+        overflow-x: auto;
       }
       .text-col{
         top: 0px;
       }
+  @media all and (max-height: 400px){
+    .modal-body-step{
+        height: 200px;
+        overflow-y: auto;
+    }
+
+    .text-col{
+      top: 0px;
+    }
+  }
 }
 </style>
 <div class="modal fade" id="CloseForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLalavel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">การดำเนินงาน</h5>
+      <div class="modal-header bg-primary">
+        <div class="row">
+          <div class="col-12 col-md-12 form-inline text-white my-1  ">
+            <h4 class="modal-title" id="exampleModalLabel">ตรวจสอบเบื้องต้น</h4>
+            <i class="separator mx-2">
+              <i class="fas fa-arrow-right"></i>
+            </i>
+            <h4 class="modal-title" id="exampleModalLabel">ช่าง</h4>
+            <i class="separator mx-2">
+              <i class="fas fa-arrow-right"></i>
+            </i>
+            <h4 class="modal-title" id="exampleModalLabel">อะไหล่</h4>
+            <i class="separator mx-2">
+              <i class="fas fa-arrow-right"></i>
+            </i>
+            <h4 class="modal-title" id="exampleModalLabel">การดำเนินงาน</h4>
+            <i class="separator mx-2">
+              <i class="fas fa-arrow-right"></i>
+            </i>
+            <h4 class="modal-title" id="exampleModalLabel">สรุปผล</h4>
+          </div>
+          <div class="col-12 col-md-12">
+            <div class="row">
+              <div class="col-12 col-md-12">
+                <input type="text" class="modal-title form-control-plaintext bg-primary text-white" id="show-detail" readonly>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
         <button type="button" class="btn btn-sm btn-danger "data-dismiss="modal" ><i class="fas fa-times"></i></button>
       </div>
+
       <div class="modal-body modal-body-step">
         <div class="row">
-          <div class="col-12 col-md-12 " id="tabactive">
-            <ul class=" nav nav-pills nav-primary">
-              <li class="step">
-                <a class="nav-link active WORK_STEP1"  href="#WORK_STEP1"  aria-expanded="true" id="step1" data-toggle="tab"><i class="fa fa-user mr-0"></i> ตรวจสอบเบื้องต้น</a>
-              </li>
-              <li class="step">
+
+          <div class="col-12 col-md-12 tabactive">
+
+            <div class="col-8 col-md-5 col-lg-3 ml-auto mr-auto">
+              <ul class=" nav nav-pills nav-primary">
+                <li class="step">
+                  <a class="nav-link active WORK_STEP_1"  href="#WORK_STEP_1"
+                  aria-expanded="true" id="step" style="width: 191px;font-size: 16px;" data-toggle="tab">
+                    <i class="fa fa-user mr-2"></i>ตรวจสอบเบื้องต้น</a>
+                </li>
+              </ul>
+            </div>
+              {{-- <li class="step">
                 <a class="nav-link WORK_STEP2_IN" href="#WORK_STEP2_IN"  data-toggle="tab" id="step2" hidden> </a>
               </li>
               <li class="step">
@@ -114,12 +176,11 @@
               </li>
               <li class="step">
                 <a class="nav-link WORK_RESULT" href="#WORK_RESULT" id="step5"  data-toggle="tab" hidden></a>
-              </li>
-            </ul>
+              </li> --}}
           </div>
         </div>
-        <div class="tab-content">
-          <div class="tab-pane active" id="WORK_STEP1">
+        <div class="tab-content my-2  ">
+          <div class="tab-pane active" id="WORK_STEP_1">
             <div class="row">
               <div class="col-6 col-sm-10 col-md-4 ml-auto">
                 <label>วันที่เริ่มตรวจสอบ</label>
@@ -127,152 +188,79 @@
               </div>
               <div class="col-6 col-sm-10 col-md-4 mr-auto">
                 <label>เวลาตรวจสอบ</label>
-                <input type="time" class="form-control form-control-sm " >
+                <input type="time" class="form-control form-control-sm " value="{{ date('H:m') }}">
               </div>
             </div>
             <div class="row">
               <div class="col-6 col-sm-10 col-md-4 ml-auto">
                 <label>วันที่ตรวจสอบเสร็จ</label>
-                <input type="date" class="form-control form-control-sm ">
+                <input type="date" class="form-control form-control-sm " value="{{ date('Y-m-d') }}">
               </div>
               <div class="col-6 col-sm-10 col-md-4 mr-auto">
                 <label>เวลาตรวจสอบเสร็จ</label>
-                <input type="time" class="form-control form-control-sm " >
+                <input type="time" class="form-control form-control-sm " value="{{ date('H:m') }}">
               </div>
             </div>
             <div class="row my-5">
-              <div class="col-10 col-sm-6 col-md-5 col-lg-4 ml-auto mr-auto">
-  							<div class="card card-stats card-primary card-round">
-  								<div class="card-body" style="cursor: pointer;" id="step2_in">
-  									<div class="row">
-  										<div class="col-12 col-md-6 col-lg-5 ml-auto mr-auto">
-  											<div class="icon-big text-center">
-  												<i class="fas fa-user-cog"></i>
-  											</div>
-  										</div>
-  										<div class="col-6 col-md-12 col-lg-7 ml-auto mr-auto text-col">
-  											<div class="numbers text-center">
-  												<h4 class="card-title">ช่างภายใน</h4>
-  											</div>
-  										</div>
-  									</div>
-  								</div>
-  							</div>
-    					</div>
-              <div class="col-10 col-sm-6 col-md-5 col-lg-4 ml-auto mr-auto">
-  							<div class="card card-stats card-primary card-round">
-  								<div class="card-body" style="cursor: pointer;" id="step2_sup">
-  									<div class="row">
-  										<div class="col-12 col-md-6 col-lg-5 ml-auto mr-auto">
-  											<div class="icon-big text-center">
-  												<i class="fas fa-users"></i>
-  											</div>
-  										</div>
-  										<div class="col-6 col-md-12 col-lg-7 ml-auto mr-auto text-col">
-  											<div class="numbers text-center">
-  												<h4 class="card-title">ช่างภายนอก</h4>
-  											</div>
-  										</div>
-  									</div>
-  								</div>
-  							</div>
-    					</div>
-              <div class="col-10 col-sm-6 col-md-5 col-lg-4 ml-auto mr-auto">
-  							<div class="card card-stats card-primary card-round">
-  								<div class="card-body" style="cursor: pointer;" id="step3_finish" onclick="step_final()">
-  									<div class="row">
-  										<div class="col-12 col-md-6 col-lg-5 ml-auto mr-auto">
-  											<div class="icon-big text-center">
-  												<i class="fas fa-clipboard-check"></i>
-  											</div>
-  										</div>
-  										<div class="col-6 col-md-12 col-lg-7 ml-auto mr-auto text-col">
-  											<div class="numbers text-center">
-  												<h4 class="card-title">ปิดเอกสาร</h4>
-  											</div>
-  										</div>
+              <div class="col-5 col-sm-3 col-lg-2 ml-auto" >
+  							<div class="card text-white">
+  								<div class="d-flex align-items-center bg-danger" style="cursor:pointer"  id="step_cancel">
+  									<span class="stamp stamp-md bg-danger">
+  										<i class="fas fa-times-circle"></i>
+  									</span>
+  									<div>
+  										<h5 class="mb-1 my-1"><b> ยกเลิก </b></h5>
   									</div>
   								</div>
   							</div>
   						</div>
-              <div class="col-10 col-sm-6 col-md-5 col-lg-4 ml-auto mr-auto">
-  							<div class="card card-stats card-danger card-round">
-  								<div class="card-body" style="cursor: pointer;" id="step3_finish" onclick="cancelform()">
-  									<div class="row">
-  										<div class="col-12 col-md-6 col-lg-5 ml-auto mr-auto">
-  											<div class="icon-big text-center">
-  												<i class="fas fa-clipboard-check"></i>
-  											</div>
-  										</div>
-  										<div class="col-6 col-md-12 col-lg-7 ml-auto mr-auto">
-  											<div class="numbers text-center">
-  												<h4 class="card-title">ยกเลิกเอกสาร</h4>
-  											</div>
-  										</div>
+              <div class="col-5 col-sm-3 col-lg-2 mr-auto" >
+  							<div class="card text-white" >
+  								<div class="d-flex flex-row-reverse align-items-center  bg-primary" style="cursor:pointer"  onclick="nextstep(2)">
+  									<span class="stamp stamp-md  bg-primary ">
+  										<i class="fas fa-arrow-alt-circle-right"></i>
+  									</span>
+  									<div>
+  										<h5 class="mb-1 my-1"><b> ไปต่อ </b></h5>
   									</div>
   								</div>
   							</div>
   						</div>
             </div>
           </div>
-          <div class="tab-pane " id="WORK_STEP2_IN">
-            <div class="form-group">
-              <div class="row">
-                <div class="col-sm-6 col-md-4">
-                  <label>ช่างซ่อม 1</label>
-                    <select class="form-control form-control-sm my-2">
-                      <option>อนุศักดิ์ ผิวดำ</option>
-                      <option>อนุลักษณ์ รัตนประเสริฐ</option>
-                    </select>
-                </div>
-                <div class="col-sm-6 col-md-4">
-                  <label>ช่างซ่อม 2</label>
-                    <select class="form-control form-control-sm my-2">
-                      <option>อนุศักดิ์ ผิวดำ</option>
-                      <option>อนุลักษณ์ รัตนประเสริฐ</option>
-                    </select>
-                </div>
-                <div class="col-sm-6 col-md-4">
-                  <label>ช่างซ่อม 3</label>
-                    <select class="form-control form-control-sm my-2">
-                      <option>อนุศักดิ์ ผิวดำ</option>
-                      <option>อนุลักษณ์ รัตนประเสริฐ</option>
-                    </select>
-                </div>
-              </div>
-            </div>
-            <div class="form-group">
+          <div class="tab-pane " id="WORK_STEP_2">
+            <div class="form-group" id="select_typeworker">
               <div class="row ">
-                <div class="col-6 col-md-5 col-lg-4 ml-auto">
-                  <div class="card card-stats card-primary card-round">
-                    <div class="card-body" style="cursor: pointer;" id="step3_partchange">
+                <div class="col-6 col-md-5 col-lg-3 ml-auto">
+                  <div class="card card-stats card-primary card-round my-4">
+                    <div class="card-body" style="cursor: pointer;" onclick="type_worker(1)">
                       <div class="row">
                         <div class="col-5">
-                          <div class="icon-big text-center">
-                            <i class="fas fa-user-cog"></i>
+                          <div class="icon-big ml-3">
+                            <i class="fas fa-users-cog"></i>
                           </div>
                         </div>
                         <div class="col-7 col-stats">
                           <div class="numbers">
-                            <h4 class="card-title text-center">เปลี่ยนอะไหล่</h4>
+                            <h4 class="card-title text-center">ภายใน</h4>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="col-6 col-md-5 col-lg-4  mr-auto">
-                  <div class="card card-stats card-primary card-round">
-                    <div class="card-body" style="cursor: pointer;" id="step3_finish" onclick="step_final()">
+                <div class="col-6 col-md-5 col-lg-3  mr-auto">
+                  <div class="card card-stats card-primary card-round my-4">
+                    <div class="card-body" style="cursor: pointer;" onclick="type_worker(2)">
                       <div class="row">
                         <div class="col-5">
-                          <div class="icon-big text-center">
-                            <i class="fas fa-clipboard-check"></i>
+                          <div class="icon-big ml-3">
+                            <i class="fas fa-users"></i>
                           </div>
                         </div>
                         <div class="col-7 col-stats">
                           <div class="numbers">
-                            <h4 class="card-title text-center">ปิดเอกสาร</h4>
+                            <h4 class="card-title text-center">ภายนอก</h4>
                           </div>
                         </div>
                       </div>
@@ -281,8 +269,41 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="tab-pane " id="WORK_STEP2_SUP">
+            <div class="form-group" id="work_in" hidden>
+              <div class="row">
+                <div class="col-4 col-md-3 col-lg-2 ml-auto text-right">
+                  <label>เพิ่มพนักงาน :</label>
+                </div>
+                <div class="col-5 col-md-6 col-lg-4">
+                  <select class="form-control form-control-sm col-9 REC_WORKER_NAME" id="WORKER_SELECT" name="WORKER_SELECT">
+                    <option value> กรุณาเลือก </option>
+                    @foreach ($DATA_EMPNAME as $index => $row)
+                        <option value="{{ $row->EMP_CODE }}">{{ $row->EMP_CODE. ' ' .$row->EMP_NAME_TH }}</option>
+                    @endforeach
+                  </select>
+                </div>
+                <div class="col-3 col-md-2 col-lg-2 mr-auto">
+
+                    <button type="button" class="btn btn-secondary btn-sm mx-1" id="add_worker"><i class="fas fa-plus"></i>เพิ่มพนักงาน</button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12 col-md-12 col-lg-8 ml-auto mr-auto">
+                  <table class="table table-bordered table-head-bg-info table-bordered-bd-info mt-4">
+                    <thead>
+                      <tr>
+                        <th width="40px" class="text-center">#</th>
+                        <th>พนักงาน</th>
+                        <th width="60px">action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="table_worker">
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="form-group has-error" id="work_out" hidden>
               <div class="row">
                 <div class="col-6 col-sm-10 col-md-4 ml-auto my-1">
                   <label>วันที่เริ่มซ่อม</label>
@@ -290,29 +311,34 @@
                 </div>
                 <div class="col-6 col-sm-10 col-md-4 mr-auto my-1">
                   <label>เวลาซ่อม</label>
-                  <input type="time" class="form-control form-control-sm " >
+                  <input type="time" class="form-control form-control-sm " value="{{ date('H:m') }}">
                 </div>
               </div>
               <div class="row">
                 <div class="col-6 col-sm-10 col-md-4 ml-auto my-1">
                   <label>วันที่ซ่อมเสร็จ</label>
-                  <input type="date" class="form-control form-control-sm ">
+                  <input type="date" class="form-control form-control-sm "value="{{ date('Y-m-d') }}">
                 </div>
                 <div class="col-6 col-sm-10 col-md-4 mr-auto my-1">
                   <label>เวลาซ่อมเสร็จ</label>
-                  <input type="time" class="form-control form-control-sm " >
+                  <input type="time" class="form-control form-control-sm " value="{{ date('H:m') }}">
                 </div>
               </div>
               <div class="row my-1">
-                <div class="col-12 col-sm-10 col-md-8 ml-auto  mr-auto">
+                <div class="col-6 col-sm-5 col-md-4 ml-auto">
+                  <label> บริษัท/บุคคล </label>
+                  <input type="text" class="form-control form-control-sm" autocomplete>
+                </div>
+                <div class="col-6 col-sm-5 col-md-4 mr-auto">
+
                   <label> ค่าใช้จ่าย </label>
                     <div class="input-group">
-											<input type="number" class="form-control form-control-sm"
+                      <input type="number" class="form-control form-control-sm"
                       min="0" value="0" step=".01">
-											<div class="input-group-append">
-												<span class="input-group-text">บาท</span>
-											</div>
-										</div>
+                      <div class="input-group-append">
+                        <span class="input-group-text">บาท</span>
+                      </div>
+                    </div>
                 </div>
               </div>
               <div class="row">
@@ -321,103 +347,129 @@
                   <textarea class="form-control"></textarea>
                 </div>
               </div>
-              <div class="row my-4">
-                <div class="col-12 col-md-5 col-lg-4  ml-auto ">
-                  <div class="card card-stats card-primary card-round">
-                    <div class="card-body" style="cursor: pointer;" data-dismiss="modal">
-                      <div class="row">
-                        <div class="col-5">
-                          <div class="icon-big text-center">
-                            <i class="fas fa-clipboard-check"></i>
-                          </div>
-                        </div>
-                        <div class="col-7 col-stats">
-                          <div class="numbers">
-                            <h4 class="card-title text-center">รอดำเนินการ</h4>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+            </div>
+            <div class="row my-3">
+              <div class="col-5 col-sm-4 col-lg-3 ml-auto" >
+  							<div class="card text-white">
+  								<div class="d-flex align-items-center bg-danger" style="cursor:pointer" id="previous_worker" onclick="previous_step(1)">
+  									<span class="stamp stamp-md bg-danger">
+  										<i class="fas fa-arrow-alt-circle-left"></i>
+  									</span>
+  									<div>
+  										<h5 class="mb-1 my-1"><b> ย้อนกลับ </b></h5>
+  									</div>
+  								</div>
+  							</div>
+  						</div>
+              <div class="col-5 col-sm-4 col-lg-3 mr-auto" >
+  							<div class="card text-white" >
+  								<div class="d-flex flex-row-reverse align-items-center  bg-primary" style="cursor:pointer"  onclick="nextstep(3)">
+  									<span class="stamp stamp-md  bg-primary ">
+  										<i class="fas fa-arrow-alt-circle-right"></i>
+  									</span>
+  									<div>
+  										<h5 class="mb-1 my-1"><b> ไปต่อ </b></h5>
+  									</div>
+  								</div>
+  							</div>
+  						</div>
+            </div>
+          </div>
+          <div class="tab-pane" id="WORK_STEP_3">
+
+              <div class="form-group">
+                <div class="row">
+                <div class="col-12 col-md-12 col-lg-8 form-inline">
+                  <label>เพิ่มอะไหล่</label>
+                  <div class="col-9 col-md-10 col-lg-8">
+                    <select class="form-control form-control-sm col-9 REC_WORKER_NAME" id="SPAREPART" name="SPAREPART">
+                      <option value> กรุณาเลือก </option>
+                      @foreach ($DATA_SPAREPART as $index => $row)
+                          <option value="{{ $row->UNID }}" id="{{ $row->UNID }}"
+                            data-sparepartcode="{{$row->SPAREPART_CODE}}"
+                            data-sparepartname="{{$row->SPAREPART_NAME}}"
+                            data-sparepartsize="{{$row->SPAREPART_SIZE}}"
+                            data-sparepartmodel="{{$row->SPAREPART_MODEL}}"
+                            >{{ $row->SPAREPART_CODE. ' : '. $row->SPAREPART_NAME }}</option>
+                      @endforeach
+                    </select>
                   </div>
                 </div>
-                <div class="col-12 col-md-5 col-lg-4   mr-auto">
-                  <div class="card card-stats card-primary card-round">
-                    <div class="card-body" style="cursor: pointer;" id="step3_finish" onclick="step_result()">
-                      <div class="row">
-                        <div class="col-5">
-                          <div class="icon-big text-center">
-                            <i class="fas fa-clipboard-check"></i>
-                          </div>
-                        </div>
-                        <div class="col-7 col-stats">
-                          <div class="numbers">
-                            <h4 class="card-title text-center">สรุปผล</h4>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <div class="col-4 col-md-4 col-lg-2 my-2 ml-auto mr-auto">
+                  <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="add_sparepart(1)">
+                    <i class="fas fa-plus mr-2"></i>ตัดสต็อก</button>
+                </div>
+                <div class="col-5 col-md-4 col-lg-2 my-2 ml-auto mr-auto">
+                  <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="add_sparepart(2)">
+                    <i class="fas fa-plus mr-2"></i>เปลี่ยนอะไหล่</button>
                 </div>
               </div>
-          </div>
-          <div class="tab-pane" id="WORK_STEP3">
-            <div class="form-group">
-              <div class="row">
-                <table class="table table-bordered table-head-bg-info table-bordered-bd-info mt-4">
+
+            </div>
+            {{-- <div class="row">
+              <div class="col-6 col-md-6 col-lg-3 my-2">
+                  <input type="text" class="form-control-sm form-control-plaintext bg-info text-white " id="SPAREPART_CODE" readonly value="รหัส :">
+              </div>
+              <div class="col-6 col-md-6 col-lg-3 my-2">
+                <input type="text" class="form-control-sm form-control-plaintext bg-info text-white " id="SPAREPART_NAME" readonly value="ชื่อ :">
+              </div>
+              <div class="col-4 col-md-4 col-lg-2 my-2">
+                <input type="text" class="form-control-sm form-control-plaintext bg-info text-white " id="SPAREPART_SIZE" readonly value="เบอร์ :">
+              </div>
+              <div class="col-4 col-md-4 col-lg-2 my-2">
+                <input type="text" class="form-control-sm form-control-plaintext bg-info text-white " id="SPAREPARTM_ODEL" readonly value="ขนาด :">
+              </div>
+
+
+            </div> --}}
+            <div class="form-group mt--4">
+              <div class="row sparepart-table-responsive">
+                <table class="table sparepart-table table-bordered table-head-bg-info table-bordered-bd-info mt-2">
                   <thead>
                     <tr>
-                      <th scope="col">action</th>
-                      <th scope="col">อะไหล่</th>
-                      <th scope="col">เบอร์</th>
-                      <th scope="col">ขนาด</th>
-                      <th scope="col">ราคา</th>
-                      <th scope="col">เบิก</th>
-                      <th scope="col">หน่อย</th>
+                      <th class="sparepart-action">action</th>
+                      <th>รหัส</th>
+                      <th>ชื่อ</th>
+                      <th>เบอร์</th>
+                      <th>ขนาด</th>
+                      <th>ราคา</th>
+                      <th>เบิก</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <button type="button" class="btn btn-secondary btn-sm btn-block my-1" onclick="withdraw(this)"
-                        data-unid="1">เบิก</button>
-                      </td>
-                      <td>สายพาน</td>
-                      <td>8</td>
-                      <td>1นิ้ว</td>
-                      <td>200</td>
-                      <td>9</td>
-                      <td>เส้น</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <button type="button" class="btn btn-secondary btn-sm btn-block my-1" onclick="withdraw(this)"
-                        data-unid="2">เบิก</button>
-                      </td>
-                      <td>น้ำมันคูแล่น</td>
-                      <td>-</td>
-                      <td>ถัง</td>
-                      <td>200</td>
-                      <td>1</td>
-                      <td>ถัง</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <button type="button" class="btn btn-secondary btn-sm btn-block my-1" onclick="withdraw(this)"
-                        data-unid="3">เบิก</button>
-                      </td>
-                      <td>มอนิเตอร์</td>
-                      <td>-</td>
-                      <td>-</td>
-                      <td>300</td>
-                      <td>1</td>
-                      <td>เครื่อง</td>
-                    </tr>
+                  <tbody id="table_sparepart">
+
                   </tbody>
                 </table>
               </div>
             </div>
-            <div class="form-group">
-              <div class="row" >
+            <div class="row my-3">
+              <div class="col-5 col-sm-4 col-lg-3 ml-auto" >
+  							<div class="card text-white">
+  								<div class="d-flex align-items-center bg-danger" style="cursor:pointer"  onclick="previous_step(2)">
+  									<span class="stamp stamp-md bg-danger">
+  										<i class="fas fa-arrow-alt-circle-left"></i>
+  									</span>
+  									<div>
+  										<h5 class="mb-1 my-1"><b> ย้อนกลับ </b></h5>
+  									</div>
+  								</div>
+  							</div>
+  						</div>
+              <div class="col-5 col-sm-4 col-lg-3 mr-auto" >
+  							<div class="card text-white" >
+  								<div class="d-flex flex-row-reverse align-items-center  bg-primary" style="cursor:pointer"  onclick="nextstep(4)">
+  									<span class="stamp stamp-md  bg-primary ">
+  										<i class="fas fa-arrow-alt-circle-right"></i>
+  									</span>
+  									<div>
+  										<h5 class="mb-1 my-1"><b> ไปต่อ </b></h5>
+  									</div>
+  								</div>
+  							</div>
+  						</div>
+            </div>
+            {{-- <div class="form-group">
+              <div class="row">
                 <div class="col-12 col-md-6 col-lg-4  ml-auto " id="buypart" hidden>
                   <div class="card card-stats card-warning card-round">
                     <div class="card-body" style="cursor: pointer;" onclick="buypart()">
@@ -456,7 +508,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> --}}
           </div>
           <div class="tab-pane" id="WORK_STEP3_WAITPART">
             <div class="form-group">

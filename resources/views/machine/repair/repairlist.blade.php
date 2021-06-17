@@ -2,6 +2,7 @@
 @section('tittle','แจ้งซ่อม')
 @section('meta')
 	<meta name="csrf-token" content="{{ csrf_token() }}">
+	<link href="{{asset('assets/css/select2.min.css')}}" rel="stylesheet" />
 @endsection
 @section('css')
 
@@ -91,7 +92,7 @@
 								            <th scope="col">วันที่เอกสาร</th>
 								            <th scope="col">สถานะเครื่องจักร</th>
 								            <th scope="col">สถานะงาน</th>
-								            
+
 														<th scope="col" >ผู้รับงาน</th>
 														<th scope="col" >วันที่รับงาน</th>
 								          </tr>
@@ -108,14 +109,7 @@
 								                  </span>
 								                </a>
 								              </td>
-								              {{-- <td style="width:50px"> --}}
-								                {{-- <button type="button"class="btn btn-primary btn-block btn-sm my-1 " onclick="pdfrepair('{{ $row->UNID }}')"
-								                style="width:50px;height:30px">
-								                  <span class="">
-								                    <i  style="font-size:17px"class="icon-printer "></i>
-								                  </span>
-								                </button> --}}
-								              {{-- </td> --}}
+
 								              <td >  				{{ $row->MACHINE_CODE }}		     </td>
 								              <td >  				{{ $row->MACHINE_NAME }}		    </td>
 								              <td >  				{{ $row->MACHINE_LINE }}	    </td>
@@ -124,7 +118,8 @@
 
 								                @if ($row->CLOSE_STATUS ===  '9')
 								                  <td style="width:120px">
-								                    <button type="button"class="btn btn-success btn-block btn-sm my-1 " style="width:120px;height:30px">
+								                    <button type="button"class="btn btn-success btn-block btn-sm my-1 "
+																		style="width:120px;height:30px">
 								                      <span class="btn-label text-center">
 								                        <i class="fas  mx-1"></i>รอรับงาน
 								                      </span>
@@ -132,7 +127,14 @@
 								                  </td>
 								                  <td style="width:90px">
 																		@can('isAdmin')
-																			<button onclick="REC_WORK()" type="button"
+																			<button onclick="rec_work(this)" type="button"
+																			data-mccode="{{ $row->MACHINE_CODE }}"
+																			data-mcname="{{ $row->MACHINE_NAME }}"
+																			data-mcline="{{ $row->MACHINE_LINE }}"
+																			data-empcode="{{ $row->EMP_CODE }}"
+																			data-empname="{{ $row->EMP_NAME_TH }}"
+																			data-redetail="{{ $row->REPAIR_SUBSELECT_NAME }}"
+																			data-priority="{{ $row->PRIORITY }}"
 																			class="btn btn-danger btn-block btn-sm my-1"
 																		 style="width:90px;height:30px">
 
@@ -204,125 +206,215 @@
 {{-- ส่วนjava --}}
 @section('javascript')
 <script src="{{ asset('assets/js/ajax/ajax-csrf.js') }}"></script>
+<script src="{{ asset('assets/js/select2.min.js') }}"></script>
 <script>
-	$(".tabactive").each(function(){
-		$(this).click(function(){
-			id = $(this).attr('id');
-			url = window.location.href;
-			$(".nav-link").removeClass("active");
-			$(this).addClass("active show");
-			$('.tab-pane').removeClass("active");
-			$("#"+id).addClass("active");
-
-		});
+//************************* array ****************************
+	var array_emp_code = [];
+	var sparepart_total = {};
+	var arr = [];
+//************************* array ****************************
+//******************************* function ********************
+function loop_tabel_worker(array_emp_code){
+	var url = "{{ route('repair.addtableworker') }}";
+	$.ajax({
+			 type:'POST',
+			 url: url,
+			 datatype: 'json',
+			 data: {
+				 "_token": "{{ csrf_token() }}",
+				 "EMP_CODE" : array_emp_code,
+			 } ,
+			 success:function(data){
+				 $('#table_worker').html(data.html);
+			 }
+		 });
+};
+function loop_tabel_sparepart(unid,total){
+	arr.push({unid:unid,total:total});
+	$.each(arr,function(key, value){
+		sparepart_total[value.unid] = value.total;
 	});
-	// $(document).ready(function(){
-	function REC_WORK(){
+	var url = "{{ route('repair.addsparepart') }}";
+	$.ajax({
+			 type:'POST',
+			 url: url,
+			 datatype: 'json',
+			 data: {TOTAL_SPAREPART : sparepart_total},
+			 success:function(data){
+				 $('#table_sparepart').html(data.html);
+			 }
+		 });
+};
+function input_totals_parepart(unid){
+	Swal.fire({
+			title: 'ใส่จำนวนเบิก',
+			input: 'number',
+		}).then((result) => {
+			if (result.value != "" && result.value != null) {
+				var total = result.value;
+				loop_tabel_sparepart(unid,total);
+			}
+		});
+}
+//******************************* End function ********************
+
+	function rec_work(thisdata){
+		var mccode = $(thisdata).data('mccode');
+		var	mcline = $(thisdata).data('mcline');
+		var	mcname = $(thisdata).data('mcname');
+		var	empcode = $(thisdata).data('empcode');
+		var	empname = $(thisdata).data('empname');
+		var	redetail = $(thisdata).data('redetail');
+		var	priority = $(thisdata).data('priority');
+		jQuery(document).off('focusin.modal');
+		$('#MC_CODE').html(mccode);
+		$('#MC_LINE').html(mcline);
+		$('#MC_NAME').html(mcname);
+		$('#EMP').html(empcode +' '+empname);
+		$('#RE_DETAIL').html(redetail);
+		$('#PRIORITY').html(priority);
 		$('#RepairForm').modal({backdrop: 'static', keyboard: false});
+		$.fn.modal.Constructor.prototype._enforceFocus = function() {};
+		$('.REC_WORKER_NAME').select2({
+			placeholder: "กรุณาเลือก",
+			width:'100%',
+		 });
 		$('#RepairForm').modal('show');
 	}
 
-
-	// });
 	$('#closestep_1').on('click',function(){
+		var detail = $('#RE_DETAIL').first().text();
+		$('#show-detail').val('อาการเสีย : '+detail);
 		$('#CloseForm').modal({backdrop: 'static', keyboard: false});
 		$('#RepairForm').modal('hide');
 		$('#CloseForm').modal('show');
 	});
-	$('#step2_in').on('click',function(){
-		$('#step2').html('<i class="fa fa-file mr-2"></i>ช่างภายใน');
-		$('#step2').attr('href','#WORK_STEP2_IN');
-		$('#step2').removeClass('WORK_STEP2_SUP');
-		$('#step2').addClass('WORK_STEP2_IN');
-		$('#step2').attr('hidden',false);
-		$('#step2').click();
-		$('#step3_partchange').on('click',function(){
-			$('#step3').html('<i class="fa fa-file mr-2"></i>อะไหล่');
-			$('#step3').attr('hidden',false);
-			$('#step3').click();
-		});
-	});
-	$('#step2_sup').on('click',function(){
-		$('#step2').html('<i class="fa fa-file mr-2"></i>ช่างภายนอก');
-		$('#step2').attr('href','#WORK_STEP2_SUP');
-		$('#step2').removeClass('WORK_STEP2_IN');
-		$('#step2').addClass('WORK_STEP2_SUP');
-		$('#step2').attr('hidden',false);
-		$('#step2').click();
-		$('#step3_partchange').on('click',function(){
-			$('#step3').html('<i class="fa fa-file mr-2"></i>อะไหล่');
-			$('#step3').attr('hidden',false);
-			$('#step3').click();
-		});
-	});
-	function cancelform(){
-		jQuery(document).off('focusin.modal');
-		Swal.fire({
-			title: 'สาเหตุการยกเลิก',
-			input: 'text',
-		}).then((result) => {
-				 $('#CloseForm').modal('hide');
-		});
-	}
-	function step_final(){
-		$('#step4').html('<i class="fa fa-file mr-2"></i>ปิดเอกสาร');
-		$('#step4').attr('hidden',false);
-		$('#step4').click();
-	};
-	function step_result(){
-			$('#step5').html('<i class="fa fa-map-signs mr-2"></i> สรุป');
-			$('#step5').attr('hidden',false);
-			$('#step5').click();
-	}
-	function withdraw(thisdata){
-		var unid = $(thisdata).data('unid');
-		jQuery(document).off('focusin.modal');
-		if (unid == '1') {
-			Swal.fire({
-				title: 'จำนวนเบิก',
-				input: 'number',
-			});
-		}else if (unid == '2') {
-			Swal.fire({
-				title: 'อะไหล่หมด',
-				icon: 'error',
-				confirmButtonText:'รอการสั่งซื้อ',
-				timer:'1000',
-			});
-			$('#buypart').attr('hidden',false);
-		}else {
-			Swal.fire({
-				title: 'อะไหล่ใกล้จะหมด',
-				icon: 'warning',
-				confirmButtonText:'OK',
-				timer:'1000',
-			});
-		}
-	}
- function buypart(){
-	 $('#step3_waitpart').html('<i class="fa fa-file mr-2"></i>รออะไหล่');
-	 $('#step3_waitpart').attr('hidden',false);
-	 $('#step3_waitpart').click();
- }
- function closework(u){
+	function previous_step(step_number){
+		var step_number_up = Number(step_number) + 1;
+		var work_step_previous = 'WORK_STEP_'+step_number;
+		var work_step_simple   = 'WORK_STEP_'+step_number_up;
+			if (step_number == '1') {
+				$('#step').html('<i class="fa fa-user mr-2"></i>ตรวจสอบเบื้องต้น');
+			}else if (step_number == '2') {
+				$('#step').html('<i class="fa fa-user mr-2"></i>ช่าง');
+			}else if (step_number == '3') {
+				$('#step').html('<i class="fa fa-user mr-2"></i>อะไหล่');
+			}else if (step_number == '4') {
 
-	var unid = (u);
-	console.log(unid);
-		Swal.fire({
-			title: 'ต้องการปิดเอกสารมั้ย?',
-			text: "หากทำการปิดเอกสารแล้วไม่สามารถแก้ไขได้ ต้องทำการสร้างใหม่เท่านั้น!",
-			icon: 'warning',
-			showCancelButton: true,
-			confirmButtonColor: '#3085d6',
-			cancelButtonColor: '#d33',
-			confirmButtonText: 'Yes!'
-		}).then((result) => {
-			if (result.isConfirmed) {
-			window.location.href = "/machine/repair/delete/"+unid;
 			}
-		})
+			$('#step').attr('href','#'+work_step_previous);
+			$('#step').removeClass(work_step_simple);
+			$('#step').addClass(work_step_previous);
+			$('#'+work_step_simple).removeClass('active show');
+			$('#'+work_step_previous).addClass('active show');
+	};
+	function nextstep(step_number){
+		var step_number_up = Number(step_number) - 1;
+		var work_step_next = 'WORK_STEP_'+step_number;
+		var work_step_simple   = 'WORK_STEP_'+step_number_up;
+			if (step_number == '1') {
+				$('#step').html('<i class="fa fa-user mr-2"></i>ตรวจสอบเบื้องต้น');
+			}else if (step_number == '2') {
+				$('#step').html('<i class="fa fa-user mr-2"></i>ช่าง');
+			}else if (step_number == '3') {
+				$('#step').html('<i class="fa fa-user mr-2"></i>อะไหล่');
+				$('#SPAREPART').select2({
+					placeholder: "กรุณาเลือก",
+					width:'100%',
+				 });
+			}else if (step_number == '4') {
 
+			}
+			$('#step').attr('href','#'+work_step_next);
+			$('#step').removeClass(work_step_simple);
+			$('#step').addClass(work_step_next);
+			$('#'+work_step_simple).removeClass('active show');
+			$('#'+work_step_next).addClass('active show');
+	};
+	function previous_worker(){
+		$('#work_in').attr('hidden',true);
+		$('#work_out').attr('hidden',true);
+		$('#select_typeworker').attr('hidden',false);
+		$("#previous_worker").attr('onclick','previous_step(1)');
 	}
+	 function type_worker(type_worker){
+			var check_type = type_worker;
+			if (check_type == '1') {
+				$('#work_in').attr('hidden',false);
+				$("#previous_worker").attr('onclick','previous_worker()');
+			}else {
+				$('#work_out').attr('hidden',false);
+				$("#previous_worker").attr('onclick','previous_worker()');
+			}
+			$('#select_typeworker').attr('hidden',true);
+		}
+	 $('#step_cancel').on('click',function(){
+			jQuery(document).off('focusin.modal');
+			Swal.fire({
+				title: 'สาเหตุการยกเลิก',
+				input: 'text',
+			}).then((result) => {
+					 $('#CloseForm').modal('hide');
+			});
+		});
+	 $('#add_worker').on('click',function(event){
+			 event.preventDefault();
+			 var emp_code = $('#WORKER_SELECT').val();
+			 $('#WORKER_SELECT option[value="'+emp_code+'"]').detach();
+			 if (emp_code != "" && emp_code != null) {
+				 array_emp_code.push(emp_code);
+				 loop_tabel_worker(array_emp_code);
+			 }
+		 });
+	 function deleteworker(thisdata){
+			var empcode = $(thisdata).data('empcode');
+			var empname = $(thisdata).data('empname');
+			var data = {
+				id: empcode,
+				text: empcode+' '+empname
+		 };
+			 for( var i = 0; i < array_emp_code.length; i++){
+					 if ( array_emp_code[i] == empcode) {
+						 console.log(i);
+							 array_emp_code.splice(i, 1);
+					 }
+			 }
+			var newOption = new Option(data.text, data.id, false, false);
+			$('#WORKER_SELECT').append(newOption).trigger('change');
+			loop_tabel_worker(array_emp_code);
+		 }
+	 $('#SPAREPART').on('change',function(){
+			var unid = $('#SPAREPART').val();
+			var sparepartcode = $('#'+unid).data('sparepartcode');
+			var sparepartname = $('#'+unid).data('sparepartname');
+			var sparepartsize = $('#'+unid).data('sparepartsize');
+			var sparepartmodel = $('#'+unid).data('sparepartmodel');
+			$('#SPAREPART_CODE').val("รหัส : "+sparepartcode);
+			$('#SPAREPART_NAME').val("ชื่อ : "+sparepartname);
+			$('#SPAREPART_SIZE').val("เบอร์ : "+sparepartsize);
+			$('#SPAREPARTM_ODEL').val("ขนาด : "+sparepartmodel);
+		 });
+	 function add_sparepart(typeadd){
+		 //1 ตัดสต็อก  2ไม่ตัดสต็อก
+		 $(document).off('focusin.modal');
+		 var unid = $('#SPAREPART').val();
+	   input_totals_parepart(unid);
+	 };
+	 function edittotal(thisdata){
+		 var unid = $(thisdata).data('unid');
+		 input_totals_parepart(unid);
+	 }
+	 function removesparepart(thisdata){
+		 var unid = $(thisdata).data('unid');
+		 for( var i = 0; i < arr.length; i++){
+				 if ( arr[i].unid == unid) {
+						 arr.splice(i, 1);
+				 }
+		 }
+		 loop_tabel_sparepart(unid);
+	 }
+
+
  function btn_closeform(){
 	 $('#CloseForm').modal({backdrop: 'static', keyboard: false});
 	 $('#CloseForm').modal('show');

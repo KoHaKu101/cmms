@@ -1,0 +1,9 @@
+//*************************** REMOVE ARRAY ******************************
+			for( var i = 0; i < array.length; i++){
+
+				if ( array[i] == empcode) {
+					console.log(i);
+						array.splice(i, 1);
+				}
+
+		}
