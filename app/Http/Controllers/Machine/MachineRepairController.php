@@ -268,7 +268,7 @@ class MachineRepairController extends Controller
           <tr>
             <td width="80px" style="background:#aab7c1;color:black;"><h5 class="my-1"> MC-NO </h5></td>
             <td > '.$REPAIR->MACHINE_CODE.' </td>
-            <td>LINE</td>
+            <td style="background:#aab7c1;color:black;">LINE</td>
             <td >'.$REPAIR->MACHINE_LINE.'</td>
           </tr>
           <tr>
