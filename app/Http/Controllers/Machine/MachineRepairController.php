@@ -53,24 +53,37 @@ class MachineRepairController extends Controller
                                         ->where('EMP_STATUS','=',9)->get();
     $LINE = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
     $MACHINE_LINE = isset($request->LINE) ? $request->LINE : '';
-    $MACHINE_STATUS = isset($request->MACHINE_STATUS) ? $request->MACHINE_STATUS : 9 ;
-    $MACHINE_CHECK = isset($request->MACHINE_CHECK) ? $request->MACHINE_CHECK : '';
+    $MACHINE_STATUS = isset($request->MACHINE_STATUS) ? $request->MACHINE_STATUS : '' ;
+    $CLOSE_STATUS = isset($request->CLOSE_STATUS) ? $request->CLOSE_STATUS : 9;
     $dataset = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
+                                            ->where(function ($query) use ($MACHINE_LINE) {
+                                                   if ($MACHINE_LINE != '') {
+                                                      $query->where('MACHINE_LINE', '=', $MACHINE_LINE);
+                                                    }
+                                                   })
                                             ->where(function ($query) use ($SEARCH) {
-                                                if ($SEARCH != '') {
-                                                  $query->where('MACHINE_CODE', 'like', $SEARCH)
-                                                        ->orWhere('DOC_NO', 'like', $SEARCH)
-                                                        ->orWhere('MACHINE_NAME','like',$SEARCH);
-                                                }})
-                                                              ->orderby('CLOSE_STATUS','DESC')
-                                                              ->orderBy('DOC_DATE','DESC')
-                                                              ->paginate(8);
+                                                  if ($SEARCH != "") {
+                                                     $query->where('MACHINE_CODE', 'like', '%'.$SEARCH.'%')
+                                                           ->orwhere('MACHINE_NAME','like','%'.$SEARCH.'%')
+                                                           ->orWhere('DOC_NO', 'like', '%'.$SEARCH.'%');
+                                                   }
+                                                  })
+                                               ->where(function ($query) use ($MACHINE_STATUS) {
+                                                    if ($MACHINE_STATUS != ""){
+                                                      $query->where('MACHINE_STATUS', '=', $MACHINE_STATUS);
+                                                    }
+                                                  })
+                                            ->where('CLOSE_STATUS','=',$CLOSE_STATUS)
+                                            ->orderBy('DOC_NO','ASC')
+                                            ->orderBy('DOC_DATE','DESC')
+                                            ->orderBy('MACHINE_CODE')
+                                            ->paginate(8);
    $DATA_SPAREPART = SparePart::where('STATUS','=',9)->get();
    $SEARCH = str_replace('%','',$SEARCH);
 
 
     return View('machine/repair/repairlist',compact('dataset','SEARCH','DATA_EMPNAME','DATA_SPAREPART','LINE',
-    'MACHINE_LINE','MACHINE_STATUS','MACHINE_CHECK'));
+    'MACHINE_LINE','MACHINE_STATUS','CLOSE_STATUS'));
   }
 
   public function PrepareSearch(Request $request){

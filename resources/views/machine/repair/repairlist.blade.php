@@ -57,7 +57,7 @@
 								        <div class="row ">
 													<div class="col-md-10 form-inline my-1">
 														<label class="text-white mx-2">Line : </label>
-														<select class="form-control form-control-sm mt-1" id="LINE"name='LINE'>
+														<select class="form-control form-control-sm mt-1 mx-1" id="LINE"name='LINE' onchange="changesubmit()">
 															 <option value="">แสดงทั้งหมด</option>
 															@foreach ($LINE as $index => $row_line)
 																<option value="{{ $row_line->LINE_CODE }}"
@@ -65,15 +65,15 @@
 															@endforeach
 														</select>
 														<label class="text-white mx-2">สถานะการใช้งาน : </label>
-														<select class="form-control form-control-sm mt-1 mx-1" name="MACHINE_CHECK" id="MACHINE_CHECK" onchange="changerank()">
+														<select class="form-control form-control-sm mt-1 mx-1" name="MACHINE_STATUS" id="MACHINE_STATUS" onchange="changesubmit()">
 																<option value="">-ทั้งหมด-</option>
-																<option value="1" {{ $MACHINE_CHECK == "1" ? 'selected': '' }}>หยุด/เสีย</option>
-																<option value="2" {{ $MACHINE_CHECK == "2" ? 'selected': '' }}>ทำงาน</option>
+																<option value="1" {{ $MACHINE_STATUS == "1" ? 'selected': '' }}>หยุด/เสีย</option>
+																<option value="2" {{ $MACHINE_STATUS == "2" ? 'selected': '' }}>ทำงาน</option>
 															</select>
 															<label class="text-white mx-2">สถานะ : </label>
-															<select class="form-control form-control-sm mt-1 mx-1" id="MACHINE_STATUS" name="MACHINE_STATUS" >
-																<option value="9" {{ $MACHINE_STATUS == "9" ? 'selected' : "" }}>แสดง</option>
-																<option value="1" {{ $MACHINE_STATUS == "1" ? 'selected' : "" }}>ซ่อน</option>
+															<select class="form-control form-control-sm mt-1 mx-1" id="CLOSE_STATUS" name="CLOSE_STATUS" onchange="changesubmit()">
+																<option value="9" {{ $CLOSE_STATUS == "9" ? 'selected' : "" }}>แสดง</option>
+																<option value="1" {{ $CLOSE_STATUS == "1" ? 'selected' : "" }}>ซ่อน</option>
 															</select>
 													{{-- </div> --}}
 													{{-- <div class="col-md-3 my-1"> --}}
@@ -82,7 +82,7 @@
 								                <input  type="search" id="SEARCH"  name="SEARCH" class="form-control form-control-sm mt-1" placeholder="ค้นหา........."
 																value="{{ $SEARCH }}">
 								                <div class="input-group-prepend">
-								                  <button type="submit" class="btn btn-search pr-1 btn-xs	mt-1">
+								                  <button type="submit" class="btn btn-search pr-1 btn-xs	mt-1" id="BTN_SUBMIT">
 								                    <i class="fa fa-search search-icon"></i>
 								                  </button>
 								                </div>
@@ -206,7 +206,8 @@
 								    </table>
 
 								  </div>
-									{{$dataset->appends(['SEARCH' => $SEARCH])->links('pagination.default')}}
+									{{$dataset->appends(['LINE' => $MACHINE_LINE,'SEARCH' => $SEARCH,'MACHINE_STATUS' => $MACHINE_STATUS,'CLOSE_STATUS' => $CLOSE_STATUS])
+														->links('pagination.default')}}
 								    </div>
 								</div>
 								</div>
@@ -300,7 +301,6 @@ function input_totals_parepart(unid){
 		 });
 		$('#RepairForm').modal('show');
 	}
-
 	$('#closestep_1').on('click',function(){
 		var detail = $('#RE_DETAIL').first().text();
 		$('#show-detail').val('อาการเสีย : '+detail);
@@ -441,7 +441,9 @@ function input_totals_parepart(unid){
 </script>
 
 <script type="text/javascript">
-// var button = document.getElementById('button');
+	function changesubmit(){
+		$('#BTN_SUBMIT').click();
+	}
 	function pdfrepair(m){
 		console.log(m);
 		var unid = (m);
