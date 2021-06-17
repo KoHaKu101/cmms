@@ -53,18 +53,11 @@ class MachineRepairController extends Controller
                                         ->where('EMP_STATUS','=',9)->get();
     $LINE = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
     $MACHINE_LINE = isset($request->LINE) ? $request->LINE : '';
-    // $MACHINE_STATUS = isset($request->MACHINE_STATUS) ? $request->MACHINE_STATUS : '' ;
     $CLOSE_STATUS = isset($request->CLOSE_STATUS) ? $request->CLOSE_STATUS : 9;
-
-    // $DAY = $request->DAY == 'all' ? '' : (isset($request->DAY) ? $request->DAY : date('d'));
     $MONTH = $request->MONTH == 'all' ? '' : (isset($request->MONTH) ? $request->MONTH : date('n'));
     $YEAR = $request->YEAR == 'all' ? '' : (isset($request->YEAR) ? $request->YEAR : date('y')+43);
+
     $dataset = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
-                                            // ->where(function ($query) use ($DAY) {
-                                            //        if ($DAY != '') {
-                                            //           $query->where('DD', '=', $DAY);
-                                            //         }
-                                            //        })
                                             ->where(function ($query) use ($MONTH) {
                                                     if ($MONTH != '') {
                                                        $query->where('DOC_MONTH', '=', $MONTH);
@@ -88,9 +81,10 @@ class MachineRepairController extends Controller
                                             ->orderBy('MACHINE_LINE','ASC')
                                             ->orderBy('MACHINE_CODE','ASC')
                                             ->paginate(8);
-   $DATA_SPAREPART = SparePart::where('STATUS','=',9)->get();
-   $SEARCH = str_replace('%','',$SEARCH);
-
+    $DATA_SPAREPART = SparePart::where('STATUS','=',9)->get();
+    $SEARCH = str_replace('%','',$SEARCH);
+    $MONTH = $MONTH != '' ? $MONTH : 'all';
+    $YEAR = $YEAR != '' ? $YEAR : 'all';
 
     return View('machine/repair/repairlist',compact('dataset','SEARCH','DATA_EMPNAME','DATA_SPAREPART','LINE',
     'MACHINE_LINE','MONTH','YEAR','CLOSE_STATUS'));

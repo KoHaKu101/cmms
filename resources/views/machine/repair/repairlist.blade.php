@@ -71,7 +71,9 @@
 																	<option value="{{$d}}"{{ $DAY == $d ? 'selected' : ''}}>{{$d}}</option>
 																@endfor
 															</select> --}}
+
 															<label class="text-white mx-2">เดือน : </label>
+
 															<select class="form-control form-control-sm mt-1 mx-1" id="MONTH" name="MONTH" onchange="changesubmit()">
 																<option value="all">ทั้งหมด</option>
 																@for ($m=1; $m < 13; $m++)
@@ -206,8 +208,7 @@
 								    </table>
 
 								  </div>
-									{{$dataset->appends(['LINE' => $MACHINE_LINE,'SEARCH' => $SEARCH
-										,'MONTH' => $MONTH,'YEAR' => $YEAR,'CLOSE_STATUS' => $CLOSE_STATUS])
+									{{$dataset->appends(['MACHINE_LINE'=>$MACHINE_LINE,'MONTH' => $MONTH,'YEAR' => $YEAR,'CLOSE_STATUS' => $CLOSE_STATUS,'SEARCH',$SEARCH])
 														->links('pagination.default')}}
 								    </div>
 								</div>
