@@ -71,20 +71,18 @@
 																	<option value="{{$d}}"{{ $DAY == $d ? 'selected' : ''}}>{{$d}}</option>
 																@endfor
 															</select> --}}
-
-															<label class="text-white mx-2">เดือน : </label>
-
-															<select class="form-control form-control-sm mt-1 mx-1" id="MONTH" name="MONTH" onchange="changesubmit()">
-																<option value="all">ทั้งหมด</option>
-																@for ($m=1; $m < 13; $m++)
-																	<option value="{{$m}}" {{ $MONTH == $m ?'selected' : ''}}>{{$m}}</option>
-																@endfor
-															</select>
 															<label class="text-white mx-2">ปี : </label>
 															<select class="form-control form-control-sm mt-1 mx-1" id="YEAR" name="YEAR" onchange="changesubmit()">
 																<option value="all">ทั้งหมด</option>
 																@for ($y=date('y')+41; $y < date('y')+44; $y++)
 																	<option value="{{$y}}" {{ $YEAR == $y ?'selected' : ''}}>{{$y}}</option>
+																@endfor
+															</select>
+															<label class="text-white mx-2">เดือน : </label>
+															<select class="form-control form-control-sm mt-1 mx-1" id="MONTH" name="MONTH" onchange="changesubmit()">
+																<option value="all">ทั้งหมด</option>
+																@for ($m=1; $m < 13; $m++)
+																	<option value="{{$m}}" {{ $MONTH == $m ?'selected' : ''}}>{{$m}}</option>
 																@endfor
 															</select>
 															<label class="text-white mx-2">เอกสาร : </label>
