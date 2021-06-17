@@ -55,12 +55,9 @@
 											@method('GET')
 											@csrf
 								        <div class="row ">
-								          <div class="col-md-2">
-								            <h4 class="ml-3 mt-2 " style="color:white;" ><i class="fas fa-toolbox fa-lg mr-1"></i> ค้นหาเอกสาร </h4>
-								          </div>
-								          <div class="col-md-8">
+								          <div class="col-md-3 ">
 								              <div class="input-group mt-1">
-								                <input  type="search" id="SEARCH"  name="SEARCH" class="form-control form-control-sm col-md-3" placeholder="ค้นหา........."
+								                <input  type="search" id="SEARCH"  name="SEARCH" class="form-control form-control-sm" placeholder="ค้นหา........."
 																value="{{ $SEARCH }}">
 								                <div class="input-group-prepend">
 								                  <button type="submit" class="btn btn-search pr-1 btn-xs	">
@@ -69,6 +66,27 @@
 								                </div>
 								              </div>
 								          </div>
+													<div class="col-md-7 form-inline">
+														<label class="text-white mr-2">Line : </label>
+														<select class="form-control form-control-sm mt-1" id="LINE"name='LINE'>
+															 <option value="">แสดงทั้งหมด</option>
+															@foreach ($LINE as $index => $row_line)
+																<option value="{{ $row_line->LINE_CODE }}"
+																	{{ $MACHINE_LINE == $row_line->LINE_CODE ? 'selected' : '' }}>{{ $row_line->LINE_NAME }}</option>
+															@endforeach
+														</select>
+														<label class="text-white mx-2">สถานะการใช้งาน : </label>
+														<select class="form-control form-control-sm mt-1 mx-1" name="MACHINE_CHECK" id="MACHINE_CHECK" onchange="changerank()">
+																<option value="">-ทั้งหมด-</option>
+																<option value="1" {{ $MACHINE_CHECK == "1" ? 'selected': '' }}>หยุด/เสีย</option>
+																<option value="2" {{ $MACHINE_CHECK == "2" ? 'selected': '' }}>ทำงาน</option>
+															</select>
+															<label class="text-white mx-2">สถานะ : </label>
+															<select class="form-control form-control-sm mt-1 mx-1" id="MACHINE_STATUS" name="MACHINE_STATUS" >
+																<option value="9" {{ $MACHINE_STATUS == "9" ? 'selected' : "" }}>แสดง</option>
+																<option value="1" {{ $MACHINE_STATUS == "1" ? 'selected' : "" }}>ซ่อน</option>
+															</select>
+													</div>
 													<div class="col-md-2 text-right">
 														<a href="{{ route('repair.repairsearch') }}"class="btn btn-warning  btn-xs mt-1">
 															<span class="fas fa-file fa-lg">	แจ้งซ่อม	</span>

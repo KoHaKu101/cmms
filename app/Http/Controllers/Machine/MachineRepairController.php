@@ -16,6 +16,7 @@ use App\Models\Machine\Machine;
 use App\Models\Machine\MachineEMP;
 use App\Models\Machine\EMPName;
 use App\Models\Machine\SparePart;
+use App\Models\Machine\MachineLine;
 
 use App\Models\Machine\MachineRepairREQ;
 //************** Package form github ***************
@@ -50,6 +51,10 @@ class MachineRepairController extends Controller
     $SEARCH = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
     $DATA_EMPNAME = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
                                         ->where('EMP_STATUS','=',9)->get();
+    $LINE = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
+    $MACHINE_LINE = isset($request->LINE) ? $request->LINE : '';
+    $MACHINE_STATUS = isset($request->MACHINE_STATUS) ? $request->MACHINE_STATUS : 9 ;
+    $MACHINE_CHECK = isset($request->MACHINE_CHECK) ? $request->MACHINE_CHECK : '';
     $dataset = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
                                             ->where(function ($query) use ($SEARCH) {
                                                 if ($SEARCH != '') {
@@ -63,7 +68,9 @@ class MachineRepairController extends Controller
    $DATA_SPAREPART = SparePart::where('STATUS','=',9)->get();
    $SEARCH = str_replace('%','',$SEARCH);
 
-    return View('machine/repair/repairlist',compact('dataset','SEARCH','DATA_EMPNAME','DATA_SPAREPART'));
+
+    return View('machine/repair/repairlist',compact('dataset','SEARCH','DATA_EMPNAME','DATA_SPAREPART','LINE',
+    'MACHINE_LINE','MACHINE_STATUS','MACHINE_CHECK'));
   }
 
   public function PrepareSearch(Request $request){
