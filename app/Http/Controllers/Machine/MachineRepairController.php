@@ -53,7 +53,7 @@ class MachineRepairController extends Controller
                                         ->where('EMP_STATUS','=',9)->get();
     $LINE = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
     $MACHINE_LINE = isset($request->LINE) ? $request->LINE : '';
-    $CLOSE_STATUS = isset($request->CLOSE_STATUS) ? $request->CLOSE_STATUS : 9;
+    $CLOSE_STATUS = $request->CLOSE_STATUS == 'all' ? '' : (isset($request->CLOSE_STATUS) ? $request->CLOSE_STATUS : 9);
     $MONTH = $request->MONTH == 'all' ? '' : (isset($request->MONTH) ? $request->MONTH : date('n'));
     $YEAR = $request->YEAR == 'all' ? '' : (isset($request->YEAR) ? $request->YEAR : date('y')+43);
 
@@ -75,7 +75,11 @@ class MachineRepairController extends Controller
                                                            ->orWhere('DOC_NO', 'like', '%'.$SEARCH.'%');
                                                    }
                                                   })
-                                            ->where('CLOSE_STATUS','=',$CLOSE_STATUS)
+                                            ->where(function ($query) use ($CLOSE_STATUS) {
+                                                  if ($CLOSE_STATUS != "") {
+                                                      $query->where('CLOSE_STATUS', '=', $CLOSE_STATUS);
+                                                   }
+                                                  })
                                             ->orderBy('DOC_DATE','DESC')
                                             ->orderBy('DOC_NO','DESC')
                                             ->orderBy('MACHINE_LINE','ASC')
@@ -85,6 +89,7 @@ class MachineRepairController extends Controller
     $SEARCH = str_replace('%','',$SEARCH);
     $MONTH = $MONTH != '' ? $MONTH : 'all';
     $YEAR = $YEAR != '' ? $YEAR : 'all';
+    $CLOSE_STATUS = $CLOSE_STATUS != '' ? $CLOSE_STATUS : 'all';
 
     return View('machine/repair/repairlist',compact('dataset','SEARCH','DATA_EMPNAME','DATA_SPAREPART','LINE',
     'MACHINE_LINE','MONTH','YEAR','CLOSE_STATUS'));

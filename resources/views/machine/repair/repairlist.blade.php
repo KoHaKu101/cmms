@@ -87,7 +87,8 @@
 															</select>
 															<label class="text-white mx-2">เอกสาร : </label>
 															<select class="form-control form-control-sm mt-1 mx-1" id="CLOSE_STATUS" name="CLOSE_STATUS" onchange="changesubmit()">
-																<option value="9" {{ $CLOSE_STATUS == "9" ? 'selected' : "" }}>ดำเนินการ</option>
+																<option value="all">ทั้งหมด</option>
+																<option value="9" {{ $CLOSE_STATUS == "9" ? 'selected' : "" }}>กำลังดำเนินการ</option>
 																<option value="1" {{ $CLOSE_STATUS == "1" ? 'selected' : "" }}>ปิดเอกสาร</option>
 															</select>
 														<label class="text-white mx-1">ค้นหา : </label>
