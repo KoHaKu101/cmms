@@ -131,6 +131,7 @@ class MachineRepairController extends Controller
         $EXPLOT = str_replace('RE'.$DATE_RESET_DOCNO->format('ym').'-','',$DATA_MACHINEREPAIRREQ->DOC_NO)+1;
         $DOC_NO = 'RE' . $DATE_RESET_DOCNO->format('ym'). sprintf('-%04d', $EXPLOT);
       }
+      
       //$DATE_DOCNO->format('y');
       //$DATE_DOCNO->format('m');
       //$DATE_DOCNO->format('d');
@@ -154,7 +155,7 @@ class MachineRepairController extends Controller
         ,'PRIORITY'              => $PRIORITY
         ,'DOC_NO'                => $DOC_NO
         ,'DOC_DATE'              => $DATE_DOCNO->format('Y-m-d')
-        ,'REPAIR_REQ_TIME'       => $DATE_DOCNO->format('H:m:s')
+        ,'REPAIR_REQ_TIME'       => $DATE_DOCNO->format('H:i:s')
         ,'CLOSE_STATUS'          => $CLOSE_STATUS
         ,'CLOSE_BY'              => ''
         ,'CREATE_BY'             =>Auth::user()->name

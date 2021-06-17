@@ -55,7 +55,7 @@
 											@method('GET')
 											@csrf
 								        <div class="row ">
-													<div class="col-md-10 form-inline my-1">
+													<div class="col-md-12 col-lg-10 form-inline my-1">
 														<label class="text-white mx-2">Line : </label>
 														<select class="form-control form-control-sm mt-1 mx-1" id="LINE"name='LINE' onchange="changesubmit()">
 															 <option value="">แสดงทั้งหมด</option>
@@ -88,22 +88,20 @@
 								                </div>
 								              </div>
 								          </div>
-													<div class="col-md-2 text-right my-1">
+													<div class="col-md-12 col-lg-2 text-right my-1">
 														<a href="{{ route('repair.repairsearch') }}"class="btn btn-warning  btn-xs mt-1">
 															<span class="fas fa-file fa-lg">	แจ้งซ่อม	</span>
 														</a>
 													</div>
-
 								        </div>
 											</form>
-
 								  </div>
 								  <div id="result"class="card-body">
 								    <div class="table-responsive" id="dynamic_content">
 								      <table class="display table table-striped table-hover">
 								        <thead class="thead-light">
 								          <tr>
-														<th>วันที่เอกสาร</th>
+														<th style="width:130px">วันที่เอกสาร</th>
 								            <th style="width:160px">เลขที่เอกสาร </th>
 														<th>Line</th>
 								            <th>รหัสเครื่อง </th>
@@ -120,12 +118,12 @@
 
 								        <tbody>
 								          @foreach ($dataset as $key => $row)
-
 								            <tr>
-															<td >{{ $row->DOC_DATE.' '.date('H:m',strtotime($row->REPAIR_REQ_TIME))}}</td>
+															<td >{{ $row->DOC_DATE.' '.date('H:i',strtotime($row->REPAIR_REQ_TIME))}}</td>
 								              <td >
-								                <a href="{{ route('repair.edit',[$row->UNID]) }}" class="btn btn-secondary btn-block btn-sm my-1 " style="height:30px">
-								                  <span class="btn-label float-left">
+								                <a href="{{ route('repair.edit',[$row->UNID]) }}"
+																	class="btn btn-secondary btn-block btn-sm my-1 text-left" style="height:30px">
+								                  <span class="btn-label">
 								                    <i class="fas fa-eye mx-1"></i>{{ $row->DOC_NO }}
 								                  </span>
 								                </a>
@@ -186,7 +184,7 @@
 								                      </td>
 								                @endif
 
-																<td >{{ date('d-m-y H:m') }}</td>
+																<td >{{ date('H:i') }}</td>
 								              </tr>
 								            @endforeach
 
