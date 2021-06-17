@@ -26,7 +26,11 @@
 
 	{{-- ส่วนเนื้อหาและส่วนท้า --}}
 @section('contentandfooter')
+	@php
+	$months=array(0 =>'ALL',1 => "มกราคม",2 => "กุมภาพันธ์",3 =>"มีนาคม",4 => "เมษายน",5 =>"พฤษภาคม",6 =>"มิถุนายน",
+									 7 =>"กรกฎาคม",8 =>"สิงหาคม",9 =>"กันยายน",10 =>"ตุลาคม",11 => "พฤศจิกายน",12 =>"ธันวาคม");
 
+	@endphp
 	  <div class="content">
       <div class="page-inner">
 				<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
@@ -74,7 +78,7 @@
 															<label class="text-white mx-2">ปี : </label>
 															<select class="form-control form-control-sm mt-1 mx-1" id="YEAR" name="YEAR" onchange="changesubmit()">
 																<option value="all">ทั้งหมด</option>
-																@for ($y=date('y')+41; $y < date('y')+44; $y++)
+																@for ($y=date('Y')-2; $y < date('Y')+1; $y++)
 																	<option value="{{$y}}" {{ $YEAR == $y ?'selected' : ''}}>{{$y}}</option>
 																@endfor
 															</select>
@@ -82,7 +86,7 @@
 															<select class="form-control form-control-sm mt-1 mx-1" id="MONTH" name="MONTH" onchange="changesubmit()">
 																<option value="all">ทั้งหมด</option>
 																@for ($m=1; $m < 13; $m++)
-																	<option value="{{$m}}" {{ $MONTH == $m ?'selected' : ''}}>{{$m}}</option>
+																	<option value="{{$m}}" {{ $MONTH == $m ?'selected' : ''}}>{{$months[$m]}}</option>
 																@endfor
 															</select>
 															<label class="text-white mx-2">เอกสาร : </label>

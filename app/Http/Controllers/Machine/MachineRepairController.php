@@ -55,7 +55,7 @@ class MachineRepairController extends Controller
     $MACHINE_LINE = isset($request->LINE) ? $request->LINE : '';
     $CLOSE_STATUS = $request->CLOSE_STATUS == 'all' ? '' : (isset($request->CLOSE_STATUS) ? $request->CLOSE_STATUS : 9);
     $MONTH = $request->MONTH == 'all' ? '' : (isset($request->MONTH) ? $request->MONTH : date('n'));
-    $YEAR = $request->YEAR == 'all' ? '' : (isset($request->YEAR) ? $request->YEAR : date('y')+43);
+    $YEAR = $request->YEAR == 'all' ? '' : (isset($request->YEAR) ? $request->YEAR : date('Y'));
 
     $dataset = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
                                             ->where(function ($query) use ($MONTH) {
@@ -135,8 +135,8 @@ class MachineRepairController extends Controller
       $DATE_RESET_DOCNO      = Carbon::parse($DATA_MACHINEREPAIRREQ->DOC_DATE);
       $DOC_NO = 'RE' . $DATE_DOCNO->format('ym') . sprintf('-%04d', 1);
 
-      if ($DATE_RESET_DOCNO->format('ym') == Carbon::now()->addyears('543')->format('ym') ) {
-        $EXPLOT = str_replace('RE'.$DATE_RESET_DOCNO->format('ym').'-','',$DATA_MACHINEREPAIRREQ->DOC_NO)+1;
+      if ($DATE_RESET_DOCNO->format('ym') == Carbon::now()->format('ym') ) {
+        $EXPLOT = str_replace('RE'.$DATE_RESET_DOCNO->addyears('543')->format('ym').'-','',$DATA_MACHINEREPAIRREQ->DOC_NO)+1;
         $DOC_NO = 'RE' . $DATE_RESET_DOCNO->format('ym'). sprintf('-%04d', $EXPLOT);
       }
 
@@ -145,7 +145,6 @@ class MachineRepairController extends Controller
       //$DATE_DOCNO->format('d');
       // dd($DATE_DOCNO->format('d'));
       //******************* insert *******************//
-
       MachineRepairREQ::insert([
         'UNID'=> $UNID
         ,'MACHINE_UNID'          => $DATA_MACHINE->UNID
@@ -162,9 +161,9 @@ class MachineRepairController extends Controller
         ,'EMP_NAME'              => $DATA_EMP->EMP_NAME
         ,'PRIORITY'              => $PRIORITY
         ,'DOC_NO'                => $DOC_NO
-        ,'DOC_DATE'              => $DATE_DOCNO->format('Y-m-d')
-        ,'DOC_YEAR'              => $DATE_DOCNO->format('y')
-        ,'DOC_MONTH'             => $DATE_DOCNO->format('m')
+        ,'DOC_DATE'              => date('Y-m-d')
+        ,'DOC_YEAR'              => date('Y')
+        ,'DOC_MONTH'             => date('m')
         ,'REPAIR_REQ_TIME'       => $DATE_DOCNO->format('H:i:s')
         ,'CLOSE_STATUS'          => $CLOSE_STATUS
         ,'CLOSE_BY'              => ''
