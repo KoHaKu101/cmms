@@ -67,12 +67,12 @@ class MachineRepairController extends Controller
                                             //        })
                                             ->where(function ($query) use ($MONTH) {
                                                     if ($MONTH != '') {
-                                                       $query->where('MM', '=', $MONTH);
+                                                       $query->where('DOC_MONTH', '=', $MONTH);
                                                      }
                                                     })
                                             ->where(function ($query) use ($YEAR) {
                                                    if ($YEAR != '') {
-                                                      $query->where('YY', '=', $YEAR);
+                                                      $query->where('DOC_YEAR', '=', $YEAR);
                                                     }
                                                    })
                                             ->where(function ($query) use ($SEARCH) {
