@@ -384,14 +384,14 @@
                   <div class="col-9 col-md-10 col-lg-8">
                     <select class="form-control form-control-sm col-9 REC_WORKER_NAME" id="SPAREPART" name="SPAREPART">
                       <option value> กรุณาเลือก </option>
-                      @foreach ($DATA_SPAREPART as $index => $row)
+                      {{-- @foreach ($DATA_SPAREPART as $index => $row)
                           <option value="{{ $row->UNID }}" id="{{ $row->UNID }}"
                             data-sparepartcode="{{$row->SPAREPART_CODE}}"
                             data-sparepartname="{{$row->SPAREPART_NAME}}"
                             data-sparepartsize="{{$row->SPAREPART_SIZE}}"
                             data-sparepartmodel="{{$row->SPAREPART_MODEL}}"
                             >{{ $row->SPAREPART_CODE. ' : '. $row->SPAREPART_NAME }}</option>
-                      @endforeach
+                      @endforeach --}}
                     </select>
                   </div>
                 </div>

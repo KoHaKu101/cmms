@@ -48,23 +48,32 @@ class MachineRepairController extends Controller
 
   public function Index(Request $request){
 
-    $SEARCH = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
+    $SEARCH      = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
+    $SERACH_TEXT =  $request->SEARCH;
     $DATA_EMPNAME = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
                                         ->where('EMP_STATUS','=',9)->get();
     $LINE = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
     $MACHINE_LINE = isset($request->LINE) ? $request->LINE : '';
-    $CLOSE_STATUS = $request->CLOSE_STATUS == 'all' ? '' : (isset($request->CLOSE_STATUS) ? $request->CLOSE_STATUS : 9);
-    $MONTH = $request->MONTH == 'all' ? '' : (isset($request->MONTH) ? $request->MONTH : date('n'));
-    $YEAR = $request->YEAR == 'all' ? '' : (isset($request->YEAR) ? $request->YEAR : date('Y'));
+
+    $MONTH = isset($request->MONTH) ? $request->MONTH : 0 ;
+
+    $DOC_STATUS = isset($request->DOC_STATUS) ? $request->DOC_STATUS : 0 ;
+
+    $YEAR = isset($request->YEAR) ? $request->YEAR : date('Y') ;
 
     $dataset = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
+                                          ->where(function ($query) use ($MACHINE_LINE) {
+                                                  if ($MACHINE_LINE != '') {
+                                                     $query->where('MACHINE_LINE', '=', $MACHINE_LINE);
+                                                   }
+                                                  })
                                             ->where(function ($query) use ($MONTH) {
-                                                    if ($MONTH != '') {
+                                                    if ($MONTH > 0) {
                                                        $query->where('DOC_MONTH', '=', $MONTH);
                                                      }
                                                     })
                                             ->where(function ($query) use ($YEAR) {
-                                                   if ($YEAR != '') {
+                                                   if ($YEAR > 0) {
                                                       $query->where('DOC_YEAR', '=', $YEAR);
                                                     }
                                                    })
@@ -75,24 +84,19 @@ class MachineRepairController extends Controller
                                                            ->orWhere('DOC_NO', 'like', '%'.$SEARCH.'%');
                                                    }
                                                   })
-                                            ->where(function ($query) use ($CLOSE_STATUS) {
-                                                  if ($CLOSE_STATUS != "") {
-                                                      $query->where('CLOSE_STATUS', '=', $CLOSE_STATUS);
+                                            ->where(function ($query) use ($DOC_STATUS) {
+                                                  if ($DOC_STATUS > 0) {
+                                                      $query->where('CLOSE_STATUS', '=', $DOC_STATUS);
                                                    }
                                                   })
                                             ->orderBy('DOC_DATE','DESC')
                                             ->orderBy('DOC_NO','DESC')
                                             ->orderBy('MACHINE_LINE','ASC')
                                             ->orderBy('MACHINE_CODE','ASC')
-                                            ->paginate(8);
-    $DATA_SPAREPART = SparePart::where('STATUS','=',9)->get();
-    $SEARCH = str_replace('%','',$SEARCH);
-    $MONTH = $MONTH != '' ? $MONTH : 'all';
-    $YEAR = $YEAR != '' ? $YEAR : 'all';
-    $CLOSE_STATUS = $CLOSE_STATUS != '' ? $CLOSE_STATUS : 'all';
-
-    return View('machine/repair/repairlist',compact('dataset','SEARCH','DATA_EMPNAME','DATA_SPAREPART','LINE',
-    'MACHINE_LINE','MONTH','YEAR','CLOSE_STATUS'));
+                                            ->paginate(10);
+    $SEARCH = $SERACH_TEXT;
+    return View('machine/repair/repairlist',compact('dataset','SEARCH','DATA_EMPNAME','LINE',
+    'MACHINE_LINE','MONTH','YEAR','DOC_STATUS'));
   }
 
   public function PrepareSearch(Request $request){

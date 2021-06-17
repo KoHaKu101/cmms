@@ -62,7 +62,7 @@
 													<div class="col-md-12 col-lg-10 form-inline my-1">
 														<label class="text-white mx-2">Line : </label>
 														<select class="form-control form-control-sm mt-1 mx-1" id="LINE"name='LINE' onchange="changesubmit()">
-															 <option value="all">ทั้งหมด</option>
+															 <option value="0">ทั้งหมด</option>
 															@foreach ($LINE as $index => $row_line)
 																<option value="{{ $row_line->LINE_CODE }}"
 																	{{ $MACHINE_LINE == $row_line->LINE_CODE ? 'selected' : '' }}>{{ $row_line->LINE_NAME }}</option>
@@ -77,23 +77,23 @@
 															</select> --}}
 															<label class="text-white mx-2">ปี : </label>
 															<select class="form-control form-control-sm mt-1 mx-1" id="YEAR" name="YEAR" onchange="changesubmit()">
-																<option value="all">ทั้งหมด</option>
+																<option value="0">ทั้งหมด</option>
 																@for ($y=date('Y')-2; $y < date('Y')+1; $y++)
 																	<option value="{{$y}}" {{ $YEAR == $y ?'selected' : ''}}>{{$y}}</option>
 																@endfor
 															</select>
 															<label class="text-white mx-2">เดือน : </label>
 															<select class="form-control form-control-sm mt-1 mx-1" id="MONTH" name="MONTH" onchange="changesubmit()">
-																<option value="all">ทั้งหมด</option>
+																<option value="0">ทั้งหมด</option>
 																@for ($m=1; $m < 13; $m++)
 																	<option value="{{$m}}" {{ $MONTH == $m ?'selected' : ''}}>{{$months[$m]}}</option>
 																@endfor
 															</select>
 															<label class="text-white mx-2">เอกสาร : </label>
 															<select class="form-control form-control-sm mt-1 mx-1" id="CLOSE_STATUS" name="CLOSE_STATUS" onchange="changesubmit()">
-																<option value="all">ทั้งหมด</option>
-																<option value="9" {{ $CLOSE_STATUS == "9" ? 'selected' : "" }}>กำลังดำเนินการ</option>
-																<option value="1" {{ $CLOSE_STATUS == "1" ? 'selected' : "" }}>ปิดเอกสาร</option>
+																<option value="0">ทั้งหมด</option>
+																<option value="9" {{ $DOC_STATUS == "9" ? 'selected' : "" }}>กำลังดำเนินการ</option>
+																<option value="1" {{ $DOC_STATUS == "1" ? 'selected' : "" }}>ปิดเอกสาร</option>
 															</select>
 														<label class="text-white mx-1">ค้นหา : </label>
 								              <div class="input-group mx-1">
@@ -211,7 +211,7 @@
 								    </table>
 
 								  </div>
-									{{$dataset->appends(['MACHINE_LINE'=>$MACHINE_LINE,'MONTH' => $MONTH,'YEAR' => $YEAR,'CLOSE_STATUS' => $CLOSE_STATUS,'SEARCH',$SEARCH])
+									{{$dataset->appends(['MACHINE_LINE'=>$MACHINE_LINE,'MONTH' => $MONTH,'YEAR' => $YEAR,'DOC_STATUS' => $DOC_STATUS,'SEARCH',$SEARCH])
 														->links('pagination.default')}}
 								    </div>
 								</div>
