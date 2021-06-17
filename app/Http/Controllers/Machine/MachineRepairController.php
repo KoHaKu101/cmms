@@ -55,10 +55,24 @@ class MachineRepairController extends Controller
     $MACHINE_LINE = isset($request->LINE) ? $request->LINE : '';
     $MACHINE_STATUS = isset($request->MACHINE_STATUS) ? $request->MACHINE_STATUS : '' ;
     $CLOSE_STATUS = isset($request->CLOSE_STATUS) ? $request->CLOSE_STATUS : 9;
+
+    $DAY = $request->DAY == 'all' ? '' : (isset($request->DAY) ? $request->DAY : date('d'));
+    $MONTH = $request->MONTH == 'all' ? '' : (isset($request->MONTH) ? $request->MONTH : date('n'));
+    $YEAR = $request->YEAR == 'all' ? '' : (isset($request->YEAR) ? $request->YEAR : date('y')+43);
     $dataset = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
-                                            ->where(function ($query) use ($MACHINE_LINE) {
-                                                   if ($MACHINE_LINE != '') {
-                                                      $query->where('MACHINE_LINE', '=', $MACHINE_LINE);
+                                            ->where(function ($query) use ($DAY) {
+                                                   if ($DAY != '') {
+                                                      $query->where('DD', '=', $DAY);
+                                                    }
+                                                   })
+                                            ->where(function ($query) use ($MONTH) {
+                                                    if ($MONTH != '') {
+                                                       $query->where('MM', '=', $MONTH);
+                                                     }
+                                                    })
+                                            ->where(function ($query) use ($YEAR) {
+                                                   if ($YEAR != '') {
+                                                      $query->where('YY', '=', $YEAR);
                                                     }
                                                    })
                                             ->where(function ($query) use ($SEARCH) {
@@ -68,12 +82,7 @@ class MachineRepairController extends Controller
                                                            ->orWhere('DOC_NO', 'like', '%'.$SEARCH.'%');
                                                    }
                                                   })
-                                               ->where(function ($query) use ($MACHINE_STATUS) {
-                                                    if ($MACHINE_STATUS != ""){
-                                                      $query->where('MACHINE_STATUS', '=', $MACHINE_STATUS);
-                                                    }
-                                                  })
-                                            ->where('CLOSE_STATUS','=',$CLOSE_STATUS)
+                                            ->where('CLOSE_STATUS','=','9')
                                             ->orderBy('DOC_DATE','DESC')
                                             ->orderBy('DOC_NO','DESC')
                                             ->orderBy('MACHINE_LINE','ASC')
@@ -84,7 +93,7 @@ class MachineRepairController extends Controller
 
 
     return View('machine/repair/repairlist',compact('dataset','SEARCH','DATA_EMPNAME','DATA_SPAREPART','LINE',
-    'MACHINE_LINE','MACHINE_STATUS','CLOSE_STATUS'));
+    'MACHINE_LINE','DAY','MONTH','YEAR','CLOSE_STATUS'));
   }
 
   public function PrepareSearch(Request $request){
@@ -131,7 +140,7 @@ class MachineRepairController extends Controller
         $EXPLOT = str_replace('RE'.$DATE_RESET_DOCNO->format('ym').'-','',$DATA_MACHINEREPAIRREQ->DOC_NO)+1;
         $DOC_NO = 'RE' . $DATE_RESET_DOCNO->format('ym'). sprintf('-%04d', $EXPLOT);
       }
-      
+
       //$DATE_DOCNO->format('y');
       //$DATE_DOCNO->format('m');
       //$DATE_DOCNO->format('d');
@@ -155,6 +164,9 @@ class MachineRepairController extends Controller
         ,'PRIORITY'              => $PRIORITY
         ,'DOC_NO'                => $DOC_NO
         ,'DOC_DATE'              => $DATE_DOCNO->format('Y-m-d')
+        ,'YY'                    => $DATE_DOCNO->format('y')
+        ,'MM'                    => $DATE_DOCNO->format('m')
+        ,'DD'                    => $DATE_DOCNO->format('d')
         ,'REPAIR_REQ_TIME'       => $DATE_DOCNO->format('H:i:s')
         ,'CLOSE_STATUS'          => $CLOSE_STATUS
         ,'CLOSE_BY'              => ''
