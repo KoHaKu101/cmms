@@ -55,19 +55,8 @@
 											@method('GET')
 											@csrf
 								        <div class="row ">
-								          <div class="col-md-3 ">
-								              <div class="input-group mt-1">
-								                <input  type="search" id="SEARCH"  name="SEARCH" class="form-control form-control-sm" placeholder="ค้นหา........."
-																value="{{ $SEARCH }}">
-								                <div class="input-group-prepend">
-								                  <button type="submit" class="btn btn-search pr-1 btn-xs	">
-								                    <i class="fa fa-search search-icon"></i>
-								                  </button>
-								                </div>
-								              </div>
-								          </div>
-													<div class="col-md-7 form-inline">
-														<label class="text-white mr-2">Line : </label>
+													<div class="col-md-10 form-inline my-1">
+														<label class="text-white mx-2">Line : </label>
 														<select class="form-control form-control-sm mt-1" id="LINE"name='LINE'>
 															 <option value="">แสดงทั้งหมด</option>
 															@foreach ($LINE as $index => $row_line)
@@ -86,8 +75,20 @@
 																<option value="9" {{ $MACHINE_STATUS == "9" ? 'selected' : "" }}>แสดง</option>
 																<option value="1" {{ $MACHINE_STATUS == "1" ? 'selected' : "" }}>ซ่อน</option>
 															</select>
-													</div>
-													<div class="col-md-2 text-right">
+													{{-- </div> --}}
+													{{-- <div class="col-md-3 my-1"> --}}
+														<label class="text-white mx-1">ค้นหา : </label>
+								              <div class="input-group mx-1">
+								                <input  type="search" id="SEARCH"  name="SEARCH" class="form-control form-control-sm mt-1" placeholder="ค้นหา........."
+																value="{{ $SEARCH }}">
+								                <div class="input-group-prepend">
+								                  <button type="submit" class="btn btn-search pr-1 btn-xs	mt-1">
+								                    <i class="fa fa-search search-icon"></i>
+								                  </button>
+								                </div>
+								              </div>
+								          </div>
+													<div class="col-md-2 text-right my-1">
 														<a href="{{ route('repair.repairsearch') }}"class="btn btn-warning  btn-xs mt-1">
 															<span class="fas fa-file fa-lg">	แจ้งซ่อม	</span>
 														</a>
