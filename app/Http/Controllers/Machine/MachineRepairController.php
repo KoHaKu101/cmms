@@ -131,15 +131,15 @@ class MachineRepairController extends Controller
     $html = '';
 
     foreach ($dataset as $key => $row) {
-      $MACHINE_STATUS = $row->MACHINE_STATUS == 1 ? 'หยุดทำงาน' : 'ทำงาน';
       $html.= '<tr>
-                <td >'.date('d-m-Y',strtotime($row->DOC_DATE))."".date('H:i',strtotime($row->REPAIR_REQ_TIME)).'</td>
+                <td>'.$key+1 .'</td>
+                <td >'.date('d-m-Y',strtotime($row->DOC_DATE)).'</td>
                 <td >'.$row->DOC_NO.'</td>
                 <td >'.$row->MACHINE_LINE.'</td>
                 <td >'.$row->MACHINE_CODE.'</td>
                 <td >'.$row->MACHINE_NAME.'</td>
                 <td >'.$row->REPAIR_SUBSELECT_NAME.'</td>d
-                <td >'.$MACHINE_STATUS.'</td>
+
                 <td >
                   <button type="button"class="btn btn-success btn-block btn-sm my-1 ">
                     <span class="btn-label text-center" style="color:black">
@@ -165,7 +165,7 @@ class MachineRepairController extends Controller
 
 
       // dd($html);
-      $html.= '<td >'.date('d-m-Y H:i').'</td>
+      $html.= '<td >'.date('d-m-Y').'</td>
         </tr>';
       }
     return Response()->json(['html'=>$html]);

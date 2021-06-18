@@ -95,7 +95,7 @@
 															</select>
 														<label class="text-white mx-1">ค้นหา : </label>
 								              <div class="input-group mx-1">
-								                <input  type="search" id="SEARCH"  name="SEARCH" class="form-control form-control-sm mt-1" placeholder="ค้นหา........."
+								                <input  type="search" id="SEARCH"  name="SEARCH" class="form-control form-control-sm mt-1 col-lg-9" placeholder="ค้นหา........."
 																value="{{ $SEARCH }}">
 								                <div class="input-group-prepend">
 								                  <button type="submit" class="btn btn-search pr-1 btn-xs	mt-1" id="BTN_SUBMIT">
@@ -105,7 +105,7 @@
 								              </div>
 														{{-- </div> --}}
 														{{-- <div class="col-md-12 col-lg-1 text-right"> --}}
-														<div class="col-md-7 col-lg-2 text-right">
+														<div class="col-md-7 col-lg-1 text-right">
 															<a href="{{ route('repair.repairsearch') }}"class="btn btn-warning  btn-xs mt-1 ">
 																<span style="font-size: 13px;margin-bottom: 7px;">	แจ้งซ่อม	</span>
 															</a>
@@ -138,7 +138,39 @@
 										</div>
 		                <div class="row" id="picture_table">
 		                  @foreach ($dataset as $key => $row)
-												<div class="col-6 col-md-6 col-lg-3 my-3">
+												@php
+													$BG_COLOR = $row->PRIORITY == '9' ? 'bg-danger text-white' : 'bg-warning text-white';
+												@endphp
+												<div class="col-lg-3">
+													<div class="card card-round">
+														<div class="card-body">
+															<div class="card-title text-center fw-mediumbold {{ $BG_COLOR }}">{{$row->MACHINE_CODE}}</div>
+															<div class="card-list">
+																<div class="item-list">
+																	<div class="avatar">
+																		<img src="{{asset('../assets/img/noemp.png')}}" alt="..." class="avatar-img rounded-circle">
+																	</div>
+																	<div class="info-user ml-3">
+																		<div class="username" style="">รอรับงาน</div>
+																		<div class="status">{{$row->REPAIR_SUBSELECT_NAME}}</div>
+																		<div class="status">แจ้งเมื่อ:{{Carbon\Carbon::parse($row->CREATE_TIME)->diffForHumans()}}</div>
+																	</div>
+
+																</div>
+															</div>
+															<div class="row ">
+																<div class="col-md-12 text-center">
+																	<button class="btn  btn-primary  btn-sm">
+																		SELECT
+																	</button>
+																</div>
+
+															</div>
+														</div>
+													</div>
+												</div>
+
+												{{-- <div class="col-6 col-md-6 col-lg-3 my-3">
 													<div class="card card-pricing card-pricing-focus " style="padding: 14px 5px;background-color: #aedee8b8;">
 														<div class="card-header">
 																<span class="card-title">MC-CODE : {{ $row->MACHINE_CODE }}</span>
@@ -194,13 +226,14 @@
 															data-detail="{{ $row->REPAIR_SUBSELECT_NAME }}">รับงาน</button>
 														</div>
 													</div>
-												</div>
+												</div> --}}
 		                    @endforeach
 		                </div>
 								    <div class="table-responsive" id="list_table" hidden>
 								      <table class="display table table-striped table-hover">
 								        <thead class="thead-light">
 								          <tr>
+														<th>#</th>
 														<th >วันที่เอกสาร</th>
 								            <th >เลขที่เอกสาร </th>
 														<th>Line</th>
@@ -208,7 +241,6 @@
 								            <th>ชื่อเครื่องจักร</th>
 														<th>อาการ</th>
 								            <th>สถานะเครื่องจักร</th>
-								            <th >สถานะงาน</th>
 														<th >ผู้รับงาน</th>
 														<th >วันที่รับงาน</th>
 								          </tr>
@@ -217,14 +249,14 @@
 								        <tbody id="result">
 								          @foreach ($dataset as $key => $row)
 								            <tr>
-															<td >{{ date('d-m-Y',strtotime($row->DOC_DATE)).' '.date('H:i',strtotime($row->REPAIR_REQ_TIME)) }}</td>
+															<td>{{ $key+1 }}</td>
+															<td >{{ date('d-m-Y',strtotime($row->DOC_DATE)) }}</td>
 								              <td >{{ $row->DOC_NO }}
 								              </td>
 															<td >  				{{ $row->MACHINE_LINE }}	    </td>
 								              <td >  				{{ $row->MACHINE_CODE }}		     </td>
 								              <td >  				{{ $row->MACHINE_NAME }}		    </td>
 															<td >  				{{ $row->REPAIR_SUBSELECT_NAME }}		    </td>
-								              <td >  				{{ $row->MACHINE_STATUS == '1' ? 'หยุดทำงาน' : 'ทำงาน'}}	    </td>
 								                @if ($row->CLOSE_STATUS ===  '9')
 								                  <td >
 								                    <button type="button"class="btn btn-success btn-block btn-sm my-1 ">
@@ -249,7 +281,7 @@
 																		@endcan
 								                @endif
 
-																<td >{{ date('d-m-Y H:i') }}</td>
+																<td >{{ date('d-m-Y') }}</td>
 								              </tr>
 								            @endforeach
 								        </tbody>
