@@ -50,7 +50,6 @@ class MachineRepairController extends Controller
 
     $SEARCH      = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
     $SERACH_TEXT =  $request->SEARCH;
-
     $LINE = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
     $MACHINE_LINE = isset($request->LINE) ? $request->LINE : '';
 
@@ -96,7 +95,6 @@ class MachineRepairController extends Controller
     return View('machine/repair/repairlist',compact('dataset','SEARCH','LINE',
     'MACHINE_LINE','MONTH','YEAR','DOC_STATUS'));
   }
-
   public function PrepareSearch(Request $request){
 
     $search = $request->search;
@@ -250,6 +248,7 @@ class MachineRepairController extends Controller
               return Redirect()->back();
           }
   public function EMPCallAjax(Request $request){
+
     $REPAIR_REQ_UNID = isset($request->REPAIR_REQ_UNID) ? $request->REPAIR_REQ_UNID : '';
     $DATA_EMPNAME = EMPName::select('*')->selectraw("dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH")->where('EMP_STATUS','=','9')->get();
     $html_select = '<select class="form-control form-control-sm col-9 REC_WORKER_NAME" id="REC_WORKER_NAME" name="REC_WORKER_NAME">
@@ -262,6 +261,8 @@ class MachineRepairController extends Controller
     if ($REPAIR_REQ_UNID != '') {
       $REPAIR = MachineRepairREQ::select('*')->selectraw("dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH")
                                                   ->where('UNID','=',$REPAIR_REQ_UNID)->first();
+
+    	
       $PRIORITY_TEXT = $REPAIR->PRIORITY == '9' ? 'เร่งด่วน' : 'ไม่เร่งด่วน' ;
       $html_detail.= '<table class="table table-bordered table-bordered-bd-info">
         <tbody>
@@ -277,7 +278,10 @@ class MachineRepairController extends Controller
           </tr>
           <tr>
             <td style="background:#aab7c1;color:black;"><h5 class="my-1">อาการ</h5>  </td>
-            <td  colspan="3"> '.$REPAIR->REPAIR_SUBSELECT_NAME.' </td>
+            <td  colspan="3">
+              <input type="text" class="form-control form-control-sm" id="DETAIL_REPAIR"
+                value="'.$REPAIR->REPAIR_SUBSELECT_NAME.'">
+            </td>
           </tr>
           <tr>
             <td style="background:#aab7c1;color:black;"><h5 class="my-1">ระดับ</h5>  </td>
@@ -289,7 +293,8 @@ class MachineRepairController extends Controller
 
 
 
-    return Response()->json(['html_detail'=>$html_detail,'html_select' => $html_select]);
+    return Response()->json(['html_detail'=>$html_detail,'html_select' => $html_select])
+    ->withCookie(cookie('DETAIL', $REPAIR->REPAIR_SUBSELECT_NAME));
   }
   public function SelectRepairDetail(Request $request){
     $UNID = $request->UNID;

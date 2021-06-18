@@ -72,7 +72,8 @@
 
 											<div class="form-group">
 												<label for="MACHINE_STARTDATE">วันที่เริ่มใช้งาน	</label>
-												<input type="date" class=" form-control form-control-sm " id="MACHINE_STARTDATE" name="MACHINE_STARTDATE" placeholder="วันที่เริ่มใช้งาน">
+												<input type="date" class=" form-control form-control-sm " id="MACHINE_STARTDATE" name="MACHINE_STARTDATE"
+												placeholder="วันที่เริ่มใช้งาน" value="{{ date('Y-m-d') }}">
 											</div>
 												<div class="form-group col-lg-12 has-error">
 													<div class="row">

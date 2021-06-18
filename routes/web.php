@@ -94,7 +94,7 @@ Route::get('machine/repair/repairlist'             ,[MachineRepairController::cl
   Route::get('machine/repair/delete/{UNID}'        ,[MachineRepairController::class,'Delete'])       ->name('repair.delete');
 
   Route::post('machine/repair/select/selectrepairdetail',[MachineRepairController::class,'SelectRepairDetail'])->name('repair.selectrepairdetail');
-  Route::post('machine/repair/empcallajax'              ,[MachineRepairController::class,'EMPCallAjax']) ->name('repair.empcallajax');
+  Route::get('machine/repair/empcallajax'              ,[MachineRepairController::class,'EMPCallAjax']) ->name('repair.empcallajax');
   Route::post('machine/repair/addtableworker'           ,[MachineRepairController::class,'AddTableWorker']) ->name('repair.addtableworker');
   Route::post('machine/repair/addsparepart'             ,[MachineRepairController::class,'AddSparePart'])->name('repair.addsparepart');
 

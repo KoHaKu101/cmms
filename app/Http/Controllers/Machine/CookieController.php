@@ -30,11 +30,9 @@ class CookieController extends Controller
     return $number;
   }
   public function setCookie(Request $request) {
-
     $name = $request->NAME;
     $value = $request->VALUE;
     Cookie::queue($name, $value);
-
   }
   public function getCookie(Request $request) {
      $value = $request->cookie('name');

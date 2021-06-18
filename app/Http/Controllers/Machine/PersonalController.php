@@ -92,13 +92,6 @@ class PersonalController extends Controller
           } else {
               $last_img = "";
           }
-
-      // $POSITION = $request->POSITION;
-      // $DATA_POSITIONEMP = PositionEMP::where('EMP_POSITION_CODE','=',$POSITION)->first();
-      //   if ($DATA_POSITIONEMP->LITMIT_STOCK > $DATA_POSITIONEMP->EMP_POSITION_LIMIT) {
-      //     alert()->error('ตำแหน่งงานเต็ม')->autoclose('1000');
-      //     return Redirect()->back();
-      //   }
     $ENCODE = EMPName::selectRaw("dbo.encode_utf8('$request->EMP_NAME') as EMP_NAME")->first();
     $EMP_NAME = $ENCODE->EMP_NAME;
     EMPName::insert([
@@ -116,12 +109,6 @@ class PersonalController extends Controller
       'UNID'                 => $UNID,
 
     ]);
-
-        // $LITMIT_STOCK = $DATA_POSITIONEMP->LITMIT_STOCK > 0 ? $DATA_POSITIONEMP->LITMIT_STOCK+1 : 1;
-        // $DATA_POSITIONEMP->update([
-        //   'LITMIT_STOCK' => $LITMIT_STOCK
-        // ]);
-
     alert()->success('ลงทะเบียน สำเร็จ')->autoclose('1500');
     return Redirect()->route('personal.edit',$UNID);
 

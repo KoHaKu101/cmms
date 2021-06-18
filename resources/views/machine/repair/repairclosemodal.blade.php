@@ -25,7 +25,7 @@
         </div>
         <div class="row">
             <div class="col-3 col-md-2">
-              <label> ผู้รับแจ้ง </label>
+              <label> ผู้รับงาน </label>
             </div>
             <div class="col-9 col-md-10" id="select_recworker">
             </div>
@@ -35,8 +35,6 @@
         <button type="button" class="btn btn-sm btn-danger "data-dismiss="modal" >Cancel</i></button>
         <button type="button" class="btn btn-primary btn-sm" id="closestep_1"> Save </button>
       </div>
-
-
     </div>
   </div>
 </div>
@@ -45,15 +43,20 @@
   padding: 0px!important;
 }
 .modal-body-step{
-    height: 490px;
+
     overflow-y: auto;
 }
 .sparepart-table .sparepart-action{
   width: 110px;
 }
+.separator-solid{
+  border-top: 1px solid #c3c3c3;
+  margin: 6px;
+  margin-left: -1px;
+}
   @media all and (max-width: 1000px) {
       .modal-body-step{
-          height: 650px;
+
           overflow-y: auto;
       }
       .sparepart-table .sparepart-action{
@@ -69,7 +72,7 @@
       }
   @media all and (max-height: 400px){
     .modal-body-step{
-        height: 200px;
+        height: 300px;
         overflow-y: auto;
     }
 
@@ -82,45 +85,45 @@
 <div class="modal fade" id="CloseForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLalavel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <div class="modal-header bg-primary">
+      <div class="modal-header bg-primary text-primary">
+        <h5 class="modal-title" id="TITLE_DOCNO_SUB"></h5>
+        <button type="button" class="btn btn-sm btn-danger "data-dismiss="modal" ><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body modal-body-step">
         <div class="row">
-          <div class="col-12 col-md-12 form-inline text-white my-1  ">
-            <h4 class="modal-title" id="exampleModalLabel">ตรวจสอบเบื้องต้น</h4>
-            <i class="separator mx-2">
-              <i class="fas fa-arrow-right"></i>
-            </i>
-            <h4 class="modal-title" id="exampleModalLabel">ช่าง</h4>
-            <i class="separator mx-2">
-              <i class="fas fa-arrow-right"></i>
-            </i>
-            <h4 class="modal-title" id="exampleModalLabel">อะไหล่</h4>
-            <i class="separator mx-2">
-              <i class="fas fa-arrow-right"></i>
-            </i>
-            <h4 class="modal-title" id="exampleModalLabel">การดำเนินงาน</h4>
-            <i class="separator mx-2">
-              <i class="fas fa-arrow-right"></i>
-            </i>
-            <h4 class="modal-title" id="exampleModalLabel">สรุปผล</h4>
-          </div>
           <div class="col-12 col-md-12">
             <div class="row">
               <div class="col-12 col-md-12">
-                <input type="text" class="modal-title form-control-plaintext bg-primary text-white" id="show-detail" readonly>
+                  <h4 class="modal-title" id="show-detail">อาการเสีย : {{ Cookie::get('DETAIL')}}</h4>
               </div>
             </div>
           </div>
-
-
         </div>
-        <button type="button" class="btn btn-sm btn-danger "data-dismiss="modal" ><i class="fas fa-times"></i></button>
-      </div>
-
-      <div class="modal-body modal-body-step">
+        <div class="separator-solid" ></div>
         <div class="row">
-
+          <div class="col-12 col-md-12 form-inline my-1  ">
+            <h4 class="modal-title text-primary" id="step1">ตรวจสอบเบื้องต้น</h4>
+            <i class="separator mx-2">
+              <i class="fas fa-arrow-right"></i>
+            </i>
+            <h4 class="modal-title" id="step2">เลือกช่าง</h4>
+            <i class="separator mx-2">
+              <i class="fas fa-arrow-right"></i>
+            </i>
+            <h4 class="modal-title" id="step3">อะไหล่</h4>
+            <i class="separator mx-2">
+              <i class="fas fa-arrow-right"></i>
+            </i>
+            <h4 class="modal-title" id="step4">การดำเนินงาน</h4>
+            <i class="separator mx-2">
+              <i class="fas fa-arrow-right"></i>
+            </i>
+            <h4 class="modal-title" id="step5">สรุปผล</h4>
+          </div>
+        </div>
+        {{-- <div class="separator-solid"></div> --}}
+        {{-- <div class="row">
           <div class="col-12 col-md-12 tabactive">
-
             <div class="col-8 col-md-5 col-lg-3 ml-auto mr-auto">
               <ul class=" nav nav-pills nav-primary">
                 <li class="step">
@@ -130,7 +133,7 @@
                 </li>
               </ul>
             </div>
-              {{-- <li class="step">
+              <li class="step">
                 <a class="nav-link WORK_STEP2_IN" href="#WORK_STEP2_IN"  data-toggle="tab" id="step2" hidden> </a>
               </li>
               <li class="step">
@@ -145,12 +148,12 @@
               </li>
               <li class="step">
                 <a class="nav-link WORK_RESULT" href="#WORK_RESULT" id="step5"  data-toggle="tab" hidden></a>
-              </li> --}}
+              </li>
           </div>
-        </div>
-        <div class="tab-content my-2  ">
+        </div> --}}
+        <div class="tab-content my-4  ">
           <div class="tab-pane active" id="WORK_STEP_1">
-            <div class="row">
+            <div class="row has-error">
               <div class="col-6 col-sm-10 col-md-4 ml-auto">
                 <label>วันที่เริ่มตรวจสอบ</label>
                 <input type="date" class="form-control form-control-sm " value="{{ date('Y-m-d') }}">
@@ -160,7 +163,7 @@
                 <input type="time" class="form-control form-control-sm " value="{{ date('H:m') }}">
               </div>
             </div>
-            <div class="row">
+            <div class="row has-error">
               <div class="col-6 col-sm-10 col-md-4 ml-auto">
                 <label>วันที่ตรวจสอบเสร็จ</label>
                 <input type="date" class="form-control form-control-sm " value="{{ date('Y-m-d') }}">
@@ -170,32 +173,23 @@
                 <input type="time" class="form-control form-control-sm " value="{{ date('H:m') }}">
               </div>
             </div>
-            <div class="row my-5">
-              <div class="col-5 col-sm-3 col-lg-2 ml-auto" >
-  							<div class="card text-white">
-  								<div class="d-flex align-items-center bg-danger" style="cursor:pointer"  id="step_cancel">
-  									<span class="stamp stamp-md bg-danger">
-  										<i class="fas fa-times-circle"></i>
-  									</span>
-  									<div>
-  										<h5 class="mb-1 my-1"><b> ยกเลิก </b></h5>
-  									</div>
-  								</div>
-  							</div>
-  						</div>
-              <div class="col-5 col-sm-3 col-lg-2 mr-auto" >
-  							<div class="card text-white" >
-  								<div class="d-flex flex-row-reverse align-items-center  bg-primary" style="cursor:pointer"  onclick="nextstep(2)">
-  									<span class="stamp stamp-md  bg-primary ">
-  										<i class="fas fa-arrow-alt-circle-right"></i>
-  									</span>
-  									<div>
-  										<h5 class="mb-1 my-1"><b> ไปต่อ </b></h5>
-  									</div>
-  								</div>
-  							</div>
-  						</div>
+            <div class="row my-3">
+              <div class="col-md-10 col-lg-10 modal-footer">
+
+                {{-- <div class="col-9 col-sm-3 col-lg-3 mr-auto ml-auto" >
+    							<button type="button" class="btn btn-secondary btn-sm btn-link text-left">
+                    <i class="fas fa-times fa-2x"></i>
+                  </button>
+    						</div> --}}
+                <div class="text-right" >
+    							<button type="button" class="btn btn-secondary btn-sm  btn-link text-right"
+                  onclick="nextstep(2)">
+                    <i class="fas fa-arrow-right fa-2x"></i>
+                  </button>
+    						</div>
+              </div>
             </div>
+
           </div>
           <div class="tab-pane " id="WORK_STEP_2">
             <div class="form-group" id="select_typeworker">
@@ -252,7 +246,6 @@
                   </select>
                 </div>
                 <div class="col-3 col-md-2 col-lg-2 mr-auto">
-
                     <button type="button" class="btn btn-secondary btn-sm mx-1" id="add_worker"><i class="fas fa-plus"></i>เพิ่มพนักงาน</button>
                 </div>
               </div>
@@ -702,13 +695,10 @@
                 <textarea class="form-control">เช็คระบบน้ำมันหล่อลื่นแกน x</textarea>
               </div>
             </div>
-
             <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">Save</button>
           </div>
         </div>
-
       </div>
-
     </div>
   </div>
 </div>

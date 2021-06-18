@@ -113,16 +113,14 @@
 								      <table class="display table table-striped table-hover">
 								        <thead class="thead-light">
 								          <tr>
-														<th style="width:130px">วันที่เอกสาร</th>
-								            <th style="width:160px">เลขที่เอกสาร </th>
+														<th >วันที่เอกสาร</th>
+								            <th >เลขที่เอกสาร </th>
 														<th>Line</th>
 								            <th>รหัสเครื่อง </th>
 								            <th>ชื่อเครื่องจักร</th>
-
-
+														<th>อาการ</th>
 								            <th>สถานะเครื่องจักร</th>
-								            <th style="width:100px">สถานะงาน</th>
-
+								            <th >สถานะงาน</th>
 														<th >ผู้รับงาน</th>
 														<th >วันที่รับงาน</th>
 								          </tr>
@@ -132,73 +130,43 @@
 								          @foreach ($dataset as $key => $row)
 								            <tr>
 															<td >{{ date('d-m-Y',strtotime($row->DOC_DATE)).' '.date('H:i',strtotime($row->REPAIR_REQ_TIME)) }}</td>
-								              <td >
-								                <a href="{{ route('repair.edit',[$row->UNID]) }}"
-																	class="btn btn-secondary btn-block btn-sm my-1 text-left" style="height:30px">
-								                  <span class="btn-label">
-								                    <i class="fas fa-eye mx-1"></i>{{ $row->DOC_NO }}
-								                  </span>
-								                </a>
+								              <td >{{ $row->DOC_NO }}
 								              </td>
 															<td >  				{{ $row->MACHINE_LINE }}	    </td>
 								              <td >  				{{ $row->MACHINE_CODE }}		     </td>
 								              <td >  				{{ $row->MACHINE_NAME }}		    </td>
+															<td >  				{{ $row->REPAIR_SUBSELECT_NAME }}		    </td>
 								              <td >  				{{ $row->MACHINE_STATUS == '1' ? 'หยุดทำงาน' : 'ทำงาน'}}	    </td>
 								                @if ($row->CLOSE_STATUS ===  '9')
 								                  <td >
 								                    <button type="button"class="btn btn-success btn-block btn-sm my-1 ">
-								                      <span class="btn-label text-center">
-								                        <i class="fas  mx-1"></i>รอรับงาน
+								                      <span class="btn-label text-center" style="color:black">
+								                        รอรับงาน
 								                      </span>
 								                    </button>
 								                  </td>
-								                  <td style="width:90px">
+								                  <td >
 																		@can('isAdminandManager')
 																			<button onclick="rec_work(this)" type="button"
 																			data-unid="{{ $row->UNID }}"
 																			data-docno="{{ $row->DOC_NO }}"
+																			data-detail="{{ $row->REPAIR_SUBSELECT_NAME }}"
+																			href="#"
 																			class="btn btn-danger btn-block btn-sm my-1"
-																		 style="width:90px;height:30px">
+																		 >
 																			 <span class="btn-label">
 																				 <i class="fas fa-clipboard-check mx-1"></i>สุบรรณ
 																			 </span>
 																		 </button>
 																		@else
-
 																		@endcan
-
-								                @elseif ($row->CLOSE_STATUS === '1')
-								                  <td style="width:100px">
-								                    <button type="button" class="btn btn-primary btn-block btn-sm my-1 " style="width:120px;height:30px">
-								                      <span class="btn-label float-left">
-								                        <i class="fas  mx-1"></i>เรียบร้อยแล้ว
-								                      </span>
-								                    </button>
-								                    </td>
-								                    <td style="width:90px">
-
-								                    </td>
-								                @else
-								                  <td style="width:100px">
-								                      <button type="button" class="btn btn-danger btn-block btn-sm my-1 " style="width:120px;height:30px">
-								                        <span class="btn-label float-left">
-								                          <i class="fas  mx-1"></i>สถานะไม่แน่ชัด
-								                        </span>
-								                      </button>
-								                      </td>
-								                      <td style="width:90px">
-
-								                      </td>
 								                @endif
 
 																<td >{{ date('d-m-Y H:i') }}</td>
 								              </tr>
 								            @endforeach
-
-
 								        </tbody>
 								    </table>
-
 								  </div>
 									{{$dataset->appends(['MACHINE_LINE'=>$MACHINE_LINE,'MONTH' => $MONTH,'YEAR' => $YEAR,'DOC_STATUS' => $DOC_STATUS,'SEARCH',$SEARCH])
 														->links('pagination.default')}}
@@ -222,6 +190,7 @@
 <script src="{{ asset('assets/js/ajax/ajax-csrf.js') }}"></script>
 <script src="{{ asset('assets/js/select2.min.js') }}"></script>
 <script>
+
 //************************* array ****************************
 	var array_emp_code = [];
 	var sparepart_total = {};
@@ -270,14 +239,16 @@ function input_totals_parepart(unid){
 			}
 		});
 }
-//******************************* End function ********************
 
+//******************************* End function ********************
 	function rec_work(thisdata){
 		var repair_unid = $(thisdata).data('unid');
 		var docno = $(thisdata).data('docno');
+		var detail = $(thisdata).data('detail');
 		var url = "{{ route('repair.empcallajax') }}";
+
 		$.ajax({
-				 type:'POST',
+				 type:'GET',
 				 url: url,
 				 data: {REPAIR_REQ_UNID : repair_unid},
 				 datatype: 'json',
@@ -291,15 +262,16 @@ function input_totals_parepart(unid){
 						$('#TITLE_DOCNO').html('เลขที่เอกสาร : '+docno);
 						$('#RepairForm').modal({backdrop: 'static', keyboard: false});
 						$.fn.modal.Constructor.prototype._enforceFocus = function() {};
-						$('#RepairForm').modal('show');
-
+						$("#RepairForm").modal("show");
 				 }
 			 });
-
 	}
 	$('#closestep_1').on('click',function(){
-		var detail = $('#RE_DETAIL').first().text();
-		$('#show-detail').val('อาการเสีย : '+detail);
+		var docno = $('#TITLE_DOCNO').html();
+		console.log();
+		var detail = $('#DETAIL_REPAIR').val();
+		$('#TITLE_DOCNO_SUB').html(docno);
+		$("#show-detail").html('อาการเสีย : '+detail);
 		$('#CloseForm').modal({backdrop: 'static', keyboard: false});
 		$('#RepairForm').modal('hide');
 		$('#CloseForm').modal('show');
@@ -308,43 +280,19 @@ function input_totals_parepart(unid){
 		var step_number_up = Number(step_number) + 1;
 		var work_step_previous = 'WORK_STEP_'+step_number;
 		var work_step_simple   = 'WORK_STEP_'+step_number_up;
-			if (step_number == '1') {
-				$('#step').html('<i class="fa fa-user mr-2"></i>ตรวจสอบเบื้องต้น');
-			}else if (step_number == '2') {
-				$('#step').html('<i class="fa fa-user mr-2"></i>ช่าง');
-			}else if (step_number == '3') {
-				$('#step').html('<i class="fa fa-user mr-2"></i>อะไหล่');
-			}else if (step_number == '4') {
-
-			}
-			$('#step').attr('href','#'+work_step_previous);
-			$('#step').removeClass(work_step_simple);
-			$('#step').addClass(work_step_previous);
-			$('#'+work_step_simple).removeClass('active show');
-			$('#'+work_step_previous).addClass('active show');
+		$('#step'+step_number).addClass('text-primary fw-bold');
+		$('#step'+step_number_up).removeClass('text-primary fw-bold');
+		$('#'+work_step_simple).removeClass('active show');
+		$('#'+work_step_previous).addClass('active show');
 	};
 	function nextstep(step_number){
-		var step_number_up = Number(step_number) - 1;
+		var step_number_down = Number(step_number) - 1;
 		var work_step_next = 'WORK_STEP_'+step_number;
 		var work_step_simple   = 'WORK_STEP_'+step_number_up;
-			if (step_number == '1') {
-				$('#step').html('<i class="fa fa-user mr-2"></i>ตรวจสอบเบื้องต้น');
-			}else if (step_number == '2') {
-				$('#step').html('<i class="fa fa-user mr-2"></i>ช่าง');
-			}else if (step_number == '3') {
-				$('#step').html('<i class="fa fa-user mr-2"></i>อะไหล่');
-				$('#SPAREPART').select2({
-					placeholder: "กรุณาเลือก",
-					width:'100%',
-				 });
-			}else if (step_number == '4') {
-
-			}
-			$('#step').attr('href','#'+work_step_next);
-			$('#step').removeClass(work_step_simple);
-			$('#step').addClass(work_step_next);
-			$('#'+work_step_simple).removeClass('active show');
-			$('#'+work_step_next).addClass('active show');
+		$('#step'+step_number).addClass('text-primary fw-bold');
+		$('#step'+step_number_down).removeClass('text-primary fw-bold');
+		$('#'+work_step_simple).removeClass('active show');
+		$('#'+work_step_next).addClass('active show');
 	};
 	function previous_worker(){
 		$('#work_in').attr('hidden',true);
