@@ -357,6 +357,7 @@ function input_totals_parepart(unid){
 		});
 }
 function styletable(formatnumber){
+	
 	if (formatnumber == '1') {
 		$('#picture_table').attr('hidden',false);
 		$('#list_table').attr('hidden',true);

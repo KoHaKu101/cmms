@@ -192,7 +192,7 @@ body.modal-open {
             <div class="form-group" id="select_typeworker">
               <div class="row ">
                 <div class="col-6 col-md-5 col-lg-3 ml-auto">
-                  <div class="card card-stats card-primary card-round my-4">
+                  <div class="card card-stats card-primary card-round ">
                     <div class="card-body" style="cursor: pointer;" onclick="type_worker(1)">
                       <div class="row">
                         <div class="col-5">
@@ -210,7 +210,7 @@ body.modal-open {
                   </div>
                 </div>
                 <div class="col-6 col-md-5 col-lg-3  mr-auto">
-                  <div class="card card-stats card-primary card-round my-4">
+                  <div class="card card-stats card-primary card-round ">
                     <div class="card-body" style="cursor: pointer;" onclick="type_worker(2)">
                       <div class="row">
                         <div class="col-5">
