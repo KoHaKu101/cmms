@@ -64,8 +64,7 @@
 											@method('GET')
 											@csrf
 								        <div class="row ">
-													<div class="col-md-12 col-lg-10 form-inline my-1">
-
+													<div class="col-md-12 col-lg-12 form-inline my-1">
 															<label class="text-white mx-2">ปี : </label>
 															<select class="form-control form-control-sm mt-1 mx-1" id="YEAR" name="YEAR" onchange="changesubmit()">
 																<option value="0">ทั้งหมด</option>
@@ -89,7 +88,7 @@
 																@endforeach
 															</select>
 															<label class="text-white mx-2">เอกสาร : </label>
-															<select class="form-control form-control-sm mt-1 mx-1" id="CLOSE_STATUS" name="CLOSE_STATUS"onchange="changesubmit()">
+															<select class="form-control form-control-sm mt-1 mx-1" id="DOC_STATUS" name="DOC_STATUS"onchange="changesubmit()">
 																<option value="0">ทั้งหมด</option>
 																<option value="9" {{ $DOC_STATUS == "9" ? 'selected' : "" }}>กำลังดำเนินการ</option>
 																<option value="1" {{ $DOC_STATUS == "1" ? 'selected' : "" }}>ปิดเอกสาร</option>
@@ -104,11 +103,15 @@
 								                  </button>
 								                </div>
 								              </div>
+														{{-- </div> --}}
+														{{-- <div class="col-md-12 col-lg-1 text-right"> --}}
+														<div class="col-md-7 col-lg-2 text-right">
+															<a href="{{ route('repair.repairsearch') }}"class="btn btn-warning  btn-xs mt-1 ">
+																<span style="font-size: 13px;margin-bottom: 7px;">	แจ้งซ่อม	</span>
+															</a>
 														</div>
-														<div class="col-md-12 col-lg-2 text-right">
-														<a href="{{ route('repair.repairsearch') }}"class="btn btn-warning  btn-xs mt-2">
-															<span class="fas fa-file fa-lg">	แจ้งซ่อม	</span>
-														</a>
+
+
 													</div>
 								        </div>
 											</form>
@@ -116,11 +119,11 @@
 								  <div class="card-body">
 										<style>
 										.text-size{
-											font-size: 14px;
+											font-size: 13px;
 										}
 										</style>
 										<div class="row">
-											<div class="col-md-2 ml-auto">
+											<div class="col-3 col-md-2 ml-auto">
 												<div class="selectgroup w-100">
 													<label class="selectgroup-item" >
 														<input type="radio"  class="selectgroup-input" onchange="styletable(1)" checked name="styletable">
@@ -135,76 +138,63 @@
 										</div>
 		                <div class="row" id="picture_table">
 		                  @foreach ($dataset as $key => $row)
-												@php
-												$DATA_ICON = $MACHINE_ICON->where('UNID',$row->MACHINE_UNID)->first();
-												$noimg = asset("assets/img/no_image1200_900.png");
-												$hasimg = asset('image/machine/'.$DATA_ICON->MACHINE_LINE.'/'.$DATA_ICON->MACHINE_ICON);
-												$icon =  $DATA_ICON->MACHINE_ICON == NULL ? 'src= '.$noimg.' ' : 'src= '.$hasimg.' ' ;
-												@endphp
-		                    <div class="col-md-6 col-lg-4 my-3" >
-                           <img {{$icon}} alt="img3" class="col-md-12" style="height:200px;">
-                          <div class="mx-3  card-pricing card-pricing-focus" style="padding: 6px 6px;background-color: #aedee8b8;">
-														<ul class="specification-list" >
-															<li>
-																<div class="row text-size">
-													        <div class="col-4 col-md-4">
-													            <span>วันที่เอกสาร </span>
-													        </div>
-													        <div class="col-8 col-md-8">
-													            <span class="text-left">: {{ $row->DOC_DATE }}</span>
-													        </div>
-														    </div>
-															</li>
-															<li>
-																<div class="row text-size">
-													        <div class="col-4 col-md-4">
-													            <span>เลขที่เอกสาร </span>
-													        </div>
-													        <div class="col-8 col-md-8">
-													            <span class="text-left">: {{ $row->DOC_NO }}</span>
-													        </div>
-														    </div>
-
-															</li>
-															<li>
-																<div class="row text-size">
-													        <div class="col-4 col-md-4">
-													            <span>Line </span>
-													        </div>
-													        <div class="col-8 col-md-8">
-													            <span class="text-left">: {{$row->MACHINE_LINE }}</span>
-													        </div>
-														    </div>
-															</li>
-															<li>
-																<div class="row text-size">
-													        <div class="col-4 col-md-4">
-													            <span>MC-CODE </span>
-													        </div>
-													        <div class="col-8 col-md-8">
-													            <span class="text-left">: {{ $row->MACHINE_CODE }}</span>
-													        </div>
-														    </div>
-															</li>
-															<li>
-																<div class="row text-size">
-													        <div class="col-4 col-md-4">
-													            <span>อาการ </span>
-													        </div>
-													        <div class="col-8 col-md-8">
-													            <span class="text-left">: {{ $row->REPAIR_SUBSELECT_NAME }}</span>
-													        </div>
-														    </div>
-															</li>
-														</ul>
+												<div class="col-6 col-md-6 col-lg-3 my-3">
+													<div class="card card-pricing card-pricing-focus " style="padding: 14px 5px;background-color: #aedee8b8;">
+														<div class="card-header">
+																<span class="card-title">MC-CODE : {{ $row->MACHINE_CODE }}</span>
+														</div>
+														<div class="separator-solid"style="border-top: 7px solid #ebecec;margin: 0px 0;"></div>
+														<div class="card-body" style="padding: 0rem;">
+															<ul class="specification-list" >
+																<li>
+																	<div class="row text-size">
+														        <div class="col-4 col-md-3 col-lg-3 ">
+														            <span>วันที </span>
+														        </div>
+														        <div class="col-8 col-md-9 col-lg-9 ">
+														            <span class="text-left">: {{ $row->DOC_DATE }}</span>
+														        </div>
+															    </div>
+																</li>
+																<li>
+																	<div class="row text-size">
+														        <div class="col-4 col-md-3 col-lg-3 ">
+														            <span>อาการ </span>
+														        </div>
+														        <div class="col-8 col-md-9 col-lg-9 ">
+														            <span class="text-left">:{{ $row->REPAIR_SUBSELECT_NAME }}</span>
+														        </div>
+															    </div>
+																</li>
+																<li>
+																	<div class="row text-size">
+														        <div class="col-4 col-md-3 col-lg-3 ">
+														            <span>สถานะ </span>
+														        </div>
+														        <div class="col-8 col-md-9 col-lg-9 ">
+														            <span class="text-left">: กำลังดำเนินการ</span>
+														        </div>
+															    </div>
+																</li>
+																<li>
+																	<div class="row text-size">
+														        <div class="col-4 col-md-3 col-lg-3">
+														            <span>ผู้รับ</span>
+														        </div>
+														        <div class="col-8 col-md-9 col-lg-9 ">
+														            <span class="text-left">: สุบรรณ</span>
+														        </div>
+															    </div>
+																</li>
+															</ul>
 															<button type="button" class="btn btn-primary btn-block"
 															onclick="rec_work(this)"
 															data-unid="{{ $row->UNID }}"
 															data-docno="{{ $row->DOC_NO }}"
 															data-detail="{{ $row->REPAIR_SUBSELECT_NAME }}">รับงาน</button>
+														</div>
 													</div>
-
-		                    </div>
+												</div>
 		                    @endforeach
 		                </div>
 								    <div class="table-responsive" id="list_table" hidden>
@@ -357,7 +347,7 @@ function input_totals_parepart(unid){
 		});
 }
 function styletable(formatnumber){
-	
+
 	if (formatnumber == '1') {
 		$('#picture_table').attr('hidden',false);
 		$('#list_table').attr('hidden',true);
@@ -369,12 +359,10 @@ function styletable(formatnumber){
 }
 //******************************* End function ********************
 	function rec_work(thisdata){
-
 		var repair_unid = $(thisdata).data('unid');
 		var docno = $(thisdata).data('docno');
 		var detail = $(thisdata).data('detail');
 		var url = "{{ route('repair.empcallajax') }}";
-		event.preventDefault();
 		$.ajax({
 				 type:'GET',
 				 url: url,
@@ -383,6 +371,13 @@ function styletable(formatnumber){
 				 success:function(data){
 					 $('#show_detail').html(data.html_detail);
 					 $('#select_recworker').html(data.html_select);
+					 $('#WORKER_SELECT').html(data.html_select);
+						$('#WORKER_SELECT').select2({
+							width:'100%',
+						});
+					 $('.select-repairdetail').select2({
+						 width:'100%',
+					 });
 					 $('.REC_WORKER_NAME').select2({
 						 placeholder: "กรุณาเลือก",
 						 width:'100%',
@@ -399,11 +394,10 @@ function styletable(formatnumber){
 		var docno = $('#TITLE_DOCNO').html();
 		var detail = $('#DETAIL_REPAIR').val();
 		for (var i = 1; i < 6; i++) {
-			console.log(i);
-			$('#step'+i).removeClass('text-primary fw-bold');
+			$('#step'+i).removeClass('badge-success fw-bold');
 			$('#WORK_STEP_'+i).removeClass('active show');
 		}
-		$('#step1').addClass('text-primary fw-bold');
+		$('#step1').addClass('badge-primary fw-bold');
 		$('#WORK_STEP_1').addClass('active show');
 		$('#TITLE_DOCNO_SUB').html(docno);
 		$("#show-detail").html('อาการเสีย : '+detail);
@@ -415,8 +409,9 @@ function styletable(formatnumber){
 		var step_number_up = Number(step_number) + 1;
 		var work_step_previous = 'WORK_STEP_'+step_number;
 		var work_step_simple   = 'WORK_STEP_'+step_number_up;
-		$('#step'+step_number).addClass('text-primary fw-bold');
-		$('#step'+step_number_up).removeClass('text-primary fw-bold');
+		$('#step'+step_number).removeClass('badge-success fw-bold');
+		$('#step'+step_number).addClass('badge-primary fw-bold');
+		$('#step'+step_number_up).removeClass('badge-primary fw-bold');
 		$('#'+work_step_simple).removeClass('active show');
 		$('#'+work_step_previous).addClass('active show');
 	};
@@ -424,8 +419,9 @@ function styletable(formatnumber){
 		var step_number_down = Number(step_number) - 1;
 		var work_step_next = 'WORK_STEP_'+step_number;
 		var work_step_simple   = 'WORK_STEP_'+step_number_down;
-		$('#step'+step_number).addClass('text-primary fw-bold');
-		$('#step'+step_number_down).removeClass('text-primary fw-bold');
+		$('#step'+step_number).addClass('badge-primary fw-bold');
+		$('#step'+step_number_down).removeClass('badge-primary fw-bold');
+		$('#step'+step_number_down).addClass('badge-success fw-bold');
 		$('#'+work_step_simple).removeClass('active show');
 		$('#'+work_step_next).addClass('active show');
 	};
@@ -438,14 +434,15 @@ function styletable(formatnumber){
 	}
 	 function type_worker(type_worker){
 			var check_type = type_worker;
+			var url = "{{ route('repair.empcallajax') }}";
 			if (check_type == '1') {
-				$('#work_in').attr('hidden',false);
-				$("#previous_worker").attr('onclick','previous_worker()');
+				 $('#work_in').attr('hidden',false);
+				 $("#previous_worker").attr('onclick','previous_worker()');
 			}else {
 				$('#work_out').attr('hidden',false);
 				$("#previous_worker").attr('onclick','previous_worker()');
 			}
-			$('#select_typeworker').attr('hidden',true);
+			 $('#select_typeworker').attr('hidden',true);
 		}
 	 $('#add_worker').on('click',function(event){
 			 event.preventDefault();

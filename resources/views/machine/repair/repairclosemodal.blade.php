@@ -55,19 +55,25 @@ body.modal-open {
   margin-left: -1px;
 }
 .modal-body-step{
-    height: 500px;
+    height: 530px;
     overflow-y: auto;
 }
+.badge{
+  font-size: 14px;
+}
+
   @media all and (max-width: 600px) {
       .modal-body-step{
           height: 500px;
           overflow-y: auto;
       }
-  @media all and (min-width: 900px) {
+  }
+  /* @media all and (min-width: 900px) {
       .modal-body-step{
           height: 750px;
           overflow-y: auto;
       }
+    } */
   @media all and (max-height: 400px){
     .modal-body-step{
         height: 300px;
@@ -78,7 +84,7 @@ body.modal-open {
       top: 0px;
     }
   }
-}
+
 </style>
 <div class="modal fade" id="CloseForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLalavel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
@@ -99,24 +105,24 @@ body.modal-open {
         </div>
         <div class="separator-solid" ></div>
         <div class="row">
-          <div class="col-12 col-md-12 form-inline my-1  ">
-            <h4 class="modal-title text-primary" id="step1">ตรวจสอบเบื้องต้น</h4>
+          <div class="col-12 col-md-12  my-1  ">
+            <h4 class="modal-title badge" id="step1">ตรวจสอบเบื้องต้น</h4>
             <i class="separator mx-2">
               <i class="fas fa-arrow-right"></i>
             </i>
-            <h4 class="modal-title" id="step2">เลือกช่าง</h4>
+            <h4 class="modal-title badge" id="step2">เลือกช่าง</h4>
             <i class="separator mx-2">
               <i class="fas fa-arrow-right"></i>
             </i>
-            <h4 class="modal-title" id="step3">อะไหล่</h4>
+            <h4 class="modal-title badge" id="step3">อะไหล่</h4>
             <i class="separator mx-2">
               <i class="fas fa-arrow-right"></i>
             </i>
-            <h4 class="modal-title" id="step4">การดำเนินงาน</h4>
+            <h4 class="modal-title badge" id="step4">การดำเนินงาน</h4>
             <i class="separator mx-2">
               <i class="fas fa-arrow-right"></i>
             </i>
-            <h4 class="modal-title" id="step5">สรุปผล</h4>
+            <h4 class="modal-title badge" id="step5">สรุปผล</h4>
           </div>
         </div>
         {{-- <div class="separator-solid"></div> --}}
@@ -152,27 +158,33 @@ body.modal-open {
         <div class="tab-content my-4  ">
           <div class="tab-pane active" id="WORK_STEP_1">
             <div class="row has-error">
-              <div class="col-6 col-sm-10 col-md-4 ml-auto">
+              <div class="col-6 col-sm-10 col-md-6 col-lg-4 ml-auto">
                 <label>วันที่เริ่มตรวจสอบ</label>
                 <input type="date" class="form-control form-control-sm " value="{{ date('Y-m-d') }}">
               </div>
-              <div class="col-6 col-sm-10 col-md-4 mr-auto">
+              <div class="col-6 col-sm-10 col-md-6 col-lg-4 mr-auto">
                 <label>เวลาตรวจสอบ</label>
                 <input type="time" class="form-control form-control-sm " value="{{ date('H:m') }}">
               </div>
             </div>
             <div class="row has-error">
-              <div class="col-6 col-sm-10 col-md-4 ml-auto">
+              <div class="col-6 col-sm-10 col-md-6 col-lg-4 ml-auto">
                 <label>วันที่ตรวจสอบเสร็จ</label>
                 <input type="date" class="form-control form-control-sm " value="{{ date('Y-m-d') }}">
               </div>
-              <div class="col-6 col-sm-10 col-md-4 mr-auto">
+              <div class="col-6 col-sm-10 col-md-6 col-lg-4 mr-auto">
                 <label>เวลาตรวจสอบเสร็จ</label>
                 <input type="time" class="form-control form-control-sm " value="{{ date('H:m') }}">
               </div>
             </div>
+            <div class="row has-error">
+              <div class="col-12 col-sm-10 col-md-12 col-lg-8 ml-auto mr-auto">
+                <lable>รายละเอียดการตรวจสอบ</lable>
+                <textarea class="form-control" row="2"></textarea>
+              </div>
+            </div>
             <div class="row my-3">
-              <div class="col-md-10 col-lg-10 modal-footer">
+              <div class="col-md-12 col-lg-10 modal-footer">
                 {{-- <div class="col-9 col-sm-3 col-lg-3 mr-auto ml-auto" >
     							<button type="button" class="btn btn-secondary btn-sm btn-link text-left">
                     <i class="fas fa-times fa-2x"></i>
@@ -236,10 +248,6 @@ body.modal-open {
                 </div>
                 <div class="col-5 col-md-6 col-lg-4">
                   <select class="form-control form-control-sm col-9 REC_WORKER_NAME" id="WORKER_SELECT" name="WORKER_SELECT">
-                    <option value> กรุณาเลือก </option>
-                    {{-- @foreach ($DATA_EMPNAME as $index => $row)
-                        <option value="{{ $row->EMP_CODE }}">{{ $row->EMP_CODE. ' ' .$row->EMP_NAME_TH }}</option>
-                    @endforeach --}}
                   </select>
                 </div>
                 <div class="col-3 col-md-2 col-lg-2 mr-auto">
@@ -262,49 +270,81 @@ body.modal-open {
                 </div>
               </div>
             </div>
-              <div class="row" id="work_out" hidden>
-                <div class="col-6 col-sm-10 col-md-4 ml-auto my-1">
+            <div class="form-group has-error"id="work_out" hidden>
+              <div class="row" >
+                <div class="col-6 col-sm-10 col-md-6 col-lg-4 ml-auto my-1">
                   <label>วันที่เริ่มซ่อม</label>
                   <input type="date" class="form-control form-control-sm " value="{{ date('Y-m-d') }}">
                 </div>
-                <div class="col-6 col-sm-10 col-md-4 mr-auto my-1">
+                <div class="col-6 col-sm-10 col-md-6 col-lg-4 mr-auto my-1">
                   <label>เวลาซ่อม</label>
                   <input type="time" class="form-control form-control-sm " value="{{ date('H:m') }}">
                 </div>
               </div>
               <div class="row">
-                <div class="col-6 col-sm-10 col-md-4 ml-auto my-1">
+                <div class="col-6 col-sm-10 col-md-6 col-lg-4 ml-auto my-1">
                   <label>วันที่ซ่อมเสร็จ</label>
                   <input type="date" class="form-control form-control-sm "value="{{ date('Y-m-d') }}">
                 </div>
-                <div class="col-6 col-sm-10 col-md-4 mr-auto my-1">
+                <div class="col-6 col-sm-10 col-md-6 col-lg-4 mr-auto my-1">
                   <label>เวลาซ่อมเสร็จ</label>
                   <input type="time" class="form-control form-control-sm " value="{{ date('H:m') }}">
                 </div>
               </div>
               <div class="row my-1">
-                <div class="col-6 col-sm-5 col-md-4 ml-auto">
+                <div class="col-6 col-sm-5 col-md-6 col-lg-4 ml-auto">
                   <label> บริษัท/บุคคล </label>
-                  <input type="text" class="form-control form-control-sm" autocomplete>
+                    <input type="text" class="form-control form-control-sm " autocomplete>
                 </div>
-                <div class="col-6 col-sm-5 col-md-4 mr-auto">
-
-                  <label> ค่าใช้จ่าย </label>
-                    <div class="input-group">
-                      <input type="number" class="form-control form-control-sm"
+                <div class="col-6 col-sm-5 col-md-6 col-lg-4 mr-auto">
+                  <label> ค่าบริการ </label>
+                  {{-- <div class="form-inline"> --}}
+                    <div class="input-group form-inline">
+                      <input type="number" class="form-control form-control-sm col-md-5"
                       min="0" value="0" step=".01">
                       <div class="input-group-append">
                         <span class="input-group-text">บาท</span>
                       </div>
+                      <button type="button" class="btn btn-primary btn-sm mx-2"><i class="fas fa-plus"> เพิ่ม</i></button>
+
                     </div>
+                  {{-- </div> --}}
+
                 </div>
               </div>
               <div class="row">
-                <div class="col-12 col-sm-10 col-md-8 ml-auto mr-auto">
+                <div class="col-md-12 col-lg-8 ml-auto mr-auto">
+                  <table class="table table-bordered table-head-bg-info table-bordered-bd-info mt-4">
+										<thead>
+											<tr>
+												<th scope="col">#</th>
+												<th scope="col">ชื่อ บริษัท/บุคคล</th>
+												<th scope="col">ค่าบริการ</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>1</td>
+												<td>Machinery Imporium (1995) co., ltd.</td>
+												<td>1000 บาท</td>
+											</tr>
+											<tr>
+												<td>2</td>
+												<td>Machinery Imporium (1995) co., ltd.</td>
+												<td>2100 บาท</td>
+											</tr>
+
+										</tbody>
+									</table>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12 col-sm-10 col-md-12 col-lg-8 ml-auto mr-auto">
                   <label>วิธีการแก้ไข</label>
                   <textarea class="form-control"></textarea>
                 </div>
               </div>
+            </div>
             <div class="row my-3">
               <div class="col-5 col-sm-4 col-lg-3 ml-auto" >
   							<div class="card text-white">

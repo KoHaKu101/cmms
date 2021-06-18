@@ -83,10 +83,10 @@ class MachineRepairController extends Controller
                                             ->orderBy('DOC_MONTH','DESC')
                                             ->orderBy('DOC_NO','DESC')
                                             ->paginate(10);
-    $MACHINE_ICON  = Machine::select('MACHINE_LINE','MACHINE_ICON','UNID')->first();
+
     $SEARCH = $SERACH_TEXT;
     return View('machine/repair/repairlist',compact('dataset','SEARCH','LINE',
-    'MACHINE_LINE','MONTH','YEAR','DOC_STATUS','MACHINE_ICON'));
+    'MACHINE_LINE','MONTH','YEAR','DOC_STATUS'));
   }
   public function FetchData(Request $request){
     $SEARCH         = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
@@ -336,7 +336,8 @@ class MachineRepairController extends Controller
     if ($REPAIR_REQ_UNID != '') {
       $REPAIR = MachineRepairREQ::select('*')->selectraw("dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH")
                                                   ->where('UNID','=',$REPAIR_REQ_UNID)->first();
-
+      $DATA_SELECMAIN = SelectMainRepair::where('STATUS','=','9')->get();
+      $DATA_SELECSUB = SelectSubRepair::where('STATUS','=','9')->get();
 
       $PRIORITY_TEXT = $REPAIR->PRIORITY == '9' ? 'เร่งด่วน' : 'ไม่เร่งด่วน' ;
       $html_detail.= '<table class="table table-bordered table-bordered-bd-info">
@@ -354,8 +355,16 @@ class MachineRepairController extends Controller
           <tr>
             <td style="background:#aab7c1;color:black;"><h5 class="my-1">อาการ</h5>  </td>
             <td  colspan="3">
-              <input type="text" class="form-control form-control-sm" id="DETAIL_REPAIR"
-                value="'.$REPAIR->REPAIR_SUBSELECT_NAME.'">
+              <select class="select-repairdetail" id="DETAIL_REPAIR">';
+              foreach ($DATA_SELECMAIN as $index => $row_main){
+          $html_detail.='<optgroup label="'.$row_main->REPAIR_MAINSELECT_NAME.'">';
+                foreach ($DATA_SELECSUB->where('REPAIR_MAINSELECT_UNID','=',$row_main->UNID) as $index => $row_sub){
+                  $SELECTED = $row_sub->UNID == $REPAIR->REPAIR_SUBSELECT_UNID ? 'selected' : '' ;
+                  $html_detail.= '<option value="'.$row_sub->REPAIR_SUBSELECT_NAME.'" '.$SELECTED.'>'.$row_sub->REPAIR_SUBSELECT_NAME.'</option>';
+                }
+          $html_detail.='</optgroup>';
+              }
+          $html_detail.='</select>
             </td>
           </tr>
           <tr>
@@ -368,8 +377,7 @@ class MachineRepairController extends Controller
 
 
 
-    return Response()->json(['html_detail'=>$html_detail,'html_select' => $html_select])
-    ->withCookie(cookie('DETAIL', $REPAIR->REPAIR_SUBSELECT_NAME));
+    return Response()->json(['html_detail'=>$html_detail,'html_select' => $html_select]);
   }
   public function SelectRepairDetail(Request $request){
     $UNID = $request->UNID;
