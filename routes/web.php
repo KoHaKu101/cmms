@@ -84,6 +84,7 @@ Route::get('/cookie/get',[CookieController::class,'getCookie'])->name('cookie.ge
 //repair
 
 Route::get('machine/repair/repairlist'             ,[MachineRepairController::class,'Index'])->name('repair.list');
+Route::get('machine/repair/fetchdata'             ,[MachineRepairController::class,'FetchData'])->name('repair.fetchdata');
 
   Route::get('machine/repair/form/{MACHINE_CODE}'  ,[MachineRepairController::class,'Create'])       ->name('repair.form');
   Route::get('machine/repair/repairsearch'         ,[MachineRepairController::class,'PrepareSearch'])->name('repair.repairsearch');

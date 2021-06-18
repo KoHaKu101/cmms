@@ -53,30 +53,29 @@
 						<div class="row">
 							<div class="col-md-12">
 								<div class="card ">
-
 								  <div class="card-header bg-primary  ">
-										<form action="{{ route('repair.list') }}" method="POST" enctype="multipart/form-data">
+										<form action="{{ route('repair.list') }}" method="POST" id="FRM_SEARCH"enctype="multipart/form-data">
 											@method('GET')
 											@csrf
 								        <div class="row ">
 													<div class="col-md-12 col-lg-10 form-inline my-1">
 
 															<label class="text-white mx-2">ปี : </label>
-															<select class="form-control form-control-sm mt-1 mx-1" id="YEAR" name="YEAR" >
+															<select class="form-control form-control-sm mt-1 mx-1" id="YEAR" name="YEAR" onchange="changesubmit()">
 																<option value="0">ทั้งหมด</option>
 																@for ($y=date('Y')-2; $y < date('Y')+1; $y++)
 																	<option value="{{$y}}" {{ $YEAR == $y ?'selected' : ''}}>{{$y}}</option>
 																@endfor
 															</select>
 															<label class="text-white mx-2">เดือน : </label>
-															<select class="form-control form-control-sm mt-1 mx-1" id="MONTH" name="MONTH" >
+															<select class="form-control form-control-sm mt-1 mx-1" id="MONTH" name="MONTH" onchange="changesubmit()">
 																<option value="0">ทั้งหมด</option>
 																@for ($m=1; $m < 13; $m++)
 																	<option value="{{$m}}" {{ $MONTH == $m ?'selected' : ''}}>{{$months[$m]}}</option>
 																@endfor
 															</select>
 															<label class="text-white mx-2">Line : </label>
-															<select class="form-control form-control-sm mt-1 mx-1" id="LINE"name='LINE' >
+															<select class="form-control form-control-sm mt-1 mx-1" id="LINE"name='LINE' onchange="changesubmit()">
 																 <option value="">ทั้งหมด</option>
 																@foreach ($LINE as $index => $row_line)
 																	<option value="{{ $row_line->LINE_CODE }}"
@@ -84,7 +83,7 @@
 																@endforeach
 															</select>
 															<label class="text-white mx-2">เอกสาร : </label>
-															<select class="form-control form-control-sm mt-1 mx-1" id="CLOSE_STATUS" name="CLOSE_STATUS">
+															<select class="form-control form-control-sm mt-1 mx-1" id="CLOSE_STATUS" name="CLOSE_STATUS"onchange="changesubmit()">
 																<option value="0">ทั้งหมด</option>
 																<option value="9" {{ $DOC_STATUS == "9" ? 'selected' : "" }}>กำลังดำเนินการ</option>
 																<option value="1" {{ $DOC_STATUS == "1" ? 'selected' : "" }}>ปิดเอกสาร</option>
@@ -108,8 +107,9 @@
 								        </div>
 											</form>
 								  </div>
-								  <div id="result"class="card-body">
-								    <div class="table-responsive" id="dynamic_content">
+								  <div class="card-body">
+										{{-- <div class="" --}}
+								    <div class="table-responsive" id="dynamic_content" hidden>
 								      <table class="display table table-striped table-hover">
 								        <thead class="thead-light">
 								          <tr>
@@ -126,7 +126,7 @@
 								          </tr>
 								        </thead>
 
-								        <tbody>
+								        <tbody id="result">
 								          @foreach ($dataset as $key => $row)
 								            <tr>
 															<td >{{ date('d-m-Y',strtotime($row->DOC_DATE)).' '.date('H:i',strtotime($row->REPAIR_REQ_TIME)) }}</td>
@@ -167,7 +167,7 @@
 								            @endforeach
 								        </tbody>
 								    </table>
-								  </div>
+								  	</div>
 									{{$dataset->appends(['MACHINE_LINE'=>$MACHINE_LINE,'MONTH' => $MONTH,'YEAR' => $YEAR,'DOC_STATUS' => $DOC_STATUS,'SEARCH',$SEARCH])
 														->links('pagination.default')}}
 								    </div>
@@ -197,6 +197,23 @@
 	var arr = [];
 //************************* array ****************************
 //******************************* function ********************
+$(document).ready(function(){
+		var url = "{{ route('repair.fetchdata') }}";
+		var data = $('#FRM_SEARCH').serialize();
+		var loaddata_secon = function (){
+			$.ajax({
+						 type:'GET',
+						 url: url,
+						 data: data,
+						 datatype: 'json',
+						 success:function(data){
+							 $('#result').html(data.html);
+						 }
+					 });
+				 }
+  setInterval(loaddata_secon,8000);
+})
+
 function loop_tabel_worker(array_emp_code){
 	var url = "{{ route('repair.addtableworker') }}";
 	$.ajax({
@@ -259,17 +276,23 @@ function input_totals_parepart(unid){
 						 placeholder: "กรุณาเลือก",
 						 width:'100%',
 						});
-						$('#TITLE_DOCNO').html('เลขที่เอกสาร : '+docno);
-						$('#RepairForm').modal({backdrop: 'static', keyboard: false});
-						$.fn.modal.Constructor.prototype._enforceFocus = function() {};
-						$("#RepairForm").modal("show");
+					 $('#TITLE_DOCNO').html('เลขที่เอกสาร : '+docno);
+					 $('#RepairForm').modal({backdrop: 'static', keyboard: false});
+					 $.fn.modal.Constructor.prototype._enforceFocus = function() {};
+					 $("#RepairForm").modal("show");
 				 }
 			 });
 	}
 	$('#closestep_1').on('click',function(){
 		var docno = $('#TITLE_DOCNO').html();
-		console.log();
 		var detail = $('#DETAIL_REPAIR').val();
+		for (var i = 1; i < 6; i++) {
+			console.log(i);
+			$('#step'+i).removeClass('text-primary fw-bold');
+			$('#WORK_STEP_'+i).removeClass('active show');
+		}
+		$('#step1').addClass('text-primary fw-bold');
+		$('#WORK_STEP_1').addClass('active show');
 		$('#TITLE_DOCNO_SUB').html(docno);
 		$("#show-detail").html('อาการเสีย : '+detail);
 		$('#CloseForm').modal({backdrop: 'static', keyboard: false});
@@ -288,12 +311,13 @@ function input_totals_parepart(unid){
 	function nextstep(step_number){
 		var step_number_down = Number(step_number) - 1;
 		var work_step_next = 'WORK_STEP_'+step_number;
-		var work_step_simple   = 'WORK_STEP_'+step_number_up;
+		var work_step_simple   = 'WORK_STEP_'+step_number_down;
 		$('#step'+step_number).addClass('text-primary fw-bold');
 		$('#step'+step_number_down).removeClass('text-primary fw-bold');
 		$('#'+work_step_simple).removeClass('active show');
 		$('#'+work_step_next).addClass('active show');
 	};
+
 	function previous_worker(){
 		$('#work_in').attr('hidden',true);
 		$('#work_out').attr('hidden',true);
@@ -311,15 +335,6 @@ function input_totals_parepart(unid){
 			}
 			$('#select_typeworker').attr('hidden',true);
 		}
-	 $('#step_cancel').on('click',function(){
-			jQuery(document).off('focusin.modal');
-			Swal.fire({
-				title: 'สาเหตุการยกเลิก',
-				input: 'text',
-			}).then((result) => {
-					 $('#CloseForm').modal('hide');
-			});
-		});
 	 $('#add_worker').on('click',function(event){
 			 event.preventDefault();
 			 var emp_code = $('#WORKER_SELECT').val();

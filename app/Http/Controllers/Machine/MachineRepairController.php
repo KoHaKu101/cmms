@@ -9,6 +9,7 @@ use App\Http\Middleware\VerifyCsrfToken;
 use Carbon\Carbon;
 use Auth;
 use Cookie;
+use Gate;
 //******************** model ***********************
 use App\Models\MachineAddTable\SelectMainRepair;
 use App\Models\MachineAddTable\SelectSubRepair;
@@ -26,10 +27,6 @@ use Maatwebsite\Excel\Facades\Excel;
 class MachineRepairController extends Controller
 {
   public function __construct(){
-    $cookie_array = array('0' => 'empcode','1' => 'selectmainrepair','2' => 'selectsubrepair','3' => 'priority' );
-    foreach ($cookie_array as $index => $row) {
-      Cookie::queue(Cookie::forget($row));
-    }
     $this->middleware('auth');
   }
   public function randUNID($table){
@@ -47,18 +44,13 @@ class MachineRepairController extends Controller
   }
 
   public function Index(Request $request){
-
     $SEARCH      = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
     $SERACH_TEXT =  $request->SEARCH;
     $LINE = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
     $MACHINE_LINE = isset($request->LINE) ? $request->LINE : '';
-
     $MONTH = isset($request->MONTH) ? $request->MONTH : 0 ;
-
     $DOC_STATUS = isset($request->DOC_STATUS) ? $request->DOC_STATUS : 0 ;
-
     $YEAR = isset($request->YEAR) ? $request->YEAR : date('Y') ;
-
     $dataset = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
                                             ->where(function ($query) use ($MACHINE_LINE) {
                                                   if ($MACHINE_LINE != '') {
@@ -94,6 +86,88 @@ class MachineRepairController extends Controller
     $SEARCH = $SERACH_TEXT;
     return View('machine/repair/repairlist',compact('dataset','SEARCH','LINE',
     'MACHINE_LINE','MONTH','YEAR','DOC_STATUS'));
+  }
+  public function FetchData(Request $request){
+    $SEARCH         = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
+    $SERACH_TEXT    = $request->SEARCH;
+    $MACHINE_LINE   = isset($request->LINE) ? $request->LINE : '';
+    $MONTH          = isset($request->MONTH) ? $request->MONTH : 0 ;
+    $DOC_STATUS     = isset($request->DOC_STATUS) ? $request->DOC_STATUS : 0 ;
+    $YEAR           = isset($request->YEAR) ? $request->YEAR : date('Y') ;
+    $dataset        = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
+                                            ->where(function ($query) use ($MACHINE_LINE) {
+                                                  if ($MACHINE_LINE != '') {
+                                                     $query->where('MACHINE_LINE', '=', $MACHINE_LINE);
+                                                   }
+                                                  })
+                                            ->where(function ($query) use ($MONTH) {
+                                                    if ($MONTH > 0) {
+                                                       $query->where('DOC_MONTH', '=', $MONTH);
+                                                     }
+                                                    })
+                                            ->where(function ($query) use ($YEAR) {
+                                                   if ($YEAR > 0) {
+                                                      $query->where('DOC_YEAR', '=', $YEAR);
+                                                    }
+                                                   })
+                                            ->where(function ($query) use ($SEARCH) {
+                                                  if ($SEARCH != "") {
+                                                     $query->where('MACHINE_CODE', 'like', '%'.$SEARCH.'%')
+                                                           ->orwhere('MACHINE_NAME','like','%'.$SEARCH.'%')
+                                                           ->orWhere('DOC_NO', 'like', '%'.$SEARCH.'%');
+                                                   }
+                                                  })
+                                            ->where(function ($query) use ($DOC_STATUS) {
+                                                  if ($DOC_STATUS > 0) {
+                                                      $query->where('CLOSE_STATUS', '=', $DOC_STATUS);
+                                                   }
+                                                 })
+                                            ->orderBy('DOC_YEAR','DESC')
+                                            ->orderBy('DOC_MONTH','DESC')
+                                            ->orderBy('DOC_NO','DESC')
+                                            ->paginate(10);
+    $SEARCH         = $SERACH_TEXT;
+    $html = '';
+
+    foreach ($dataset as $key => $row) {
+      $MACHINE_STATUS = $row->MACHINE_STATUS == 1 ? 'หยุดทำงาน' : 'ทำงาน';
+      $html.= '<tr>
+                <td >'.date('d-m-Y',strtotime($row->DOC_DATE))."".date('H:i',strtotime($row->REPAIR_REQ_TIME)).'</td>
+                <td >'.$row->DOC_NO.'</td>
+                <td >'.$row->MACHINE_LINE.'</td>
+                <td >'.$row->MACHINE_CODE.'</td>
+                <td >'.$row->MACHINE_NAME.'</td>
+                <td >'.$row->REPAIR_SUBSELECT_NAME.'</td>d
+                <td >'.$MACHINE_STATUS.'</td>
+                <td >
+                  <button type="button"class="btn btn-success btn-block btn-sm my-1 ">
+                    <span class="btn-label text-center" style="color:black">
+                      รอรับงาน
+                    </span>
+                  </button>
+                </td>';
+                if (Gate::allows("isAdminandManager")) {
+                  $html.='<td >
+                      <button onclick="rec_work(this)" type="button"
+                      data-unid="'.$row->UNID.'"
+                      data-docno="'.$row->DOC_NO.'"
+                      data-detail="'.$row->REPAIR_SUBSELECT_NAME.'"
+                      class="btn btn-danger btn-block btn-sm my-1"
+                     >
+                       <span class="btn-label">
+                       <i class="fas fa-clipboard-check mx-1"></i>สุบรรณ
+                     </span>
+                     </button></td>';
+                   }else {
+                  $html.='<td ></td>';
+                  }
+
+
+      // dd($html);
+      $html.= '<td >'.date('d-m-Y H:i').'</td>
+        </tr>';
+      }
+    return Response()->json(['html'=>$html]);
   }
   public function PrepareSearch(Request $request){
 
@@ -262,7 +336,7 @@ class MachineRepairController extends Controller
       $REPAIR = MachineRepairREQ::select('*')->selectraw("dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH")
                                                   ->where('UNID','=',$REPAIR_REQ_UNID)->first();
 
-    	
+
       $PRIORITY_TEXT = $REPAIR->PRIORITY == '9' ? 'เร่งด่วน' : 'ไม่เร่งด่วน' ;
       $html_detail.= '<table class="table table-bordered table-bordered-bd-info">
         <tbody>

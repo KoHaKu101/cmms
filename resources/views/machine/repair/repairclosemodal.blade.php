@@ -54,21 +54,19 @@
   margin: 6px;
   margin-left: -1px;
 }
-  @media all and (max-width: 1000px) {
+.modal-body-step{
+    height: 500px;
+    overflow-y: auto;
+}
+  @media all and (max-width: 600px) {
       .modal-body-step{
-
+          height: 500px;
           overflow-y: auto;
       }
-      .sparepart-table .sparepart-action{
-        width: 110px;
-      }
-      .sparepart-table-responsive{
-        display: block;
-        width: 160%;
-        overflow-x: auto;
-      }
-      .text-col{
-        top: 0px;
+  @media all and (min-width: 900px) {
+      .modal-body-step{
+          height: 750px;
+          overflow-y: auto;
       }
   @media all and (max-height: 400px){
     .modal-body-step{
@@ -175,7 +173,6 @@
             </div>
             <div class="row my-3">
               <div class="col-md-10 col-lg-10 modal-footer">
-
                 {{-- <div class="col-9 col-sm-3 col-lg-3 mr-auto ml-auto" >
     							<button type="button" class="btn btn-secondary btn-sm btn-link text-left">
                     <i class="fas fa-times fa-2x"></i>
@@ -265,8 +262,7 @@
                 </div>
               </div>
             </div>
-            <div class="form-group has-error" id="work_out" hidden>
-              <div class="row">
+              <div class="row" id="work_out" hidden>
                 <div class="col-6 col-sm-10 col-md-4 ml-auto my-1">
                   <label>วันที่เริ่มซ่อม</label>
                   <input type="date" class="form-control form-control-sm " value="{{ date('Y-m-d') }}">
@@ -309,7 +305,6 @@
                   <textarea class="form-control"></textarea>
                 </div>
               </div>
-            </div>
             <div class="row my-3">
               <div class="col-5 col-sm-4 col-lg-3 ml-auto" >
   							<div class="card text-white">
