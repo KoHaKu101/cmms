@@ -3,6 +3,12 @@
 @section('meta')
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<link href="{{asset('assets/css/select2.min.css')}}" rel="stylesheet" />
+	<link href="{{asset('assets\css\cubeportfolio.css')}}" rel="stylesheet" type="text/css">
+
+  	  <link href="{{asset('assets\css\portfolio.min.css')}}" rel="stylesheet" type="text/css">
+
+ 	 <link href="{{asset('assets\css\customize.css')}}" rel="stylesheet" type="text/css">
+
 @endsection
 @section('css')
 
@@ -108,7 +114,85 @@
 											</form>
 								  </div>
 								  <div class="card-body">
-										{{-- <div class="" --}}
+										<style>
+										.text-size{
+											font-size: 14px;
+										}
+										</style>
+					                <div class="row">
+					                  @foreach ($dataset as $key => $row)
+															@php
+															$DATA_ICON = $MACHINE_ICON->where('UNID',$row->MACHINE_UNID)->first();
+															$noimg = asset("assets/img/no_image1200_900.png");
+															$hasimg = asset('image/machine/'.$DATA_ICON->MACHINE_LINE.'/'.$DATA_ICON->MACHINE_ICON);
+															$icon =  $DATA_ICON->MACHINE_ICON == NULL ? 'src= '.$noimg.' ' : 'src= '.$hasimg.' ' ;
+															@endphp
+					                    <div class="col-md-6 col-lg-4 my-3" >
+	                               <img {{$icon}} alt="img3" class="col-md-12" style="height:200px;">
+		                            <div class="mx-3  card-pricing card-pricing-focus" style="padding: 6px 6px;background-color: #aedee8b8;">
+																	<ul class="specification-list" >
+																		<li>
+																			<div class="row text-size">
+																        <div class="col-4 col-md-4">
+																            <span>วันที่เอกสาร </span>
+																        </div>
+																        <div class="col-8 col-md-8">
+																            <span class="text-left">: {{ $row->DOC_DATE }}</span>
+																        </div>
+																	    </div>
+																		</li>
+																		<li>
+																			<div class="row text-size">
+																        <div class="col-4 col-md-4">
+																            <span>เลขที่เอกสาร </span>
+																        </div>
+																        <div class="col-8 col-md-8">
+																            <span class="text-left">: {{ $row->DOC_NO }}</span>
+																        </div>
+																	    </div>
+
+																		</li>
+																		<li>
+																			<div class="row text-size">
+																        <div class="col-4 col-md-4">
+																            <span>Line </span>
+																        </div>
+																        <div class="col-8 col-md-8">
+																            <span class="text-left">: {{$row->MACHINE_LINE }}</span>
+																        </div>
+																	    </div>
+																		</li>
+																		<li>
+																			<div class="row text-size">
+																        <div class="col-4 col-md-4">
+																            <span>MC-CODE </span>
+																        </div>
+																        <div class="col-8 col-md-8">
+																            <span class="text-left">: {{ $row->MACHINE_CODE }}</span>
+																        </div>
+																	    </div>
+																		</li>
+																		<li>
+																			<div class="row text-size">
+																        <div class="col-4 col-md-4">
+																            <span>อาการ </span>
+																        </div>
+																        <div class="col-8 col-md-8">
+																            <span class="text-left">: {{ $row->REPAIR_SUBSELECT_NAME }}</span>
+																        </div>
+																	    </div>
+																		</li>
+																	</ul>
+																		<button type="button" class="btn btn-primary btn-block"
+																		onclick="rec_work(this)"
+																		data-unid="{{ $row->UNID }}"
+																		data-docno="{{ $row->DOC_NO }}"
+																		data-detail="{{ $row->REPAIR_SUBSELECT_NAME }}">รับงาน</button>
+																</div>
+
+					                    </div>
+					                    @endforeach
+					                </div>
 								    <div class="table-responsive" id="dynamic_content" hidden>
 								      <table class="display table table-striped table-hover">
 								        <thead class="thead-light">
@@ -151,7 +235,6 @@
 																			data-unid="{{ $row->UNID }}"
 																			data-docno="{{ $row->DOC_NO }}"
 																			data-detail="{{ $row->REPAIR_SUBSELECT_NAME }}"
-																			href="#"
 																			class="btn btn-danger btn-block btn-sm my-1"
 																		 >
 																			 <span class="btn-label">
@@ -187,6 +270,9 @@
 
 {{-- ส่วนjava --}}
 @section('javascript')
+<script src="{{ asset('assets/js/porfolio/jquery.cubeportfolio.js') }}"></script>
+<script src="{{ asset('assets/js/porfolio/portfolio-1.js') }}"></script>
+<script src="{{ asset('assets/js/porfolio/retina.min.js') }}"></script>
 <script src="{{ asset('assets/js/ajax/ajax-csrf.js') }}"></script>
 <script src="{{ asset('assets/js/select2.min.js') }}"></script>
 <script>
@@ -259,11 +345,12 @@ function input_totals_parepart(unid){
 
 //******************************* End function ********************
 	function rec_work(thisdata){
+
 		var repair_unid = $(thisdata).data('unid');
 		var docno = $(thisdata).data('docno');
 		var detail = $(thisdata).data('detail');
 		var url = "{{ route('repair.empcallajax') }}";
-
+		event.preventDefault();
 		$.ajax({
 				 type:'GET',
 				 url: url,
@@ -277,7 +364,8 @@ function input_totals_parepart(unid){
 						 width:'100%',
 						});
 					 $('#TITLE_DOCNO').html('เลขที่เอกสาร : '+docno);
-					 $('#RepairForm').modal({backdrop: 'static', keyboard: false});
+					 $('#RepairForm').modal({backdrop: 'static', keyboard: false,focus:false});
+
 					 $.fn.modal.Constructor.prototype._enforceFocus = function() {};
 					 $("#RepairForm").modal("show");
 				 }

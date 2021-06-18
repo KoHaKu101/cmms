@@ -6,8 +6,8 @@
 .modal-ms {
     max-width: 50% !important;
 }
-.text-col{
-  top: 15px;
+body.modal-open {
+    overflow: visible;
 }
 </style>
 

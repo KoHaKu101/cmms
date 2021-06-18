@@ -35,9 +35,7 @@
             </button></a>
         </div>
         <div class="card-body">
-
           <div class="portfolio-content portfolio-1">
-
               <!--portfolio Grid-->
               <div id="js-grid-juicy-projects" class="cbp">
                 <div class="row">
@@ -82,12 +80,9 @@
                     </div>
                     @endforeach
                 </div>
-
                   <!--/portfolio 1-->
-
               </div>
               <!-- /portfolio Grid-->
-
           </div>
         </div>
       </div>

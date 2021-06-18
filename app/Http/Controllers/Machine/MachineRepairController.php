@@ -83,9 +83,10 @@ class MachineRepairController extends Controller
                                             ->orderBy('DOC_MONTH','DESC')
                                             ->orderBy('DOC_NO','DESC')
                                             ->paginate(10);
+    $MACHINE_ICON  = Machine::select('MACHINE_LINE','MACHINE_ICON','UNID')->first();
     $SEARCH = $SERACH_TEXT;
     return View('machine/repair/repairlist',compact('dataset','SEARCH','LINE',
-    'MACHINE_LINE','MONTH','YEAR','DOC_STATUS'));
+    'MACHINE_LINE','MONTH','YEAR','DOC_STATUS','MACHINE_ICON'));
   }
   public function FetchData(Request $request){
     $SEARCH         = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
