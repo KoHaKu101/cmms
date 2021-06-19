@@ -621,17 +621,17 @@ body.modal-open {
 							</div>
 						</div>
             </div>
-            <div class="row my-3">
+            <div class="row">
               <div class="col-md-12 col-lg-10 modal-footer">
-                <div class="col-6 col-sm-10 col-md-6 col-lg-3 ml-auto" >
+                <div class="col-6 col-sm-7 col-md-7 col-lg-8 ml-auto" >
                   <button type="button" class="btn btn-secondary btn-sm btn-link text-left" id="previous_worker" onclick="previous_step(4)">
                     <i class="fas fa-arrow-left fa-2x"></i>
                   </button>
                 </div>
-                <div class="col-6 col-sm-2 col-md-4 col-lg-2  ml-auto " >
-                  <button type="button" class="btn btn-secondary btn-sm  btn-link text-right"
+                <div class="col-6 col-sm-5 col-md-5 col-lg-2  ml-auto " >
+                  <button type="button" class="btn btn-secondary btn-sm  text-right"
                   id="closeform">
-                    <i class="fas fa-clipboard-check fa-2x">ปิดเอกสาร</i>
+                    <i class="fas fa-clipboard-check fa-2x"> ปิดเอกสาร</i>
                   </button>
                 </div>
               </div>
