@@ -605,7 +605,7 @@ body.modal-open {
 												</div>
                         <div class="col-6 col-sm-5 col-md-4 transfer-total">
 													<h5 class="sub">ค่าใช้จ่ายทั้งหมด</h5>
-													<div class="price">600 ฿</div>
+													<div class="price">2600 ฿</div>
 												</div>
                       </div>
 											<div class="separator-solid"></div>
@@ -623,12 +623,12 @@ body.modal-open {
             </div>
             <div class="row">
               <div class="col-md-12 col-lg-10 modal-footer">
-                <div class="col-6 col-sm-7 col-md-7 col-lg-8 ml-auto" >
+                <div class="col-5 col-sm-7 col-md-7 col-lg-8 ml-auto" >
                   <button type="button" class="btn btn-secondary btn-sm btn-link text-left" id="previous_worker" onclick="previous_step(4)">
                     <i class="fas fa-arrow-left fa-2x"></i>
                   </button>
                 </div>
-                <div class="col-6 col-sm-5 col-md-5 col-lg-2  ml-auto " >
+                <div class="col-7 col-sm-5 col-md-5 col-lg-2  ml-auto " >
                   <button type="button" class="btn btn-secondary btn-sm  text-right"
                   id="closeform">
                     <i class="fas fa-clipboard-check fa-2x"> ปิดเอกสาร</i>

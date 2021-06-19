@@ -122,7 +122,9 @@
 														<th> # </th>
 														<th width="150px">รายการ</th>
 														<th >สถานะ</th>
-														<th >action</th>
+														<th class="text-right">แก้ไข</th>
+														<th class="text-right">ลบ</th>
+														<th class="text-right">รายละเอียด</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -138,7 +140,7 @@
 															<td>{{$index+1}}</td>
 															<td>{{$datarow->REPAIR_MAINSELECT_NAME}}</td>
 															<td>{{ $STATUS[$datarow->STATUS] }}</td>
-															<td>
+															<td colspan="3">
 																<button type="button" class="btn btn-secondary btn-sm mx-1 my-1"
 																	onclick="BTN_EDIT(this)"
 																	data-repair_name="{{ $datarow->REPAIR_MAINSELECT_NAME }}"
