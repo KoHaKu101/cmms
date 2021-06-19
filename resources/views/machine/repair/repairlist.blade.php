@@ -160,7 +160,11 @@
 															</div>
 															<div class="row ">
 																<div class="col-md-12 text-center">
-																	<button class="btn  btn-primary  btn-sm">
+																	<button class="btn  btn-primary  btn-sm"
+																	onclick="rec_work(this)"
+																	data-unid="{{ $row->UNID }}"
+																	data-docno="{{ $row->DOC_NO }}"
+																	data-detail="{{ $row->REPAIR_SUBSELECT_NAME }}">
 																		SELECT
 																	</button>
 																</div>
@@ -367,17 +371,6 @@ function loop_tabel_sparepart(unid,total){
 			 }
 		 });
 };
-function input_totals_parepart(unid){
-	Swal.fire({
-			title: 'ใส่จำนวนเบิก',
-			input: 'number',
-		}).then((result) => {
-			if (result.value != "" && result.value != null) {
-				var total = result.value;
-				loop_tabel_sparepart(unid,total);
-			}
-		});
-}
 function styletable(formatnumber){
 
 	if (formatnumber == '1') {
@@ -404,10 +397,13 @@ function styletable(formatnumber){
 					 $('#show_detail').html(data.html_detail);
 					 $('#select_recworker').html(data.html_select);
 					 $('#WORKER_SELECT').html(data.html_select);
-						$('#WORKER_SELECT').select2({
-							width:'100%',
-						});
+					 $('#SPAREPART').html(data.html_sparepart);
+					 $('#SPAREPART','#WORKER_SELECT').select2({
+						 placeholder: "กรุณาเลือก",
+						 width:'100%',
+					 });
 					 $('.select-repairdetail').select2({
+						 placeholder: "กรุณาเลือก",
 						 width:'100%',
 					 });
 					 $('.REC_WORKER_NAME').select2({
@@ -416,9 +412,11 @@ function styletable(formatnumber){
 						});
 					 $('#TITLE_DOCNO').html('เลขที่เอกสาร : '+docno);
 					 $('#RepairForm').modal({backdrop: 'static', keyboard: false,focus:false});
-
 					 $.fn.modal.Constructor.prototype._enforceFocus = function() {};
-					 $("#RepairForm").modal("show");
+					 if (data) {
+						  $("#RepairForm").modal("show");
+					 }
+
 				 }
 			 });
 	}
@@ -464,18 +462,18 @@ function styletable(formatnumber){
 		$('#select_typeworker').attr('hidden',false);
 		$("#previous_worker").attr('onclick','previous_step(1)');
 	}
-	 function type_worker(type_worker){
-			var check_type = type_worker;
-			var url = "{{ route('repair.empcallajax') }}";
-			if (check_type == '1') {
-				 $('#work_in').attr('hidden',false);
-				 $("#previous_worker").attr('onclick','previous_worker()');
-			}else {
-				$('#work_out').attr('hidden',false);
-				$("#previous_worker").attr('onclick','previous_worker()');
-			}
-			 $('#select_typeworker').attr('hidden',true);
+	function type_worker(type_worker){
+		var check_type = type_worker;
+		var url = "{{ route('repair.empcallajax') }}";
+		if (check_type == '1') {
+			 $('#work_in').attr('hidden',false);
+			 $("#previous_worker").attr('onclick','previous_worker()');
+		}else {
+			$('#work_out').attr('hidden',false);
+			$("#previous_worker").attr('onclick','previous_worker()');
 		}
+		 $('#select_typeworker').attr('hidden',true);
+	}
 	 $('#add_worker').on('click',function(event){
 			 event.preventDefault();
 			 var emp_code = $('#WORKER_SELECT').val();
@@ -494,7 +492,6 @@ function styletable(formatnumber){
 		 };
 			 for( var i = 0; i < array_emp_code.length; i++){
 					 if ( array_emp_code[i] == empcode) {
-						 console.log(i);
 							 array_emp_code.splice(i, 1);
 					 }
 			 }
@@ -517,11 +514,18 @@ function styletable(formatnumber){
 		 //1 ตัดสต็อก  2ไม่ตัดสต็อก
 		 $(document).off('focusin.modal');
 		 var unid = $('#SPAREPART').val();
-	   input_totals_parepart(unid);
+		 var total = $('#TOTAL_SPAREPART').val();
+	   loop_tabel_sparepart(unid,total);
 	 };
 	 function edittotal(thisdata){
+
 		 var unid = $(thisdata).data('unid');
-		 input_totals_parepart(unid);
+		 $('#SPAREPART').val(unid);
+	   $('#SPAREPART').select2({
+			 width:'100%',
+		 }).trigger('change');
+		 console.log(sparepart_total);
+		 // input_totals_parepart(unid);
 	 }
 	 function removesparepart(thisdata){
 		 var unid = $(thisdata).data('unid');

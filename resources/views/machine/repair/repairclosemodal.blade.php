@@ -185,11 +185,6 @@ body.modal-open {
             </div>
             <div class="row my-3">
               <div class="col-md-12 col-lg-10 modal-footer">
-                {{-- <div class="col-9 col-sm-3 col-lg-3 mr-auto ml-auto" >
-    							<button type="button" class="btn btn-secondary btn-sm btn-link text-left">
-                    <i class="fas fa-times fa-2x"></i>
-                  </button>
-    						</div> --}}
                 <div class="text-right" >
     							<button type="button" class="btn btn-secondary btn-sm  btn-link text-right"
                   onclick="nextstep(2)">
@@ -198,7 +193,6 @@ body.modal-open {
     						</div>
               </div>
             </div>
-
           </div>
           <div class="tab-pane " id="WORK_STEP_2">
             <div class="form-group" id="select_typeworker">
@@ -298,18 +292,14 @@ body.modal-open {
                 </div>
                 <div class="col-6 col-sm-5 col-md-6 col-lg-4 mr-auto">
                   <label> ค่าบริการ </label>
-                  {{-- <div class="form-inline"> --}}
-                    <div class="input-group form-inline">
-                      <input type="number" class="form-control form-control-sm col-md-5"
-                      min="0" value="0" step=".01">
-                      <div class="input-group-append">
-                        <span class="input-group-text">บาท</span>
-                      </div>
-                      <button type="button" class="btn btn-primary btn-sm mx-2"><i class="fas fa-plus"> เพิ่ม</i></button>
-
+                  <div class="input-group form-inline">
+                    <input type="number" class="form-control form-control-sm col-md-5"
+                    min="0" value="0" step=".01">
+                    <div class="input-group-append">
+                      <span class="input-group-text">บาท</span>
                     </div>
-                  {{-- </div> --}}
-
+                    <button type="button" class="btn btn-primary btn-sm mx-2"><i class="fas fa-plus"> เพิ่ม</i></button>
+                  </div>
                 </div>
               </div>
               <div class="row">
@@ -317,20 +307,34 @@ body.modal-open {
                   <table class="table table-bordered table-head-bg-info table-bordered-bd-info mt-4">
 										<thead>
 											<tr>
-												<th scope="col">#</th>
-												<th scope="col">ชื่อ บริษัท/บุคคล</th>
-												<th scope="col">ค่าบริการ</th>
+												<th >#</th>
+												<th >ชื่อ บริษัท/บุคคล</th>
+												<th >ค่าบริการ</th>
 											</tr>
 										</thead>
 										<tbody>
 											<tr>
 												<td>1</td>
-												<td>Machinery Imporium (1995) co., ltd.</td>
+												<td style="height: 50px;" >Machinery Imporium (1995) co., ltd.
+                          <div class="row">
+                            <div class="col-md-12">
+                              <label>วิธีการแก้ไข</label>
+                              <textarea class="form-control mt--1 mb-1"></textarea>
+                            </div>
+                          </div>
+                        </td>
 												<td>1000 บาท</td>
 											</tr>
 											<tr>
 												<td>2</td>
-												<td>Machinery Imporium (1995) co., ltd.</td>
+												<td style="height: 50px;">Machinery Imporium (1995) co., ltd.
+                          <div class="row">
+                            <div class="col-md-12">
+                              <label>วิธีการแก้ไข</label>
+                              <textarea class="form-control mt--1 mb-1"></textarea>
+                            </div>
+                          </div>
+                        </td>
 												<td>2100 บาท</td>
 											</tr>
 
@@ -338,87 +342,46 @@ body.modal-open {
 									</table>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-12 col-sm-10 col-md-12 col-lg-8 ml-auto mr-auto">
-                  <label>วิธีการแก้ไข</label>
-                  <textarea class="form-control"></textarea>
-                </div>
-              </div>
             </div>
             <div class="row my-3">
-              <div class="col-5 col-sm-4 col-lg-3 ml-auto" >
-  							<div class="card text-white">
-  								<div class="d-flex align-items-center bg-danger" style="cursor:pointer" id="previous_worker" onclick="previous_step(1)">
-  									<span class="stamp stamp-md bg-danger">
-  										<i class="fas fa-arrow-alt-circle-left"></i>
-  									</span>
-  									<div>
-  										<h5 class="mb-1 my-1"><b> ย้อนกลับ </b></h5>
-  									</div>
-  								</div>
-  							</div>
-  						</div>
-              <div class="col-5 col-sm-4 col-lg-3 mr-auto" >
-  							<div class="card text-white" >
-  								<div class="d-flex flex-row-reverse align-items-center  bg-primary" style="cursor:pointer"  onclick="nextstep(3)">
-  									<span class="stamp stamp-md  bg-primary ">
-  										<i class="fas fa-arrow-alt-circle-right"></i>
-  									</span>
-  									<div>
-  										<h5 class="mb-1 my-1"><b> ไปต่อ </b></h5>
-  									</div>
-  								</div>
-  							</div>
-  						</div>
+              <div class="col-md-12 col-lg-10 modal-footer">
+                <div class="col-9 col-sm-10 col-md-6 col-lg-3 ml-auto" >
+                  <button type="button" class="btn btn-secondary btn-sm btn-link text-left" id="previous_worker" onclick="previous_step(1)">
+                    <i class="fas fa-arrow-left fa-2x"></i>
+                  </button>
+                </div>
+                <div class="col-3 col-sm-2 col-md-4 col-lg-2  ml-auto " >
+                  <button type="button" class="btn btn-secondary btn-sm  btn-link text-right"
+                  onclick="nextstep(3)">
+                    <i class="fas fa-arrow-right fa-2x"></i>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
           <div class="tab-pane" id="WORK_STEP_3">
-
               <div class="form-group">
                 <div class="row">
-                <div class="col-12 col-md-12 col-lg-8 form-inline">
+                <div class="col-12 col-md-12 col-lg-6 form-inline has-error">
                   <label>เพิ่มอะไหล่</label>
-                  <div class="col-9 col-md-10 col-lg-8">
+                  <div class="col-9 col-md-10 col-lg-9">
                     <select class="form-control form-control-sm col-9 REC_WORKER_NAME" id="SPAREPART" name="SPAREPART">
-                      <option value> กรุณาเลือก </option>
-                      {{-- @foreach ($DATA_SPAREPART as $index => $row)
-                          <option value="{{ $row->UNID }}" id="{{ $row->UNID }}"
-                            data-sparepartcode="{{$row->SPAREPART_CODE}}"
-                            data-sparepartname="{{$row->SPAREPART_NAME}}"
-                            data-sparepartsize="{{$row->SPAREPART_SIZE}}"
-                            data-sparepartmodel="{{$row->SPAREPART_MODEL}}"
-                            >{{ $row->SPAREPART_CODE. ' : '. $row->SPAREPART_NAME }}</option>
-                      @endforeach --}}
                     </select>
+
                   </div>
                 </div>
-                <div class="col-4 col-md-4 col-lg-2 my-2 ml-auto mr-auto">
-                  <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="add_sparepart(1)">
-                    <i class="fas fa-plus mr-2"></i>ตัดสต็อก</button>
+                <div class="col-4 col-md-4 col-lg-3 my-2 form-inline has-error">
+                  <label>จำนวนเบิก</label>
+                  <input type="number" class="form-control form-control-sm col-md-5 mx-1" id="TOTAL_SPAREPART" min="0" value="1">
                 </div>
-                <div class="col-5 col-md-4 col-lg-2 my-2 ml-auto mr-auto">
-                  <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="add_sparepart(2)">
-                    <i class="fas fa-plus mr-2"></i>เปลี่ยนอะไหล่</button>
+                <div class="col-4 col-md-4 col-lg-3 my-2  form-inline">
+                  <button type="button" class="btn btn-secondary btn-sm mx-1" onclick="add_sparepart(1)">
+                    ตัดสต็อก</button>
+                  <button type="button" class="btn btn-secondary btn-sm mx-1" onclick="add_sparepart(2)">
+                    ไม่ตัดสต็อก</button>
                 </div>
               </div>
-
             </div>
-            {{-- <div class="row">
-              <div class="col-6 col-md-6 col-lg-3 my-2">
-                  <input type="text" class="form-control-sm form-control-plaintext bg-info text-white " id="SPAREPART_CODE" readonly value="รหัส :">
-              </div>
-              <div class="col-6 col-md-6 col-lg-3 my-2">
-                <input type="text" class="form-control-sm form-control-plaintext bg-info text-white " id="SPAREPART_NAME" readonly value="ชื่อ :">
-              </div>
-              <div class="col-4 col-md-4 col-lg-2 my-2">
-                <input type="text" class="form-control-sm form-control-plaintext bg-info text-white " id="SPAREPART_SIZE" readonly value="เบอร์ :">
-              </div>
-              <div class="col-4 col-md-4 col-lg-2 my-2">
-                <input type="text" class="form-control-sm form-control-plaintext bg-info text-white " id="SPAREPARTM_ODEL" readonly value="ขนาด :">
-              </div>
-
-
-            </div> --}}
             <div class="form-group mt--4">
               <div class="row sparepart-table-responsive">
                 <table class="table sparepart-table table-bordered table-head-bg-info table-bordered-bd-info mt-2">
@@ -434,78 +397,26 @@ body.modal-open {
                     </tr>
                   </thead>
                   <tbody id="table_sparepart">
-
                   </tbody>
                 </table>
               </div>
             </div>
             <div class="row my-3">
-              <div class="col-5 col-sm-4 col-lg-3 ml-auto" >
-  							<div class="card text-white">
-  								<div class="d-flex align-items-center bg-danger" style="cursor:pointer"  onclick="previous_step(2)">
-  									<span class="stamp stamp-md bg-danger">
-  										<i class="fas fa-arrow-alt-circle-left"></i>
-  									</span>
-  									<div>
-  										<h5 class="mb-1 my-1"><b> ย้อนกลับ </b></h5>
-  									</div>
-  								</div>
-  							</div>
-  						</div>
-              <div class="col-5 col-sm-4 col-lg-3 mr-auto" >
-  							<div class="card text-white" >
-  								<div class="d-flex flex-row-reverse align-items-center  bg-primary" style="cursor:pointer"  onclick="nextstep(4)">
-  									<span class="stamp stamp-md  bg-primary ">
-  										<i class="fas fa-arrow-alt-circle-right"></i>
-  									</span>
-  									<div>
-  										<h5 class="mb-1 my-1"><b> ไปต่อ </b></h5>
-  									</div>
-  								</div>
-  							</div>
-  						</div>
-            </div>
-            {{-- <div class="form-group">
-              <div class="row">
-                <div class="col-12 col-md-6 col-lg-4  ml-auto " id="buypart" hidden>
-                  <div class="card card-stats card-warning card-round">
-                    <div class="card-body" style="cursor: pointer;" onclick="buypart()">
-                      <div class="row">
-                        <div class="col-5">
-                          <div class="icon-big text-center">
-                            <i class="fas fa-clipboard-check"></i>
-                          </div>
-                        </div>
-                        <div class="col-7 col-stats">
-                          <div class="numbers">
-                            <h4 class="card-title text-center">สั่งซื้อ</h4>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+              <div class="col-md-12 col-lg-10 modal-footer">
+                <div class="col-9 col-sm-10 col-md-6 col-lg-3 ml-auto" >
+                  <button type="button" class="btn btn-secondary btn-sm btn-link text-left"
+                    onclick="previous_step(2)">
+                    <i class="fas fa-arrow-left fa-2x"></i>
+                  </button>
                 </div>
-
-                <div class="col-12 col-md-6 col-lg-4 ml-auto mr-auto">
-                  <div class="card card-stats card-primary card-round">
-                    <div class="card-body" style="cursor: pointer;" onclick="step_final()">
-                      <div class="row">
-                        <div class="col-5">
-                          <div class="icon-big text-center">
-                            <i class="fas fa-clipboard-check"></i>
-                          </div>
-                        </div>
-                        <div class="col-7 col-stats">
-                          <div class="numbers">
-                            <h4 class="card-title text-center">ปิดเอกสาร</h4>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <div class="col-3 col-sm-2 col-md-4 col-lg-2  ml-auto " >
+                  <button type="button" class="btn btn-secondary btn-sm  btn-link text-right"
+                  onclick="nextstep(4)">
+                    <i class="fas fa-arrow-right fa-2x"></i>
+                  </button>
                 </div>
               </div>
-            </div> --}}
+            </div>
           </div>
           <div class="tab-pane" id="WORK_STEP3_WAITPART">
             <div class="form-group">

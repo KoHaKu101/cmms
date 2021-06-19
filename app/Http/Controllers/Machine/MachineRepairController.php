@@ -83,7 +83,6 @@ class MachineRepairController extends Controller
                                             ->orderBy('DOC_MONTH','DESC')
                                             ->orderBy('DOC_NO','DESC')
                                             ->paginate(10);
-
     $SEARCH = $SERACH_TEXT;
     return View('machine/repair/repairlist',compact('dataset','SEARCH','LINE',
     'MACHINE_LINE','MONTH','YEAR','DOC_STATUS'));
@@ -323,22 +322,36 @@ class MachineRepairController extends Controller
               return Redirect()->back();
           }
   public function EMPCallAjax(Request $request){
-
     $REPAIR_REQ_UNID = isset($request->REPAIR_REQ_UNID) ? $request->REPAIR_REQ_UNID : '';
-    $DATA_EMPNAME = EMPName::select('*')->selectraw("dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH")->where('EMP_STATUS','=','9')->get();
+    $DATA_EMPNAME = EMPName::select('*')->selectraw("dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH")
+                                        ->where('EMP_STATUS','=','9')->get();
+    $DATA_SPAREPART = SparePart::where('STATUS','=','9')->get();
+    //*************************** select worker *******************************************//
     $html_select = '<select class="form-control form-control-sm col-9 REC_WORKER_NAME" id="REC_WORKER_NAME" name="REC_WORKER_NAME">
-      <option value> กรุณาเลือก </option>';
-      foreach ($DATA_EMPNAME as $index => $row){
-        $html_select.= '<option value="'.$row->EMP_CODE.'">'.$row->EMP_CODE." ".$row->EMP_NAME_TH.'</option>';
-      }
+                      <option value> กรุณาเลือก </option>';
+                      foreach ($DATA_EMPNAME as $index => $row){
+                        $html_select.= '<option value="'.$row->EMP_CODE.'">'.$row->EMP_CODE." ".$row->EMP_NAME_TH.'</option>';
+                      }
     $html_select.='</select>';
+    //*************************** select sparepart **************************************//
+    $html_sparepart = '<select class="form-control form-control-sm col-9 REC_WORKER_NAME" id="REC_WORKER_NAME" name="REC_WORKER_NAME">
+      <option value> กรุณาเลือก </option>';
+      foreach ($DATA_SPAREPART as $index => $row_sparepart){
+        $html_sparepart.= '<option value="'. $row_sparepart->UNID .'" id="'. $row_sparepart->UNID .'"
+                            data-sparepartcode="'.$row_sparepart->SPAREPART_CODE.'"
+                            data-sparepartname="'.$row_sparepart->SPAREPART_NAME.'"
+                            data-sparepartsize="'.$row_sparepart->SPAREPART_SIZE.'"
+                            data-sparepartmodel="'.$row_sparepart->SPAREPART_MODEL.'"
+                            >'.$row_sparepart->SPAREPART_CODE. ' : '. $row_sparepart->SPAREPART_NAME.'</option>';
+      }
+    $html_sparepart.='</select>';
+    //*********************************** table ของรายละเอียด ****************************************/
     $html_detail = "";
     if ($REPAIR_REQ_UNID != '') {
       $REPAIR = MachineRepairREQ::select('*')->selectraw("dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH")
                                                   ->where('UNID','=',$REPAIR_REQ_UNID)->first();
       $DATA_SELECMAIN = SelectMainRepair::where('STATUS','=','9')->get();
       $DATA_SELECSUB = SelectSubRepair::where('STATUS','=','9')->get();
-
       $PRIORITY_TEXT = $REPAIR->PRIORITY == '9' ? 'เร่งด่วน' : 'ไม่เร่งด่วน' ;
       $html_detail.= '<table class="table table-bordered table-bordered-bd-info">
         <tbody>
@@ -355,16 +368,16 @@ class MachineRepairController extends Controller
           <tr>
             <td style="background:#aab7c1;color:black;"><h5 class="my-1">อาการ</h5>  </td>
             <td  colspan="3">
-              <select class="select-repairdetail" id="DETAIL_REPAIR">';
+              <select class="select-repairdetail my-1" id="DETAIL_REPAIR">';
               foreach ($DATA_SELECMAIN as $index => $row_main){
-          $html_detail.='<optgroup label="'.$row_main->REPAIR_MAINSELECT_NAME.'">';
-                foreach ($DATA_SELECSUB->where('REPAIR_MAINSELECT_UNID','=',$row_main->UNID) as $index => $row_sub){
-                  $SELECTED = $row_sub->UNID == $REPAIR->REPAIR_SUBSELECT_UNID ? 'selected' : '' ;
-                  $html_detail.= '<option value="'.$row_sub->REPAIR_SUBSELECT_NAME.'" '.$SELECTED.'>'.$row_sub->REPAIR_SUBSELECT_NAME.'</option>';
-                }
-          $html_detail.='</optgroup>';
-              }
-          $html_detail.='</select>
+              $html_detail.='<optgroup label="'.$row_main->REPAIR_MAINSELECT_NAME.'">';
+                    foreach ($DATA_SELECSUB->where('REPAIR_MAINSELECT_UNID','=',$row_main->UNID) as $index => $row_sub){
+                      $SELECTED = $row_sub->UNID == $REPAIR->REPAIR_SUBSELECT_UNID ? 'selected' : '' ;
+                      $html_detail.= '<option value="'.$row_sub->REPAIR_SUBSELECT_NAME.'" '.$SELECTED.'>'.$row_sub->REPAIR_SUBSELECT_NAME.'</option>';
+                    }
+              $html_detail.='</optgroup>';
+                  }
+              $html_detail.='</select>
             </td>
           </tr>
           <tr>
@@ -374,10 +387,7 @@ class MachineRepairController extends Controller
         </tbody>
       </table>';
     }
-
-
-
-    return Response()->json(['html_detail'=>$html_detail,'html_select' => $html_select]);
+    return Response()->json(['html_detail'=>$html_detail,'html_select' => $html_select,'html_sparepart' => $html_sparepart]);
   }
   public function SelectRepairDetail(Request $request){
     $UNID = $request->UNID;
