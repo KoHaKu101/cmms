@@ -518,14 +518,13 @@ function styletable(formatnumber){
 	   loop_tabel_sparepart(unid,total);
 	 };
 	 function edittotal(thisdata){
-
 		 var unid = $(thisdata).data('unid');
 		 $('#SPAREPART').val(unid);
 	   $('#SPAREPART').select2({
 			 width:'100%',
 		 }).trigger('change');
-		 console.log(sparepart_total);
-		 // input_totals_parepart(unid);
+		 var total = sparepart_total[unid];
+		 $('#TOTAL_SPAREPART').val(total);
 	 }
 	 function removesparepart(thisdata){
 		 var unid = $(thisdata).data('unid');
@@ -536,6 +535,15 @@ function styletable(formatnumber){
 		 }
 		 loop_tabel_sparepart(unid);
 	 }
+	 $('#addbuy_sparepart').on('click',function(){
+		  var check = $('#addbuy_sparepart').val();
+			$('#buy_sparepart').attr('hidden',false);
+			$('#addbuy_sparepart').val('2');
+			if (check == '2') {
+				$('#addbuy_sparepart').val('1');
+				$('#buy_sparepart').attr('hidden',true);
+			}
+	 });
 
 
  function btn_closeform(){

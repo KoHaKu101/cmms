@@ -360,14 +360,13 @@ body.modal-open {
             </div>
           </div>
           <div class="tab-pane" id="WORK_STEP_3">
-              <div class="form-group">
-                <div class="row">
+            <div class="form-group">
+              <div class="row">
                 <div class="col-12 col-md-12 col-lg-6 form-inline has-error">
                   <label>เพิ่มอะไหล่</label>
                   <div class="col-9 col-md-10 col-lg-9">
                     <select class="form-control form-control-sm col-9 REC_WORKER_NAME" id="SPAREPART" name="SPAREPART">
                     </select>
-
                   </div>
                 </div>
                 <div class="col-4 col-md-4 col-lg-3 my-2 form-inline has-error">
@@ -397,30 +396,20 @@ body.modal-open {
                     </tr>
                   </thead>
                   <tbody id="table_sparepart">
+                    <td colspan="7"></td>
                   </tbody>
                 </table>
               </div>
-            </div>
-            <div class="row my-3">
-              <div class="col-md-12 col-lg-10 modal-footer">
-                <div class="col-9 col-sm-10 col-md-6 col-lg-3 ml-auto" >
-                  <button type="button" class="btn btn-secondary btn-sm btn-link text-left"
-                    onclick="previous_step(2)">
-                    <i class="fas fa-arrow-left fa-2x"></i>
-                  </button>
-                </div>
-                <div class="col-3 col-sm-2 col-md-4 col-lg-2  ml-auto " >
-                  <button type="button" class="btn btn-secondary btn-sm  btn-link text-right"
-                  onclick="nextstep(4)">
-                    <i class="fas fa-arrow-right fa-2x"></i>
-                  </button>
+              <div class="row">
+                <div class="col-md-2">
+                  <button type="button" class="btn btn-primary btn-sm" id="addbuy_sparepart"
+                  value="1"
+                  ><i class="fas fa-dollar-sign mr-1"></i>สั่งอะไหล่</button>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="tab-pane" id="WORK_STEP3_WAITPART">
-            <div class="form-group">
-              <div class="row">
+            <div id="buy_sparepart" hidden>
+              <div class="row has-error" >
                 <div class="col-6 col-sm-10 col-md-4 ml-auto">
                   <label>วันที่สั่งซื้อ</label>
                   <input type="date" class="form-control form-control-sm " value="{{ date('Y-m-d') }}">
@@ -440,98 +429,25 @@ body.modal-open {
                   <input type="time" class="form-control form-control-sm " >
                 </div>
               </div>
-              <div class="row">
-                <table class="table table-bordered table-head-bg-info table-bordered-bd-info mt-4">
-                  <thead>
-                    <tr>
-                      <th scope="col">action</th>
-                      <th scope="col">อะไหล่</th>
-                      <th scope="col">เบอร์</th>
-                      <th scope="col">สต็อก</th>
-                      <th scope="col">เบิก</th>
-                      <th scope="col">คงเหลือ</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <button type="button" class="btn btn-secondary btn-sm btn-block my-1" onclick="withdraw(this)"
-                        data-unid="1">เบิก</button>
-                      </td>
-                      <td>สายพาน</td>
-                      <td>8</td>
-                      <td>10</td>
-                      <td>1</td>
-                      <td>9</td>
-                    </tr>
-                    <tr class="bg-danger text-white">
-                      <td>
-                        <button type="button" class="btn btn-secondary btn-sm btn-block my-1" onclick="withdraw(this)"
-                        data-unid="2">เบิก</button>
-                      </td>
-                      <td>น้ำมันคูแล่น</td>
-                      <td>8</td>
-                      <td>0</td>
-                      <td>1</td>
-                      <td>0</td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <button type="button" class="btn btn-secondary btn-sm btn-block my-1" onclick="withdraw(this)"
-                        data-unid="3">เบิก</button>
-                      </td>
-                      <td>มอนิเตอร์</td>
-                      <td></td>
-                      <td>2</td>
-                      <td>1</td>
-                      <td>1</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
             </div>
-            <div class="form-group">
-              <div class="row ">
-                <div class="col-12 col-md-5 col-lg-4  ml-auto ">
-                  <div class="card card-stats card-primary card-round">
-                    <div class="card-body" style="cursor: pointer;" data-dismiss="modal" >
-                      <div class="row">
-                        <div class="col-5">
-                          <div class="icon-big text-center">
-                            <i class="fas fa-clipboard-check"></i>
-                          </div>
-                        </div>
-                        <div class="col-7 col-stats">
-                          <div class="numbers">
-                            <h4 class="card-title text-center">รอดำเนินการ</h4>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+            <div class="row my-3">
+              <div class="col-md-12 col-lg-10 modal-footer">
+                <div class="col-9 col-sm-10 col-md-6 col-lg-3 ml-auto" >
+                  <button type="button" class="btn btn-secondary btn-sm btn-link text-left"
+                    onclick="previous_step(2)">
+                    <i class="fas fa-arrow-left fa-2x"></i>
+                  </button>
                 </div>
-                <div class="col-12 col-md-6 col-lg-4  mr-auto">
-                  <div class="card card-stats card-primary card-round">
-                    <div class="card-body" style="cursor: pointer;" onclick="step_final()">
-                      <div class="row">
-                        <div class="col-5">
-                          <div class="icon-big text-center">
-                            <i class="fas fa-clipboard-check"></i>
-                          </div>
-                        </div>
-                        <div class="col-7 col-stats">
-                          <div class="numbers">
-                            <h4 class="card-title text-center">ปิดเอกสาร</h4>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <div class="col-3 col-sm-2 col-md-4 col-lg-2  ml-auto " >
+                  <button type="button" class="btn btn-secondary btn-sm  btn-link text-right"
+                  onclick="nextstep(4)">
+                    <i class="fas fa-arrow-right fa-2x"></i>
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-          <div class="tab-pane" id="WORK_FINAL">
+          <div class="tab-pane has-error" id="WORK_STEP_4">
             <div class="row">
               <div class="col-6 col-sm-10 col-md-4 ml-auto">
                 <label>วันที่เริ่มซ่อม</label>
@@ -557,91 +473,148 @@ body.modal-open {
                 <label>วิธีการแก้ไข</label>
                 <textarea class="form-control"></textarea>
               </div>
-
             </div>
-            <div class="form-group my-4">
-              <div class="row ">
-                <div class="col-8 col-md-5 col-lg-4  ml-auto mr-auto">
-                  <div class="card card-stats card-primary card-round">
-                    <div class="card-body" style="cursor: pointer;" onclick="step_result()">
-                      <div class="row">
-                        <div class="col-5">
-                          <div class="icon-big text-center">
-                            <i class="fas fa-clipboard-check"></i>
-                          </div>
-                        </div>
-                        <div class="col-7 col-stats">
-                          <div class="numbers">
-                            <h4 class="card-title text-center">สรุปผล</h4>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+            <div class="row my-3">
+              <div class="col-md-12 col-lg-10 modal-footer">
+                <div class="col-9 col-sm-10 col-md-6 col-lg-3 ml-auto" >
+                  <button type="button" class="btn btn-secondary btn-sm btn-link text-left" id="previous_worker" onclick="previous_step(3)">
+                    <i class="fas fa-arrow-left fa-2x"></i>
+                  </button>
+                </div>
+                <div class="col-3 col-sm-2 col-md-4 col-lg-2  ml-auto " >
+                  <button type="button" class="btn btn-secondary btn-sm  btn-link text-right"
+                  onclick="nextstep(5)">
+                    <i class="fas fa-arrow-right fa-2x"></i>
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-          <div class="tab-pane" id="WORK_RESULT">
-            <div class="table-responsive">
-              <table class="table-step table table-bordered table-head-bg-info table-bordered-bd-info mt-4">
-  							<thead>
-  								<tr>
-  									<th>รายการ</th>
-  									<th>เริ่มวันที่</th>
-  									<th>เสร็จวันที่</th>
-                    <th>เริ่มเวลา</th>
-  									<th>เสร็จเวลา</th>
-  									<th>สรุประยะเวลา</th>
-  								</tr>
-  							</thead>
-  							<tbody>
-  								<tr>
-  									<td>ตรวจสอบเบื้องต้น</td>
-  									<td>{{date('d-m-',strtotime('08-06-2021')).date('y')+43}}</td>
-  									<td>{{date('d-m-',strtotime('08-06-2021')).date('y')+43}}</td>
-                    <td>08:30</td>
-  									<td>09:00</td>
-  									<td>0 วัน 0 ชั่วโมง 30 นาที</td>
-  								</tr>
-  								<tr>
-  									<td>ช่างซ่อมภายนอก</td>
-                    <td>-</td>
-  									<td>-</td>
-                    <td>-</td>
-  									<td>-</td>
-  									<td>0 วัน 0 ชั่วโมง 0 นาที</td>
-  								</tr>
-  								<tr>
-  									<td>สั่งอะไหล่</td>
-                    <td>-</td>
-  									<td>-</td>
-                    <td>-</td>
-  									<td>-</td>
-  									<td>0 วัน 0 ชั่วโมง 0 นาที</td>
-  								</tr>
-                  <tr>
-  									<td>ดำเนินการซ่อม</td>
-                    <td>{{date('d-m-',strtotime('08-06-2021')).date('y')+43}}</td>
-  									<td>{{date('d-m-',strtotime('08-06-2021')).date('y')+43}}</td>
-                    <td>9:00</td>
-  									<td>10:00</td>
-  									<td>0 วัน 1 ชั่วโมง 0 นาที</td>
-  								</tr>
-                  <tr>
-  									<td colspan="5" class="bg-primary text-white text-center">ผลรวม</td>
-                    <td>0 วัน 1 ชั่วโมง 30 นาท</td>
-  								</tr>
-  							</tbody>
-  						</table>
+          <div class="tab-pane" id="WORK_STEP_5">
+            <div class="row">
+              <div class="col-12 col-lg-10 ml-auto mr-auto" >
+							<div class="page-divider"></div>
+							<div class="row">
+								<div class="col-md-12">
+									<div class="card card-invoice" style="border: groove;">
+                    <div class="card-header">
+                      <div class="invoice-header form-inline">
+                        <h3 class="invoice-title">
+                          MC-001
+                        </h3>
+                        {{-- <div class="invoice-logo form-inline">
+                          <img src="http://www.cmms.com/assets/img/logo13.jpg" alt="company logo" width="50px"><h4 class="mx-2">P Quality Machine Parts</h4>
+                        </div> --}}
+                      </div>
+                      <div class="form-inline">
+                        <div class="invoice-desc my-2">ผู้รับงาน : สุบรรณ์</div>
+                        {{-- <div class="invoice-desc text-right my-2">188/8 หมู่ 1 ถ.เทพารักษ์ ต.บางเสาธง
+                          <br>อ.บางเสาธง จ.สมุทรปราการ 10540</div> --}}
+                      </div>
+                    </div>
+										<div class="card-body">
+											<div class="row">
+												<div class="col-md-4 info-invoice">
+													<h5 class="sub">วันที่แจ้ง</h5>
+													<p>{{date('d-m-Y')}}</p>
+												</div>
+												<div class="col-md-4 info-invoice">
+													<h5 class="sub">วันที่ซ่อมเสร็จ</h5>
+													<p>{{date('d-m-Y',strtotime('2021/06/20'))}}</p>
+												</div>
+												<div class="col-md-4 info-invoice">
+													<h5 class="sub">ระยะเวลา DownTime</h5>
+														<p>{{date_diff(date_create(date('d-m-Y')),date_create(date('d-m-Y',strtotime('2021/06/20'))))->format('%d วัน %h ชั่วโมง %i นาที')}}</p>
+												</div>
+											</div>
+											<div class="row">
+												<div class="col-md-12">
+													<div class="invoice-detail">
+														<div class="invoice-top">
+															<h3 class="title"><strong>รายการอะไหล่</strong></h3>
+														</div>
+														<div class="invoice-item">
+															<div class="table-responsive">
+																<table class="table table-striped">
+																	<thead>
+																		<tr>
+																			<td><strong>รหัส</strong></td>
+																			<td class="text-center"><strong>ชื่อ</strong></td>
+																			<td class="text-center"><strong>จำนวน</strong></td>
+																			<td class="text-right"><strong>ราคา</strong></td>
+																		</tr>
+																	</thead>
+																	<tbody>
+																		<tr>
+																			<td>BS-200</td>
+																			<td class="text-right">สายพาน</td>
+																			<td class="text-center">1</td>
+																			<td class="text-right">200 ฿</td>
+																		</tr>
+																		<tr>
+																			<td>BS-400</td>
+																			<td class="text-right">belling</td>
+																			<td class="text-center">3</td>
+																			<td class="text-right">200 ฿</td>
+																		</tr>
+																		<tr>
+																			<td>BS-1000</td>
+																			<td class="text-right">-</td>
+																			<td class="text-center">1</td>
+																			<td class="text-right">200 ฿</td>
+																		</tr>
+																		<tr>
+																			<td></td>
+																			<td></td>
+																			<td class="text-center"><strong>รวม</strong></td>
+																			<td class="text-right">600 ฿</td>
+																		</tr>
+																	</tbody>
+																</table>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+                    <style>
+                    .card-invoice .transfer-total .price {
+                          font-size: 28px;
+                          color: #1572E8;
+                          padding: 7px 0;
+                          font-weight: 600;
+                      }
+                    </style>
+										<div class="card-footer">
+                      <div class="row">
+												<div class="col-sm-7 col-md-5 mb-3 mb-md-0 transfer-to">
+													<h5 class="sub">ค่าบริการช่างภายนอก</h5>
+												</div>
+												<div class="col-sm-5 col-md-7 transfer-total">
+													<h5 class="sub">2,000 ฿</h5>
+												</div>
+											</div>
+                      <div class="row">
+                        <div class="col-sm-7 col-md-8 mb-3 mb-md-0 transfer-to">
+												</div>
+                        <div class="col-sm-5 col-md-4 transfer-total">
+													<h5 class="sub">ค่าใช้จ่ายทั้งหมด</h5>
+													<div class="price">600 ฿</div>
+												</div>
+                      </div>
+											<div class="separator-solid"></div>
+                      <h6 class="text-uppercase mt-4 mb-3 fw-bold">
+												การแก้ไข
+											</h6>
+											<p class="text-muted mb-0">
+												We really appreciate your business and if there's anything else we can do, please let us know! Also, should you need us to add VAT or anything else to this order, it's super easy since this is a template, so just ask!
+											</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
             </div>
-            <div class="row my-4">
-              <div class="col-12 col-sm-12 col-md-12 ml-auto mr-auto">
-                <label>วิธีการแก้ไข</label>
-                <textarea class="form-control">เช็คระบบน้ำมันหล่อลื่นแกน x</textarea>
-              </div>
-            </div>
-            <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">Save</button>
           </div>
         </div>
       </div>
