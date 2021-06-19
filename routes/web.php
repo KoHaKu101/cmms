@@ -146,6 +146,7 @@ Route::get('machine/personal/personallist'   ,[PersonalController::class,'Index'
 Route::get('machine/daily/list'                     ,[DailyCheckController::class,'DailyList'])  ->name('daily.list');
   Route::post('machine/daily/uploadimg'               ,[DailyCheckController::class,'CheckSheetUpload']) ->name('daily.upload');
   Route::get('machine/daily/deleteimg/{UNID?}'         ,[DailyCheckController::class,'DeleteImg']) ->name('daily.delete');
+  Route::get('machine/daily/view/{UNID}'            ,[DailyCheckController::class,'View']) ->name('daily.view');
 //***************************** tabledata ****************************************
 //machinetypetable
 Route::get('machine/machinetypetable/list'      ,[MachineTypeTableController::class,'Index'])  ->name('machinetypetable.list');

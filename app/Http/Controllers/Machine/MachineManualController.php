@@ -73,7 +73,7 @@ class MachineManualController extends Controller
       'FILE_UPLOAD' => 'mimes:pdf',
       ],
       [
-      'FILE_UPLOAD.mimes'   => 'เฉพาะไฟล์ jpeg, png, jpg',
+      'FILE_UPLOAD.mimes'   => 'เฉพาะไฟล์ pdf',
       ]);
     $TOPIC_NAME = $request->TOPIC_NAME;
     $DATA_MACHINE = Machine::where('UNID','=',$request->MACHINE_UNID)->first();
