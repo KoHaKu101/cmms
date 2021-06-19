@@ -189,6 +189,8 @@ class MachineRepairController extends Controller
   }
   public function Store(Request $request,$MACHINE_UNID){
       //******************* Request parameter *******************//
+      MachineRepairREQ::select('*')->delete();
+
             //Get the highest "id" in the table + 1
       $CLOSE_STATUS = '9';
         $MACHINE_UNID = $MACHINE_UNID;
@@ -201,16 +203,16 @@ class MachineRepairController extends Controller
       $DATA_MACHINE = Machine::where('UNID','=',$MACHINE_UNID)->first();
         $DATA_SELECTMACHINEREPAIR = SelectMainRepair::where('UNID','=',$SELECT_MAIN_REPAIR_UNID)->first();
         $DATA_SELECTSUBREPAIR = SelectSubRepair::where('UNID','=',$SELECT_SUB_REPAIR_UNID)->first();
+
         $DATA_EMP = MachineEMP::where('EMP_CODE','=',$EMP_CODE)->where('REF_UNID','=',$MACHINE_UNID)->first();
       //******************* docno *******************//
       $DATA_MACHINEREPAIRREQ = MachineRepairREQ::selectraw('max(DOC_NO)DOC_NO,max(DOC_DATE)DOC_DATE')->first();
       $DATE_DOCNO            = Carbon::now()->addyears('543');
       $DATE_RESET_DOCNO      = Carbon::parse($DATA_MACHINEREPAIRREQ->DOC_DATE);
       $DOC_NO = 'RE' . $DATE_DOCNO->format('ym') . sprintf('-%04d', 1);
-      dd($DATE_RESET_DOCNO->format('Y-m') == Carbon::now()->format('Y-m'),$DATE_RESET_DOCNO->format('Y-m'),Carbon::now()->format('Y-m'));
+      dd($DATE_RESET_DOCNO->format('ym') == Carbon::now()->format('ym'),$DATE_RESET_DOCNO->format('ym'),Carbon::now()->format('ym'));
       if ($DATE_RESET_DOCNO->format('ym') == Carbon::now()->format('ym') ) {
         $EXPLOT = str_replace('RE'.$DATE_RESET_DOCNO->addyears('543')->format('ym').'-','',$DATA_MACHINEREPAIRREQ->DOC_NO)+1;
-
         $DOC_NO = 'RE' . $DATE_RESET_DOCNO->format('ym'). sprintf('-%04d', $EXPLOT);
       }
 

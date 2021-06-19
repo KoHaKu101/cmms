@@ -539,28 +539,28 @@ body.modal-open {
 																	<thead>
 																		<tr>
 																			<td><strong>รหัส</strong></td>
-																			<td class="text-center"><strong>ชื่อ</strong></td>
-																			<td class="text-center"><strong>จำนวน</strong></td>
+																			<td class="text-left"><strong>ชื่อ</strong></td>
+																			<td class="text-left"><strong>จำนวน</strong></td>
 																			<td class="text-right"><strong>ราคา</strong></td>
 																		</tr>
 																	</thead>
 																	<tbody>
 																		<tr>
 																			<td>BS-200</td>
-																			<td class="text-right">สายพาน</td>
-																			<td class="text-center">1</td>
+																			<td class="text-left">สายพาน</td>
+																			<td class="text-left">1</td>
 																			<td class="text-right">200 ฿</td>
 																		</tr>
 																		<tr>
 																			<td>BS-400</td>
-																			<td class="text-right">belling</td>
-																			<td class="text-center">3</td>
+																			<td class="text-left">belling</td>
+																			<td class="text-left">3</td>
 																			<td class="text-right">200 ฿</td>
 																		</tr>
 																		<tr>
 																			<td>BS-1000</td>
-																			<td class="text-right">-</td>
-																			<td class="text-center">1</td>
+																			<td class="text-left">-</td>
+																			<td class="text-left">1</td>
 																			<td class="text-right">200 ฿</td>
 																		</tr>
 																		<tr>
@@ -614,6 +614,21 @@ body.modal-open {
 								</div>
 							</div>
 						</div>
+            </div>
+            <div class="row my-3">
+              <div class="col-md-12 col-lg-10 modal-footer">
+                <div class="col-9 col-sm-10 col-md-6 col-lg-3 ml-auto" >
+                  <button type="button" class="btn btn-secondary btn-sm btn-link text-left" id="previous_worker" onclick="previous_step(4)">
+                    <i class="fas fa-arrow-left fa-2x"></i>
+                  </button>
+                </div>
+                <div class="col-3 col-sm-2 col-md-4 col-lg-2  ml-auto " >
+                  <button type="button" class="btn btn-secondary btn-sm  btn-link text-right"
+                  id="closeform">
+                    <i class="fas fa-clipboard-check fa-2x">ปิดเอกสาร</i>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
