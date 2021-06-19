@@ -158,7 +158,7 @@
 												<div class="row">
 													<div class="col-6 col-sm-6 col-lg-6">
 														<label >สถานะการใช้งาน</label>
-														<select class=" form-control form-control-sm " id="MACHINE_CHECK" name="MACHINE_CHECK" required autofocus>
+														<select class=" form-control form-control-sm " id="MACHINE_CHECK" name="MACHINE_CHECK" required >
 															<option value>-แสดงทั้งหมด-</option>
 															@foreach ($machinestatus as $key => $srow)
 																<option value="{{ $srow->STATUS_CODE }}"
@@ -168,7 +168,7 @@
 													</div>
 													<div class="col-6 col-sm-6 col-lg-6">
 														<label>ตำแหน่งเครื่อง</label>
-														<select class=" form-control form-control-sm " id="MACHINE_LINE" name="MACHINE_LINE" required autofocus>
+														<select class=" form-control form-control-sm " id="MACHINE_LINE" name="MACHINE_LINE" required >
 															<option value> -แสดงทั้งหมด- </option>
 															@foreach($machineline as $dataline)
 															<option value="{{ $dataline->LINE_CODE  }}"

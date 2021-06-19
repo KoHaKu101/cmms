@@ -212,7 +212,7 @@ class MachineRepairController extends Controller
       $DOC_NO = 'RE' . $DATE_DOCNO->format('ym') . sprintf('-%04d', 1);
       dd($DATE_RESET_DOCNO->format('ym') == Carbon::now()->format('ym'),$DATE_RESET_DOCNO->format('ym'),Carbon::now()->format('ym'));
       if ($DATA_MACHINEREPAIRREQ->$DATE_RESET_DOCNO != NULL) {
-        if ($DATE_RESET_DOCNO->format('ym') == Carbon::now()->format('ym') ) {
+        if ($DATE_RESET_DOCNO->format('m') == Carbon::now()->format('m') ) {
           $EXPLOT = str_replace('RE'.$DATE_RESET_DOCNO->addyears('543')->format('ym').'-','',$DATA_MACHINEREPAIRREQ->DOC_NO)+1;
           $DOC_NO = 'RE' . $DATE_RESET_DOCNO->format('ym'). sprintf('-%04d', $EXPLOT);
         }

@@ -245,7 +245,7 @@ body.modal-open {
                   </select>
                 </div>
                 <div class="col-3 col-md-2 col-lg-2 mr-auto">
-                    <button type="button" class="btn btn-secondary btn-sm mx-1" id="add_worker"><i class="fas fa-plus"></i>เพิ่มพนักงาน</button>
+                    <button type="button" class="btn btn-primary btn-sm mx-1" id="add_worker"><i class="fas fa-plus"></i>เพิ่มพนักงาน</button>
                 </div>
               </div>
               <div class="row">
@@ -265,7 +265,7 @@ body.modal-open {
               </div>
             </div>
             <div class="form-group has-error"id="work_out" hidden>
-              <div class="row" >
+              {{-- <div class="row" >
                 <div class="col-6 col-sm-6 col-md-6 col-lg-4 ml-auto my-1">
                   <label>วันที่เริ่มซ่อม</label>
                   <input type="date" class="form-control form-control-sm " value="{{ date('Y-m-d') }}">
@@ -284,7 +284,7 @@ body.modal-open {
                   <label>เวลาซ่อมเสร็จ</label>
                   <input type="time" class="form-control form-control-sm " value="{{ date('H:m') }}">
                 </div>
-              </div>
+              </div> --}}
               <div class="row my-1">
                 <div class="col-6 col-sm-6 col-md-6 col-lg-4 ml-auto">
                   <label> บริษัท/บุคคล </label>
@@ -380,9 +380,9 @@ body.modal-open {
                   <input type="number" class="form-control form-control-sm col-md-5 mx-1" id="TOTAL_SPAREPART" min="0" value="1">
                 </div>
                 <div class="col-7 col-sm-5 col-md-4 col-lg-3 my-2  form-inline">
-                  <button type="button" class="btn btn-secondary btn-sm mx-1" onclick="add_sparepart(1)">
+                  <button type="button" class="btn btn-primary btn-sm mx-1" onclick="add_sparepart(1)">
                     ตัดสต็อก</button>
-                  <button type="button" class="btn btn-secondary btn-sm mx-1" onclick="add_sparepart(2)">
+                  <button type="button" class="btn btn-primary btn-sm mx-1" onclick="add_sparepart(2)">
                     ไม่ตัดสต็อก</button>
                 </div>
               </div>
@@ -422,17 +422,17 @@ body.modal-open {
                 </div>
                 <div class="col-6 col-sm-6 col-md-4 mr-auto">
                   <label>เวลาสั่งซื้อ</label>
-                  <input type="time" class="form-control form-control-sm " >
+                  <input type="time" class="form-control form-control-sm " value="{{ date('H:i') }}">
                 </div>
               </div>
               <div class="row">
                 <div class="col-6 col-sm-6 col-md-4 ml-auto">
                   <label>วันที่รับเข้า</label>
-                  <input type="date" class="form-control form-control-sm ">
+                  <input type="date" class="form-control form-control-sm " value="{{ date('Y-m-d') }}">
                 </div>
                 <div class="col-6 col-sm-6 col-md-4 mr-auto">
                   <label>เวลาสั่งซื้อ</label>
-                  <input type="time" class="form-control form-control-sm " >
+                  <input type="time" class="form-control form-control-sm " value="{{ date('H:i') }}">
                 </div>
               </div>
             </div>
@@ -461,17 +461,17 @@ body.modal-open {
               </div>
               <div class="col-6 col-sm-6 col-md-4 mr-auto">
                 <label>เวลาซ่อม</label>
-                <input type="time" class="form-control form-control-sm " >
+                <input type="time" class="form-control form-control-sm " value="{{ date('H:i') }}">
               </div>
             </div>
             <div class="row">
               <div class="col-6 col-sm-6 col-md-4 ml-auto">
                 <label>วันที่ซ่อมเสร็จ</label>
-                <input type="date" class="form-control form-control-sm ">
+                <input type="date" class="form-control form-control-sm "value="{{ date('Y-m-d') }}">
               </div>
               <div class="col-6 col-sm-6 col-md-4 mr-auto">
                 <label>เวลาซ่อมเสร็จ</label>
-                <input type="time" class="form-control form-control-sm " >
+                <input type="time" class="form-control form-control-sm " value="{{ date('H:i') }}">
               </div>
             </div>
             <div class="row">

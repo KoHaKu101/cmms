@@ -67,7 +67,7 @@
 										<div class="col-md-6 col-lg-4">
 											<div class="form-group has-error">
 												<label for="TYPE_CODE">รหัสประเภทเครื่องจักร</label>
-													<input type="text" class="form-control" id="TYPE_CODE" name="TYPE_CODE" placeholder="รหัสประเภทเครื่องจักร" required autofocus>
+													<input type="text" class="form-control" id="TYPE_CODE" name="TYPE_CODE" placeholder="รหัสประเภทเครื่องจักร" required >
 
 											</div>
 											<div class="col-md-6 col-lg-12">
@@ -84,7 +84,7 @@
 										<div class="col-md-6 col-lg-4">
 											<div class="form-group has-error">
 												<label for="TYPE_NAME">ชื่อประเภทเครื่องจักร</label>
-												<input type="text" class="form-control" id="TYPE_NAME" name="TYPE_NAME" placeholder="ชื่อประเภทเครื่องจักร" required autofocus>
+												<input type="text" class="form-control" id="TYPE_NAME" name="TYPE_NAME" placeholder="ชื่อประเภทเครื่องจักร" required >
 
 											</div>
 											<div class="form-check has-error">

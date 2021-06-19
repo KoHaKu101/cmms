@@ -179,7 +179,7 @@
 												</div>
 												<div class="form-group has-error">
 													<label for="STATUS_NAME">สถานะเครื่องจักร</label>
-													<input type="text"  class="form-control" id="STATUS_NAME" name="STATUS_NAME" placeholder="สถานะ" required autofocus>
+													<input type="text"  class="form-control" id="STATUS_NAME" name="STATUS_NAME" placeholder="สถานะ" required >
 
 												</div>
 												<div class="form-group has-error">

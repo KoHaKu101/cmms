@@ -72,7 +72,7 @@
 										<div class="col-md-6 col-lg-4">
 											<div class="form-group has-error">
 												<label for="EMP_CODE">ชื่อประเภทเครื่องจักร</label>
-													<input type="text" class="form-control" id="TYPE_NAME" name="TYPE_NAME" value="{{$dataset->TYPE_NAME}}" required autofocus>
+													<input type="text" class="form-control" id="TYPE_NAME" name="TYPE_NAME" value="{{$dataset->TYPE_NAME}}" required >
 
 											</div>
 											<div class="col-md-6 col-lg-12">
@@ -89,7 +89,7 @@
 										<div class="col-md-6 col-lg-4">
 											<div class="form-group has-error">
 												<label for="EMP_NAME">รหัสประเภทเครื่องจักร</label>
-												<input type="text" class="form-control" id="TYPE_CODE" name="TYPE_CODE" value="{{$dataset->TYPE_CODE}}" required autofocus>
+												<input type="text" class="form-control" id="TYPE_CODE" name="TYPE_CODE" value="{{$dataset->TYPE_CODE}}" required >
 											</div>
 											<div class="form-check has-error">
 												<label for="TYPE_STATUS">สถานการเปิดใช้งาน</label><br>

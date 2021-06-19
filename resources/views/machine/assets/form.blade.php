@@ -67,7 +67,7 @@
 										<div class="col-md-6 col-lg-4">
 											<div class="form-group has-error">
 												<label for="MACHINE_CODE">รหัสเครื่องจักร</label>
-													<input type="text" class=" form-control form-control-sm " id="MACHINE_CODE" name="MACHINE_CODE" placeholder="รหัสเครื่องจักร" required autofocus>
+													<input type="text" class=" form-control form-control-sm " id="MACHINE_CODE" name="MACHINE_CODE" placeholder="รหัสเครื่องจักร" required >
 											</div>
 
 											<div class="form-group">
@@ -79,7 +79,7 @@
 													<div class="row">
 														<div class="col-6 col-sm-6 col-lg-6">
 															<label>สถานะการใช้งาน</label>
-															<select class=" form-control form-control-sm " id="MACHINE_CHECK" name="MACHINE_CHECK" required autofocus>
+															<select class=" form-control form-control-sm " id="MACHINE_CHECK" name="MACHINE_CHECK" required >
 																<option value>-แสดงทั้งหมด-</option>
 																@foreach ($machinestatus as $key => $srow)
 																	<option value="{{ $srow->STATUS_CODE }}">{{$srow->STATUS_NAME}}</option>
@@ -88,7 +88,7 @@
 														</div>
 														<div class="col-6 col-sm-6 col-lg-6">
 															<label>ตำแหน่งเครื่อง</label>
-															<select class=" form-control form-control-sm " id="MACHINE_LINE" name="MACHINE_LINE" required autofocus>
+															<select class=" form-control form-control-sm " id="MACHINE_LINE" name="MACHINE_LINE" required >
 																<option value> -แสดงทั้งหมด- </option>
 																@foreach($machineline as $dataline)
 																<option value="{{ $dataline->LINE_CODE  }}"> {{$dataline->LINE_NAME}} </option>
@@ -122,15 +122,15 @@
 										<div class="col-md-12 col-lg-4">
 											<div class="form-group has-error">
 												<label for="MACHINE_NAME">ชื่อเครื่องจักร</label>
-												<input type="text" class=" form-control form-control-sm " id="MACHINE_NAME" name="MACHINE_NAME" placeholder="ชื่อเครื่องจักร" required autofocus>
+												<input type="text" class=" form-control form-control-sm " id="MACHINE_NAME" name="MACHINE_NAME" placeholder="ชื่อเครื่องจักร" required >
 											</div>
 											<div class="form-group has-error">
 												<label for="MACHINE_RVE_DATE">วันที่ Maintenance 	</label>
-												<input type="date" class=" form-control form-control-sm " id="MACHINE_RVE_DATE" name="MACHINE_RVE_DATE" placeholder="วันที่ Maintenance" required autofocus>
+												<input type="date" class=" form-control form-control-sm " id="MACHINE_RVE_DATE" name="MACHINE_RVE_DATE" value="{{ date('Y-m-d') }}" readonly required >
 											</div>
 											<div class="form-group has-error">
 												<label for="PURCHASE_FORM">ซื้อจากบริษัท	</label>
-												<input type="text" class=" form-control form-control-sm " id="PURCHASE_FORM" name="PURCHASE_FORM" placeholder="ซื้อจากบริษัท" required autofocus>
+												<input type="text" class=" form-control form-control-sm " id="PURCHASE_FORM" name="PURCHASE_FORM" placeholder="ซื้อจากบริษัท" required >
 											</div>
 											<div class="form-group has-error col-lg-12 from-inline">
 												<div class="row">
