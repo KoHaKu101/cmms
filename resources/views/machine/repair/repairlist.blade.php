@@ -424,7 +424,7 @@ function styletable(formatnumber){
 		var docno = $('#TITLE_DOCNO').html();
 		var detail = $('#DETAIL_REPAIR').val();
 		for (var i = 1; i < 6; i++) {
-			$('#step'+i).removeClass('badge-success fw-bold');
+			$('#step'+i).removeClass('badge-primary badge-success fw-bold');
 			$('#WORK_STEP_'+i).removeClass('active show');
 		}
 		$('#step1').addClass('badge-primary fw-bold');
@@ -546,10 +546,11 @@ function styletable(formatnumber){
 	 });
 
 
- function btn_closeform(){
-	 $('#CloseForm').modal({backdrop: 'static', keyboard: false});
-	 $('#CloseForm').modal('show');
- }
+
+	 $('#closeform').on('click',function(){
+		 $('#CloseForm').modal('hide');
+	 })
+
 
 </script>
 
