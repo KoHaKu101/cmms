@@ -123,8 +123,8 @@
 								            <th width="25px">ลำดับ</th>
 														<th width="25px">LINE</th>
 								            <th width="130px">MC-CODE</th>
-								            <th width="330px">Machine Name</th>
-														<th width="100px">MC-TYPE</th>
+								            <th width="300px">Machine Name</th>
+														<th width="200px">MC-TYPE</th>
 														<th width="30px">Rank</th>
 														<th >เช็คเมื่อ</th>
 														<th >ซ่อมเมื่อ</th>
@@ -160,7 +160,7 @@
 								                </a>
 								              </td>
 								              <td> {{ $row->MACHINE_NAME_TH }}  </td>
-															<td> {{ $row->MACHINE_TYPE }}  </td>
+															<td> {{ $row->MACHINE_TYPE_TH }}  </td>
 															<td> {{ $row->MACHINE_RANK_CODE }}  </td>
 															<td> {{ $PLAN_LAST_DATE }}  </td>
 															<td> {{ $REPAIR_LAST_DATE }}  </td>
