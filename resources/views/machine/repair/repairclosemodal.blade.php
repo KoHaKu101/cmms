@@ -106,23 +106,23 @@ body.modal-open {
         <div class="separator-solid" ></div>
         <div class="row">
           <div class="col-12 col-md-12  my-1  ">
-            <h4 class="modal-title badge" id="step1">ตรวจสอบเบื้องต้น</h4>
+            <h4 class="modal-title badge my-1" id="step1">ตรวจสอบเบื้องต้น</h4>
             <i class="separator mx-2">
               <i class="fas fa-arrow-right"></i>
             </i>
-            <h4 class="modal-title badge" id="step2">เลือกช่าง</h4>
+            <h4 class="modal-title badge my-1" id="step2">เลือกช่าง</h4>
             <i class="separator mx-2">
               <i class="fas fa-arrow-right"></i>
             </i>
-            <h4 class="modal-title badge" id="step3">อะไหล่</h4>
+            <h4 class="modal-title badge my-1" id="step3">อะไหล่</h4>
             <i class="separator mx-2">
               <i class="fas fa-arrow-right"></i>
             </i>
-            <h4 class="modal-title badge" id="step4">การดำเนินงาน</h4>
+            <h4 class="modal-title badge my-1" id="step4">การดำเนินงาน</h4>
             <i class="separator mx-2">
               <i class="fas fa-arrow-right"></i>
             </i>
-            <h4 class="modal-title badge" id="step5">สรุปผล</h4>
+            <h4 class="modal-title badge my-1" id="step5">สรุปผล</h4>
           </div>
         </div>
         {{-- <div class="separator-solid"></div> --}}
@@ -158,27 +158,27 @@ body.modal-open {
         <div class="tab-content my-4  ">
           <div class="tab-pane active" id="WORK_STEP_1">
             <div class="row has-error">
-              <div class="col-6 col-sm-10 col-md-6 col-lg-4 ml-auto">
+              <div class="col-6 col-sm-6 col-md-6 col-lg-4 ml-auto">
                 <label>วันที่เริ่มตรวจสอบ</label>
                 <input type="date" class="form-control form-control-sm " value="{{ date('Y-m-d') }}">
               </div>
-              <div class="col-6 col-sm-10 col-md-6 col-lg-4 mr-auto">
+              <div class="col-6 col-sm-6 col-md-6 col-lg-4 mr-auto">
                 <label>เวลาตรวจสอบ</label>
                 <input type="time" class="form-control form-control-sm " value="{{ date('H:m') }}">
               </div>
             </div>
             <div class="row has-error">
-              <div class="col-6 col-sm-10 col-md-6 col-lg-4 ml-auto">
+              <div class="col-6 col-sm-6 col-md-6 col-lg-4 ml-auto">
                 <label>วันที่ตรวจสอบเสร็จ</label>
                 <input type="date" class="form-control form-control-sm " value="{{ date('Y-m-d') }}">
               </div>
-              <div class="col-6 col-sm-10 col-md-6 col-lg-4 mr-auto">
+              <div class="col-6 col-sm-6 col-md-6 col-lg-4 mr-auto">
                 <label>เวลาตรวจสอบเสร็จ</label>
                 <input type="time" class="form-control form-control-sm " value="{{ date('H:m') }}">
               </div>
             </div>
             <div class="row has-error">
-              <div class="col-12 col-sm-10 col-md-12 col-lg-8 ml-auto mr-auto">
+              <div class="col-12 col-sm-12 col-md-12 col-lg-8 ml-auto mr-auto">
                 <lable>รายละเอียดการตรวจสอบ</lable>
                 <textarea class="form-control" row="2"></textarea>
               </div>
@@ -266,40 +266,46 @@ body.modal-open {
             </div>
             <div class="form-group has-error"id="work_out" hidden>
               <div class="row" >
-                <div class="col-6 col-sm-10 col-md-6 col-lg-4 ml-auto my-1">
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 ml-auto my-1">
                   <label>วันที่เริ่มซ่อม</label>
                   <input type="date" class="form-control form-control-sm " value="{{ date('Y-m-d') }}">
                 </div>
-                <div class="col-6 col-sm-10 col-md-6 col-lg-4 mr-auto my-1">
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 mr-auto my-1">
                   <label>เวลาซ่อม</label>
                   <input type="time" class="form-control form-control-sm " value="{{ date('H:m') }}">
                 </div>
               </div>
               <div class="row">
-                <div class="col-6 col-sm-10 col-md-6 col-lg-4 ml-auto my-1">
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 ml-auto my-1">
                   <label>วันที่ซ่อมเสร็จ</label>
                   <input type="date" class="form-control form-control-sm "value="{{ date('Y-m-d') }}">
                 </div>
-                <div class="col-6 col-sm-10 col-md-6 col-lg-4 mr-auto my-1">
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 mr-auto my-1">
                   <label>เวลาซ่อมเสร็จ</label>
                   <input type="time" class="form-control form-control-sm " value="{{ date('H:m') }}">
                 </div>
               </div>
               <div class="row my-1">
-                <div class="col-6 col-sm-5 col-md-6 col-lg-4 ml-auto">
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 ml-auto">
                   <label> บริษัท/บุคคล </label>
-                    <input type="text" class="form-control form-control-sm " autocomplete>
+                    <input type="text" class="form-control form-control-sm " autocomplete="">
                 </div>
-                <div class="col-6 col-sm-5 col-md-6 col-lg-4 mr-auto">
+                <div class="col-6 col-sm-6 col-md-6 col-lg-4 mr-auto">
                   <label> ค่าบริการ </label>
-                  <div class="input-group form-inline">
-                    <input type="number" class="form-control form-control-sm col-md-5"
-                    min="0" value="0" step=".01">
+                  <div class="input-group ">
+                    <input type="number" class="form-control form-control-sm" min="0" value="0" step=".01">
                     <div class="input-group-append">
                       <span class="input-group-text">บาท</span>
                     </div>
-                    <button type="button" class="btn btn-primary btn-sm mx-2"><i class="fas fa-plus"> เพิ่ม</i></button>
                   </div>
+                </div>
+                <div class="col-8 col-sm-9 col-md-8 col-lg-6 ml-auto">
+                  <label>วิธีการแก้ไข</label>
+                  <textarea class="form-control mt--1 mb-1" row="2"></textarea>
+                </div>
+                <div class="col-4 col-sm-3 col-lg-4 mt-5">
+                  <button type="button" class="btn btn-primary btn-sm mt-2 mx-2"><i class="fas fa-plus"> เพิ่ม</i></button>
+
                 </div>
               </div>
               <div class="row">
@@ -362,18 +368,18 @@ body.modal-open {
           <div class="tab-pane" id="WORK_STEP_3">
             <div class="form-group">
               <div class="row">
-                <div class="col-12 col-md-12 col-lg-6 form-inline has-error">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6 form-inline has-error">
                   <label>เพิ่มอะไหล่</label>
-                  <div class="col-9 col-md-10 col-lg-9">
+                  <div class="col-9 col-sm-10 col-md-10 col-lg-9">
                     <select class="form-control form-control-sm col-9 REC_WORKER_NAME" id="SPAREPART" name="SPAREPART">
                     </select>
                   </div>
                 </div>
-                <div class="col-4 col-md-4 col-lg-3 my-2 form-inline has-error">
+                <div class="col-4 col-sm-7 col-md-4 col-lg-3 my-2 form-inline has-error">
                   <label>จำนวนเบิก</label>
                   <input type="number" class="form-control form-control-sm col-md-5 mx-1" id="TOTAL_SPAREPART" min="0" value="1">
                 </div>
-                <div class="col-4 col-md-4 col-lg-3 my-2  form-inline">
+                <div class="col-7 col-sm-5 col-md-4 col-lg-3 my-2  form-inline">
                   <button type="button" class="btn btn-secondary btn-sm mx-1" onclick="add_sparepart(1)">
                     ตัดสต็อก</button>
                   <button type="button" class="btn btn-secondary btn-sm mx-1" onclick="add_sparepart(2)">
@@ -410,21 +416,21 @@ body.modal-open {
             </div>
             <div id="buy_sparepart" hidden>
               <div class="row has-error" >
-                <div class="col-6 col-sm-10 col-md-4 ml-auto">
+                <div class="col-6 col-sm-6 col-md-4 ml-auto">
                   <label>วันที่สั่งซื้อ</label>
                   <input type="date" class="form-control form-control-sm " value="{{ date('Y-m-d') }}">
                 </div>
-                <div class="col-6 col-sm-10 col-md-4 mr-auto">
+                <div class="col-6 col-sm-6 col-md-4 mr-auto">
                   <label>เวลาสั่งซื้อ</label>
                   <input type="time" class="form-control form-control-sm " >
                 </div>
               </div>
               <div class="row">
-                <div class="col-6 col-sm-10 col-md-4 ml-auto">
+                <div class="col-6 col-sm-6 col-md-4 ml-auto">
                   <label>วันที่รับเข้า</label>
                   <input type="date" class="form-control form-control-sm ">
                 </div>
-                <div class="col-6 col-sm-10 col-md-4 mr-auto">
+                <div class="col-6 col-sm-6 col-md-4 mr-auto">
                   <label>เวลาสั่งซื้อ</label>
                   <input type="time" class="form-control form-control-sm " >
                 </div>
@@ -449,27 +455,27 @@ body.modal-open {
           </div>
           <div class="tab-pane has-error" id="WORK_STEP_4">
             <div class="row">
-              <div class="col-6 col-sm-10 col-md-4 ml-auto">
+              <div class="col-6 col-sm-6 col-md-4 ml-auto">
                 <label>วันที่เริ่มซ่อม</label>
                 <input type="date" class="form-control form-control-sm " value="{{ date('Y-m-d') }}">
               </div>
-              <div class="col-6 col-sm-10 col-md-4 mr-auto">
+              <div class="col-6 col-sm-6 col-md-4 mr-auto">
                 <label>เวลาซ่อม</label>
                 <input type="time" class="form-control form-control-sm " >
               </div>
             </div>
             <div class="row">
-              <div class="col-6 col-sm-10 col-md-4 ml-auto">
+              <div class="col-6 col-sm-6 col-md-4 ml-auto">
                 <label>วันที่ซ่อมเสร็จ</label>
                 <input type="date" class="form-control form-control-sm ">
               </div>
-              <div class="col-6 col-sm-10 col-md-4 mr-auto">
+              <div class="col-6 col-sm-6 col-md-4 mr-auto">
                 <label>เวลาซ่อมเสร็จ</label>
                 <input type="time" class="form-control form-control-sm " >
               </div>
             </div>
             <div class="row">
-              <div class="col-12 col-sm-10 col-md-8 ml-auto mr-auto">
+              <div class="col-12 col-sm-12 col-md-8 ml-auto mr-auto">
                 <label>วิธีการแก้ไข</label>
                 <textarea class="form-control"></textarea>
               </div>
@@ -514,15 +520,15 @@ body.modal-open {
                     </div>
 										<div class="card-body">
 											<div class="row">
-												<div class="col-md-4 info-invoice">
+												<div class="col-6 col-sm-3 col-md-4 info-invoice">
 													<h5 class="sub">วันที่แจ้ง</h5>
 													<p>{{date('d-m-Y')}}</p>
 												</div>
-												<div class="col-md-4 info-invoice">
+												<div class="col-6 col-sm-3 col-md-4 info-invoice">
 													<h5 class="sub">วันที่ซ่อมเสร็จ</h5>
 													<p>{{date('d-m-Y',strtotime('2021/06/20'))}}</p>
 												</div>
-												<div class="col-md-4 info-invoice">
+												<div class="col-12 col-sm-6 col-md-4 info-invoice">
 													<h5 class="sub">ระยะเวลา DownTime</h5>
 														<p>{{date_diff(date_create(date('d-m-Y')),date_create(date('d-m-Y',strtotime('2021/06/20'))))->format('%d วัน %h ชั่วโมง %i นาที')}}</p>
 												</div>
@@ -587,17 +593,17 @@ body.modal-open {
                     </style>
 										<div class="card-footer">
                       <div class="row">
-												<div class="col-sm-7 col-md-5 mb-3 mb-md-0 transfer-to">
+												<div class="col-7 col-sm-7 col-md-5 mb-3 mb-md-0 transfer-to">
 													<h5 class="sub">ค่าบริการช่างภายนอก</h5>
 												</div>
-												<div class="col-sm-5 col-md-7 transfer-total">
+												<div class="col-5 col-sm-5 col-md-7 transfer-total">
 													<h5 class="sub">2,000 ฿</h5>
 												</div>
 											</div>
                       <div class="row">
-                        <div class="col-sm-7 col-md-8 mb-3 mb-md-0 transfer-to">
+                        <div class="col-6 col-sm-7 col-md-8 mb-3 mb-md-0 transfer-to">
 												</div>
-                        <div class="col-sm-5 col-md-4 transfer-total">
+                        <div class="col-6 col-sm-5 col-md-4 transfer-total">
 													<h5 class="sub">ค่าใช้จ่ายทั้งหมด</h5>
 													<div class="price">600 ฿</div>
 												</div>
@@ -617,12 +623,12 @@ body.modal-open {
             </div>
             <div class="row my-3">
               <div class="col-md-12 col-lg-10 modal-footer">
-                <div class="col-9 col-sm-10 col-md-6 col-lg-3 ml-auto" >
+                <div class="col-6 col-sm-10 col-md-6 col-lg-3 ml-auto" >
                   <button type="button" class="btn btn-secondary btn-sm btn-link text-left" id="previous_worker" onclick="previous_step(4)">
                     <i class="fas fa-arrow-left fa-2x"></i>
                   </button>
                 </div>
-                <div class="col-3 col-sm-2 col-md-4 col-lg-2  ml-auto " >
+                <div class="col-6 col-sm-2 col-md-4 col-lg-2  ml-auto " >
                   <button type="button" class="btn btn-secondary btn-sm  btn-link text-right"
                   id="closeform">
                     <i class="fas fa-clipboard-check fa-2x">ปิดเอกสาร</i>
