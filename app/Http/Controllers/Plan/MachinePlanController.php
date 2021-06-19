@@ -27,12 +27,6 @@ use App\Models\SettingMenu\MailSetup;
 //***************** Controller ************************
 use App\Http\Controllers\Machine\UploadImgController;
 
-
-
-
-
-
-
 class MachinePlanController extends Controller
 {
   protected  $paging =10;
@@ -50,8 +44,6 @@ class MachinePlanController extends Controller
         }
 
     });
-
-
 
   }
   public function randUNID($table){

@@ -103,21 +103,19 @@ Route::get('machine/repair/fetchdata'             ,[MachineRepairController::cla
 Route::middleware('can:isAdminandManager')->group(function () {
 //PDF FILE
 Route::get('/machine/repairhistory/pdf/{UNID}', 'App\Http\Controllers\PDF\MachineHistoryRepairPDFController@RepairHistory');
-
 Route::get('/machine/systemcheck/pdf/{UNID}',   'App\Http\Controllers\PDF\MachineSystemCheckPDFController@SystemCheckPdf');
-Route::get('/machine/assets/machineall/{LINE?}', [MachinePDFController::class,'MachinePDF']);
-
+  Route::get('/machine/assets/machineall/{LINE?}', [MachinePDFController::class,'MachinePDF']);
 //Dashboard
 Route::get('/machine/dashboard/sumaryline',[DashboardController::class,'Sumaryline'])->name('dashboard.sumaryline');
-Route::get('/machine/dashboard/dashboard',[DashboardController::class,'Dashboard']);
-Route::get('/machine',[DashboardController::class,'Dashboard']);
-Route::get('/machine/dashboard',[DashboardController::class,'Dashboard'])->name('dashboard.dashboard');
-Route::get('/dashboard',[DashboardController::class,'Dashboard'])->name('dashboard');
+  Route::get('/machine/dashboard/dashboard',[DashboardController::class,'Dashboard']);
+  Route::get('/machine',[DashboardController::class,'Dashboard']);
+  Route::get('/machine/dashboard',[DashboardController::class,'Dashboard'])->name('dashboard.dashboard');
+  Route::get('/dashboard',[DashboardController::class,'Dashboard'])->name('dashboard');
 // calendar
  Route::get('/machine/calendar',[CalendarController::class,'Index']);
 //Notification
 Route::get('machine/repair/notificaiton' ,[DashboardController::class,'Notification']);
-Route::get('machine/repair/notificaitoncount' ,[DashboardController::class,'NotificationCount'])  ->name('repair.notificaitoncount');
+  Route::get('machine/repair/notificaitoncount' ,[DashboardController::class,'NotificationCount'])  ->name('repair.notificaitoncount');
 //Export and import
 Route::get('machine/export', [MachineExportController::class,'export']);
 
@@ -132,7 +130,6 @@ Route::get('machine/assets/machinelist'     ,[MachineController::class,'All'])  
 //manual
 Route::get('machine/manual/manuallist'        ,[MachineManualController::class,'Index'])  ->name('manual.list');
   Route::get('machine/manual/show/{UNID}'     ,[MachineManualController::class,'Show'])   ->name('manual.Show');
-
   Route::post('machine/upload/storeupload'     ,[MachineManualController::class,'StoreUpload']) ->name('machine.storeupload');
   Route::get('machine/upload/view/{UNID}'      ,[MachineManualController::class,'View']) ->name('upload.view');
   Route::get('machine/upload/download/{UNID}'  ,[MachineManualController::class,'Download']) ->name('upload.download');
@@ -145,13 +142,10 @@ Route::get('machine/personal/personallist'   ,[PersonalController::class,'Index'
   Route::get('machine/personal/edit/{UNID}'            ,[PersonalController::class,'Edit'])   ->name('personal.edit');
   Route::post('machine/personal/update/{UNID}'  ,[PersonalController::class,'Update']);
   Route::get('machine/personal/delete/{UNID}'   ,[PersonalController::class,'Delete']) ->name('personal.delete');
-
-
-
 //daily checksheet
 Route::get('machine/daily/list'                     ,[DailyCheckController::class,'DailyList'])  ->name('daily.list');
-Route::post('machine/daily/uploadimg'               ,[DailyCheckController::class,'CheckSheetUpload']) ->name('daily.upload');
-Route::get('machine/daily/deleteimg/{UNID?}'         ,[DailyCheckController::class,'DeleteImg']) ->name('daily.delete');
+  Route::post('machine/daily/uploadimg'               ,[DailyCheckController::class,'CheckSheetUpload']) ->name('daily.upload');
+  Route::get('machine/daily/deleteimg/{UNID?}'         ,[DailyCheckController::class,'DeleteImg']) ->name('daily.delete');
 //***************************** tabledata ****************************************
 //machinetypetable
 Route::get('machine/machinetypetable/list'      ,[MachineTypeTableController::class,'Index'])  ->name('machinetypetable.list');
@@ -169,8 +163,6 @@ Route::get('machine/repairtemplate/list/{UNID?}'        ,[MachineRepairTableCont
   Route::post('machine/repairtemplate/subsave'          ,[MachineRepairTableController::class,'SubSave']) ->name('repairtemplate.subsave');
   Route::post('machine/repairtemplate/subupdate'          ,[MachineRepairTableController::class,'SubUpdate']) ->name('repairtemplate.subupdate');
   Route::post('machine/repairtemplate/subdelete'          ,[MachineRepairTableController::class,'SubDelete']) ->name('repairtemplate.subdelete');
-
-
 //status
 Route::get('machine/machinestatustable/list'      ,[MachineStatusTableController::class,'Index'])  ->name('machinestatustable.list');
   Route::post('machine/machinestatustable/store'            ,[MachineStatusTableController::class,'Store']) ->name('machinestatustable.store');
@@ -211,11 +203,10 @@ Route::get('machine/spart/report'                            ,[ReportSparePartCo
   Route::get('machine/spart/report/planmonth/form'                 ,[ReportSparePartController::class,'Form']) ->name('SparPart.Report.Form');
   Route::get('machine/spart/report/planmonth/save'                 ,[ReportSparePartController::class,'Save']) ->name('SparPart.Report.Save');
   Route::get('machine/spart/reportplanmonth/change'                 ,[ReportSparePartController::class,'PlanChange']) ->name('SparPart.Report.PlanChange');
-
-Route::get('machine/spart/report/planmonth/formimg'                 ,[ReportSparePartController::class,'FormImg']) ->name('SparPart.Report.FormImg');
-Route::post('machine/spart/planmonth/saveimg'                 ,[ReportSparePartController::class,'SaveImg']) ->name('SparPart.Report.SaveImg');
-Route::post('machine/spart/planmonth/deleteimg'                 ,[ReportSparePartController::class,'DeleteImg']) ->name('SparPart.Report.DeleteImg');
-Route::get('machine/spart/report/planpdm/list'                 ,[ReportSparePartController::class,'PlanPDMList']) ->name('SparPart.Report.PlanPDMList');
+  Route::get('machine/spart/report/planmonth/formimg'                 ,[ReportSparePartController::class,'FormImg']) ->name('SparPart.Report.FormImg');
+  Route::post('machine/spart/planmonth/saveimg'                 ,[ReportSparePartController::class,'SaveImg']) ->name('SparPart.Report.SaveImg');
+  Route::post('machine/spart/planmonth/deleteimg'                 ,[ReportSparePartController::class,'DeleteImg']) ->name('SparPart.Report.DeleteImg');
+  Route::get('machine/spart/report/planpdm/list'                 ,[ReportSparePartController::class,'PlanPDMList']) ->name('SparPart.Report.PlanPDMList');
 //machine sparepart
 Route::get('machine/machinespart/getlistsparepart/{UNID}'     ,[MachineSparePartController::class,'GetListSparepart']) ->name('MachineSparPart.GetListSparepart');
 Route::get('machine/machinespart/save'                        ,[MachineSparePartController::class,'Save']) ->name('MachineSparPart.Save');
@@ -233,7 +224,7 @@ Route::post('machine/plan/planpmpdf'                         ,[MachinePlanContro
 Route::get('machine/pdf/plan/planpm/{YEAR}'                  ,[PlanYearMachinePm::class,'PlanYearPDF']) ->name('plan.yearpdf');
 Route::get('machine/pdf/plan/planpmmonth/{YEAR}/{MONTH?}'    ,[PlanMonthMachinePm::class,'PlanMonthPDF']) ->name('plan.monthpdf');
 Route::get('machine/pm/planlist'                             ,[MachinePlanController::class,'PMPlanList'])  ->name('pm.planlist');
-Route::post('machine/pm/planlist'                            ,[MachinePlanController::class,'PMPlanList'])->middleware('can:isAdmin','can:isManager');
+Route::post('machine/pm/planlist'                            ,[MachinePlanController::class,'PMPlanList']);
 Route::get('machine/pm/plancheck/{UNID}'                     ,[MachinePlanController::class,'PMPlanCheckForm']) ->name('pm.plancheck');
 Route::get('machine/pm/planedit/{UNID}'                      ,[MachinePlanController::class,'PMPlanEditForm']) ->name('pm.planedit');
 Route::post('machine/pm/planlist/save'                       ,[MachinePlanController::class,'PMPlanListSave']) ->name('pm.planlistsave');
