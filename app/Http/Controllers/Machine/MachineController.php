@@ -75,7 +75,7 @@ class MachineController extends Controller
     $MACHINE_LINE = isset($request->LINE) ? $request->LINE : '';
     $MACHINE_RANK_CODE = isset($request->MACHINE_RANK_CODE) ? $request->MACHINE_RANK_CODE : '';
     $MACHINE_STATUS = isset($request->MACHINE_STATUS) ? $request->MACHINE_STATUS : 9 ;
-      $machine = Machine::select('*')->selectRaw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH,dbo.decode_utf8(MACHINE_TYPE) as MACHINE_TYPE_TH,')
+      $machine = Machine::select('*')->selectRaw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH,dbo.decode_utf8(MACHINE_TYPE) as MACHINE_TYPE_TH')
                         ->where(function ($query) use ($MACHINE_LINE) {
                                if ($MACHINE_LINE != '') {
                                   $query->where('MACHINE_LINE', '=', $MACHINE_LINE);
