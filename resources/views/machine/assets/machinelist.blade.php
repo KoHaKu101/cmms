@@ -69,7 +69,7 @@
 											<div class="col-md-8 form-inline ">
 												<label class="text-white">Line : </label>
 												 <select class="form-control form-control-sm mt-1 mx-1" id="LINE" name="LINE" onchange="changeline()">
-													 <option value >ทั้งหมด</option>
+													 <option value="0">ทั้งหมด</option>
 													 @foreach ($LINE as $index => $row_line)
 														 <option value="{{ $row_line->LINE_CODE }}" {{ $MACHINE_LINE == $row_line->LINE_CODE ? 'selected' : '' }}>{{ $row_line->LINE_NAME }}</option>
 													 @endforeach
@@ -78,14 +78,14 @@
 
 												<label class="text-white mx-2">Rank : </label>
 												 <select class="form-control form-control-sm mt-1 mx-1" id="MACHINE_RANK_CODE" name="MACHINE_RANK_CODE" onchange="changerank()">
-													 <option value >ทั้งหมด</option>
+													 <option value="0" >ทั้งหมด</option>
 													 @foreach ($RANK as $index => $row_rank)
 														 <option value="{{ $row_rank->MACHINE_RANK_CODE }}" {{ $MACHINE_RANK_CODE == $row_rank->MACHINE_RANK_CODE ? 'selected' : '' }}>{{ $row_rank->MACHINE_RANK_CODE }}</option>
 													 @endforeach
 												 </select>
 												<label class='text-white mx-2'>สถานะการใช้งาน : </label>
 												<select class="form-control form-control-sm mt-1 mx-1" name="MACHINE_CHECK" id="MACHINE_CHECK" onchange="changerank()">
-														<option value="">-ทั้งหมด-</option>
+														<option value="0">-ทั้งหมด-</option>
 														<option value="1" {{ $MACHINE_CHECK == "1" ? 'selected': '' }}>หยุด/เสีย</option>
 														<option value="2" {{ $MACHINE_CHECK == "2" ? 'selected': '' }}>ทำงาน</option>
 														<option value="3" {{ $MACHINE_CHECK == "3" ? 'selected': '' }}>รอผลิต</option>
@@ -189,7 +189,7 @@
 								        </tbody>
 
 								    </table>
-								    {{ $machine->appends( ['SEARCH' => $SEARCH,'MACHINE_LINE' => $MACHINE_LINE,'MACHINE_RANK_CODE' => $MACHINE_RANK_CODE])->links('pagination.default') }}
+								    {{ $machine->links('pagination.default') }}
 
 								  </div>
 								    </div>

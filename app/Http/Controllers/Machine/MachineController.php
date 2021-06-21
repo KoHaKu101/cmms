@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Auth;
 use File;
-
+use Cookie;
+use Illuminate\Http\Response;
 
 //******************** model ***********************
 use App\Models\Machine\Machine;
@@ -68,16 +69,32 @@ class MachineController extends Controller
   }
 
   public function All(Request $request) {
+
+    $COOKIE_MACHINE_CHECK     = $request->MACHINE_CHECK     != '' ? $request->MACHINE_CHECK     : $request->cookie('MACHINE_CHECK');
+    $COOKIE_SEARCH            = $request->SEARCH            != '' ? $request->SEARCH            : $request->cookie('SEARCH');
+    $COOKIE_LINE              = $request->LINE              != '' ? $request->LINE              : $request->cookie('LINE');
+    $COOKIE_MACHINE_RANK_CODE = $request->MACHINE_RANK_CODE != '' ? $request->MACHINE_RANK_CODE : $request->cookie('MACHINE_RANK_CODE');
+    $COOKIE_MACHINE_STATUS    = $request->MACHINE_STATUS    != '' ? $request->MACHINE_STATUS    : $request->cookie('MACHINE_STATUS');
+    $MINUTES = 30;
+    Cookie::queue('MACHINE_CHECK',$COOKIE_MACHINE_CHECK,$MINUTES);
+    Cookie::queue('SEARCH',$COOKIE_SEARCH,$MINUTES);
+    Cookie::queue('LINE',$COOKIE_LINE,$MINUTES);
+    Cookie::queue('MACHINE_RANK_CODE',$COOKIE_MACHINE_RANK_CODE,$MINUTES);
+    Cookie::queue('MACHINE_STATUS',$COOKIE_MACHINE_STATUS,$MINUTES);
+
+
     $LINE = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
     $RANK = MachineRankTable::where('MACHINE_RANK_STATUS','=','9')->orderBy('MACHINE_RANK_CODE')->get();
-    $MACHINE_CHECK = isset($request->MACHINE_CHECK) ? $request->MACHINE_CHECK : '';
-    $SEARCH = isset($request->SEARCH) ? $request->SEARCH : "" ;
-    $MACHINE_LINE = isset($request->LINE) ? $request->LINE : '';
-    $MACHINE_RANK_CODE = isset($request->MACHINE_RANK_CODE) ? $request->MACHINE_RANK_CODE : '';
-    $MACHINE_STATUS = isset($request->MACHINE_STATUS) ? $request->MACHINE_STATUS : 9 ;
+
+    $MACHINE_CHECK = $COOKIE_MACHINE_CHECK;
+    $SEARCH = $COOKIE_SEARCH ;
+
+    $MACHINE_LINE = $COOKIE_LINE;
+    $MACHINE_RANK_CODE = $COOKIE_MACHINE_RANK_CODE;
+    $MACHINE_STATUS = $COOKIE_MACHINE_STATUS;
       $machine = Machine::select('*')->selectRaw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH,dbo.decode_utf8(MACHINE_TYPE) as MACHINE_TYPE_TH')
                         ->where(function ($query) use ($MACHINE_LINE) {
-                               if ($MACHINE_LINE != '') {
+                               if ($MACHINE_LINE > 0) {
                                   $query->where('MACHINE_LINE', '=', $MACHINE_LINE);
                                 }
                                })
@@ -90,12 +107,12 @@ class MachineController extends Controller
                                }
                               })
                         ->where(function ($query) use ($MACHINE_RANK_CODE) {
-                             if ($MACHINE_RANK_CODE != ""){
+                             if ($MACHINE_RANK_CODE > 0){
                                $query->where('MACHINE_RANK_CODE', '=', $MACHINE_RANK_CODE);
                              }
                            })
                            ->where(function ($query) use ($MACHINE_CHECK) {
-                                if ($MACHINE_CHECK != ""){
+                                if ($MACHINE_CHECK > 0){
                                   $query->where('MACHINE_CHECK', '=', $MACHINE_CHECK);
                                 }
                               })
