@@ -71,13 +71,18 @@ class MachineController extends Controller
   public function All(Request $request) {
 
     $COOKIE_MACHINE_CHECK     = $request->MACHINE_CHECK     != '' ? $request->MACHINE_CHECK     : $request->cookie('MACHINE_CHECK');
-    $COOKIE_SEARCH            = $request->SEARCH            != '' ? $request->SEARCH            : $request->cookie('SEARCH');
     $COOKIE_LINE              = $request->LINE              != '' ? $request->LINE              : $request->cookie('LINE');
     $COOKIE_MACHINE_RANK_CODE = $request->MACHINE_RANK_CODE != '' ? $request->MACHINE_RANK_CODE : $request->cookie('MACHINE_RANK_CODE');
     $COOKIE_MACHINE_STATUS    = $request->MACHINE_STATUS    != '' ? $request->MACHINE_STATUS    : $request->cookie('MACHINE_STATUS');
     $MINUTES = 30;
+    // $COOKIE_SEARCH            = $request->SEARCH;
+
+    // $response = new Response('Set Cookie');
+    //           $response->withCookie(cookie('name', 'MyValue',));
+    // // $dd = Cookie::queue('cookieName','123');
+    // dd($response->header('cookie'));
     Cookie::queue('MACHINE_CHECK',$COOKIE_MACHINE_CHECK,$MINUTES);
-    Cookie::queue('SEARCH',$COOKIE_SEARCH,$MINUTES);
+    // Cookie::queue('SEARCH',$COOKIE_SEARCH,$MINUTES);
     Cookie::queue('LINE',$COOKIE_LINE,$MINUTES);
     Cookie::queue('MACHINE_RANK_CODE',$COOKIE_MACHINE_RANK_CODE,$MINUTES);
     Cookie::queue('MACHINE_STATUS',$COOKIE_MACHINE_STATUS,$MINUTES);
@@ -87,7 +92,7 @@ class MachineController extends Controller
     $RANK = MachineRankTable::where('MACHINE_RANK_STATUS','=','9')->orderBy('MACHINE_RANK_CODE')->get();
 
     $MACHINE_CHECK = $COOKIE_MACHINE_CHECK;
-    $SEARCH = $COOKIE_SEARCH ;
+    $SEARCH = $request->SEARCH ;
 
     $MACHINE_LINE = $COOKIE_LINE;
     $MACHINE_RANK_CODE = $COOKIE_MACHINE_RANK_CODE;
