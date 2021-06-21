@@ -55,7 +55,7 @@
 		}
 		.has-error .select2-selection {
     border-color: rgb(185, 74, 72) !important;
-		}
+	}
 		.slider:before {
 				position: absolute;
 				content: "";

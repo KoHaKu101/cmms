@@ -83,7 +83,7 @@
 												 </select>
 												<label class='text-white mx-2'>สถานะการใช้งาน : </label>
 												<select class="form-control form-control-sm mt-1 mx-1" name="MACHINE_CHECK" id="MACHINE_CHECK" onchange="changerank()">
-														<option value="0">-ทั้งหมด-</option>
+														<option value="0">ทั้งหมด</option>
 														<option value="1" {{ $MACHINE_CHECK == "1" ? 'selected': '' }}>หยุด/เสีย</option>
 														<option value="2" {{ $MACHINE_CHECK == "2" ? 'selected': '' }}>ทำงาน</option>
 														<option value="3" {{ $MACHINE_CHECK == "3" ? 'selected': '' }}>รอผลิต</option>

@@ -111,7 +111,6 @@
 															</a>
 														</div>
 
-
 													</div>
 								        </div>
 											</form>
@@ -123,20 +122,21 @@
 										}
 										</style>
 										<div class="row">
-											<div class="col-3 col-md-2 ml-auto">
+											<div class="col-6 col-sm-6 col-md-3 col-lg-2 ml-auto my-1">
 												<div class="selectgroup w-100">
 													<label class="selectgroup-item" >
-														<input type="radio"  class="selectgroup-input" onchange="styletable(1)" checked name="styletable">
+														<input type="radio"  class="selectgroup-input" onchange="styletable(1)" {{ Cookie::get('table_style') == '1' ? 'checked' : ''}} name="styletable">
 														<span class="selectgroup-button"><i class="fas fa-th-large"></i></span>
 													</label>
 													<label class="selectgroup-item"  >
-														<input type="radio" class="selectgroup-input" onchange="styletable(2)" name="styletable">
+														<input type="radio" class="selectgroup-input" onchange="styletable(2)" {{ Cookie::get('table_style') == '2' ? 'checked' : ''}} name="styletable">
 														<span class="selectgroup-button"><i class="fas fa-list-ol"></i></span>
 													</label>
 												</div>
 											</div>
 										</div>
-		                <div class="row" id="table_style">
+
+		                <div class="row" id="table_style" {{ Cookie::get('table_style') == '1' ? '' : 'hidden'}} >
 		                  @foreach ($dataset as $key => $row)
 												@php
 													$BG_COLOR = $row->PRIORITY == '9' ? 'bg-danger text-white' : 'bg-warning text-white';
@@ -233,7 +233,7 @@
 												</div> --}}
 		                    @endforeach
 		                </div>
-								    <div class="table-responsive" id="list_table" hidden>
+								    <div class="table-responsive" id="list_table" {{ Cookie::get('table_style') == '2' ? '' : 'hidden'}} >
 								      <table class="display table table-striped table-hover">
 								        <thead class="thead-light">
 								          <tr>
@@ -339,6 +339,7 @@ $(document).ready(function(){
 					 });
 				 }
   setInterval(loaddata_secon,8000);
+
 })
 
 function loop_tabel_worker(array_emp_code){
@@ -373,15 +374,28 @@ function loop_tabel_sparepart(unid,total){
 			 }
 		 });
 };
-function styletable(formatnumber){
+function setcookie(name,value){
+	var urlcookie = "{{ route('cookie.set') }}";
+	var data = {"_token": "{{ csrf_token() }}",NAME : name,VALUE : value}
+	$.ajax({
+		type:'GET',
+		url: urlcookie,
+		datatype: 'json',
+		data: data ,
+		success:function(res){
+				}
+			});
+}
+function styletable(table_style){
 
-	if (formatnumber == '1') {
+	if (table_style == '1') {
 		$('#table_style').attr('hidden',false);
 		$('#list_table').attr('hidden',true);
+		 setcookie('table_style','1');
 	}else {
 		$('#table_style').attr('hidden',true);
 		$('#list_table').attr('hidden',false);
-
+		 setcookie('table_style','2');
 	}
 }
 //******************************* End function ********************
