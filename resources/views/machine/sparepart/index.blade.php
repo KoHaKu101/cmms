@@ -124,7 +124,7 @@
 														<tbody>
 															@foreach ($DATA_SPAREPART as $key => $row)
 																<tr>
-																	<td>{{ $row->SPAREPART_INDEX }}</td>
+																	<td>{{ $key+1 }}</td>
 																	<td><strong>{{$row->SPAREPART_CODE}}</strong></td>
 																	<td>{{$row->SPAREPART_NAME}}</td>
 																	<td>{{$row->SPAREPART_MODEL}}</td>
