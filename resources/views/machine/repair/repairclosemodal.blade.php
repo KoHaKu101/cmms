@@ -368,18 +368,18 @@ body.modal-open {
           <div class="tab-pane" id="WORK_STEP_3">
             <div class="form-group">
               <div class="row">
-                <div class="col-12 col-sm-12 col-md-12 col-lg-6 form-inline has-error">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-5 form-inline has-error">
                   <label>เพิ่มอะไหล่</label>
                   <div class="col-9 col-sm-10 col-md-10 col-lg-9">
                     <select class="form-control form-control-sm col-9 REC_WORKER_NAME" id="SPAREPART" name="SPAREPART">
                     </select>
                   </div>
                 </div>
-                <div class="col-4 col-sm-7 col-md-4 col-lg-3 my-2 form-inline has-error">
+                <div class="col-4 col-sm-7 col-md-6 col-lg-3 my-2 form-inline has-error">
                   <label>จำนวนเบิก</label>
                   <input type="number" class="form-control form-control-sm col-md-5 mx-1" id="TOTAL_SPAREPART" min="0" value="1">
                 </div>
-                <div class="col-7 col-sm-5 col-md-4 col-lg-3 my-2  form-inline">
+                <div class="col-8 col-sm-5 col-md-6 col-lg-4 my-2  form-inline">
                   <button type="button" class="btn btn-primary btn-sm mx-1" onclick="add_sparepart(1)">
                     ตัดสต็อก</button>
                   <button type="button" class="btn btn-primary btn-sm mx-1" onclick="add_sparepart(2)">
@@ -532,6 +532,16 @@ body.modal-open {
 													<h5 class="sub">ระยะเวลา DownTime</h5>
 														<p>{{date_diff(date_create(date('d-m-Y')),date_create(date('d-m-Y',strtotime('2021/06/20'))))->format('%d วัน %h ชั่วโมง %i นาที')}}</p>
 												</div>
+                        <div class="separator-solid"></div>
+                        
+                        <div class="form-group">
+                          <h6 class="text-uppercase mb-3 fw-bold">
+                            การแก้ไข
+                          </h6>
+                          <p class="text-muted mb-0">
+                            We really appreciate your business and if there's anything else we can do, please let us know! Also, should you need us to add VAT or anything else to this order, it's super easy since this is a template, so just ask!
+                          </p>
+                        </div>
 											</div>
 											<div class="row">
 												<div class="col-md-12">
@@ -608,13 +618,7 @@ body.modal-open {
 													<div class="price">2600 ฿</div>
 												</div>
                       </div>
-											<div class="separator-solid"></div>
-                      <h6 class="text-uppercase mt-4 mb-3 fw-bold">
-												การแก้ไข
-											</h6>
-											<p class="text-muted mb-0">
-												We really appreciate your business and if there's anything else we can do, please let us know! Also, should you need us to add VAT or anything else to this order, it's super easy since this is a template, so just ask!
-											</p>
+
 										</div>
 									</div>
 								</div>

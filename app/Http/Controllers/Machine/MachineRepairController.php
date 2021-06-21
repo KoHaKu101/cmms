@@ -189,7 +189,7 @@ class MachineRepairController extends Controller
   }
   public function Store(Request $request,$MACHINE_UNID){
       //******************* Request parameter *******************//
-      MachineRepairREQ::select('*')->delete();
+      // MachineRepairREQ::select('*')->delete();
       $CLOSE_STATUS = '9';
         $MACHINE_UNID = $MACHINE_UNID;
         $EMP_CODE = $request->cookie('empcode');
@@ -247,7 +247,7 @@ class MachineRepairController extends Controller
       foreach ($cookie_array as $index => $row) {
         Cookie::queue(Cookie::forget($row));
       }
-      return redirect()->route('repair.edit',$UNID);
+      return redirect()->route('repair.list');
   }
   public function Edit($UNID) {
     $data_repairreq = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME')
