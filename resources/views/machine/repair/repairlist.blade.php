@@ -400,7 +400,11 @@ function styletable(formatnumber){
 					 $('#select_recworker').html(data.html_select);
 					 $('#WORKER_SELECT').html(data.html_select);
 					 $('#SPAREPART').html(data.html_sparepart);
-					 $('#SPAREPART','#WORKER_SELECT').select2({
+					 $('#SPAREPART').select2({
+						 placeholder: "กรุณาเลือก",
+						 width:'116%',
+					 });
+					 $('#WORKER_SELECT').select2({
 						 placeholder: "กรุณาเลือก",
 						 width:'100%',
 					 });
@@ -409,7 +413,6 @@ function styletable(formatnumber){
 						 width:'100%',
 						 selectionCssClass:'my-1 ',
 					 });
-					 // $('.select2').addClass("my-1");
 					 $('.REC_WORKER_NAME').select2({
 						 placeholder: "กรุณาเลือก",
 						 width:'100%',
@@ -431,8 +434,6 @@ function styletable(formatnumber){
 			$('#step'+i).removeClass('badge-primary badge-success fw-bold');
 			$('#WORK_STEP_'+i).removeClass('active show');
 		}
-		console.log(detail);
-
 		$('#step1').addClass('badge-primary fw-bold');
 		$('#WORK_STEP_1').addClass('active show');
 		$('#TITLE_DOCNO_SUB').html(docno);
@@ -527,7 +528,7 @@ function styletable(formatnumber){
 		 var unid = $(thisdata).data('unid');
 		 $('#SPAREPART').val(unid);
 	   $('#SPAREPART').select2({
-			 width:'100%',
+			 width:'116%',
 		 }).trigger('change');
 		 var total = sparepart_total[unid];
 		 $('#TOTAL_SPAREPART').val(total);
@@ -554,16 +555,12 @@ function styletable(formatnumber){
 	 $('#closeform').on('click',function(){
 		 $('#CloseForm').modal('hide');
 	 })
-
-
 </script>
-
 <script type="text/javascript">
 	function changesubmit(){
 		$('#BTN_SUBMIT').click();
 	}
 	function pdfrepair(m){
-		console.log(m);
 		var unid = (m);
 		window.open('/machine/repair/pdf/'+unid,'Repairprint','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');
 	}

@@ -368,18 +368,18 @@ body.modal-open {
           <div class="tab-pane" id="WORK_STEP_3">
             <div class="form-group">
               <div class="row">
-                <div class="col-12 col-sm-12 col-md-12 col-lg-5 form-inline has-error">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6 form-inline has-error">
                   <label>เพิ่มอะไหล่</label>
                   <div class="col-9 col-sm-10 col-md-10 col-lg-9">
-                    <select class="form-control form-control-sm col-9 REC_WORKER_NAME" id="SPAREPART" name="SPAREPART">
+                    <select class="form-control form-control-sm col-9" id="SPAREPART" name="SPAREPART">
                     </select>
                   </div>
                 </div>
-                <div class="col-4 col-sm-7 col-md-6 col-lg-3 my-2 form-inline has-error">
+                <div class="col-4 col-sm-7 col-md-6 col-lg-6 my-2 form-inline has-error">
                   <label>จำนวนเบิก</label>
-                  <input type="number" class="form-control form-control-sm col-md-5 mx-1" id="TOTAL_SPAREPART" min="0" value="1">
-                </div>
-                <div class="col-8 col-sm-5 col-md-6 col-lg-4 my-2  form-inline">
+                  <input type="number" class="form-control form-control-sm col-md-3 mx-1" id="TOTAL_SPAREPART" min="0" value="1">
+                {{-- </div> --}}
+                {{-- <div class="col-8 col-sm-5 col-md-6 col-lg-4 my-2  form-inline"> --}}
                   <button type="button" class="btn btn-primary btn-sm mx-1" onclick="add_sparepart(1)">
                     ตัดสต็อก</button>
                   <button type="button" class="btn btn-primary btn-sm mx-1" onclick="add_sparepart(2)">
