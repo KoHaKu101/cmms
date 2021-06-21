@@ -41,6 +41,7 @@ class MachineRepairController extends Controller
     ->where('UNID',$number)
     ->first(['UNID'])) );
     return $number;
+    
    }
 
   public function Index(Request $request){
