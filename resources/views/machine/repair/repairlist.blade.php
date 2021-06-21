@@ -431,6 +431,8 @@ function styletable(formatnumber){
 			$('#step'+i).removeClass('badge-primary badge-success fw-bold');
 			$('#WORK_STEP_'+i).removeClass('active show');
 		}
+		console.log(detail);
+
 		$('#step1').addClass('badge-primary fw-bold');
 		$('#WORK_STEP_1').addClass('active show');
 		$('#TITLE_DOCNO_SUB').html(docno);
