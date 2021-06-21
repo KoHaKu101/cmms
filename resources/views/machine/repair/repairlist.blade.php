@@ -107,7 +107,7 @@
 														{{-- <div class="col-md-12 col-lg-1 text-right"> --}}
 														<div class="col-md-7 col-lg-1 text-right">
 															<a href="{{ route('repair.repairsearch') }}"class="btn btn-warning  btn-xs mt-1 ">
-																<span style="font-size: 13px;margin-bottom: 7px;">	แจ้งซ่อม123</span>
+																<span style="font-size: 13px;margin-bottom: 7px;">	แจ้งซ่อม</span>
 															</a>
 														</div>
 
