@@ -402,10 +402,12 @@ function styletable(formatnumber){
 						 placeholder: "กรุณาเลือก",
 						 width:'100%',
 					 });
-					 $('.select-repairdetail').select2({
+					$('.select-repairdetail').select2({
 						 placeholder: "กรุณาเลือก",
 						 width:'100%',
+						 // containerCssClass: 'my-1',
 					 });
+					 $('.select2').addClass("my-1");
 					 $('.REC_WORKER_NAME').select2({
 						 placeholder: "กรุณาเลือก",
 						 width:'100%',
@@ -544,8 +546,6 @@ function styletable(formatnumber){
 				$('#buy_sparepart').attr('hidden',true);
 			}
 	 });
-
-
 
 	 $('#closeform').on('click',function(){
 		 $('#CloseForm').modal('hide');
