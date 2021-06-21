@@ -365,16 +365,18 @@ class MachineRepairController extends Controller
           <tr>
             <td style="background:#aab7c1;color:black;"><h5 class="my-1">อาการ</h5>  </td>
             <td  colspan="3">
-              <select class="select-repairdetail my-2" id="DETAIL_REPAIR">';
-              foreach ($DATA_SELECMAIN as $index => $row_main){
-              $html_detail.='<optgroup label="'.$row_main->REPAIR_MAINSELECT_NAME.'">';
-                    foreach ($DATA_SELECSUB->where('REPAIR_MAINSELECT_UNID','=',$row_main->UNID) as $index => $row_sub){
-                      $SELECTED = $row_sub->UNID == $REPAIR->REPAIR_SUBSELECT_UNID ? 'selected' : '' ;
-                      $html_detail.= '<option value="'.$row_sub->REPAIR_SUBSELECT_NAME.'" '.$SELECTED.'>'.$row_sub->REPAIR_SUBSELECT_NAME.'</option>';
+              <div class="has-error">
+                <select class="select-repairdetail" id="DETAIL_REPAIR ">';
+                foreach ($DATA_SELECMAIN as $index => $row_main){
+                $html_detail.='<optgroup label="'.$row_main->REPAIR_MAINSELECT_NAME.'">';
+                      foreach ($DATA_SELECSUB->where('REPAIR_MAINSELECT_UNID','=',$row_main->UNID) as $index => $row_sub){
+                        $SELECTED = $row_sub->UNID == $REPAIR->REPAIR_SUBSELECT_UNID ? 'selected' : '' ;
+                        $html_detail.= '<option value="'.$row_sub->REPAIR_SUBSELECT_NAME.'" '.$SELECTED.'>'.$row_sub->REPAIR_SUBSELECT_NAME.'</option>';
+                      }
+                $html_detail.='</optgroup>';
                     }
-              $html_detail.='</optgroup>';
-                  }
-              $html_detail.='</select>
+                $html_detail.='</select>
+              </div>
             </td>
           </tr>
           <tr>

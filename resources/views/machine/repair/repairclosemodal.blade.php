@@ -532,17 +532,16 @@ body.modal-open {
 													<h5 class="sub">ระยะเวลา DownTime</h5>
 														<p>{{date_diff(date_create(date('d-m-Y')),date_create(date('d-m-Y',strtotime('2021/06/20'))))->format('%d วัน %h ชั่วโมง %i นาที')}}</p>
 												</div>
-                        <div class="separator-solid"></div>
-                        
+
                         <div class="form-group">
-                          <h6 class="text-uppercase mb-3 fw-bold">
+                          <h6 class="text-uppercase mb-2 fw-bold">
                             การแก้ไข
                           </h6>
-                          <p class="text-muted mb-0">
-                            We really appreciate your business and if there's anything else we can do, please let us know! Also, should you need us to add VAT or anything else to this order, it's super easy since this is a template, so just ask!
-                          </p>
+                          <p class="text-muted mb-1">
+                            CHANGE CONTROL UNIT FLOW LUBRICATON
                         </div>
 											</div>
+                      <div class="separator-solid"></div>
 											<div class="row">
 												<div class="col-md-12">
 													<div class="invoice-detail">
@@ -582,7 +581,7 @@ body.modal-open {
 																		<tr>
 																			<td></td>
 																			<td></td>
-																			<td class="text-center"><strong>รวม</strong></td>
+																			<td class="text-right"><strong>รวม</strong></td>
 																			<td class="text-right">600 ฿</td>
 																		</tr>
 																	</tbody>

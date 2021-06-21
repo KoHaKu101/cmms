@@ -405,9 +405,9 @@ function styletable(formatnumber){
 					$('.select-repairdetail').select2({
 						 placeholder: "กรุณาเลือก",
 						 width:'100%',
-						 // containerCssClass: 'my-1',
+						 selectionCssClass:'my-1 ',
 					 });
-					 $('.select2').addClass("my-1");
+					 // $('.select2').addClass("my-1");
 					 $('.REC_WORKER_NAME').select2({
 						 placeholder: "กรุณาเลือก",
 						 width:'100%',
