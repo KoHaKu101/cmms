@@ -85,11 +85,16 @@
 		.slider.round:before {
 		  border-radius: 50%;
 		}
+		.table-responsive-sf{
+			display: block;
+			max-width: 900px;
+			overflow-y: auto;
+		}
 	</style>
 
 	  <div class="content">
       <div class="page-inner">
-				<div class="py-12">
+				{{-- <div class="py-12"> --}}
 	        <div class="container mt--4">
 						<div class="row">
 							<div class="col-md-12">
@@ -105,14 +110,9 @@
 												</h4>
 											</div>
 											<div class="card-body">
-												{{-- <style>
-													.table-responsive {
-																width: % !important;
-														    display: table;
-														}
-												</style> --}}
-													<div class="table-responsive-xl" >
-														<table class="table">
+
+													<div class="table-responsive-sf" >
+														<table class="table  table-bordered table-head-bg-info table-bordered-bd-info">
 															<thead>
 																<tr>
 																	<th >#</th>
@@ -227,10 +227,9 @@
 							</div>
 						</div>
 					</div>
-				</div>
+				{{-- </div> --}}
       </div>
 		</div>
-	</div>
 
 		@include('machine.sparepart.modaladdsparepart')
 		@include('machine.sparepart.modaladdmachinesparepart')
