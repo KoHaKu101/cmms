@@ -398,11 +398,12 @@ body.modal-open {
                       <th>เบอร์</th>
                       <th>ขนาด</th>
                       <th>ราคา</th>
+                      <th>Unit</th>
                       <th>เบิก</th>
                     </tr>
                   </thead>
                   <tbody id="table_sparepart">
-                    <td colspan="7"></td>
+                    <td colspan="8"></td>
                   </tbody>
                 </table>
               </div>

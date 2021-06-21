@@ -500,6 +500,7 @@ class MachineRepairController extends Controller
                   <td>'.$row->SPAREPART_MODEL.'</td>
                   <td>'.$row->SPAREPART_SIZE.'</td>
                   <td>'.$row->SPAREPART_COST.'</td>
+                  <td>'.$row->UNIT.'</td>
                   <td>'.$TOTAL[$row->UNID].'</td>
 
                 </tr>';

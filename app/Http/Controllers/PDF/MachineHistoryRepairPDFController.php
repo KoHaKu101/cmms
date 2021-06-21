@@ -71,7 +71,7 @@ class MachineHistoryRepairPDFController extends Fpdf
 
 
        $pdf->Cell(78,6,iconv('UTF-8//IGNORE', 'cp874//IGNORE', $row->REPAIR_SUBSELECT_NAME),1,0,'');
-       $pdf->Cell(44,6,iconv('UTF-8//IGNORE', 'cp874//IGNORE', ($row->status = '9')? 'ดำเนินการสำเร็จ' : 'กำลังดำเนินการ'),1,0,'');
+       $pdf->Cell(44,6,iconv('UTF-8//IGNORE', 'cp874//IGNORE', ($row->CLOSE_STATUS == '9')? 'ดำเนินการสำเร็จ' : 'กำลังดำเนินการ'),1,0,'');
 
        $pdf->Ln();
      }

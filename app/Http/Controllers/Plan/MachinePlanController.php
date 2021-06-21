@@ -60,12 +60,15 @@ class MachinePlanController extends Controller
     return $number;
   }
   public function PMPlanList(Request $request){
-
     $PLAN_YEAR = $request->PLAN_YEAR > 0 ? $request->PLAN_YEAR : date('Y');
     $MACHINE_CODE = $request->MACHINE_CODE;
     $MACHINE_LINE = $request->MACHINE_LINE;
     $PLAN_STATUS = $request->PLAN_STATUS;
-    $PLAN_MONTH = $request->PLAN_MONTH > 0 ? $request->PLAN_MONTH : date('n');
+    $PLAN_MONTH = date('n');
+    if ($request->PLAN_MONTH != NULL) {
+      $PLAN_MONTH = $request->PLAN_MONTH;
+    }
+
 
     $MACHINE_CODE = $MACHINE_CODE != '' ? '%'.$MACHINE_CODE.'%' : '%';
     $MACHINE_LINE = $MACHINE_LINE != '' ? '%'.$MACHINE_LINE.'%' : '%';
@@ -82,7 +85,11 @@ class MachinePlanController extends Controller
                                       ->orWhere('PM_MASTER_NAME', 'like', $MACHINE_CODE);})
                         ->where('MACHINE_LINE','like',$MACHINE_LINE)
                         ->where('PLAN_STATUS','like',$PLAN_STATUS != '' ? $PLAN_STATUS :'%')
-                        ->where('PLAN_MONTH','like',$PLAN_MONTH > 0 ? $PLAN_MONTH : '%')
+                        ->where(function($query) use ($PLAN_MONTH){
+                          if ($PLAN_MONTH > 0) {
+                            $query->where('PLAN_MONTH','=',$PLAN_MONTH);
+                          }
+                        })
                         ->orderBy('PLAN_STATUS','DESC')
                         ->orderby('PLAN_DATE','ASC')
                         ->orderBy('MACHINE_CODE','ASC')

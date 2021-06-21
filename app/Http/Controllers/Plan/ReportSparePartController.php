@@ -43,17 +43,28 @@ class ReportSparePartController extends Controller
   }
   public function Index(Request $request){
     $DOC_YEAR  = $request->DOC_YEAR > 0 ? $request->DOC_YEAR : date('Y');
-    $DOC_MONTH = $request->DOC_MONTH > 0 ? $request->DOC_MONTH : date('n');
+    
     $SEARCH = $request->SEARCH != '' ? '%'.$request->SEARCH.'%' : '%';
     $STATUS = $request->STATUS;
+
+    $DOC_MONTH = date('n');
+    if ($request->DOC_MONTH != NULL) {
+      $DOC_MONTH = $request->DOC_MONTH;
+    }
+
     $MACHINE_LINE = isset($request->MACHINE_LINE) ? $request->MACHINE_LINE : '%';
       if ($STATUS == 'NEW') {
-        $DATA_SPAREPLAN = SparePartPlan::select('*')->selectraw("
-        CASE
-        WHEN DOC_MONTH > MONTH(getdate()) and DOC_YEAR > YEAR(getdate()) THEN 'FALSE'
-        WHEN DOC_MONTH > MONTH(getdate()) THEN 'FALSE'
-     　 else 'TRUE'
-      　    END AS classtext")->where('DOC_YEAR','=',$DOC_YEAR)->where('DOC_MONTH','=',$DOC_MONTH)
+              $DATA_SPAREPLAN = SparePartPlan::select('*')->selectraw("
+              CASE
+              WHEN DOC_MONTH > MONTH(getdate()) and DOC_YEAR > YEAR(getdate()) THEN 'FALSE'
+              WHEN DOC_MONTH > MONTH(getdate()) THEN 'FALSE'
+           　 else 'TRUE'
+            　    END AS classtext")->where('DOC_YEAR','=',$DOC_YEAR)
+                                    ->where(function($query) use ($DOC_MONTH){
+                                      if ($DOC_MONTH > 0) {
+                                        $query->where('DOC_MONTH','=',$DOC_MONTH);
+                                      }
+                                    })
                                     ->where(function ($query) use ($SEARCH) {
                                         $query->where('MACHINE_CODE', 'like', $SEARCH)
                                               ->orWhere('SPAREPART_NAME', 'like', $SEARCH);})
