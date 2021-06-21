@@ -105,70 +105,76 @@
 												</h4>
 											</div>
 											<div class="card-body">
-												<div class="table-responsive ">
-													<table class="table table-bordered table-head-bg-info table-bordered-bd-info">
-														<thead>
-															<tr>
-																<th scope="col">#</th>
-																<th scope="col">รหัส</th>
-																<th scope="col">ชื่ออะไหล่</th>
-																<th scope="col">เบอร์</th>
-																<th scope="col">ขนาด</th>
-																<th scope="col">Stock Min</th>
-																<th scope="col">Price</th>
-																<th scope="col">สถานะ</th>
-																<th scope="col">Action</th>
-																<th scope="col">Machine</th>
-															</tr>
-														</thead>
-														<tbody>
-															@foreach ($DATA_SPAREPART as $key => $row)
+												{{-- <style>
+													.table-responsive {
+																width: % !important;
+														    display: table;
+														}
+												</style> --}}
+													<div class="table-responsive-xl" >
+														<table class="table">
+															<thead>
 																<tr>
-																	<td>{{ $key+1 }}</td>
-																	<td><strong>{{$row->SPAREPART_CODE}}</strong></td>
-																	<td>{{$row->SPAREPART_NAME}}</td>
-																	<td>{{$row->SPAREPART_MODEL}}</td>
-																	<td>{{$row->SPAREPART_SIZE}}</td>
-																	<td>{{$row->STOCK_MIN}}</td>
-																	<td>{{number_format($row->SPAREPART_COST)}}</td>
-																	<td>{{$row->STATUS == 9 ? "เปิด" : "ปิด"}}</td>
-																	<td>
-																		<button type="button" class="btn btn-primary btn-sm mx-1 my-1 btn-edit-spare"
-																		data-spcode="{{$row->SPAREPART_CODE}}"
-																		data-spname="{{$row->SPAREPART_NAME}}"
-																		data-spmodel="{{$row->SPAREPART_MODEL}}"
-																		data-spsize="{{$row->SPAREPART_SIZE}}"
-																		data-spstock="{{$row->STOCK_MIN}}"
-																		data-spstatus="{{$row->STATUS}}"
-																		data-spremark="{{ $row->SPAREPART_REMARK }}"
-																		data-spcost="{{ $row->SPAREPART_COST }}"
-																		data-spunit="{{ $row->UNIT }}"
-																		>
-																		<i class="fas fa-edit fa-lg"></i></button>
-																		<button type="button" class="btn btn-danger btn-sm mx-1 my-1 btn-delete-spare"
-																		data-spcode="{{$row->SPAREPART_CODE}}"
-																		data-spunid="{{$row->UNID}}"
-																		>
-																		<i class="fas fa-trash fa-lg"></i></button>
-																	</td>
-																	<td>
-																		<button type="button" class="btn btn-primary btn-sm mx-1 my-1 btn-machine"
-																		data-spcode="{{$row->SPAREPART_CODE}}"
-																		data-spunid="{{$row->UNID}}"
-																		>
-																		<i class="fas fa-plus fa-lg"></i></button>
-																			<a href="{{ route('SparPart.List',$row->UNID) }}" class="btn {{ isset($DATA_MACHINESPAREPART_FIRST->UNID) ? $DATA_MACHINESPAREPART_FIRST->UNID == $row->UNID ? 'btn-secondary' : 'btn-info' : 'btn-info' }} btn-sm mx-1 my-1">
-																			<i class="fas fa-eye fa-lg"></i></a>
-																	</td>
+																	<th >#</th>
+																	<th >รหัส</th>
+																	<th >ชื่ออะไหล่</th>
+																	<th >เบอร์</th>
+																	<th >ขนาด</th>
+																	<th >Stock Min</th>
+																	<th >Price</th>
+																	<th >สถานะ</th>
+																	<th >Action</th>
+																	<th >Machine</th>
 																</tr>
-															@endforeach
+															</thead>
+															<tbody>
+																@foreach ($DATA_SPAREPART as $key => $row)
+																	<tr>
+																		<td class="text-nowrap">{{ $key+1 }}</td>
+																		<td class="text-nowrap"><strong>{{$row->SPAREPART_CODE}}</strong></td>
+																		<td class="text-nowrap">{{$row->SPAREPART_NAME}}</td>
+																		<td class="text-nowrap">{{$row->SPAREPART_MODEL}}</td>
+																		<td class="text-nowrap">{{$row->SPAREPART_SIZE}}</td>
+																		<td class="text-nowrap">{{$row->STOCK_MIN}}</td>
+																		<td class="text-nowrap">{{number_format($row->SPAREPART_COST)}}</td>
+																		<td class="text-nowrap">{{$row->STATUS == 9 ? "เปิด" : "ปิด"}}</td>
+																		<td class="text-nowrap">
+																			<button type="button" class="btn btn-primary btn-sm mx-1 my-1 btn-edit-spare"
+																			data-spcode="{{$row->SPAREPART_CODE}}"
+																			data-spname="{{$row->SPAREPART_NAME}}"
+																			data-spmodel="{{$row->SPAREPART_MODEL}}"
+																			data-spsize="{{$row->SPAREPART_SIZE}}"
+																			data-spstock="{{$row->STOCK_MIN}}"
+																			data-spstatus="{{$row->STATUS}}"
+																			data-spremark="{{ $row->SPAREPART_REMARK }}"
+																			data-spcost="{{ $row->SPAREPART_COST }}"
+																			data-spunit="{{ $row->UNIT }}"
+																			>
+																			<i class="fas fa-edit fa-lg"></i></button>
+																			<button type="button" class="btn btn-danger btn-sm mx-1 my-1 btn-delete-spare"
+																			data-spcode="{{$row->SPAREPART_CODE}}"
+																			data-spunid="{{$row->UNID}}"
+																			>
+																			<i class="fas fa-trash fa-lg"></i></button>
+																		</td>
+																		<td class="text-nowrap">
+																			<button type="button" class="btn btn-primary btn-sm mx-1 my-1 btn-machine"
+																			data-spcode="{{$row->SPAREPART_CODE}}"
+																			data-spunid="{{$row->UNID}}"
+																			>
+																			<i class="fas fa-plus fa-lg"></i></button>
+																				<a href="{{ route('SparPart.List',$row->UNID) }}" class="btn {{ isset($DATA_MACHINESPAREPART_FIRST->UNID) ? $DATA_MACHINESPAREPART_FIRST->UNID == $row->UNID ? 'btn-secondary' : 'btn-info' : 'btn-info' }} btn-sm mx-1 my-1">
+																				<i class="fas fa-eye fa-lg"></i></a>
+																		</td>
+																	</tr>
+																@endforeach
 
-														</tbody>
+															</tbody>
 
-													</table>
-													{{ $DATA_SPAREPART->appends(['machinepage' => $DATA_MACHINESPAREPART->currentPage()])->links('pagination.default',['paginator' => $DATA_SPAREPART,
-																		 'link_limit' => $DATA_SPAREPART->perPage()]) }}
-												</div>
+														</table>
+														{{ $DATA_SPAREPART->appends(['machinepage' => $DATA_MACHINESPAREPART->currentPage()])->links('pagination.default',['paginator' => $DATA_SPAREPART,
+																			 'link_limit' => $DATA_SPAREPART->perPage()]) }}
+													</div>
 											</div>
 										</div>
 									</div>
