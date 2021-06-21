@@ -128,7 +128,7 @@ class MachineRepairController extends Controller
                                             ->paginate(10);
     $SEARCH         = $SERACH_TEXT;
     $html = '';
-
+    $html_style = '';
     foreach ($dataset as $key => $row) {
       $html.= '<tr>
                 <td>'.$key+1 .'</td>
@@ -161,13 +161,43 @@ class MachineRepairController extends Controller
                    }else {
                   $html.='<td ></td>';
                   }
-
-
-      // dd($html);
       $html.= '<td >'.date('d-m-Y').'</td>
         </tr>';
       }
-    return Response()->json(['html'=>$html]);
+    foreach ($dataset as $index => $sub_row) {
+    $BG_COLOR = $sub_row->PRIORITY == '9' ? 'bg-danger text-white' : 'bg-warning text-white';
+    $html_style .=  '<div class="col-lg-3">
+        <div class="card card-round">
+          <div class="card-body">
+            <div class="card-title text-center fw-mediumbold '.$BG_COLOR.' ">'.$sub_row->MACHINE_CODE.'</div>
+            <div class="card-list">
+              <div class="item-list">
+                <div class="avatar">
+                  <img src="'.asset('../assets/img/noemp.png').'" alt="..." class="avatar-img rounded-circle">
+                </div>
+                <div class="info-user ml-3">
+                  <div class="username" style="">รอรับงาน</div>
+                  <div class="status">'.$sub_row->REPAIR_SUBSELECT_NAME.'</div>
+                  <div class="status">แจ้งเมื่อ:'.Carbon::parse($sub_row->CREATE_TIME)->diffForHumans().'</div>
+                </div>
+              </div>
+            </div>
+            <div class="row ">
+              <div class="col-md-12 text-center">
+                <button class="btn  btn-primary  btn-sm"
+                onclick="rec_work(this)"
+                data-unid="'.$sub_row->UNID.'"
+                data-docno="'.$sub_row->DOC_NO.'"
+                data-detail="'.$sub_row->REPAIR_SUBSELECT_NAME.'">
+                  SELECT
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>';
+      }
+    return Response()->json(['html'=>$html,'html_style' => $html_style]);
   }
   public function PrepareSearch(Request $request){
 

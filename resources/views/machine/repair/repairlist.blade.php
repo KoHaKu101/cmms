@@ -136,7 +136,7 @@
 												</div>
 											</div>
 										</div>
-		                <div class="row" id="picture_table">
+		                <div class="row" id="table_style">
 		                  @foreach ($dataset as $key => $row)
 												@php
 													$BG_COLOR = $row->PRIORITY == '9' ? 'bg-danger text-white' : 'bg-warning text-white';
@@ -334,6 +334,7 @@ $(document).ready(function(){
 						 datatype: 'json',
 						 success:function(data){
 							 $('#result').html(data.html);
+							 $('#table_style').html(data.html_style);
 						 }
 					 });
 				 }
@@ -368,16 +369,17 @@ function loop_tabel_sparepart(unid,total){
 			 data: {TOTAL_SPAREPART : sparepart_total},
 			 success:function(data){
 				 $('#table_sparepart').html(data.html);
+
 			 }
 		 });
 };
 function styletable(formatnumber){
 
 	if (formatnumber == '1') {
-		$('#picture_table').attr('hidden',false);
+		$('#table_style').attr('hidden',false);
 		$('#list_table').attr('hidden',true);
 	}else {
-		$('#picture_table').attr('hidden',true);
+		$('#table_style').attr('hidden',true);
 		$('#list_table').attr('hidden',false);
 
 	}
