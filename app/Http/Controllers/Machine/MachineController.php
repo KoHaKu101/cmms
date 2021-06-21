@@ -77,12 +77,8 @@ class MachineController extends Controller
     $MINUTES = 30;
     // $COOKIE_SEARCH            = $request->SEARCH;
 
-    // $response = new Response('Set Cookie');
-    //           $response->withCookie(cookie('name', 'MyValue',));
-    // // $dd = Cookie::queue('cookieName','123');
-    // dd($response->header('cookie'));
+
     Cookie::queue('MACHINE_CHECK',$COOKIE_MACHINE_CHECK,$MINUTES);
-    // Cookie::queue('SEARCH',$COOKIE_SEARCH,$MINUTES);
     Cookie::queue('LINE',$COOKIE_LINE,$MINUTES);
     Cookie::queue('MACHINE_RANK_CODE',$COOKIE_MACHINE_RANK_CODE,$MINUTES);
     Cookie::queue('MACHINE_STATUS',$COOKIE_MACHINE_STATUS,$MINUTES);
@@ -122,7 +118,7 @@ class MachineController extends Controller
                                 }
                               })
                         ->where('MACHINE_TYPE_STATUS','=','9')
-                        ->where('MACHINE_STATUS','=',$MACHINE_STATUS)
+                        ->where('MACHINE_STATUS','=',$MACHINE_STATUS == '' ? 9 :$MACHINE_STATUS )
                         ->orderBy('MACHINE_LINE','ASC')
                         ->orderBy('MACHINE_CODE')->paginate(10);
 

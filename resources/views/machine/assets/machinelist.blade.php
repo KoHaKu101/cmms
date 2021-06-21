@@ -74,8 +74,6 @@
 														 <option value="{{ $row_line->LINE_CODE }}" {{ $MACHINE_LINE == $row_line->LINE_CODE ? 'selected' : '' }}>{{ $row_line->LINE_NAME }}</option>
 													 @endforeach
 												 </select>
-
-
 												<label class="text-white mx-2">Rank : </label>
 												 <select class="form-control form-control-sm mt-1 mx-1" id="MACHINE_RANK_CODE" name="MACHINE_RANK_CODE" onchange="changerank()">
 													 <option value="0" >ทั้งหมด</option>
