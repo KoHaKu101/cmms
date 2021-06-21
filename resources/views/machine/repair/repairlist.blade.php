@@ -46,7 +46,7 @@
 								@can('isUser')
 									<a href="{{ url('/machine/user/homepage') }}">
 										<button class="btn btn-warning  btn-xs ">
-											<span class="fas fa-arrow-left fa-lg">Back </span>
+											<span class="fas fa-arrow-left fa-lg">Back 123</span>
 										</button>
 									</a>
 	              @endcan
