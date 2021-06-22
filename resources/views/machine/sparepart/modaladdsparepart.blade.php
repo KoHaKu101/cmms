@@ -38,16 +38,10 @@
                 <input type="text" class="form-control" id="SPAREPART_NAME" name="SPAREPART_NAME">
               </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-8">
               <div class="form-group">
                 <label for="SPAREPART_CODE">model</label>
                 <input type="text" class="form-control" id="SPAREPART_MODEL" name="SPAREPART_MODEL">
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="SPAREPART_CODE">size</label>
-                <input type="text" class="form-control" id="SPAREPART_SIZE" name="SPAREPART_SIZE">
               </div>
             </div>
             <div class="col-md-4">
@@ -56,6 +50,13 @@
                 <input type="text" class="form-control" id="UNIT" name="UNIT">
               </div>
             </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="SPAREPART_CODE">size</label>
+                <input type="text" class="form-control" id="SPAREPART_SIZE" name="SPAREPART_SIZE">
+              </div>
+            </div>
+
           </div>
           <div class="row">
             <div class="col-md-12">

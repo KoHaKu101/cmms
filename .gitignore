@@ -5,6 +5,7 @@
 /public/storage
 /storage/*.key
 /vendor
+/database/waitcreate
 .env
 .env.backup
 .phpunit.result.cache
