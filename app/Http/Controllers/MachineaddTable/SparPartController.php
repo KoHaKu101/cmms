@@ -48,7 +48,7 @@ class SparPartController extends Controller
     $DATA_MACHINESPAREPART_FIRST = SparePart::where('UNID','=',$SPAREPART_UNID)->first();
 
 
-    $DATA_SPAREPART        = SparePart::orderBy('SPAREPART_INDEX','ASC')->paginate(10,['*'],'sparepartpage');
+    $DATA_SPAREPART        = SparePart::orderBy('SPAREPART_CODE','ASC')->paginate(10,['*'],'sparepartpage');
     return View('machine.sparepart.index',compact('DATA_SPAREPART','DATA_MACHINESPAREPART','DATA_MACHINESPAREPART_FIRST'));
   }
   public function Save(Request $request){
@@ -244,7 +244,7 @@ class SparPartController extends Controller
     $pm_lastdate        = $DATESTART;
     $MACHINE            = Machine::where('UNID','=',$MACHINE_UNID)->first();
     $SPAREPART          = SparePart::where('UNID','=',$SPARTPART_UNID)->first();
-  
+
     $TOTAL_COST = 0;
     if ($SPAREPART_QTY > 0 && $SPAREPART_COST > 0) {
       $TOTAL_COST = $SPAREPART_QTY * $SPAREPART_COST;
