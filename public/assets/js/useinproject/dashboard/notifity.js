@@ -33,7 +33,7 @@ $(document).ready(function(){
       }
       });
     }
-    setInterval(notifity,20000);
+    setInterval(notifity,50000);
 
     var count = function (){
       $.ajax({
@@ -52,5 +52,5 @@ $(document).ready(function(){
         }
         });
       }
-      setInterval(count,20000);
+      setInterval(count,50000);
   });
