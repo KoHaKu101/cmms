@@ -15,6 +15,7 @@ use App\Http\Controllers\Dashboard\CalendarController;
 use App\Http\Controllers\Machine\MachineController;
 use App\Http\Controllers\Machine\PersonalController;
 use App\Http\Controllers\Machine\MachineRepairController;
+use App\Http\Controllers\Machine\RepairCloseFormController;
 use App\Http\Controllers\Machine\PositionEmpController;
 use App\Http\Controllers\Machine\MachineManualController;
 use App\Http\Controllers\Machine\SysCheckController;
@@ -83,21 +84,24 @@ Route::get('/cookie/set',[CookieController::class,'setCookie'])->name('cookie.se
 Route::get('/cookie/get',[CookieController::class,'getCookie'])->name('cookie.get');
 //repair
 
-Route::get('machine/repair/repairlist'             ,[MachineRepairController::class,'Index'])->name('repair.list');
-Route::get('machine/repair/fetchdata'             ,[MachineRepairController::class,'FetchData'])->name('repair.fetchdata');
+Route::get('machine/repair/repairlist'                    ,[MachineRepairController::class,'Index'])             ->name('repair.list');
+Route::get('machine/repair/fetchdata'                     ,[MachineRepairController::class,'FetchData'])         ->name('repair.fetchdata');
 
-  Route::get('machine/repair/form/{MACHINE_CODE}'  ,[MachineRepairController::class,'Create'])       ->name('repair.form');
-  Route::get('machine/repair/repairsearch'         ,[MachineRepairController::class,'PrepareSearch'])->name('repair.repairsearch');
+  Route::get('machine/repair/form/{MACHINE_CODE}'         ,[MachineRepairController::class,'Create'])            ->name('repair.form');
+  Route::get('machine/repair/repairsearch'                ,[MachineRepairController::class,'PrepareSearch'])     ->name('repair.repairsearch');
 
-  Route::post('machine/repair/store/{MACHINE_UNID}',[MachineRepairController::class,'Store'])        ->name('repair.store');
-  Route::get('machine/repair/edit/{UNID}'          ,[MachineRepairController::class,'Edit'])         ->name('repair.edit');
-  Route::post('machine/repair/update/{UNID}'       ,[MachineRepairController::class,'Update'])       ->name('repair.update');
-  Route::get('machine/repair/delete/{UNID}'        ,[MachineRepairController::class,'Delete'])       ->name('repair.delete');
+  Route::post('machine/repair/store/{MACHINE_UNID}'       ,[MachineRepairController::class,'Store'])             ->name('repair.store');
+  Route::get('machine/repair/edit/{UNID}'                 ,[MachineRepairController::class,'Edit'])              ->name('repair.edit');
+  Route::post('machine/repair/update/{UNID}'              ,[MachineRepairController::class,'Update'])            ->name('repair.update');
+  Route::get('machine/repair/delete/{UNID}'               ,[MachineRepairController::class,'Delete'])            ->name('repair.delete');
 
-  Route::post('machine/repair/select/selectrepairdetail',[MachineRepairController::class,'SelectRepairDetail'])->name('repair.selectrepairdetail');
-  Route::get('machine/repair/empcallajax'              ,[MachineRepairController::class,'EMPCallAjax']) ->name('repair.empcallajax');
-  Route::post('machine/repair/addtableworker'           ,[MachineRepairController::class,'AddTableWorker']) ->name('repair.addtableworker');
-  Route::post('machine/repair/addsparepart'             ,[MachineRepairController::class,'AddSparePart'])->name('repair.addsparepart');
+  Route::post('machine/repair/select/selectrepairdetail'  ,[RepairCloseFormController::class,'SelectRepairDetail'])->name('repair.selectrepairdetail');
+  Route::get('machine/repair/empcallajax'                 ,[RepairCloseFormController::class,'EMPCallAjax'])       ->name('repair.empcallajax');
+  Route::post('machine/repair/addtableworker'             ,[RepairCloseFormController::class,'AddTableWorker'])    ->name('repair.addtableworker');
+  Route::post('machine/repair/addsparepart'               ,[RepairCloseFormController::class,'AddSparePart'])      ->name('repair.addsparepart');
+  Route::post('machine/repair/savestep'                   ,[RepairCloseFormController::class,'SaveStep'])          ->name('repair.savestep');
+  Route::post('machine/repair/result'                     ,[RepairCloseFormController::class,'Result'])          ->name('repair.result');
+  Route::post('machine/repair/closeform'                  ,[RepairCloseFormController::class,'CloseForm'])          ->name('repair.closeform');
 
 //group not user
 Route::middleware('can:isAdminandManager')->group(function () {

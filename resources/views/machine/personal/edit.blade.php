@@ -37,9 +37,9 @@
 								</a>
 							</div>
 							<div class="col-md-11 ">
-								<form action="{{ url('machine/personal/update/'.$dataset->UNID) }}" method="POST" enctype="multipart/form-data">
+								<form action="{{ url('machine/personal/update/'.$dataset->UNID) }}" id="FRM_EMP_SAVE"method="POST" enctype="multipart/form-data">
 									@csrf
-									<button class="btn btn-primary btn-xs" type="button" onclick="submitForm()">
+									<button class="btn btn-primary btn-xs" type="submit" >
 										<span class="fas fa-save fa-lg">	Save	</span>
 									</button>
 							</div>
@@ -104,7 +104,7 @@
 										<div class="col-md-6 col-lg-4">
 											<div class="form-group has-error">
 												<label for="EMP_NAME">ชื่อพนักงาน</label>
-												<input type="text" class="form-control" id="EMP_NAME" name="EMP_NAME" value="{{ $dataset->EMP_NAME }}">
+												<input type="text" class="form-control" id="EMP_NAME" name="EMP_NAME" value="{{ $dataset->EMP_NAME }}" required>
 											</div>
 											<div class="form-group col-md-12 has-error">
 												<div class="row">
@@ -188,13 +188,6 @@
 
 {{-- ส่วนjava --}}
 @section('javascript')
-	<script>
-	    function submitForm(btn) {
-	        // disable the button
-	        btn.disabled = true;
-	        // submit the form
-	        btn.form.submit();
-	    }
-	</script>
+
 @stop
 {{-- ปิดส่วนjava --}}

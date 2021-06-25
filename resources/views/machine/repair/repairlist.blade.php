@@ -137,9 +137,19 @@
 										</div>
 
 		                <div class="row" id="table_style" {{ Cookie::get('table_style') == '1' ? '' : 'hidden'}} >
+											@php
+												$array_EMP = array();
+												foreach ($DATA_EMP as $index => $row_emp) {
+													$array_EMP[$row_emp->EMP_CODE] = $row_emp->EMP_NAME_TH;
+													$array_IMG[$row_emp->EMP_CODE] = $row_emp->EMP_ICON;
+												}
+											@endphp
 		                  @foreach ($dataset as $key => $row)
 												@php
-													$BG_COLOR = $row->PRIORITY == '9' ? 'bg-danger text-white' : 'bg-warning text-white';
+													$BG_COLOR 	 = $row->PRIORITY == '9' ? 'bg-danger text-white' : ($row->CLOSE_STATUS == '1' ? 'bg-success text-white' : 'bg-warning text-white');
+													$WORK_STATUS = isset($array_EMP[$row->INSPECTION_CODE]) ? $array_EMP[$row->INSPECTION_CODE] : 'รอรับงาน';
+													$IMG         = isset($array_IMG[$row->INSPECTION_CODE]) ? asset('image/emp/'.$array_IMG[$row->INSPECTION_CODE]) : asset('../assets/img/noemp.png');
+													$DATE_DIFF   = $row->REC_WORK_DATE != '1900-01-01 00:00:00.000'? 'รับเมื่อ:'.Carbon\Carbon::parse($row->REC_WORK_DATE)->diffForHumans() : 'แจ้งเมื่อ:'.Carbon\Carbon::parse($row->CREATE_TIME)->diffForHumans();
 												@endphp
 												<div class="col-lg-3">
 													<div class="card card-round">
@@ -148,12 +158,17 @@
 															<div class="card-list">
 																<div class="item-list">
 																	<div class="avatar">
-																		<img src="{{asset('../assets/img/noemp.png')}}" alt="..." class="avatar-img rounded-circle">
+																		<img src="{{$IMG}}"
+																		id="IMG_{{ $row->UNID }}"alt="..." class="avatar-img rounded-circle">
 																	</div>
 																	<div class="info-user ml-3">
-																		<div class="username" style="">รอรับงาน</div>
-																		<div class="status">{{$row->REPAIR_SUBSELECT_NAME}}</div>
-																		<div class="status">แจ้งเมื่อ:{{Carbon\Carbon::parse($row->CREATE_TIME)->diffForHumans()}}</div>
+																		<div class="username" style=""id="WORK_STATUS_{{$row->UNID}}">{{ $WORK_STATUS }}</div>
+																		<div class="status" >{{$row->REPAIR_SUBSELECT_NAME}}</div>
+																		@if ($row->CLOSE_STATUS == '1')
+																		<div class="status" id="DATE_DIFF_{{$row->UNID}}" > ดำเนินงานสำเร็จ</div>
+																		@else
+																		<div class="status" id="DATE_DIFF_{{$row->UNID}}">{{$DATE_DIFF}}</div>
+																		@endif
 																	</div>
 
 																</div>
@@ -173,64 +188,6 @@
 														</div>
 													</div>
 												</div>
-
-												{{-- <div class="col-6 col-md-6 col-lg-3 my-3">
-													<div class="card card-pricing card-pricing-focus " style="padding: 14px 5px;background-color: #aedee8b8;">
-														<div class="card-header">
-																<span class="card-title">MC-CODE : {{ $row->MACHINE_CODE }}</span>
-														</div>
-														<div class="separator-solid"style="border-top: 7px solid #ebecec;margin: 0px 0;"></div>
-														<div class="card-body" style="padding: 0rem;">
-															<ul class="specification-list" >
-																<li>
-																	<div class="row text-size">
-														        <div class="col-4 col-md-3 col-lg-3 ">
-														            <span>วันที </span>
-														        </div>
-														        <div class="col-8 col-md-9 col-lg-9 ">
-														            <span class="text-left">: {{ $row->DOC_DATE }}</span>
-														        </div>
-															    </div>
-																</li>
-																<li>
-																	<div class="row text-size">
-														        <div class="col-4 col-md-3 col-lg-3 ">
-														            <span>อาการ </span>
-														        </div>
-														        <div class="col-8 col-md-9 col-lg-9 ">
-														            <span class="text-left">:{{ $row->REPAIR_SUBSELECT_NAME }}</span>
-														        </div>
-															    </div>
-																</li>
-																<li>
-																	<div class="row text-size">
-														        <div class="col-4 col-md-3 col-lg-3 ">
-														            <span>สถานะ </span>
-														        </div>
-														        <div class="col-8 col-md-9 col-lg-9 ">
-														            <span class="text-left">: กำลังดำเนินการ</span>
-														        </div>
-															    </div>
-																</li>
-																<li>
-																	<div class="row text-size">
-														        <div class="col-4 col-md-3 col-lg-3">
-														            <span>ผู้รับ</span>
-														        </div>
-														        <div class="col-8 col-md-9 col-lg-9 ">
-														            <span class="text-left">: สุบรรณ</span>
-														        </div>
-															    </div>
-																</li>
-															</ul>
-															<button type="button" class="btn btn-primary btn-block"
-															onclick="rec_work(this)"
-															data-unid="{{ $row->UNID }}"
-															data-docno="{{ $row->DOC_NO }}"
-															data-detail="{{ $row->REPAIR_SUBSELECT_NAME }}">รับงาน</button>
-														</div>
-													</div>
-												</div> --}}
 		                    @endforeach
 		                </div>
 								    <div class="table-responsive" id="list_table" {{ Cookie::get('table_style') == '2' ? '' : 'hidden'}} >
@@ -244,46 +201,54 @@
 								            <th>รหัสเครื่อง </th>
 								            <th>ชื่อเครื่องจักร</th>
 														<th>อาการ</th>
-								            <th>สถานะเครื่องจักร</th>
+								            <th>สถานะงาน</th>
 														<th >ผู้รับงาน</th>
 														<th >วันที่รับงาน</th>
 								          </tr>
 								        </thead>
-
+												<style>
+													.btn-mute{
+														background: #9e9e9e;
+														color: white;
+													}
+												</style>
 								        <tbody id="result">
-								          @foreach ($dataset as $key => $row)
+								          @foreach ($dataset as $key => $sub_row)
+														@php
+															$REC_WORK_STATUS  = isset($array_EMP[$sub_row->INSPECTION_CODE]) ? $array_EMP[$sub_row->INSPECTION_CODE] : 'รอรับงาน';
+															$BTN_COLOR_STATUS = $sub_row->INSPECTION_CODE == '' ? 'btn-mute' : ($sub_row->CLOSE_STATUS == '1' ? 'btn-success' : 'btn-info') ;
+															$BTN_COLOR 			  = $sub_row->INSPECTION_CODE == '' ? 'btn-danger' : 'btn-success' ;
+															$BTN_TEXT  			  = $sub_row->INSPECTION_CODE == '' ? 'รอรับงาน' : ($sub_row->CLOSE_STATUS == '1' ? 'ปิดเอกสาร' : 'การดำเนินงาน') ;
+														@endphp
 								            <tr>
 															<td>{{ $key+1 }}</td>
-															<td >{{ date('d-m-Y',strtotime($row->DOC_DATE)) }}</td>
-								              <td >{{ $row->DOC_NO }}
+															<td >{{ date('d-m-Y',strtotime($sub_row->DOC_DATE)) }}</td>
+								              <td >{{ $sub_row->DOC_NO }}
 								              </td>
-															<td >  				{{ $row->MACHINE_LINE }}	    </td>
-								              <td >  				{{ $row->MACHINE_CODE }}		     </td>
-								              <td >  				{{ $row->MACHINE_NAME }}		    </td>
-															<td >  				{{ $row->REPAIR_SUBSELECT_NAME }}		    </td>
-								                @if ($row->CLOSE_STATUS ===  '9')
+															<td >  				{{ $sub_row->MACHINE_LINE }}	    </td>
+								              <td >  				{{ $sub_row->MACHINE_CODE }}		     </td>
+								              <td >  				{{ $sub_row->MACHINE_NAME }}		    </td>
+															<td >  				{{ $sub_row->REPAIR_SUBSELECT_NAME }}		    </td>
 								                  <td >
-								                    <button type="button"class="btn btn-success btn-block btn-sm my-1 ">
+								                    <button type="button"class="btn {{$BTN_COLOR_STATUS}} btn-block btn-sm my-1 ">
 								                      <span class="btn-label text-center" style="color:black">
-								                        รอรับงาน
+																				{{ $BTN_TEXT }}
 								                      </span>
 								                    </button>
 								                  </td>
 								                  <td >
 																		@can('isAdminandManager')
 																			<button onclick="rec_work(this)" type="button"
-																			data-unid="{{ $row->UNID }}"
-																			data-docno="{{ $row->DOC_NO }}"
-																			data-detail="{{ $row->REPAIR_SUBSELECT_NAME }}"
-																			class="btn btn-danger btn-block btn-sm my-1"
-																		 >
+																			data-unid="{{ $sub_row->UNID }}"
+																			data-docno="{{ $sub_row->DOC_NO }}"
+																			data-detail="{{ $sub_row->REPAIR_SUBSELECT_NAME }}"
+																			class="btn {{$BTN_COLOR}} btn-block btn-sm my-1 text-left">
 																			 <span class="btn-label">
-																				 <i class="fas fa-clipboard-check mx-1"></i>สุบรรณ
+																				 <i class="fas fa-clipboard-check mx-1"></i>{{$REC_WORK_STATUS}}
 																			 </span>
 																		 </button>
 																		@else
 																		@endcan
-								                @endif
 
 																<td >{{ date('d-m-Y') }}</td>
 								              </tr>
@@ -310,23 +275,14 @@
 
 {{-- ส่วนjava --}}
 @section('javascript')
-<script src="{{ asset('assets/js/porfolio/jquery.cubeportfolio.js') }}"></script>
-<script src="{{ asset('assets/js/porfolio/portfolio-1.js') }}"></script>
-<script src="{{ asset('assets/js/porfolio/retina.min.js') }}"></script>
 <script src="{{ asset('assets/js/ajax/ajax-csrf.js') }}"></script>
 <script src="{{ asset('assets/js/select2.min.js') }}"></script>
+<script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
 <script>
-
-//************************* array ****************************
-	var array_emp_code = [];
-	var sparepart_total = {};
-	var arr = [];
-//************************* array ****************************
-//******************************* function ********************
 $(document).ready(function(){
 		var url = "{{ route('repair.fetchdata') }}";
 		var data = $('#FRM_SEARCH').serialize();
-		var loaddata_secon = function (){
+		var loaddata_table_all = function (){
 			$.ajax({
 						 type:'GET',
 						 url: url,
@@ -338,11 +294,26 @@ $(document).ready(function(){
 						 }
 					 });
 				 }
-  setInterval(loaddata_secon,8000);
+	setInterval(loaddata_table_all,10000);
 
-})
+});
+//************************* array *********************************
+	var array_emp_unid = [];
+	var sparepart_total = {};
+	var sparepart_type = {};
+	var sparepart_cost = {};
 
-function loop_tabel_worker(array_emp_code){
+	var arr_spare_total = [];
+	var arr_spare_type = [];
+	var arr_spare_cost = [];
+	let number_count = 1;
+
+
+//******************************* function ************************
+
+
+//********************** function loop array **********************
+function loop_tabel_worker(array_emp_unid){
 	var url = "{{ route('repair.addtableworker') }}";
 	$.ajax({
 			 type:'POST',
@@ -350,30 +321,43 @@ function loop_tabel_worker(array_emp_code){
 			 datatype: 'json',
 			 data: {
 				 "_token": "{{ csrf_token() }}",
-				 "EMP_CODE" : array_emp_code,
+				 "UNID" : array_emp_unid,
 			 } ,
 			 success:function(data){
 				 $('#table_worker').html(data.html);
 			 }
 		 });
 };
-function loop_tabel_sparepart(unid,total){
-	arr.push({unid:unid,total:total});
-	$.each(arr,function(key, value){
+function loop_tabel_sparepart(unid,total,type,cost){
+	//********************* input array ***********************
+	arr_spare_total.push({unid:unid,total:total});
+	arr_spare_type.push({unid:unid,type:type});
+	arr_spare_cost.push({unid:unid,cost:cost});
+	//********************** loop arry *************************
+	$.each(arr_spare_total,function(key, value){
 		sparepart_total[value.unid] = value.total;
 	});
+	$.each(arr_spare_type,function(key, value){
+		sparepart_type[value.unid]  = value.type;
+	});
+	$.each(arr_spare_cost,function(key, value){
+		sparepart_cost[value.unid]  = value.cost;
+	});
+
 	var url = "{{ route('repair.addsparepart') }}";
 	$.ajax({
 			 type:'POST',
 			 url: url,
 			 datatype: 'json',
-			 data: {TOTAL_SPAREPART : sparepart_total},
+			 data: {TOTAL_SPAREPART : sparepart_total,
+			 				TYPE_SPAREPART : sparepart_type	,
+							SPAREPART_COST : sparepart_cost},
 			 success:function(data){
 				 $('#table_sparepart').html(data.html);
-
 			 }
 		 });
 };
+//********************** function common **********************
 function setcookie(name,value){
 	var urlcookie = "{{ route('cookie.set') }}";
 	var data = {"_token": "{{ csrf_token() }}",NAME : name,VALUE : value}
@@ -387,7 +371,6 @@ function setcookie(name,value){
 			});
 }
 function styletable(table_style){
-
 	if (table_style == '1') {
 		$('#table_style').attr('hidden',false);
 		$('#list_table').attr('hidden',true);
@@ -397,6 +380,52 @@ function styletable(table_style){
 		$('#list_table').attr('hidden',false);
 		 setcookie('table_style','2');
 	}
+}
+function sweetalertnoinput(){
+	Swal.fire({
+	  icon: 'error',
+	  title: 'ไม่สามารถไปขั้นตอนถัดไปได้',
+	  text: 'กรุณากรอกข้อมูลให้ครบถ้วน!',
+		timer: 1500
+	});
+}
+//********************** function class tab ***********************
+function loop_removeclass(){
+	for (var i = 1; i < 6; i++) {
+		$('.WORK_STEP_'+i).removeClass('badge-primary badge-success fw-bold');
+		$('#WORK_STEP_'+i).removeClass('active show');
+	}
+}
+function modalstep0(docno,detail){
+	$('.WORK_STEP_1').addClass('badge-primary fw-bold');
+	$('#WORK_STEP_1').addClass('active show');
+	$('#RepairForm').modal('hide');
+	$('#CloseForm').modal({backdrop: 'static', keyboard: false});
+	$('#CloseForm').modal('show');
+}
+
+//********************** function save ****************************
+function savestep(idform,steppoint){
+	var unid = $("#UNID_REPAIR_REQ").val();
+	var steppoint = steppoint;
+	var url = "{{ route('repair.savestep') }}?UNID_REPAIR_REQ="+unid+"&WORK_STEP="+idform+'&WORK_STEP_NEXT='+steppoint;
+	console.log(idform);
+	var idform = '#FRM_'+idform;
+
+	var data = $(idform).serialize();
+	$.ajax({
+		type:'POST',
+		url: url,
+		datatype: 'json',
+		data: data ,
+		success:function(res){
+					if (res.name) {
+						$('#IMG_'+unid).attr('src',res.img);
+						$('#WORK_STATUS_'+unid).html(res.name);
+						$('#DATE_DIFF_'+unid).html('แจ้งเมื่อ:'+res.date);
+					}
+				}
+			});
 }
 //******************************* End function ********************
 	function rec_work(thisdata){
@@ -410,6 +439,7 @@ function styletable(table_style){
 				 data: {REPAIR_REQ_UNID : repair_unid},
 				 datatype: 'json',
 				 success:function(data){
+			 //************************ set html **************************
 					 $('#show_detail').html(data.html_detail);
 					 $('#select_recworker').html(data.html_select);
 					 $('#WORKER_SELECT').html(data.html_select);
@@ -422,64 +452,123 @@ function styletable(table_style){
 						 placeholder: "กรุณาเลือก",
 						 width:'100%',
 					 });
-					$('.select-repairdetail').select2({
+					 $('.select-repairdetail').select2({
+						   placeholder: "กรุณาเลือก",
+					 	   width:'100%',
+					  	 selectionCssClass:'my-1 ',
+					  });
+					 $('.REC_WORKER').select2({
 						 placeholder: "กรุณาเลือก",
 						 width:'100%',
-						 selectionCssClass:'my-1 ',
-					 });
-					 $('.REC_WORKER_NAME').select2({
-						 placeholder: "กรุณาเลือก",
-						 width:'100%',
+						 selectionCssClass:'required',
 						});
 					 $('#TITLE_DOCNO').html('เลขที่เอกสาร : '+docno);
-					 $('#RepairForm').modal({backdrop: 'static', keyboard: false,focus:false});
 					 $.fn.modal.Constructor.prototype._enforceFocus = function() {};
-					 if (data) {
-						  $("#RepairForm").modal("show");
+			//***************************** step ที่ค้างไว้ *********************************
+					 if (data.step) {
+						 var step_number = data.step.replace("WORK_STEP_", "");
+						 var detail = $('#DETAIL_REPAIR option:selected').attr('data-name');
+						 $('#TITLE_DOCNO_SUB').html(docno);
+						 $("#show-detail").html('อาการเสีย : '+detail);
+						 	 loop_removeclass();
+						 if (step_number == '1') {
+						//***************************** step แรกสุด *********************************
+							 modalstep0(docno,detail);
+						 }else {
+								for (var i = 1; i < step_number ; i++) {
+
+ 							 	$('.WORK_STEP_'+i).addClass('badge-success fw-bold');
+						//***************************** step สุดท้าย *********************************
+								if (i == 4) {
+									var url = "{{ route('repair.result') }}";
+									$.ajax({
+									 type:'POST',
+									 url: url,
+									 datatype: 'json',
+									 data: {UNID_REPAIR:repair_unid} ,
+									 success:function(res){
+												 $('#closeform').attr('data-total_sparepart',res.total_sparepart);
+												 $('#closeform').attr('data-total_worker',res.total_worker);
+												 $('#closeform').attr('data-total_all',res.total_all);+
+												 $('#stepsave').attr('hidden',false);
+												 $('#stepclose').attr('hidden',true);
+												 if (res.status == '1') {
+													 $('#stepsave').attr('hidden',true);
+													 $('#stepclose').attr('hidden',false);
+												 }
+												 $('#WORK_STEP_RESULT').html(res.html);
+												 if (res.html) {
+													 $('#WORK_STEP_5').addClass('active');
+												 }
+											 }
+										 });
+								}
+							}
+					//***************************** step ต่างๆ *********************************
+							 $('#CloseForm').modal({backdrop: 'static', keyboard: false});
+							 $('#CloseForm').modal('show');
+							 $('.WORK_STEP_'+step_number).addClass('badge-primary fw-bold');
+							 $('#WORK_STEP_'+step_number).addClass('active show');
+						 }
+					 }else {
+						 $('#RepairForm').modal({backdrop: 'static', keyboard: false,focus:false});
+						 $("#RepairForm").modal("show");
 					 }
 
 				 }
 			 });
 	}
-	$('#closestep_1').on('click',function(){
-		var docno = $('#TITLE_DOCNO').html();
-		var detail = $('#DETAIL_REPAIR').val();
-		for (var i = 1; i < 6; i++) {
-			$('#step'+i).removeClass('badge-primary badge-success fw-bold');
-			$('#WORK_STEP_'+i).removeClass('active show');
-		}
-		$('#step1').addClass('badge-primary fw-bold');
-		$('#WORK_STEP_1').addClass('active show');
-		$('#TITLE_DOCNO_SUB').html(docno);
-		$("#show-detail").html('อาการเสีย : '+detail);
-		$('#CloseForm').modal({backdrop: 'static', keyboard: false});
-		$('#RepairForm').modal('hide');
-		$('#CloseForm').modal('show');
-	});
 	function previous_step(step_number){
-		var step_number_up = Number(step_number) + 1;
-		var work_step_previous = 'WORK_STEP_'+step_number;
-		var work_step_simple   = 'WORK_STEP_'+step_number_up;
-		$('#step'+step_number).removeClass('badge-success fw-bold');
-		$('#step'+step_number).addClass('badge-primary fw-bold');
-		$('#step'+step_number_up).removeClass('badge-primary fw-bold');
-		$('#'+work_step_simple).removeClass('active show');
-		$('#'+work_step_previous).addClass('active show');
-	};
+			var step_number_up = Number(step_number) + 1;
+			var work_step_previous = 'WORK_STEP_'+step_number;
+			var work_step_simple   = 'WORK_STEP_'+step_number_up;
+			$('.'+work_step_previous).removeClass('badge-success fw-bold');
+			$('.'+work_step_previous).addClass('badge-primary fw-bold');
+			$('.'+work_step_simple).removeClass('badge-primary fw-bold');
+			$('#'+work_step_simple).removeClass('active show');
+			$('#'+work_step_previous).addClass('active show');
+		};
 	function nextstep(step_number){
 		var step_number_down = Number(step_number) - 1;
 		var work_step_next = 'WORK_STEP_'+step_number;
 		var work_step_simple   = 'WORK_STEP_'+step_number_down;
-		$('#step'+step_number).addClass('badge-primary fw-bold');
-		$('#step'+step_number_down).removeClass('badge-primary fw-bold');
-		$('#step'+step_number_down).addClass('badge-success fw-bold');
-		$('#'+work_step_simple).removeClass('active show');
-		$('#'+work_step_next).addClass('active show');
-	};
+		if ($('#FRM_'+work_step_simple).valid()) {
+			savestep(work_step_simple,work_step_next);
+			if (work_step_next == 'WORK_STEP_5') {
+				var url = "{{ route('repair.result') }}";
+				var unid_repair = 			 $("#UNID_REPAIR_REQ").val();
+				$.ajax({
+					type:'POST',
+					url: url,
+					datatype: 'json',
+					data: {UNID_REPAIR:unid_repair} ,
+					success:function(res){
+								$('#closeform').attr('data-total_sparepart',res.total_sparepart);
+								$('#closeform').attr('data-total_worker',res.total_worker);
+								$('#closeform').attr('data-total_all',res.total_all);
+								$('#WORK_STEP_RESULT').html(res.html);
+								if (res.html) {
+									$('#WORK_STEP_5').addClass('active');
+								}
+							}
+						});
+			}
+			$('.'+work_step_next).addClass('badge-primary fw-bold');
+			$('.'+work_step_simple).removeClass('badge-primary fw-bold');
+			$('.'+work_step_simple).addClass('badge-success fw-bold');
+			$('#'+work_step_simple).removeClass('active show');
+			$('#'+work_step_next).addClass('active show');
+		}else {
+			sweetalertnoinput();
+		}
 
+	};
 	function previous_worker(){
-		$('#work_in').attr('hidden',true);
-		$('#work_out').attr('hidden',true);
+		$('#WORK_IN').attr('hidden',true);
+		$('#WORK_OUT').attr('hidden',true);
+		$('.form_work_in').attr('id','');
+	 	$('.form_work_out').attr('id','');
+		$('#nextstep_3').attr('hidden',true);
 		$('#select_typeworker').attr('hidden',false);
 		$("#previous_worker").attr('onclick','previous_step(1)');
 	}
@@ -487,88 +576,241 @@ function styletable(table_style){
 		var check_type = type_worker;
 		var url = "{{ route('repair.empcallajax') }}";
 		if (check_type == '1') {
-			 $('#work_in').attr('hidden',false);
+			 $('#WORK_IN').attr('hidden',false);
+			 $('.form_work_in').attr('id','FRM_WORK_STEP_2');
 			 $("#previous_worker").attr('onclick','previous_worker()');
+			 $('#nextstep_3').attr('data-type','IN');
+			 $('#nextstep_3').attr('hidden',false);
+
 		}else {
-			$('#work_out').attr('hidden',false);
+			$('#WORK_OUT').attr('hidden',false);
+			$('.form_work_out').attr('id','FRM_WORK_STEP_2');
 			$("#previous_worker").attr('onclick','previous_worker()');
+			$('#nextstep_3').attr('data-type','OUT');
+			$('#nextstep_3').attr('hidden',false);
 		}
 		 $('#select_typeworker').attr('hidden',true);
 	}
-	 $('#add_worker').on('click',function(event){
-			 event.preventDefault();
-			 var emp_code = $('#WORKER_SELECT').val();
-			 $('#WORKER_SELECT option[value="'+emp_code+'"]').detach();
-			 if (emp_code != "" && emp_code != null) {
-				 array_emp_code.push(emp_code);
-				 loop_tabel_worker(array_emp_code);
-			 }
-		 });
-	 function deleteworker(thisdata){
-			var empcode = $(thisdata).data('empcode');
-			var empname = $(thisdata).data('empname');
-			var data = {
-				id: empcode,
-				text: empcode+' '+empname
-		 };
-			 for( var i = 0; i < array_emp_code.length; i++){
-					 if ( array_emp_code[i] == empcode) {
-							 array_emp_code.splice(i, 1);
-					 }
-			 }
-			var newOption = new Option(data.text, data.id, false, false);
-			$('#WORKER_SELECT').append(newOption).trigger('change');
-			loop_tabel_worker(array_emp_code);
-		 }
-	 $('#SPAREPART').on('change',function(){
-			var unid = $('#SPAREPART').val();
-			var sparepartcode = $('#'+unid).data('sparepartcode');
-			var sparepartname = $('#'+unid).data('sparepartname');
-			var sparepartsize = $('#'+unid).data('sparepartsize');
-			var sparepartmodel = $('#'+unid).data('sparepartmodel');
-			$('#SPAREPART_CODE').val("รหัส : "+sparepartcode);
-			$('#SPAREPART_NAME').val("ชื่อ : "+sparepartname);
-			$('#SPAREPART_SIZE').val("เบอร์ : "+sparepartsize);
-			$('#SPAREPARTM_ODEL').val("ขนาด : "+sparepartmodel);
-		 });
-	 function add_sparepart(typeadd){
-		 //1 ตัดสต็อก  2ไม่ตัดสต็อก
-		 $(document).off('focusin.modal');
-		 var unid = $('#SPAREPART').val();
-		 var total = $('#TOTAL_SPAREPART').val();
-	   loop_tabel_sparepart(unid,total);
+ function deleteworker(thisdata){
+	 	var unid = $(thisdata).data('empunid');
+		var empcode = $(thisdata).data('empcode');
+		var empname = $(thisdata).data('empname');
+		var data = {
+			id: unid,
+			text: empcode+' '+empname
 	 };
-	 function edittotal(thisdata){
-		 var unid = $(thisdata).data('unid');
-		 $('#SPAREPART').val(unid);
-	   $('#SPAREPART').select2({
-			 width:'116%',
-		 }).trigger('change');
-		 var total = sparepart_total[unid];
-		 $('#TOTAL_SPAREPART').val(total);
-	 }
-	 function removesparepart(thisdata){
-		 var unid = $(thisdata).data('unid');
-		 for( var i = 0; i < arr.length; i++){
-				 if ( arr[i].unid == unid) {
-						 arr.splice(i, 1);
+		 for( var i = 0; i < array_emp_unid.length; i++){
+				 if ( array_emp_unid[i] == unid) {
+						 array_emp_unid.splice(i, 1);
 				 }
 		 }
-		 loop_tabel_sparepart(unid);
+		var newOption = new Option(data.text, data.id, false, false);
+		$('#WORKER_SELECT').append(newOption).trigger('change');
+		loop_tabel_worker(array_emp_unid);
 	 }
-	 $('#addbuy_sparepart').on('click',function(){
-		  var check = $('#addbuy_sparepart').val();
-			$('#buy_sparepart').attr('hidden',false);
-			$('#addbuy_sparepart').val('2');
-			if (check == '2') {
-				$('#addbuy_sparepart').val('1');
-				$('#buy_sparepart').attr('hidden',true);
+ function add_sparepart(typeadd){
+	 //1 ตัดสต็อก  2ไม่ตัดสต็อก
+	 $(document).off('focusin.modal');
+	 var unid = $('#SPAREPART').val();
+	 var total = $('#TOTAL_SPAREPART').val();
+	 var cost = $('#SPAREPART_COST').val();
+   loop_tabel_sparepart(unid,total,typeadd,cost);
+ };
+ function edittotal(thisdata){
+	 var unid = $(thisdata).data('unid');
+	 $('#SPAREPART').val(unid);
+   $('#SPAREPART').select2({
+		 width:'116%',
+	 }).trigger('change');
+	 var total = sparepart_total[unid];
+	 $('#TOTAL_SPAREPART').val(total);
+ }
+ function removesparepart(thisdata){
+	 var unid = $(thisdata).data('unid');
+	 for( var i = 0; i < arr_spare_total.length; i++){
+			 if ( arr_spare_total[i].unid == unid) {
+					 arr_spare_total.splice(i, 1);
+					 arr_spare_type.splice(i,1);
+					 arr_spare_cost.splice(i,1);
+			 }
+	 }
+	 loop_tabel_sparepart(unid);
+ }
+
+ $('#closestep_1').on('click',function(){
+	 var docno 				= $('#TITLE_DOCNO').html();
+	 var detail 			 	= $('#DETAIL_REPAIR option:selected').attr('data-name');
+	 var check_select  = $('#REC_WORKER').val();
+	 if (check_select != '' && check_select != null) {
+		 $('#TITLE_DOCNO_SUB').html(docno);
+		 $("#show-detail").html('อาการเสีย : '+detail);
+		 loop_removeclass();
+		 modalstep0(docno,detail);
+		 savestep('WORK_STEP_0','WORK_STEP_1');
+	 }
+
+ });
+ $('#nextstep_3').on('click',function(){
+	 var check_type = $(this).data('type');
+
+	 if (check_type == 'IN') {
+		 if (array_emp_unid != '') {
+			 nextstep('3');
+		 }
+	 }else if(check_type == 'OUT'){
+	  	nextstep('3');
+	 }
+ });
+ $('#add_worker').on('click',function(event){
+			event.preventDefault();
+			var emp_code = $('#WORKER_SELECT').val();
+			$('#WORKER_SELECT option[value="'+emp_code+'"]').detach();
+			if (emp_code != "" && emp_code != null) {
+				array_emp_unid.push(emp_code);
+				console.log(array_emp_unid);
+				loop_tabel_worker(array_emp_unid);
 			}
+		});
+ $('#addbuy_sparepart').on('click',function(){
+	  var check = $('#addbuy_sparepart').val();
+		$('#buy_sparepart .buy_sparepart').attr('disabled',false);
+		$('#addbuy_sparepart').val('2');
+		$('#buy_sparepart').attr('hidden',false);
+		if (check == '2') {
+			$('#buy_sparepart .buy_sparepart').attr('disabled',true);
+			$('#addbuy_sparepart').val('1');
+			$('#buy_sparepart').attr('hidden',true);
+		}
+ });
+ $('#SPAREPART').on('change',function(){
+		var unid = $('#SPAREPART').val();
+		var sparepartcost  = $('#'+unid).data('sparepartcost');
+		$('#SPAREPART_COST').val(sparepartcost);
 	 });
 
-	 $('#closeform').on('click',function(){
-		 $('#CloseForm').modal('hide');
-	 })
+ $('#add_workerout').on('click',function(){
+	 var name = $('.WORKEROUT_NAME').val();
+	 var cost = $('.WORKEROUT_COST').val();
+	 var detail = $('.WORKEROUT_DETAIL').val();
+	 var number_check = 0;
+	 if (name != '') {
+		 $("#table_workerout").each(function () {
+			var tds = '<tr id="tablerow'+number_count+'" class="tablerow">';
+			jQuery.each($('tr:last td', this), function () {
+
+					number_check++;
+					if (number_check == '1') {
+						tds += '<td class="tablecolumn">' + (number_count) + '</td>';
+					}else if(number_check == '2'){
+						tds += '<td>' +name+
+						'<div class="row">'+
+							'<div class="col-md-12">'+
+								'<label>วิธีการแก้ไข</label>'+
+								'<input type="hidden" value="'+name+'" id="WORKOUT_NAME['+name+']" name="WORKOUT_NAME['+name+']">'+
+								'<input type="hidden" value="'+cost+'" id="WORKOUT_COST['+name+']" name="WORKOUT_COST['+name+']">'+
+								'<textarea class="form-control mt--1 mb-1" id="WORKOUT_DETAIL['+name+']" name="WORKOUT_DETAIL['+name+']">'+detail+'</textarea>'+
+							'</div>'+
+						'</div>' + '</td>';
+					}else if(number_check == '3'){
+						tds += '<td>' + cost + '</td>';
+					}else {
+						tds += '<td><button type="button" class="btn btn-warning btn-block btn-sm"'+
+												'onclick="editworkout(this)" data-name="'+name+'" data-table="'+number_count+'">แก้ไข</button>'+
+											 '<button type="button" class="btn btn-danger btn-block btn-sm"'+
+											 	'onclick="deleteworkout(this)" data-table="'+number_count+'">ลบรายการ</button></td>';
+					}
+			});
+			number_count++;
+			tds += '</tr>';
+					$('tbody', this).append(tds);
+		});
+		$('#add_workerout').html('<i class="fas fa-plus" > เพิ่ม</i>');
+		$('.WORKEROUT_NAME').val('');
+		$('.WORKEROUT_COST').val('');
+		$('.WORKEROUT_DETAIL').val('');
+	 }
+
+ });
+ function editworkout(thisdata){
+	 var name = $(thisdata).data('name');
+	 var cost = $('#WORKOUT_COST\\['+name+'\\]').val();
+   var detail = $('#WORKOUT_DETAIL\\['+name+'\\]').val();
+	 var table_id = $(thisdata).data('table');
+	 var i = $('#table_workerout .tablecolumn').length + 1;
+	 $('#add_workerout').html('<i class="fas fa-plus" > แก้ไข</i>');
+	 $('.WORKEROUT_NAME').val(name);
+	 $('.WORKEROUT_COST').val(cost);
+	 $('.WORKEROUT_DETAIL').val(detail);
+	 $('.WORKEROUT_NAME').auto
+	 if( i > 1 ) {
+      $('table#table_workerout tr#tablerow'+table_id).remove();
+      resetIndexes();
+    }
+	 ;
+ }
+ function deleteworkout(thisdata){
+	 var table_id = $(thisdata).data('table');
+	 var i = $('#table_workerout .tablecolumn').length + 1;
+	 if( i > 0 ) {
+      $('table#table_workerout tr#tablerow'+table_id).remove();
+      resetIndexes();
+    }
+
+ }
+ function resetIndexes(){
+    var count = 1;
+    $('.tablerow').each(function(){
+        if( count > 0){
+        $(this).attr('id', 'tablerow' + count);
+				 $('#tablerow'+count+' .tablecolumn').attr('id', 'tablecolumn' + count);
+            $('#tablerow'+count+' .tablecolumn').html(count);
+        }
+
+        count++;
+				number_count = count;
+
+				console.log(count);
+				console.log(number_count);
+    });
+	}
+
+
+$('#closeform').on('click',function(){
+	var total_sparepart = $(this).data('total_sparepart');
+	var total_worker	  = $(this).data('total_worker');
+	var total_all 			= $(this).data('total_all');
+	var url 						= "{{ route('repair.closeform') }}";
+	var repair_unid		  = $("#UNID_REPAIR_REQ").val();
+	$.ajax({
+	 type:'POST',
+	 url: url,
+	 datatype: 'json',
+	 data: {UNID_REPAIR:repair_unid,
+		 	TOTAL_SPAREPART :total_sparepart,
+			TOTAL_WORKER :total_worker,
+			TOTAL_ALL :total_all} ,
+	 success:function(res){
+				 if (res.pass) {
+					 Swal.fire({
+							  icon: 'success',
+							  title: 'ปิดเอกสารเรียบร้อย',
+							  timer: 1500,
+							}).then((result) => {
+									$('#CloseForm').modal('hide');
+							});
+
+				 }else {
+					 Swal.fire({
+							 icon: 'error',
+							 title: 'เกิดข้อผิดพลาด',
+							 timer: 1500,
+						 });
+				 }
+			 }
+		 });
+ // $('#CloseForm').modal('hide');
+ })
+
 </script>
 <script type="text/javascript">
 	function changesubmit(){

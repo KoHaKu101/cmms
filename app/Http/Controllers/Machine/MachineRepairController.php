@@ -16,8 +16,9 @@ use App\Models\MachineAddTable\SelectSubRepair;
 use App\Models\Machine\Machine;
 use App\Models\Machine\MachineEMP;
 use App\Models\Machine\EMPName;
-use App\Models\Machine\SparePart;
 use App\Models\Machine\MachineLine;
+
+
 
 use App\Models\Machine\MachineRepairREQ;
 //************** Package form github ***************
@@ -56,6 +57,7 @@ class MachineRepairController extends Controller
     $MONTH = isset($request->MONTH) ? $request->MONTH : 0 ;
     $DOC_STATUS = isset($request->DOC_STATUS) ? $request->DOC_STATUS : 0 ;
     $YEAR = isset($request->YEAR) ? $request->YEAR : date('Y') ;
+    $DATA_EMP = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->where('EMP_STATUS','=',9)->get();
     $dataset = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
                                             ->where(function ($query) use ($MACHINE_LINE) {
                                                   if ($MACHINE_LINE != '') {
@@ -89,7 +91,7 @@ class MachineRepairController extends Controller
                                             ->orderBy('DOC_NO','DESC')
                                             ->paginate(10);
     $SEARCH = $SERACH_TEXT;
-    return View('machine/repair/repairlist',compact('dataset','SEARCH','LINE',
+    return View('machine/repair/repairlist',compact('dataset','SEARCH','LINE','DATA_EMP',
     'MACHINE_LINE','MONTH','YEAR','DOC_STATUS'));
   }
   public function FetchData(Request $request){
@@ -99,7 +101,8 @@ class MachineRepairController extends Controller
     $MONTH          = isset($request->MONTH) ? $request->MONTH : 0 ;
     $DOC_STATUS     = isset($request->DOC_STATUS) ? $request->DOC_STATUS : 0 ;
     $YEAR           = isset($request->YEAR) ? $request->YEAR : date('Y') ;
-    $dataset        = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
+    $dataset        = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH
+                                                                ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH')
                                             ->where(function ($query) use ($MACHINE_LINE) {
                                                   if ($MACHINE_LINE != '') {
                                                      $query->where('MACHINE_LINE', '=', $MACHINE_LINE);
@@ -135,6 +138,10 @@ class MachineRepairController extends Controller
     $html = '';
     $html_style = '';
     foreach ($dataset as $key => $row) {
+      $REC_WORK_STATUS  = isset($row->INSPECTION_CODE) ? $row->INSPECTION_NAME_TH : 'รอรับงาน';
+      $BTN_COLOR_STATUS = $row->INSPECTION_CODE == '' ? 'btn-mute' : ($row->CLOSE_STATUS == '1' ? 'btn-success' : 'btn-info') ;
+      $BTN_COLOR 			  = $row->INSPECTION_CODE == '' ? 'btn-danger' : 'btn-success' ;
+      $BTN_TEXT  			  = $row->INSPECTION_CODE == '' ? 'รอรับงาน' : ($row->CLOSE_STATUS == '1' ? 'ปิดเอกสาร' : 'การดำเนินงาน') ;
       $html.= '<tr>
                 <td>'.$key+1 .'</td>
                 <td >'.date('d-m-Y',strtotime($row->DOC_DATE)).'</td>
@@ -145,9 +152,9 @@ class MachineRepairController extends Controller
                 <td >'.$row->REPAIR_SUBSELECT_NAME.'</td>d
 
                 <td >
-                  <button type="button"class="btn btn-success btn-block btn-sm my-1 ">
-                    <span class="btn-label text-center" style="color:black">
-                      รอรับงาน
+                  <button type="button"class="btn '.$BTN_COLOR_STATUS.' btn-block btn-sm my-1 ">
+                    <span class="btn-label text-left" >
+                      '.$BTN_TEXT.'
                     </span>
                   </button>
                 </td>';
@@ -157,10 +164,10 @@ class MachineRepairController extends Controller
                       data-unid="'.$row->UNID.'"
                       data-docno="'.$row->DOC_NO.'"
                       data-detail="'.$row->REPAIR_SUBSELECT_NAME.'"
-                      class="btn btn-danger btn-block btn-sm my-1"
+                      class="btn '.$BTN_COLOR.' btn-block btn-sm my-1 text-left"
                      >
                        <span class="btn-label">
-                       <i class="fas fa-clipboard-check mx-1"></i>สุบรรณ
+                       <i class="fas fa-clipboard-check mx-1"></i>'.$REC_WORK_STATUS.'
                      </span>
                      </button></td>';
                    }else {
@@ -170,37 +177,46 @@ class MachineRepairController extends Controller
         </tr>';
       }
     foreach ($dataset as $index => $sub_row) {
-    $BG_COLOR = $sub_row->PRIORITY == '9' ? 'bg-danger text-white' : 'bg-warning text-white';
-    $html_style .=  '<div class="col-lg-3">
-        <div class="card card-round">
-          <div class="card-body">
-            <div class="card-title text-center fw-mediumbold '.$BG_COLOR.' ">'.$sub_row->MACHINE_CODE.'</div>
-            <div class="card-list">
-              <div class="item-list">
-                <div class="avatar">
-                  <img src="'.asset('../assets/img/noemp.png').'" alt="..." class="avatar-img rounded-circle">
-                </div>
-                <div class="info-user ml-3">
-                  <div class="username" style="">รอรับงาน</div>
-                  <div class="status">'.$sub_row->REPAIR_SUBSELECT_NAME.'</div>
-                  <div class="status">แจ้งเมื่อ:'.Carbon::parse($sub_row->CREATE_TIME)->diffForHumans().'</div>
+      $DATA_EMP    = EMPName::where('EMP_CODE',$sub_row->INSPECTION_CODE)->first();
+      $BG_COLOR    = $sub_row->PRIORITY == '9' ? 'bg-danger text-white' : ($sub_row->CLOSE_STATUS == '1' ? 'bg-success text-white' : 'bg-warning text-white');
+      $IMG         = isset($DATA_EMP->EMP_ICON) ? asset('image/emp/'.$DATA_EMP->EMP_ICON) : asset('../assets/img/noemp.png');
+      $WORK_STATUS = isset($sub_row->INSPECTION_NAME) ? $sub_row->INSPECTION_NAME_TH :'รอรับงาน';
+      $DATE_DIFF   = $sub_row->REC_WORK_DATE != '1900-01-01 00:00:00.000'? 'รับเมื่อ:'.Carbon::parse($sub_row->REC_WORK_DATE)->diffForHumans() : 'แจ้งเมื่อ:'.Carbon::parse($sub_row->CREATE_TIME)->diffForHumans();
+      $html_style .=  '<div class="col-lg-3">
+          <div class="card card-round">
+            <div class="card-body">
+              <div class="card-title text-center fw-mediumbold '.$BG_COLOR.' ">'.$sub_row->MACHINE_CODE.'</div>
+              <div class="card-list">
+                <div class="item-list">
+                  <div class="avatar">
+                    <img src="'.$IMG.'" alt="..." class="avatar-img rounded-circle"
+                    id="IMG_'.$sub_row->UNID.'">
+                  </div>
+                  <div class="info-user ml-3">
+                    <div class="username" id="WORK_STATUS_'.$sub_row->UNID.'">'.$WORK_STATUS.'</div>
+                    <div class="status" >'.$sub_row->REPAIR_SUBSELECT_NAME.'</div>';
+                    if ($sub_row->CLOSE_STATUS == '1'){
+                    $html_style .='<div class="status" id="DATE_DIFF_'.$sub_row->UNID.'" > ดำเนินงานสำเร็จ</div>';
+                      }else {
+                    $html_style .='<div class="status" id="DATE_DIFF_'.$sub_row->UNID.'">'.$DATE_DIFF.'</div>';
+                      }
+                    $html_style .='</div>
                 </div>
               </div>
-            </div>
-            <div class="row ">
-              <div class="col-md-12 text-center">
-                <button class="btn  btn-primary  btn-sm"
-                onclick="rec_work(this)"
-                data-unid="'.$sub_row->UNID.'"
-                data-docno="'.$sub_row->DOC_NO.'"
-                data-detail="'.$sub_row->REPAIR_SUBSELECT_NAME.'">
-                  SELECT
-                </button>
+              <div class="row ">
+                <div class="col-md-12 text-center">
+                  <button class="btn  btn-primary  btn-sm"
+                  onclick="rec_work(this)"
+                  data-unid="'.$sub_row->UNID.'"
+                  data-docno="'.$sub_row->DOC_NO.'"
+                  data-detail="'.$sub_row->REPAIR_SUBSELECT_NAME.'">
+                    SELECT
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>';
+        </div>';
       }
     return Response()->json(['html'=>$html,'html_style' => $html_style]);
   }
@@ -353,169 +369,6 @@ class MachineRepairController extends Controller
                 alert()->success('ปิดเอกสารเสำเร็จ')->autoclose('1500');
               return Redirect()->back();
           }
-  public function EMPCallAjax(Request $request){
-    $REPAIR_REQ_UNID = isset($request->REPAIR_REQ_UNID) ? $request->REPAIR_REQ_UNID : '';
-    $DATA_EMPNAME = EMPName::select('*')->selectraw("dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH")
-                                        ->where('EMP_STATUS','=','9')->get();
-    $DATA_SPAREPART = SparePart::where('STATUS','=','9')->get();
-    //*************************** select worker *******************************************//
-    $html_select = '<select class="form-control form-control-sm col-9 REC_WORKER_NAME" id="REC_WORKER_NAME" name="REC_WORKER_NAME">
-                      <option value> กรุณาเลือก </option>';
-                      foreach ($DATA_EMPNAME as $index => $row){
-                        $html_select.= '<option value="'.$row->EMP_CODE.'">'.$row->EMP_CODE." ".$row->EMP_NAME_TH.'</option>';
-                      }
-    $html_select.='</select>';
-    //*************************** select sparepart **************************************//
-    $html_sparepart = '<select class="form-control form-control-sm col-9 REC_WORKER_NAME" id="REC_WORKER_NAME" name="REC_WORKER_NAME">
-      <option value> กรุณาเลือก </option>';
-      foreach ($DATA_SPAREPART as $index => $row_sparepart){
-        $html_sparepart.= '<option value="'. $row_sparepart->UNID .'" id="'. $row_sparepart->UNID .'"
-                            data-sparepartcode="'.$row_sparepart->SPAREPART_CODE.'"
-                            data-sparepartname="'.$row_sparepart->SPAREPART_NAME.'"
-                            data-sparepartsize="'.$row_sparepart->SPAREPART_SIZE.'"
-                            data-sparepartmodel="'.$row_sparepart->SPAREPART_MODEL.'"
-                            >'.$row_sparepart->SPAREPART_CODE. ' : '. $row_sparepart->SPAREPART_NAME.'</option>';
-      }
-    $html_sparepart.='</select>';
-    //*********************************** table ของรายละเอียด ****************************************/
-    $html_detail = "";
-    if ($REPAIR_REQ_UNID != '') {
-      $REPAIR = MachineRepairREQ::select('*')->selectraw("dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH")
-                                                  ->where('UNID','=',$REPAIR_REQ_UNID)->first();
-      $DATA_SELECMAIN = SelectMainRepair::where('STATUS','=','9')->get();
-      $DATA_SELECSUB = SelectSubRepair::where('STATUS','=','9')->get();
-      $PRIORITY_TEXT = $REPAIR->PRIORITY == '9' ? 'เร่งด่วน' : 'ไม่เร่งด่วน' ;
-      $html_detail.= '<table class="table table-bordered table-bordered-bd-info">
-        <tbody>
-          <tr>
-            <td width="80px" style="background:#aab7c1;color:black;"><h5 class="my-1"> MC-NO </h5></td>
-            <td > '.$REPAIR->MACHINE_CODE.' </td>
-            <td style="background:#aab7c1;color:black;">LINE</td>
-            <td >'.$REPAIR->MACHINE_LINE.'</td>
-          </tr>
-          <tr>
-            <td style="background:#aab7c1;color:black;"><h5 class="my-1">พนักงาน</h5>  </td>
-            <td  colspan="3"> '.$REPAIR->EMP_CODE." ".$REPAIR->EMP_NAME_TH.' </td>
-          </tr>
-          <tr>
-            <td style="background:#aab7c1;color:black;"><h5 class="my-1">อาการ</h5>  </td>
-            <td  colspan="3">
-              <div class="has-error">
-                <select class="select-repairdetail" id="DETAIL_REPAIR" name="DETAIL_REPAIR">';
-                foreach ($DATA_SELECMAIN as $index => $row_main){
-                $html_detail.='<optgroup label="'.$row_main->REPAIR_MAINSELECT_NAME.'">';
-                      foreach ($DATA_SELECSUB->where('REPAIR_MAINSELECT_UNID','=',$row_main->UNID) as $index => $row_sub){
-                        $SELECTED = $row_sub->UNID == $REPAIR->REPAIR_SUBSELECT_UNID ? 'selected' : '' ;
-                        $html_detail.= '<option value="'.$row_sub->REPAIR_SUBSELECT_NAME.'" '.$SELECTED.'>'.$row_sub->REPAIR_SUBSELECT_NAME.'</option>';
-                      }
-                $html_detail.='</optgroup>';
-                    }
-                $html_detail.='</select>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td style="background:#aab7c1;color:black;"><h5 class="my-1">ระดับ</h5>  </td>
-            <td  colspan="3">'.$PRIORITY_TEXT.'</td>
-          </tr>
-        </tbody>
-      </table>';
-    }
-    return Response()->json(['html_detail'=>$html_detail,'html_select' => $html_select,'html_sparepart' => $html_sparepart]);
-  }
-  public function SelectRepairDetail(Request $request){
-    $UNID = $request->UNID;
-    $data_selectsubrepair = SelectSubRepair::where('REPAIR_MAINSELECT_UNID','=',$UNID)->get();
-    $html = '<div class="row">';
-    foreach ($data_selectsubrepair as $index => $data_row) {
-      $html.='<div class="col-sm-6 col-md-3">
-        <a  onclick="selectrepairdetail(this)"  data-unid="'.$data_row->UNID.'" data-name="'.$data_row->REPAIR_SUBSELECT_NAME.'"style="cursor:pointer">
-        <div class="card card-stats card-primary card-round">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-5">
-                <div class="icon-big text-center">
-                  <i class="fas fa-wrench"></i>
-                </div>
-              </div>
-              <div class="col-7 col-stats">
-                <div class="numbers">
-                  <p class="card-category">'.$data_row->REPAIR_SUBSELECT_NAME.'</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </a >
-      </div>';
-    }
-    $html.='</div>
-    <div class="card-action text-center">
-      <button type="button" class="btn btn-warning mx-1 my-1"
-      onclick="previousstep(this)"
-      data-step="step1"><i class="fas fa-arrow-alt-circle-left mr-1"></i>Previous</button>
-      <button type="button" class="btn btn-primary mx-1 my-1"
-      onclick="nextstep(this)"
-      data-step="step3">Next <i class="fas fa-arrow-alt-circle-right ml-1"></i></button>
-    </div>';
-    return Response()->json(['html' => $html]);
-  }
-  public function AddTableWorker(Request $request){
-      $EMP_CODE = $request->EMP_CODE;
-      $html = '';
-      if (is_array($EMP_CODE)) {
-        $DATA_EMP_NAME = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->whereIn('EMP_CODE',$EMP_CODE)->get();
-        foreach ($DATA_EMP_NAME as $index => $row) {
-            $html.= '	<tr>
-                <td>'.$index+1 .'</td>
-                <td>'.$row->EMP_CODE.' '.$row->EMP_NAME_TH.'</td>
-                <td><button type="button" class="btn btn-danger btn-sm btn-block my-1" onclick="deleteworker(this)"
-                data-empcode="'.$row->EMP_CODE.'"
-                data-empname="'.$row->EMP_NAME_TH.'">
-                <i class="fas fa-trash"></i>ลบ</button></td>
-              </tr>';
-        }
-      }
-      return Response()->json(['html' => $html]);
-  }
-  public function AddSparePart(Request $request){
-      $arr_TOTAL_SPAREPART = $request->TOTAL_SPAREPART;
-      $UNID = array();
-      $TOTAL = array();
-      $html = '';
-      if (isset($arr_TOTAL_SPAREPART)) {
-        foreach ($arr_TOTAL_SPAREPART as $key => $row_arr) {
-          $arr_UNID = array_push($UNID,$key);
-          $TOTAL[$key] = $row_arr;
-        }
-        if (is_array($UNID)) {
-          $DATA_SPARPART = SparePart::select('*')->whereIn('UNID',$UNID)->get();
-          foreach ($DATA_SPARPART as $index => $row) {
-              $html.= '  <tr>
-                  <td>
-                    <button type="button" class="btn btn-warning btn-sm mx-1 my-1"
-                    onclick="edittotal(this)"
-                    data-unid="'.$row->UNID.'"><i class="fas fa-edit"></i></button>
-                    <button type="button" class="btn btn-danger btn-sm mx-1 my-1"
-                    onclick="removesparepart(this)"
-                    data-unid="'.$row->UNID.'"><i class="fas fa-trash"></i></button>
-                  </td>
-                  <td>'.$row->SPAREPART_CODE.'</td>
-                  <td>'.$row->SPAREPART_NAME.'</td>
-                  <td>'.$row->SPAREPART_MODEL.'</td>
-                  <td>'.$row->SPAREPART_SIZE.'</td>
-                  <td>'.$row->SPAREPART_COST.'</td>
-                  <td>'.$row->UNIT.'</td>
-                  <td>'.$TOTAL[$row->UNID].'</td>
-
-                </tr>';
-          }
-        }
-      }
 
 
-
-
-      return Response()->json(['html' => $html]);
-  }
 }

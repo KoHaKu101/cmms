@@ -131,12 +131,13 @@ class PersonalController extends Controller
   }
   public function Update(Request $request,$UNID){
     $validated = $request->validate([
+      'EMP_CODE' => 'required',
       'EMP_ICON' => 'mimes:jpeg,png,jpg',
 
       ],
       [
       'EMP_ICON.mimes'   => 'เฉพาะไฟล์ jpeg, png, jpg',
-
+      'EMP_CODE.required' => 'กรุณาใส่รหัสพนักงาน'
       ]);
 
       $DATA_EMPNAME = EMPName::where('UNID',$UNID)->first();

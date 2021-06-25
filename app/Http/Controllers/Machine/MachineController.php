@@ -75,7 +75,7 @@ class MachineController extends Controller
     $COOKIE_MACHINE_RANK_CODE = $request->MACHINE_RANK_CODE != '' ? $request->MACHINE_RANK_CODE : $request->cookie('MACHINE_RANK_CODE');
     $COOKIE_MACHINE_STATUS    = $request->MACHINE_STATUS    != '' ? $request->MACHINE_STATUS    : $request->cookie('MACHINE_STATUS');
     $MINUTES = 30;
-    
+
     Cookie::queue('MACHINE_CHECK',$COOKIE_MACHINE_CHECK,$MINUTES);
     Cookie::queue('LINE',$COOKIE_LINE,$MINUTES);
     Cookie::queue('MACHINE_RANK_CODE',$COOKIE_MACHINE_RANK_CODE,$MINUTES);
