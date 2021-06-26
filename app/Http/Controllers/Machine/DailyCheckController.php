@@ -148,8 +148,10 @@ class DailyCheckController extends Controller
   }
 
   public function DeleteImg(Request $request ){
+
     $UNID = $request->UNID;
     $DATA_CHECKSHEET = MachineCheckSheet::Where('UNID','=',$UNID)->count();
+
     if ($DATA_CHECKSHEET > 0) {
       $DATA_CHECKSHEET = MachineCheckSheet::Where('UNID','=',$UNID)->first();
       $response_array = 'pass';
@@ -161,7 +163,8 @@ class DailyCheckController extends Controller
     $CHECK_YEAR  = $DATA_CHECKSHEET->CHECK_YEAR;
     $CHECK_MONTH = $DATA_CHECKSHEET->CHECK_MONTH;
     $FILE_NAME = $DATA_CHECKSHEET->FILE_NAME;
-    $pathfile = public_path('image/checksheet/'.$CHECK_YEAR.'/'.$CHECK_MONTH.'/'.$FILE_NAME);
+
+    $pathfile = public_path('file/checksheet/'.$CHECK_YEAR.'/'.$CHECK_MONTH.'/'.$FILE_NAME);
 
     if (File::delete($pathfile) == true) {
       File::delete($pathfile);
