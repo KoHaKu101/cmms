@@ -127,11 +127,16 @@
 																</tr>
 															</thead>
 															<tbody>
+																<style>
+																.bg-statusoff{
+																	    background-color: #ff7d84!important;
+																}
+																</style>
 																@foreach ($DATA_SPAREPART as $key => $row)
 																	@php
-																		$BG = $row->STATUS == '9' ? '' : 'class="bg-danger text-white"';
+																		$BG = $row->STATUS == '9' ? '' : 'bg-statusoff text-white';
 																	@endphp
-																	<tr {{ $BG }}>
+																	<tr class="{{ $BG }}">
 																		<td class="text-nowrap">{{ $key+1 }}</td>
 																		<td class="text-nowrap"><strong>{{$row->SPAREPART_CODE}}</strong></td>
 																		<td class="text-nowrap">{{$row->SPAREPART_NAME}}</td>
