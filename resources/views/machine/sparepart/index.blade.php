@@ -122,7 +122,6 @@
 																	<th >Size</th>
 																	<th >Stock Min</th>
 																	<th >Price</th>
-																	<th >Status</th>
 																	<th >Action</th>
 																	<th >Machine</th>
 																</tr>
@@ -137,7 +136,6 @@
 																		<td class="text-nowrap">{{$row->SPAREPART_SIZE}}</td>
 																		<td class="text-nowrap">{{$row->STOCK_MIN}}</td>
 																		<td class="text-nowrap">{{number_format($row->SPAREPART_COST)}}</td>
-																		<td class="text-nowrap">{{$row->STATUS == 9 ? "เปิด" : "ปิด"}}</td>
 																		<td class="text-nowrap">
 																			<button type="button" class="btn btn-primary btn-sm mx-1 my-1 btn-edit-spare"
 																			data-spcode="{{$row->SPAREPART_CODE}}"
