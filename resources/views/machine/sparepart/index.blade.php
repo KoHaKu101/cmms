@@ -110,9 +110,8 @@
 												</h4>
 											</div>
 											<div class="card-body">
-
 													<div class="table-responsive-sf" >
-														<table class="table  table-bordered table-head-bg-info table-bordered-bd-info">
+														<table class="table  table-bordered table-head-bg-info table-bordered-bd-info" id="table_main">
 															<thead>
 																<tr>
 																	<th >#</th>
@@ -288,6 +287,16 @@ function savemachine(machine_unid,spartpart_unid,spartpart_code,period,datestart
 	});
 };
 $(document).ready(function() {
+	$('#table_main').DataTable({
+			"pageLength": 10,
+			"bLengthChange": false,
+			"bFilter": true,
+			"bInfo": false,
+			"bAutoWidth": false,
+			columnDefs: [
+			{ orderable: false, targets:[0,1,2,3,4,5,6,7,8] }
+		]
+		});
 	$('.btn-new').on('click',function(){
 		$("#FRM_SPAREPART").attr("action", "/machine/spart/save");
 		$('#modal-sparepart').modal('show');
