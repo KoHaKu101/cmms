@@ -110,7 +110,37 @@
 												</h4>
 											</div>
 											<div class="card-body">
-													<div class="table-responsive-sf" >
+												<form action="{{ route('SparPart.List') }}" method="POST" enctype="multipart/form-data">
+													@method('GET')
+													@csrf
+													<div class="row">
+														<div class="col-lg-6">
+															<div class="form-group form-inline">
+																<lable> แสดงข้อมูล : </lable>
+																<select class="form-control form-control-sm" id="PAGE_PAGINATE" name="PAGE_PAGINATE" onchange="submitbtn()">
+																	<option value="10" {{$PAGE_PAGINATE == '10' ? 'selected' :''}}>10</option>
+																	<option value="25" {{$PAGE_PAGINATE == '25' ? 'selected' :''}}>25</option>
+
+																	<option value="50" {{$PAGE_PAGINATE == '50' ? 'selected' :''}}>50</option>
+																</select>
+															</div>
+														</div>
+														<div class="col-lg-6  text-rigth">
+															<div class="form-group form-inline">
+																<lable> Search :</lable>
+																<div class="input-group mt-1 col-lg-10">
+											            <input type="search" id="SEARCH" name="SEARCH" class="form-control form-control-sm " value="{{ $SEARCH }}">
+											            <div class="input-group-prepend">
+											              <button type="submit" class="btn btn-search pr-1 btn-xs	SEARCH" id="BTN_SUBMIT">
+											                <i class="fa fa-search search-icon"></i>
+											              </button>
+											            </div>
+											          </div>
+															</div>
+														</div>
+													</div>
+												</form>
+													<div class="table-responsive-sf my-2" >
 														<table class="table  table-bordered table-head-bg-info table-bordered-bd-info" id="table_main">
 															<thead>
 																<tr>
@@ -136,7 +166,7 @@
 																		$BG = $row->STATUS == '9' ? '' : 'bg-statusoff text-white';
 																	@endphp
 																	<tr class="{{ $BG }}">
-																		<td class="text-nowrap">{{ $key+1 }}</td>
+																		<td class="text-nowrap">{{ $DATA_SPAREPART->firstItem() + $key }}</td>
 																		<td class="text-nowrap"><strong>{{$row->SPAREPART_CODE}}</strong></td>
 																		<td class="text-nowrap">{{$row->SPAREPART_NAME}}</td>
 																		<td class="text-nowrap">{{$row->SPAREPART_MODEL}}</td>
@@ -178,7 +208,7 @@
 
 														</table>
 														{{ $DATA_SPAREPART->appends(['machinepage' => $DATA_MACHINESPAREPART->currentPage()])->links('pagination.default',['paginator' => $DATA_SPAREPART,
-																			 'link_limit' => $DATA_SPAREPART->perPage()]) }}
+																			 'link_limit' => $DATA_SPAREPART->perPage(),'PAGE_PAGINATE' => $PAGE_PAGINATE,'SEARCH' => $SEARCH]) }}
 													</div>
 											</div>
 										</div>
@@ -202,9 +232,11 @@
 																	<th ></th>
 															</thead>
 															<tbody>
+
 																@foreach ($DATA_MACHINESPAREPART as $index => $subrow)
+
 																<tr>
-																	<td>{{ $index+1 }}</td>
+																	<td>{{ $DATA_MACHINESPAREPART->firstItem()+$index }}</td>
 																	<td>{{$subrow->MACHINE_CODE}}</td>
 																	<td>
 																		<button
@@ -221,7 +253,7 @@
 															</tbody>
 
 														</table>
-														{{ $DATA_MACHINESPAREPART->appends( ['sparepartpage' => $DATA_SPAREPART->currentPage()])
+														{{ $DATA_MACHINESPAREPART->appends( ['sparepartpage' => $DATA_SPAREPART->currentPage(),'PAGE_PAGINATE' => $PAGE_PAGINATE,'SEARCH' => $SEARCH])
 																										 ->links() }}
 													</div>
 												</div>
@@ -287,16 +319,7 @@ function savemachine(machine_unid,spartpart_unid,spartpart_code,period,datestart
 	});
 };
 $(document).ready(function() {
-	$('#table_main').DataTable({
-			"pageLength": 10,
-			"bLengthChange": false,
-			"bFilter": true,
-			"bInfo": false,
-			"bAutoWidth": false,
-			columnDefs: [
-			{ orderable: false, targets:[0,1,2,3,4,5,6,7,8] }
-		]
-		});
+
 	$('.btn-new').on('click',function(){
 		$("#FRM_SPAREPART").attr("action", "/machine/spart/save");
 		$('#modal-sparepart').modal('show');
@@ -496,6 +519,9 @@ $(document).ready(function() {
 		 };
 	 });
 
+ }
+ function submitbtn(){
+	 $('#BTN_SUBMIT').click();
  }
 </script>
 

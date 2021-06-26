@@ -417,10 +417,14 @@ class RepairCloseFormController extends Controller
         <div class="col-md-12">
           <div class="card card-invoice" style="border: groove;">
             <div class="card-header">
-              <div class="invoice-header form-inline">
-                <h3 class="invoice-title">
+              <div class="invoice-header row">
+                <h3 class="invoice-title col-lg-10">
                   '.$DATA_REPAIR_REQ->MACHINE_CODE.'
                 </h3>
+                <button type="button" class="btn btn-secondary btn-sm  text-right stepclose"
+                data-dismiss="modal" hidden >
+                  <i class="fas fa-print"> พิมพ์ </i>
+                </button>
               </div>
               <div class="form-inline">
                 <div class="invoice-desc my-2">ผู้รับงาน : '.$DATA_REPAIR_REQ->INSPECTION_NAME_TH.'</div>

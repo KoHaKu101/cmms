@@ -544,16 +544,17 @@ function savestep(idform,steppoint){
 												 $('#closeform').attr('data-total_worker',res.total_worker);
 												 $('#closeform').attr('data-total_all',res.total_all);+
 												 $('#stepsave').attr('hidden',false);
-												 $('#stepclose').attr('hidden',true);
-												 if (res.status == '1') {
-													 $('#stepsave').attr('hidden',true);
-													 $('#stepclose').attr('hidden',false);
-												 }
+
 											 }
 										 }).done(function(res) {
 										      setTimeout(function(){
 										        $("#overlay").fadeOut(300);
 														$('#WORK_STEP_RESULT').html(res.html);
+														$('.stepclose').attr('hidden',true);
+	 												 	if (res.status == '1') {
+	 													 $('#stepsave').attr('hidden',true);
+	 													 $('.stepclose').attr('hidden',false);
+	 												 	}
 										      },500);
 
 										    });
@@ -591,6 +592,7 @@ function savestep(idform,steppoint){
 		if ($('#FRM_'+work_step_simple).valid()) {
 			savestep(work_step_simple,work_step_next);
 			if (work_step_next == 'WORK_STEP_5') {
+				$("#overlay").fadeIn(300);　
 				var url = "{{ route('repair.result') }}";
 				var unid_repair = 			 $("#UNID_REPAIR_REQ").val();
 				$.ajax({
@@ -599,6 +601,7 @@ function savestep(idform,steppoint){
 					datatype: 'json',
 					data: {UNID_REPAIR:unid_repair} ,
 					success:function(res){
+								$("#overlay").fadeOut(300);
 								$('#closeform').attr('data-total_sparepart',res.total_sparepart);
 								$('#closeform').attr('data-total_worker',res.total_worker);
 								$('#closeform').attr('data-total_all',res.total_all);

@@ -471,6 +471,7 @@ body.modal-open {
             </div>
           </div>
           <div class="tab-pane" id="WORK_STEP_5">
+            
             <div class="row" id="WORK_STEP_RESULT">
             </div>
             <div class="row">
@@ -487,7 +488,7 @@ body.modal-open {
                   </button>
                 </div>
               </div>
-              <div class="col-md-12 col-lg-10 modal-footer" id="stepclose" hidden>
+              <div class="col-md-12 col-lg-10 modal-footer stepclose" hidden>
                 <div class="col-5 col-sm-7 col-md-7 col-lg-8 ml-auto" >
 
                 </div>

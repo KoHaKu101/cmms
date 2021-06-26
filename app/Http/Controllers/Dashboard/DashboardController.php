@@ -56,7 +56,7 @@ class DashboardController extends Controller
 
 
   public function Notification(Request $request){
-    $data = MachineRepairREQ::select('*')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(4)->get();
+    $data = MachineRepairREQ::select('*')->where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(4)->get();
     return response()->json(['datarepair' => $data]);
   }
 
@@ -74,9 +74,6 @@ class DashboardController extends Controller
                           ->leftJoin($machine,$machine.'.UNID',$systemcheck.'.MACHINE_UNID_REF')
                           ->whereDate('SYSTEM_MONTHSTORE','<=',Carbon::now('Asia/Bangkok'))
                           ->orderBy('SYSTEM_MONTHSTORE','DESC')->take(4)->get();
-    // $notify = (Carbon::now() >= $data->SYSTEM_MONTHSTORE) ? $data->get()  : ""  ;
-    // $datacount = MachineRepairREQ::where('CLOSE_STATUS','9')->get()->count();
-    // dd($data);
 
     return response()->json(['datamonth' => $data]);
   }

@@ -40,7 +40,22 @@ class SparPartController extends Controller
 
   public function List(Request $request,$SPAREPART_UNID = NULL){
     // dd($request);
-    $SPAREPART_UNID        = $SPAREPART_UNID != '' ? $SPAREPART_UNID : '';
+    $PAGE_PAGINATE         = isset($request->PAGE_PAGINATE) ? $request->PAGE_PAGINATE : 10;
+    $SEARCH                = isset($request->SEARCH) ? $request->SEARCH : '';
+    $SPAREPART_UNID        = isset($SPAREPART_UNID) ? $SPAREPART_UNID : '';
+    $DATA_SPAREPART        = SparePart::where(function ($query) use ($SEARCH) {
+                                               if ($SEARCH != '') {
+                                                  $query->where('SPAREPART_CODE', 'like', '%'.$SEARCH.'%')
+                                                        ->orwhere('SPAREPART_NAME','like','%'.$SEARCH.'%')
+                                                        ->orwhere('SPAREPART_MODEL','like','%'.$SEARCH.'%')
+                                                        ->orwhere('SPAREPART_SIZE','like','%'.$SEARCH.'%');
+                                                }
+                                               })
+                                              ->where(function ($query) use ($SPAREPART_UNID) {
+                                               if ($SPAREPART_UNID != '') {
+                                                  $query->where('UNID', '=', $SPAREPART_UNID);
+                                                }
+                                              })->orderBy('SPAREPART_CODE','ASC')->paginate($PAGE_PAGINATE,['*'],'sparepartpage');
 
     $DATA_MACHINESPAREPART = MachineSparePart::where('SPAREPART_UNID','=',$SPAREPART_UNID)
                                              ->orderBy('MACHINE_CODE')->paginate(10,['*'],'machinepage');
@@ -48,8 +63,8 @@ class SparPartController extends Controller
     $DATA_MACHINESPAREPART_FIRST = SparePart::where('UNID','=',$SPAREPART_UNID)->first();
 
 
-    $DATA_SPAREPART        = SparePart::orderBy('SPAREPART_CODE','ASC')->paginate(10,['*'],'sparepartpage');
-    return View('machine.sparepart.index',compact('DATA_SPAREPART','DATA_MACHINESPAREPART','DATA_MACHINESPAREPART_FIRST'));
+    // $DATA_SPAREPART        = SparePart::orderBy('SPAREPART_CODE','ASC')->paginate(20,['*'],'sparepartpage');
+    return View('machine.sparepart.index',compact('PAGE_PAGINATE','SEARCH','DATA_SPAREPART','DATA_MACHINESPAREPART','DATA_MACHINESPAREPART_FIRST'));
   }
   public function Save(Request $request){
 
