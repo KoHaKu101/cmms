@@ -145,7 +145,7 @@
 														@endphp
 								            <tr class="mt-4">
 								              <td >
-								                <center>{{ $key+1 }}</center>
+								                <center>{{ $machine->firstItem() + $key }}</center>
 								              </td>
 															<td >  {{ $row->MACHINE_LINE }}  </td>
 								                <td >
