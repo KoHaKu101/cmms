@@ -253,8 +253,8 @@ class MachineRepairController extends Controller
       $DATA_MACHINE = Machine::where('UNID','=',$MACHINE_UNID)->first();
         $DATA_SELECTMACHINEREPAIR = SelectMainRepair::where('UNID','=',$SELECT_MAIN_REPAIR_UNID)->first();
         $DATA_SELECTSUBREPAIR = SelectSubRepair::where('UNID','=',$SELECT_SUB_REPAIR_UNID)->first();
-
-        $DATA_EMP = MachineEMP::where('EMP_CODE','=',$EMP_CODE)->where('REF_UNID','=',$MACHINE_UNID)->first();
+        $DATA_EMP = DB::select("select EMP_TH_NAME_FIRST,EMP_CODE,UNID from EMCS_EMPLOYEE where LINE_CODE = 'PD' and EMP_CODE = '".$EMP_CODE."'");
+        // $DATA_EMP = MachineEMP::where('EMP_CODE','=',$EMP_CODE)->where('REF_UNID','=',$MACHINE_UNID)->first();
       //******************* docno *******************//
       $DATA_MACHINEREPAIRREQ = MachineRepairREQ::selectraw('max(DOC_NO)DOC_NO,max(DOC_DATE)DOC_DATE')->first();
       $DATE_DOCNO            = Carbon::now()->addyears('543');
@@ -278,9 +278,9 @@ class MachineRepairController extends Controller
         ,'REPAIR_MAINSELECT_NAME'=> $DATA_SELECTMACHINEREPAIR->REPAIR_MAINSELECT_NAME
         ,'REPAIR_SUBSELECT_UNID' => $DATA_SELECTSUBREPAIR->UNID
         ,'REPAIR_SUBSELECT_NAME' => $DATA_SELECTSUBREPAIR->REPAIR_SUBSELECT_NAME
-        ,'EMP_UNID'              => $DATA_EMP->UNID
-        ,'EMP_CODE'              => $DATA_EMP->EMP_CODE
-        ,'EMP_NAME'              => $DATA_EMP->EMP_NAME
+        ,'EMP_UNID'              => $DATA_EMP[0]->UNID
+        ,'EMP_CODE'              => $DATA_EMP[0]->EMP_CODE
+        ,'EMP_NAME'              => $DATA_EMP[0]->EMP_TH_NAME_FIRST
         ,'PRIORITY'              => $PRIORITY
         ,'DOC_NO'                => $DOC_NO
         ,'DOC_DATE'              => date('Y-m-d')
