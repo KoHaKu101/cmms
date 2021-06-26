@@ -259,10 +259,10 @@
 														@php
 															$REC_WORK_STATUS  = isset($array_EMP[$sub_row->INSPECTION_CODE]) ? $array_EMP[$sub_row->INSPECTION_CODE] : 'รอรับงาน';
 															$BTN_COLOR_STATUS = $sub_row->INSPECTION_CODE == '' ? 'btn-mute' : ($sub_row->CLOSE_STATUS == '1' ? 'btn-success' : 'btn-info') ;
-															$BTN_COLOR 			  = $sub_row->INSPECTION_CODE == '' ? 'btn-danger' : 'btn-success' ;
-															$BTN_TEXT  			  = $sub_row->INSPECTION_CODE == '' ? 'รอรับงาน' : ($sub_row->CLOSE_STATUS == '1' ? 'ปิดเอกสาร' : 'การดำเนินงาน') ;
+															$BTN_COLOR 			  = $sub_row->INSPECTION_CODE == '' ? 'btn-danger' : 'btn-secondary' ;
+															$BTN_TEXT  			  = $sub_row->INSPECTION_CODE == '' ? 'รอรับงาน' : ($sub_row->CLOSE_STATUS == '1' ? 'เรียบร้อย' : 'กำลังดำเนินการ') ;
 														@endphp
-								            <tr>
+								            <tr >
 															<td>{{ $key+1 }}</td>
 															<td >{{ date('d-m-Y',strtotime($sub_row->DOC_DATE)) }}</td>
 								              <td >{{ $sub_row->DOC_NO }}
@@ -714,19 +714,11 @@ function savestep(idform,steppoint){
 			 nextstep('3');
 		 }
 	 }else if(check_type == 'OUT'){
-  	// var check_workerout = [];
-	 // $("input [name = 'WORKOUT_NAME[]' ]").each(function() {
-   //  var value = $(this).val();
-		// 	   if (value) {
-		// 	        check_workerout.push(value);
-		// 	    }
-		// 	});
-		// 	console.log(check_workerout);
-		//  if (check_workerout.length > 0 ) {
-		// 	 nextstep('3');
-		//  }
-		var check = $(".tablecolumn");
-		console.log(check);
+
+		var check = $(".tablecolumn").length;
+		if (check > 0) {
+			nextstep('3');
+		}
 	 }
  });
  $('#add_worker').on('click',function(event){
@@ -782,7 +774,7 @@ function savestep(idform,steppoint){
 					}else {
 						tds += '<td><button type="button" class="btn btn-warning btn-block btn-sm editworkout"'+
 												'onclick="editworkout(this)" data-name="'+name+'" data-table="'+number_count+'">แก้ไข</button>'+
-											 '<button type="button" class="btn btn-danger btn-block btn-sm"'+
+											 '<button type="button" class="btn btn-danger btn-block btn-sm deleteworkout"'+
 											 	'onclick="deleteworkout(this)" data-table="'+number_count+'">ลบรายการ</button></td>';
 					}
 			});
@@ -830,6 +822,7 @@ function savestep(idform,steppoint){
 				 $('#tablerow'+count+' .tablecolumn').attr('id', 'tablecolumn' + count);
             $('#tablerow'+count+' .tablecolumn').html(count);
 						$('#tablerow'+count+' .editworkout').attr('data-table',  count);
+						$('#tablerow'+count+' .deleteworkout').attr('data-table',  count);
         }
         count++;
 				number_count = count;
@@ -846,9 +839,9 @@ $('#closeform').on('click',function(){
 	 url: url,
 	 datatype: 'json',
 	 data: {UNID_REPAIR:repair_unid,
-		 	TOTAL_SPAREPART :total_sparepart,
-			TOTAL_WORKER :total_worker,
-			TOTAL_ALL :total_all} ,
+		 			TOTAL_SPAREPART :total_sparepart,
+					TOTAL_WORKER :total_worker,
+					TOTAL_ALL :total_all} ,
 	 success:function(res){
 				 if (res.pass) {
 					 Swal.fire({

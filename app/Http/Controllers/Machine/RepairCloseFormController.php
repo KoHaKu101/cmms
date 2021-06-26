@@ -207,7 +207,7 @@ class RepairCloseFormController extends Controller
                   <td>'.$row->SPAREPART_NAME.'</td>
                   <td>'.$row->SPAREPART_MODEL.'</td>
                   <td>'.$row->SPAREPART_SIZE.'</td>
-                  <td>'.$request->SPAREPART_COST[$row->UNID].'</td>
+                  <td>'.number_format($request->SPAREPART_COST[$row->UNID]).'</td>
                   <td>'.$row->UNIT.'</td>
                   <td>'. intval($TOTAL[$row->UNID]).'</td>
 

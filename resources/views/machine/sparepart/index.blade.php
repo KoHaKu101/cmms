@@ -120,7 +120,7 @@
 																	<th >Name</th>
 																	<th >Model</th>
 																	<th >Size</th>
-																	<th >Stock Min</th>
+																	<th >Safety Stock</th>
 																	<th >Price</th>
 																	<th >Action</th>
 																	<th >Machine</th>
@@ -128,7 +128,10 @@
 															</thead>
 															<tbody>
 																@foreach ($DATA_SPAREPART as $key => $row)
-																	<tr>
+																	@php
+																		$BG = $row->STATUS == '9' ? '' : 'class="bg-danger text-white"';
+																	@endphp
+																	<tr {{ $BG }}>
 																		<td class="text-nowrap">{{ $key+1 }}</td>
 																		<td class="text-nowrap"><strong>{{$row->SPAREPART_CODE}}</strong></td>
 																		<td class="text-nowrap">{{$row->SPAREPART_NAME}}</td>

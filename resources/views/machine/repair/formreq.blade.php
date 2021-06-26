@@ -58,7 +58,7 @@
 													<a class="nav-link repairdetail" href="#repairdetail" id="step2"  ><i class="fa fa-file mr-2"></i> รายละเอียด</a>
 												</li>
 												<li class="step">
-													<a class="nav-link empname" href="#empname" id="step3"  ><i class="fa fa-file mr-2"></i> พนักงาน</a>
+													<a class="nav-link empname" href="#empname" id="step3"  ><i class="fa fa-file mr-2"></i> ผู้แจ้ง</a>
 												</li>
 												<li class="step">
 													<a class="nav-link priority" href="#priority" id="step4"  ><i class="fa fa-file mr-2"></i> ความเร่งด่วน</a>
@@ -119,9 +119,9 @@
 																		<button type="button" class="btn btn-info mx-1 my-1 text-left" style="width:200px"
 																		onclick="selectemp(this)"
 																		data-empcode="{{ $row->EMP_CODE }}"
-																		data-empname="{{ $row->EMP_NAME }}"
+																		data-empname="{{ $row->EMP_TH_NAME_FIRST }}"
 																		>
-																			{{ 'รหัส '.$row->EMP_CODE.' : ชื่อ '.$row->EMP_NAME }}</button>
+																			{{ 'รหัส '.$row->EMP_CODE.' : ชื่อ '.$row->EMP_TH_NAME_FIRST }}</button>
 																	@endforeach
 															</div>
 													</div>

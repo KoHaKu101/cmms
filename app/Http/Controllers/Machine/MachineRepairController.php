@@ -140,7 +140,7 @@ class MachineRepairController extends Controller
     foreach ($dataset as $key => $row) {
       $REC_WORK_STATUS  = isset($row->INSPECTION_CODE) ? $row->INSPECTION_NAME_TH : 'รอรับงาน';
       $BTN_COLOR_STATUS = $row->INSPECTION_CODE == '' ? 'btn-mute' : ($row->CLOSE_STATUS == '1' ? 'btn-success' : 'btn-info') ;
-      $BTN_COLOR 			  = $row->INSPECTION_CODE == '' ? 'btn-danger' : 'btn-success' ;
+      $BTN_COLOR 			  = $row->INSPECTION_CODE == '' ? 'btn-danger' : 'btn-secondary' ;
       $BTN_TEXT  			  = $row->INSPECTION_CODE == '' ? 'รอรับงาน' : ($row->CLOSE_STATUS == '1' ? 'ปิดเอกสาร' : 'การดำเนินงาน') ;
       $html.= '<tr>
                 <td>'.$key+1 .'</td>
@@ -153,7 +153,7 @@ class MachineRepairController extends Controller
 
                 <td >
                   <button type="button"class="btn '.$BTN_COLOR_STATUS.' btn-block btn-sm my-1 ">
-                    <span class="btn-label text-left" >
+                    <span class="btn-label text-center" style="color:black">
                       '.$BTN_TEXT.'
                     </span>
                   </button>
@@ -233,9 +233,10 @@ class MachineRepairController extends Controller
   public function Create($UNID){
 
       $dataset = SelectMainRepair::where('STATUS','=','9')->get();
-      $data_emp = MachineEMP::select('EMP_CODE','EMP_NAME')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME')->where('EMP_STATUS','=','0')->where('REF_UNID','=',$UNID)->get();
+      // $data_emp = MachineEMP::select('EMP_CODE','EMP_NAME')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME')->where('EMP_STATUS','=','0')->where('REF_UNID','=',$UNID)->get();
       $datamachine = Machine::where('UNID','=',$UNID)->first();
-
+      $data_emp   = DB::select("select dbo.decode_utf8(EMP_TH_NAME_FIRST) as EMP_TH_NAME_FIRST,EMP_CODE,UNID from EMCS_EMPLOYEE where LINE_CODE = 'PD'");
+      // dd($data_emp);
     return View('machine/repair/formreq',compact('dataset','datamachine','data_emp'));
   }
   public function Store(Request $request,$MACHINE_UNID){
