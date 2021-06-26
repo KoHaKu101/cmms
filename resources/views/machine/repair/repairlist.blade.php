@@ -32,6 +32,48 @@
 
 	{{-- ส่วนเนื้อหาและส่วนท้า --}}
 @section('contentandfooter')
+	<style>
+	#overlayinpage{
+		position: fixed;
+	  top: 0;
+	  z-index: 100;
+	  width: 100%;
+	  height:100%;
+	  display: none;
+	  background: rgba(0,0,0,0.6);
+	}
+		#overlay{
+	  position: fixed;
+	  top: 0;
+	  z-index: 100;
+	  width: 100%;
+	  height:100%;
+	  display: none;
+	  background: rgba(0,0,0,0.6);
+	}
+	.cv-spinner {
+	  height: 100%;
+	  display: flex;
+	  justify-content: center;
+	  align-items: center;
+	}
+	.spinner {
+	  width: 40px;
+	  height: 40px;
+	  border: 4px #ddd solid;
+	  border-top: 4px #2e93e6 solid;
+	  border-radius: 50%;
+	  animation: sp-anime 0.8s infinite linear;
+	}
+	@keyframes sp-anime {
+	  100% {
+	    transform: rotate(360deg);
+	  }
+	}
+	.is-hide{
+	  display:none;
+	}
+	</style>
 	@php
 	$months=array(0 =>'ALL',1 => "มกราคม",2 => "กุมภาพันธ์",3 =>"มีนาคม",4 => "เมษายน",5 =>"พฤษภาคม",6 =>"มิถุนายน",
 									 7 =>"กรกฎาคม",8 =>"สิงหาคม",9 =>"กันยายน",10 =>"ตุลาคม",11 => "พฤศจิกายน",12 =>"ธันวาคม");
@@ -269,7 +311,11 @@
 			</div>
 		</div>
 		@include('machine.repair.repairclosemodal')
-
+		<div id="overlayinpage">
+	    <div class="cv-spinner">
+	      <span class="spinner"></span>
+	    </div>
+	  </div>
 @stop
 {{-- ปิดส่วนเนื้อหาและส่วนท้า --}}
 
@@ -278,6 +324,7 @@
 <script src="{{ asset('assets/js/ajax/ajax-csrf.js') }}"></script>
 <script src="{{ asset('assets/js/select2.min.js') }}"></script>
 <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
+{{-- <script src="{{ asset('assets/js/useinproject/jquery-1.11.0.min.js') }}"></script> --}}
 <script>
 $(document).ready(function(){
 		var url = "{{ route('repair.fetchdata') }}";
@@ -311,8 +358,8 @@ $(document).ready(function(){
 
 //******************************* function ************************
 
-
 //********************** function loop array **********************
+
 function loop_tabel_worker(array_emp_unid){
 	var url = "{{ route('repair.addtableworker') }}";
 	$.ajax({
@@ -356,7 +403,7 @@ function loop_tabel_sparepart(unid,total,type,cost){
 				 $('#table_sparepart').html(data.html);
 			 }
 		 });
-};
+	 };
 //********************** function common **********************
 function setcookie(name,value){
 	var urlcookie = "{{ route('cookie.set') }}";
@@ -409,7 +456,6 @@ function savestep(idform,steppoint){
 	var unid = $("#UNID_REPAIR_REQ").val();
 	var steppoint = steppoint;
 	var url = "{{ route('repair.savestep') }}?UNID_REPAIR_REQ="+unid+"&WORK_STEP="+idform+'&WORK_STEP_NEXT='+steppoint;
-	console.log(idform);
 	var idform = '#FRM_'+idform;
 
 	var data = $(idform).serialize();
@@ -429,16 +475,19 @@ function savestep(idform,steppoint){
 }
 //******************************* End function ********************
 	function rec_work(thisdata){
+		$("#overlayinpage").fadeIn(300);　
 		var repair_unid = $(thisdata).data('unid');
 		var docno = $(thisdata).data('docno');
 		var detail = $(thisdata).data('detail');
 		var url = "{{ route('repair.empcallajax') }}";
+
 		$.ajax({
 				 type:'GET',
 				 url: url,
 				 data: {REPAIR_REQ_UNID : repair_unid},
 				 datatype: 'json',
 				 success:function(data){
+					 $("#overlayinpage").fadeOut(300)
 			 //************************ set html **************************
 					 $('#show_detail').html(data.html_detail);
 					 $('#select_recworker').html(data.html_select);
@@ -481,6 +530,10 @@ function savestep(idform,steppoint){
 						//***************************** step สุดท้าย *********************************
 								if (i == 4) {
 									var url = "{{ route('repair.result') }}";
+									$('#CloseForm').modal({backdrop: 'static', keyboard: false});
+									$('#CloseForm').modal('show');
+									$('#WORK_STEP_5').addClass('active');
+									$("#overlay").fadeIn(300);　
 									$.ajax({
 									 type:'POST',
 									 url: url,
@@ -496,19 +549,22 @@ function savestep(idform,steppoint){
 													 $('#stepsave').attr('hidden',true);
 													 $('#stepclose').attr('hidden',false);
 												 }
-												 $('#WORK_STEP_RESULT').html(res.html);
-												 if (res.html) {
-													 $('#WORK_STEP_5').addClass('active');
-												 }
 											 }
-										 });
+										 }).done(function(res) {
+										      setTimeout(function(){
+										        $("#overlay").fadeOut(300);
+														$('#WORK_STEP_RESULT').html(res.html);
+										      },500);
+
+										    });
+								}else {
+									$('#CloseForm').modal({backdrop: 'static', keyboard: false});
+									$('#CloseForm').modal('show');
+									$('.WORK_STEP_'+step_number).addClass('badge-primary fw-bold');
+									$('#WORK_STEP_'+step_number).addClass('active show');
 								}
 							}
 					//***************************** step ต่างๆ *********************************
-							 $('#CloseForm').modal({backdrop: 'static', keyboard: false});
-							 $('#CloseForm').modal('show');
-							 $('.WORK_STEP_'+step_number).addClass('badge-primary fw-bold');
-							 $('#WORK_STEP_'+step_number).addClass('active show');
 						 }
 					 }else {
 						 $('#RepairForm').modal({backdrop: 'static', keyboard: false,focus:false});
@@ -658,7 +714,19 @@ function savestep(idform,steppoint){
 			 nextstep('3');
 		 }
 	 }else if(check_type == 'OUT'){
-	  	nextstep('3');
+  	// var check_workerout = [];
+	 // $("input [name = 'WORKOUT_NAME[]' ]").each(function() {
+   //  var value = $(this).val();
+		// 	   if (value) {
+		// 	        check_workerout.push(value);
+		// 	    }
+		// 	});
+		// 	console.log(check_workerout);
+		//  if (check_workerout.length > 0 ) {
+		// 	 nextstep('3');
+		//  }
+		var check = $(".tablecolumn");
+		console.log(check);
 	 }
  });
  $('#add_worker').on('click',function(event){
@@ -667,7 +735,6 @@ function savestep(idform,steppoint){
 			$('#WORKER_SELECT option[value="'+emp_code+'"]').detach();
 			if (emp_code != "" && emp_code != null) {
 				array_emp_unid.push(emp_code);
-				console.log(array_emp_unid);
 				loop_tabel_worker(array_emp_unid);
 			}
 		});
@@ -697,7 +764,6 @@ function savestep(idform,steppoint){
 		 $("#table_workerout").each(function () {
 			var tds = '<tr id="tablerow'+number_count+'" class="tablerow">';
 			jQuery.each($('tr:last td', this), function () {
-
 					number_check++;
 					if (number_check == '1') {
 						tds += '<td class="tablecolumn">' + (number_count) + '</td>';
@@ -714,16 +780,16 @@ function savestep(idform,steppoint){
 					}else if(number_check == '3'){
 						tds += '<td>' + cost + '</td>';
 					}else {
-						tds += '<td><button type="button" class="btn btn-warning btn-block btn-sm"'+
+						tds += '<td><button type="button" class="btn btn-warning btn-block btn-sm editworkout"'+
 												'onclick="editworkout(this)" data-name="'+name+'" data-table="'+number_count+'">แก้ไข</button>'+
 											 '<button type="button" class="btn btn-danger btn-block btn-sm"'+
 											 	'onclick="deleteworkout(this)" data-table="'+number_count+'">ลบรายการ</button></td>';
 					}
 			});
-			number_count++;
 			tds += '</tr>';
 					$('tbody', this).append(tds);
 		});
+		number_count++;
 		$('#add_workerout').html('<i class="fas fa-plus" > เพิ่ม</i>');
 		$('.WORKEROUT_NAME').val('');
 		$('.WORKEROUT_COST').val('');
@@ -736,26 +802,25 @@ function savestep(idform,steppoint){
 	 var cost = $('#WORKOUT_COST\\['+name+'\\]').val();
    var detail = $('#WORKOUT_DETAIL\\['+name+'\\]').val();
 	 var table_id = $(thisdata).data('table');
-	 var i = $('#table_workerout .tablecolumn').length + 1;
+	 var i = $('#table_workerout .tablecolumn').length  ;
 	 $('#add_workerout').html('<i class="fas fa-plus" > แก้ไข</i>');
 	 $('.WORKEROUT_NAME').val(name);
 	 $('.WORKEROUT_COST').val(cost);
 	 $('.WORKEROUT_DETAIL').val(detail);
-	 $('.WORKEROUT_NAME').auto
-	 if( i > 1 ) {
-      $('table#table_workerout tr#tablerow'+table_id).remove();
-      resetIndexes();
-    }
-	 ;
+	 $('table#table_workerout tr#tablerow'+table_id).remove();
+		resetIndexes();
+	 if( i == 1 ) {
+		 number_count = 1 ;
+	 }
  }
  function deleteworkout(thisdata){
 	 var table_id = $(thisdata).data('table');
-	 var i = $('#table_workerout .tablecolumn').length + 1;
-	 if( i > 0 ) {
-      $('table#table_workerout tr#tablerow'+table_id).remove();
-      resetIndexes();
-    }
-
+	 var i = $('#table_workerout .tablecolumn').length;
+	 $('table#table_workerout tr#tablerow'+table_id).remove();
+	 resetIndexes();
+	if( i == 1 ) {
+		number_count = 1 ;
+	}
  }
  function resetIndexes(){
     var count = 1;
@@ -764,17 +829,12 @@ function savestep(idform,steppoint){
         $(this).attr('id', 'tablerow' + count);
 				 $('#tablerow'+count+' .tablecolumn').attr('id', 'tablecolumn' + count);
             $('#tablerow'+count+' .tablecolumn').html(count);
+						$('#tablerow'+count+' .editworkout').attr('data-table',  count);
         }
-
         count++;
 				number_count = count;
-
-				console.log(count);
-				console.log(number_count);
     });
 	}
-
-
 $('#closeform').on('click',function(){
 	var total_sparepart = $(this).data('total_sparepart');
 	var total_worker	  = $(this).data('total_worker');
@@ -798,7 +858,6 @@ $('#closeform').on('click',function(){
 							}).then((result) => {
 									$('#CloseForm').modal('hide');
 							});
-
 				 }else {
 					 Swal.fire({
 							 icon: 'error',

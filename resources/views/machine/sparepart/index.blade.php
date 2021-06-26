@@ -116,13 +116,13 @@
 															<thead>
 																<tr>
 																	<th >#</th>
-																	<th >รหัส</th>
-																	<th >ชื่ออะไหล่</th>
-																	<th >เบอร์</th>
-																	<th >ขนาด</th>
+																	<th >Code</th>
+																	<th >Name</th>
+																	<th >Model</th>
+																	<th >Size</th>
 																	<th >Stock Min</th>
 																	<th >Price</th>
-																	<th >สถานะ</th>
+																	<th >Status</th>
 																	<th >Action</th>
 																	<th >Machine</th>
 																</tr>

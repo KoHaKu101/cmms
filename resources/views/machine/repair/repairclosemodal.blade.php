@@ -84,6 +84,11 @@ body.modal-open {
   }
 </style>
 <div class="modal fade" id="CloseForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLalavel" aria-hidden="true">
+  <div id="overlay">
+    <div class="cv-spinner">
+      <span class="spinner"></span>
+    </div>
+  </div>
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header bg-primary text-primary">
@@ -243,30 +248,31 @@ body.modal-open {
             <form action="#" class="form_work_out" enctype="multipart/form-data">
               <input type="hidden" id="WORKER_TYPE" name="WORKER_TYPE" value="OUT">
               <div class="form-group has-error"id="WORK_OUT" hidden>
-                  <div class="row my-1">
-                    <div class="col-6 col-sm-6 col-md-6 col-lg-4 ml-auto">
+                  <div class="row">
+                    <div class="col-lg-6 ml-auto">
                       <label> บริษัท/บุคคล </label>
                         <input type="text" class="form-control form-control-sm WORKEROUT_NAME" autocomplete="" >
                     </div>
-                    <div class="col-6 col-sm-6 col-md-6 col-lg-4 mr-auto">
+                    <div class="col-lg-4 mr-auto">
                       <label> ค่าบริการ </label>
                       <div class="input-group ">
                         <input type="number" class="form-control form-control-sm WORKEROUT_COST" min="0" value="0" step=".01" >
                         <div class="input-group-append">
                           <span class="input-group-text">บาท</span>
                         </div>
+                        <button type="button" class="btn btn-primary btn-sm  mx-2"id="add_workerout"><i class="fas fa-plus" > เพิ่ม</i></button>
                       </div>
                     </div>
-                    <div class="col-8 col-sm-9 col-md-8 col-lg-6 ml-auto">
+
+                  </div>
+                  <div class="row my-1">
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-10 ml-auto mr-auto">
                       <label>วิธีการแก้ไข</label>
                       <textarea class="form-control mt--1 mb-1 WORKEROUT_DETAIL" row="2" ></textarea>
                     </div>
-                    <div class="col-4 col-sm-3 col-lg-4 mt-5">
-                      <button type="button" class="btn btn-primary btn-sm mt-2 mx-2"id="add_workerout"><i class="fas fa-plus" > เพิ่ม</i></button>
-                    </div>
                   </div>
                 <div class="row">
-                  <div class="col-md-12 col-lg-8 ml-auto mr-auto">
+                  <div class="col-md-12 col-lg-10 ml-auto mr-auto">
                     <table class="table table-bordered table-head-bg-info table-bordered-bd-info mt-4" id="table_workerout">
   										<thead>
   											<tr>
@@ -315,25 +321,33 @@ body.modal-open {
           <div class="tab-pane" id="WORK_STEP_3">
             <div class="form-group">
               <div class="row">
-                <div class="col-11 col-sm-11 col-md-11 col-lg-6 form-inline has-error">
+                <div class="col-11 col-sm-11 col-md-11 col-lg-4  has-error">
                   <label>เพิ่มอะไหล่</label>
-                  <div class="col-9 col-sm-10 col-md-10 col-lg-9">
+                </div>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-2 text-right has-error">
+                  <label>จำนวน</label>
+                </div>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-2 text-center has-error">
+                  <label>ราคา</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-11 col-sm-11 col-md-11 col-lg-5 form-inline has-error">
+                  <div class="col-9 col-sm-10 col-md-10 col-lg-11">
                     <select class="form-control form-control-sm col-9" id="SPAREPART" name="SPAREPART">
                     </select>
                   </div>
                 </div>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-6 my-2 form-inline has-error">
-                  <label>จำนวน</label>
-                  <input type="number" class="form-control form-control-sm col-3 col-md-2 mx-2" id="TOTAL_SPAREPART" min="0" value="1" step='1'>
-                  <label>ราคา</label>
-                  <input type="number" class="form-control form-control-sm col-4 col-md-3 mx-2" id="SPAREPART_COST" name="SPAREPART_COST" min="0" value="1">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-4 my-2 form-inline has-error">
+                  <input type="number" class="form-control form-control-sm col-3 col-md-4 mx-2" id="TOTAL_SPAREPART" min="0" value="1" step='1'>
+                  <input type="number" class="form-control form-control-sm col-4 col-md-6 mx-2" id="SPAREPART_COST" name="SPAREPART_COST" min="0" value="1">
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12 text-right">
-                  <button type="button" class="btn btn-primary btn-sm mx-1 my-1" onclick="add_sparepart(1)">
+              {{-- </div> --}}
+              {{-- <div class="row"> --}}
+                <div class="col-lg-3 ">
+                  <button type="button" class="btn btn-primary btn-sm mx-1 my-2" onclick="add_sparepart(1)">
                     ตัดสต็อก</button>
-                  <button type="button" class="btn btn-primary btn-sm mx-1 my-1" onclick="add_sparepart(2)">
+                  <button type="button" class="btn btn-primary btn-sm my-2" onclick="add_sparepart(2)">
                     ไม่ตัดสต็อก</button>
                 </div>
               </div>
