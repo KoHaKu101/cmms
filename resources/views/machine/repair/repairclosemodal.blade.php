@@ -213,7 +213,7 @@ body.modal-open {
                 </div>
               </div>
             </div>
-            <form action="#" class="form_work_in" enctype="multipart/form-data">
+            <form action="#" class="form_work_in" id="FRM_WORK_STEP_2"enctype="multipart/form-data">
               <input type="hidden" id="WORKER_TYPE" name="WORKER_TYPE" value="IN">
               <div class="form-group" id="WORK_IN" hidden>
                 <div class="row">
@@ -318,39 +318,39 @@ body.modal-open {
               </div>
             </div>
           </div>
+          <style>
+          .text-hidden{
+            color: #ffffff00!important;
+          }
+          </style>
           <div class="tab-pane" id="WORK_STEP_3">
             <div class="form-group">
-              <div class="row">
-                <div class="col-11 col-sm-11 col-md-11 col-lg-4  has-error">
-                  <label>เพิ่มอะไหล่</label>
-                </div>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-2 text-right has-error">
-                  <label>จำนวน</label>
-                </div>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-2 text-center has-error">
-                  <label>ราคา</label>
+            <div class="row">
+              <div class="col-9 col-lg-5 has-error">
+                <label>เพิ่มอะไหล่</label>
+                <div class="col-lg-11">
+                  <select class="form-control form-control-sm " id="SPAREPART" name="SPAREPART"></select>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-11 col-sm-11 col-md-11 col-lg-5 form-inline has-error">
-                  <div class="col-9 col-sm-10 col-md-10 col-lg-11">
-                    <select class="form-control form-control-sm col-9" id="SPAREPART" name="SPAREPART">
-                    </select>
-                  </div>
-                </div>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-4 my-2 form-inline has-error">
-                  <input type="number" class="form-control form-control-sm col-3 col-md-4 mx-2" id="TOTAL_SPAREPART" min="0" value="1" step='1'>
-                  <input type="number" class="form-control form-control-sm col-4 col-md-6 mx-2" id="SPAREPART_COST" name="SPAREPART_COST" min="0" value="1">
-                </div>
-              {{-- </div> --}}
-              {{-- <div class="row"> --}}
-                <div class="col-lg-3 ">
-                  <button type="button" class="btn btn-primary btn-sm mx-1 my-2" onclick="add_sparepart(1)">
+              <div class="col-3 col-lg-2 has-error">
+                <label>จำนวน</label>
+                <input type="number" class="form-control form-control-sm  mx-2" id="TOTAL_SPAREPART" min="0" value="1" step='1'>
+              </div>
+              <div class="col-5 col-lg-2 has-error">
+                <label>ราคา</label>
+                <input type="number" class="form-control form-control-sm  mx-2" id="SPAREPART_COST" name="SPAREPART_COST" min="0" value="1">
+              </div>
+              <div class="col-7 col-lg-3">
+                <label class="text-hidden">จำนวน</label>
+                <div>
+                  <button type="button" class="btn btn-primary btn-sm mx-1 " onclick="add_sparepart(1)">
                     ตัดสต็อก</button>
-                  <button type="button" class="btn btn-primary btn-sm my-2" onclick="add_sparepart(2)">
+                  <button type="button" class="btn btn-primary btn-sm " onclick="add_sparepart(2)">
                     ไม่ตัดสต็อก</button>
                 </div>
+
               </div>
+            </div>
             </div>
             <form action="#" id="FRM_WORK_STEP_3" enctype="multipart/form-data">
               <div class="form-group mt--4">
@@ -471,7 +471,7 @@ body.modal-open {
             </div>
           </div>
           <div class="tab-pane" id="WORK_STEP_5">
-            
+
             <div class="row" id="WORK_STEP_RESULT">
             </div>
             <div class="row">

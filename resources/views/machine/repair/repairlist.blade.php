@@ -817,7 +817,7 @@ function savestep(idform,steppoint){
 		number_count = 1 ;
 	}
  }
- function resetIndexes(){
+function resetIndexes(){
     var count = 1;
     $('.tablerow').each(function(){
         if( count > 0){
@@ -865,7 +865,22 @@ $('#closeform').on('click',function(){
 		 });
  // $('#CloseForm').modal('hide');
  })
-
+ $('#CloseForm').on('hidden.bs.modal', function (e) {
+	 for (var i = 1; i < 5; i++) {
+		document.getElementById("FRM_WORK_STEP_"+i).reset();
+	 }
+	 array_emp_unid = []; ;
+	 sparepart_total = {}; ;
+	 sparepart_type = {}; ;
+	 sparepart_cost = {}; ;
+	 arr_spare_total = []; ;
+	 arr_spare_type = []; ;
+	 arr_spare_cost = []; ;
+	 number_count = '' ;
+	 loop_tabel_worker(array_emp_unid);
+	 resetIndexes();
+	 loop_tabel_sparepart('','','','');
+ })
 </script>
 <script type="text/javascript">
 	function changesubmit(){
@@ -875,7 +890,11 @@ $('#closeform').on('click',function(){
 		var unid = (m);
 		window.open('/machine/repair/pdf/'+unid,'Repairprint','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');
 	}
+	function pdfsaverepair(unid){
+		var unid = unid;
+		window.open('/machine/repair/savepdf/'+unid,'RepairSaveprint','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');
 
+	}
 
 </script>
 @stop

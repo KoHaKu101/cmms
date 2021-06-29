@@ -422,7 +422,7 @@ class RepairCloseFormController extends Controller
                   '.$DATA_REPAIR_REQ->MACHINE_CODE.'
                 </h3>
                 <button type="button" class="btn btn-secondary btn-sm  text-right stepclose"
-                data-dismiss="modal" hidden >
+                data-dismiss="modal" hidden onclick="pdfsaverepair(\''.$DATA_REPAIR_REQ->UNID.'\')">
                   <i class="fas fa-print"> พิมพ์ </i>
                 </button>
               </div>

@@ -76,8 +76,9 @@ Route::get('/', function () {
 Route::get('/user/logout/',[MenuController::class,'Logout'])->name('user.logout');
 Route::middleware(['auth:sanctum', 'verified']);
 //user Page
-Route::get('/machine/user/homepage',[MachineController::class,'UserHomePage'])->name('user.homepage');
+Route::get('/machine/user/homepage',            [MachineController::class,'UserHomePage'])->name('user.homepage');
 Route::get('/machine/repair/pdf/{UNID}',        'App\Http\Controllers\PDF\MachineRepairPDFController@RepairPdf');
+Route::get('/machine/repair/savepdf/{UNID}',    'App\Http\Controllers\PDF\RepairSaveFormPDFController@RepairSaveForm');
 
 //Cookie
 Route::get('/cookie/set',[CookieController::class,'setCookie'])->name('cookie.set');
