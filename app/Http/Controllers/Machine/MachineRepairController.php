@@ -152,8 +152,11 @@ class MachineRepairController extends Controller
                 <td >'.$row->REPAIR_SUBSELECT_NAME.'</td>d
 
                 <td >
-                  <button type="button"class="btn '.$BTN_COLOR_STATUS.' btn-block btn-sm my-1 ">
-                    <span class="btn-label text-center" style="color:black">
+                  <button type="button"class="btn '.$BTN_COLOR_STATUS.' btn-block btn-sm my-1 text-left"style="color:black;font-size:13px"
+                  '.($row->CLOSE_STATUS == '1' ? 'onclick=pdfsaverepair("'.$row->UNID.'")' : '').'>
+                    <i class="'.($row->CLOSE_STATUS == '1' ? 'fas fa-print' : '').'"></i>
+
+                    <span class="btn-label " >
                       '.$BTN_TEXT.'
                     </span>
                   </button>
@@ -236,10 +239,8 @@ class MachineRepairController extends Controller
   public function Create($UNID){
 
       $dataset = SelectMainRepair::where('STATUS','=','9')->get();
-      // $data_emp = MachineEMP::select('EMP_CODE','EMP_NAME')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME')->where('EMP_STATUS','=','0')->where('REF_UNID','=',$UNID)->get();
       $datamachine = Machine::where('UNID','=',$UNID)->first();
       $data_emp   = DB::select("select dbo.decode_utf8(EMP_TH_NAME_FIRST) as EMP_TH_NAME_FIRST,EMP_CODE,UNID from EMCS_EMPLOYEE where LINE_CODE = 'PD'");
-      // dd($data_emp);
     return View('machine/repair/formreq',compact('dataset','datamachine','data_emp'));
   }
   public function Store(Request $request,$MACHINE_UNID){

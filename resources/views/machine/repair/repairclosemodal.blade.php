@@ -213,7 +213,7 @@ body.modal-open {
                 </div>
               </div>
             </div>
-            <form action="#" class="form_work_in" id="FRM_WORK_STEP_2"enctype="multipart/form-data">
+            <form action="#" class="form_work_in"enctype="multipart/form-data">
               <input type="hidden" id="WORKER_TYPE" name="WORKER_TYPE" value="IN">
               <div class="form-group" id="WORK_IN" hidden>
                 <div class="row">

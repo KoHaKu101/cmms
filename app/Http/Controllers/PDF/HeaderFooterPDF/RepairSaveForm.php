@@ -34,7 +34,7 @@ class RepairSaveForm extends Fpdf
         $this->Text(140,16,iconv('UTF-8', 'cp874', 'วันที่แจ้งซ่อม :'));
         $this->Text(140,21,iconv('UTF-8', 'cp874', 'เวลาแจ้งซ่อม :'));
       //page NO
-      $this->SetFont('THSarabunNew','B',14 );
+      $this->SetFont('THSarabunNew','',14 );
         $this->Text(149,10,iconv('UTF-8', 'cp874', '___________________________'));
         $this->Text(158,16,iconv('UTF-8', 'cp874', '______________________'));
         $this->Text(158,21,iconv('UTF-8', 'cp874', '______________________'));

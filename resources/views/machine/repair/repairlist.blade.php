@@ -275,8 +275,10 @@
 								              <td >  				{{ $sub_row->MACHINE_NAME }}		    </td>
 															<td >  				{{ $sub_row->REPAIR_SUBSELECT_NAME }}		    </td>
 								                  <td >
-								                    <button type="button"class="btn {{$BTN_COLOR_STATUS}} btn-block btn-sm my-1 ">
-								                      <span class="btn-label text-center" style="color:black">
+								                    <button type="button"class="btn {{$BTN_COLOR_STATUS}} btn-block btn-sm my-1 text-left"style="color:black;font-size:13px"
+																		{{ $sub_row->CLOSE_STATUS == '1' ? 'onclick=pdfsaverepair("'.$sub_row->UNID.'")' : ''}}>
+																			<i class="{{ $sub_row->CLOSE_STATUS == '1' ? 'fas fa-print' : '' }}"></i>
+								                      <span class="btn-label " >
 																				{{ $BTN_TEXT }}
 								                      </span>
 								                    </button>
@@ -855,7 +857,7 @@ $('#closeform').on('click',function(){
 					TOTAL_WORKER :total_worker,
 					TOTAL_ALL :total_all} ,
 	 success:function(res){
-				 if (res.pass) {
+				 if (res.pass == 'true') {
 					 Swal.fire({
 							  icon: 'success',
 							  title: 'ปิดเอกสารเรียบร้อย',
@@ -864,12 +866,15 @@ $('#closeform').on('click',function(){
 								  $('#BG_'+repair_unid).removeClass('bg-danger');
 									$('#BG_'+repair_unid).removeClass('bg-warning');
 									$('#BG_'+repair_unid).addClass('bg-success');
-									$('#CloseForm').modal('hide');
+									// $('#CloseForm').modal('hide');
+									$('#stepsave').attr('hidden',true);
+									$('.stepclose').attr('hidden',false);
 							});
 				 }else {
 					 Swal.fire({
 							 icon: 'error',
 							 title: 'เกิดข้อผิดพลาด',
+							 text: 'กรุณากรอกข้อมูลให้ครบถ้วน',
 							 timer: 1500,
 						 });
 				 }

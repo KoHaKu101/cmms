@@ -273,15 +273,16 @@ class RepairCloseFormController extends Controller
       }
       $DATA_EMP_NAME = isset($request->WORKOUT_NAME) ? $request->WORKOUT_NAME : EMPName::whereIn('UNID',[$request->WORKER_UNID])->get();
 
-
       foreach ($DATA_EMP_NAME as $key => $row) {
         $WORKER_UNID          = $WORKER_TYPE == 'OUT' ?  '' : $row->UNID ;
         $WORKER_CODE          = $WORKER_TYPE == 'OUT' ?  '' : $row->EMP_CODE ;
         $WORKER_CHECK_NAME    = $WORKER_TYPE == 'OUT' ?  EMPName::selectraw("dbo.encode_utf8('$row') as WORKER_NAME")->first() : $row->EMP_NAME ;
         $WORKER_COST          = isset($request->WORKOUT_COST) ? $request->WORKOUT_COST[$key] != NULL ? $request->WORKOUT_COST[$key] : 0 : 0;
+
+
         $WORKER_REPAIR_DETAIL = isset($request->WORKOUT_DETAIL) ? $request->WORKOUT_DETAIL[$key] : '';
         $WORKER_NAME          = $WORKER_TYPE == 'OUT' ? $WORKER_CHECK_NAME->WORKER_NAME : $row->EMP_NAME ;
-        
+
         RepairWorker::insert([
           'UNID'                    =>  $this->randUNID('PMCS_CMMS_REPAIR_WORKER')
           ,'REPAIR_REQ_UNID'        =>  $REPAIR_REQ_UNID
@@ -531,11 +532,13 @@ class RepairCloseFormController extends Controller
     return Response()->json(['html' => $html,'status' => $CLOSE_STATUS,'total_sparepart' => $COST_ALL_SPAREPART
                             ,'total_worker' => $RESULT_ALL_WORKER,'total_all' => $TOTAL_COST_ALL]);
 
-
-
   }
   public function CloseForm(Request $request){
     $DATA_REPAIR =  MachineRepairREQ::where('UNID','=',$request->UNID_REPAIR);
+    $CHECK_WORKER = RepairSparepart::where('REPAIR_REQ_UNID','=',$request->UNID_REPAIR)->get();
+    if (!isset($CHECK_WORKER[0]->WORKER_TYPE)) {
+      return Response()->json(['pass'=>'false']);
+    }
     $DATA_REPAIR_FIRST = $DATA_REPAIR->first();
     //********************************* Cost ************************************
     $TOTAL_COST_SPAREPART   = $request->TOTAL_SPAREPART;
@@ -549,14 +552,14 @@ class RepairCloseFormController extends Controller
     $DOWNTIME               = ($RESULT_INSPECTION + $RESULT_SPAREPART + $RESULT_WORKERIN + $RESULT_WORKEROUT);
 
     $DATA_REPAIR->update([
-      'DOWNTIME' =>  $DOWNTIME
+      'DOWNTIME'              =>  $DOWNTIME
       ,'TOTAL_COST_SPAREPART' => $TOTAL_COST_SPAREPART
-      ,'TOTAL_COST_WORKER' => $TOTAL_COST_WORKER
-      ,'TOTAL_COST_REPAIR' => $TOTAL_COST_REPAIR
-      ,'CLOSE_BY' => $DATA_REPAIR_FIRST->INSPECTION_NAME
-      ,'CLOSE_STATUS' => 1
-      ,'MODIFY_BY' => Carbon::now()
-      ,'MODIFY_TIME' => Auth::user()->name
+      ,'TOTAL_COST_WORKER'    => $TOTAL_COST_WORKER
+      ,'TOTAL_COST_REPAIR'    => $TOTAL_COST_REPAIR
+      ,'CLOSE_BY'             => $DATA_REPAIR_FIRST->INSPECTION_NAME
+      ,'CLOSE_STATUS'         => 1
+      ,'MODIFY_BY'            => Carbon::now()
+      ,'MODIFY_TIME'          => Auth::user()->name
     ]);
 
     return Response()->json(['pass'=>'true']);
