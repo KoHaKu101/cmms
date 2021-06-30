@@ -39,7 +39,7 @@ class RepairSaveForm extends Fpdf
         $this->Text(158,16,iconv('UTF-8', 'cp874', '______________________'));
         $this->Text(158,21,iconv('UTF-8', 'cp874', '______________________'));
         $this->Ln(0);
-        $this->Text(149,10,iconv('UTF-8', 'cp874', 'MRP6406-0018'   ));
+        $this->Text(149,10,iconv('UTF-8', 'cp874', $dataset->MACHINE_REPORT_NO   ));
         $this->Text(158,16,iconv('UTF-8', 'cp874', date('d-m-Y',strtotime($dataset->DOC_DATE))   ));
         $this->Text(158,21,iconv('UTF-8', 'cp874', date('H:i:s',strtotime($dataset->REPAIR_REQ_TIME))   ));
       //data header

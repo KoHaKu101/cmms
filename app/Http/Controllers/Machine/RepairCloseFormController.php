@@ -13,7 +13,6 @@ use Gate;
 //******************** model ***********************
 use App\Models\MachineAddTable\SelectMainRepair;
 use App\Models\MachineAddTable\SelectSubRepair;
-use App\Models\Machine\Machine;
 use App\Models\Machine\EMPName;
 use App\Models\Machine\SparePart;
 use App\Models\Machine\RepairWorker;
@@ -535,7 +534,7 @@ class RepairCloseFormController extends Controller
   }
   public function CloseForm(Request $request){
     $DATA_REPAIR =  MachineRepairREQ::where('UNID','=',$request->UNID_REPAIR);
-    $CHECK_WORKER = RepairSparepart::where('REPAIR_REQ_UNID','=',$request->UNID_REPAIR)->get();
+    $CHECK_WORKER = RepairWorker::where('REPAIR_REQ_UNID','=',$request->UNID_REPAIR)->get();
     if (!isset($CHECK_WORKER[0]->WORKER_TYPE)) {
       return Response()->json(['pass'=>'false']);
     }
@@ -551,6 +550,16 @@ class RepairCloseFormController extends Controller
     $RESULT_WORKEROUT       = $DATA_REPAIR_FIRST->WORKEROUT_RESULT_TIME;
     $DOWNTIME               = ($RESULT_INSPECTION + $RESULT_SPAREPART + $RESULT_WORKERIN + $RESULT_WORKEROUT);
 
+    $DATA_MACHINEREPAIRREQ = MachineRepairREQ::selectraw('max(MACHINE_REPORT_NO)MACHINE_REPORT_NO,max(DOC_DATE)DOC_DATE')->first();
+    $DATE_DOCNO            = Carbon::now()->addyears('543');
+    $MACHINE_REPORT_NO     = 'MRP' . $DATE_DOCNO->format('ym') . sprintf('-%04d', 1);
+    if ($DATA_MACHINEREPAIRREQ->MACHINE_REPORT_NO != '') {
+      $DATE_RESET_DOCNO     = Carbon::parse($DATA_MACHINEREPAIRREQ->DOC_DATE);
+      if ($DATE_RESET_DOCNO->format('m') == Carbon::now()->format('m') ) {
+        $EXPLOT             = str_replace('MRP'.$DATE_RESET_DOCNO->addyears('543')->format('ym').'-','',$DATA_MACHINEREPAIRREQ->MACHINE_REPORT_NO)+1;
+        $MACHINE_REPORT_NO  = 'MRP' . $DATE_RESET_DOCNO->format('ym'). sprintf('-%04d', $EXPLOT);
+      }
+    }
     $DATA_REPAIR->update([
       'DOWNTIME'              =>  $DOWNTIME
       ,'TOTAL_COST_SPAREPART' => $TOTAL_COST_SPAREPART
@@ -558,6 +567,9 @@ class RepairCloseFormController extends Controller
       ,'TOTAL_COST_REPAIR'    => $TOTAL_COST_REPAIR
       ,'CLOSE_BY'             => $DATA_REPAIR_FIRST->INSPECTION_NAME
       ,'CLOSE_STATUS'         => 1
+      ,'MACHINE_REPORT_NO'    => $MACHINE_REPORT_NO
+      ,'CLOSE_TIME'           => date('H:i:s')
+      ,'CLOSE_DATE'           => date('Y-m-d')
       ,'MODIFY_BY'            => Carbon::now()
       ,'MODIFY_TIME'          => Auth::user()->name
     ]);

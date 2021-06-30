@@ -75,6 +75,12 @@ class MachineRepairREQ extends Model
       ,'STATUS'
       ,'WORK_STEP'
       ,'REC_WORK_DATE'
+      ,'MACHINE_REPORT_NO'
+      ,'CLOSE_TIME'
+      ,'CLOSE_DATE'
+      ,'PD_UNID'
+      ,'PD_CODE'
+      ,'PD_NAME'
     ];
 
 }

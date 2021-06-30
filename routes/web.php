@@ -14,8 +14,6 @@ use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\CalendarController;
 use App\Http\Controllers\Machine\MachineController;
 use App\Http\Controllers\Machine\PersonalController;
-use App\Http\Controllers\Machine\MachineRepairController;
-use App\Http\Controllers\Machine\RepairCloseFormController;
 use App\Http\Controllers\Machine\PositionEmpController;
 use App\Http\Controllers\Machine\MachineManualController;
 use App\Http\Controllers\Machine\SysCheckController;
@@ -24,6 +22,10 @@ use App\Http\Controllers\Machine\DailyCheckController;
 use App\Http\Controllers\Machine\MachineSparePartController;
 use App\Http\Controllers\Machine\CookieController;
 use App\Http\Controllers\Machine\PerMissionController;
+//************************* Repair *************************************
+use App\Http\Controllers\Machine\MachineRepairController;
+use App\Http\Controllers\Machine\RepairCloseFormController;
+use App\Http\Controllers\Machine\RepairHistoryController;
 //************************* Plan *************************************
 use App\Http\Controllers\Plan\MachinePlanController;
 use App\Http\Controllers\Plan\Report\PlanYearMachinePm;
@@ -103,6 +105,8 @@ Route::get('machine/repair/fetchdata'                     ,[MachineRepairControl
   Route::post('machine/repair/savestep'                   ,[RepairCloseFormController::class,'SaveStep'])          ->name('repair.savestep');
   Route::post('machine/repair/result'                     ,[RepairCloseFormController::class,'Result'])          ->name('repair.result');
   Route::post('machine/repair/closeform'                  ,[RepairCloseFormController::class,'CloseForm'])          ->name('repair.closeform');
+
+  Route::get('machine/repairhistory/list' , [RepairHistoryController::class,'HistoryList'])->name('repairhistory.list');
 
 //group not user
 Route::middleware('can:isAdminandManager')->group(function () {
