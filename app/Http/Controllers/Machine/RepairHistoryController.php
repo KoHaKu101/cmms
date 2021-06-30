@@ -42,10 +42,11 @@ class RepairHistoryController extends Controller
 
   public function HistoryList(Request $request){
     $DATA_REPAIR_HEADER = MachineRepairREQ::select('MACHINE_UNID','MACHINE_CODE','MACHINE_NAME')
+                                            ->where('CLOSE_STATUS','=',1)
                                             ->groupBy('MACHINE_UNID','MACHINE_CODE','MACHINE_NAME')
                                             ->orderBy('MACHINE_CODE')->get();
     $DATA_REPAIR = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH')
-                                   ->orderBy('MACHINE_CODE')->get();
+                                   ->where('CLOSE_STATUS','=',1)->orderBy('MACHINE_CODE')->get();
     $DATA_SPAREPART = RepairSparepart::orderBy('SPAREPART_NAME')->get();
     return view('machine.history.list',compact('DATA_REPAIR','DATA_REPAIR_HEADER','DATA_SPAREPART'));
   }
