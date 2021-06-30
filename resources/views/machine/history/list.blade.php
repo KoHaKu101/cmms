@@ -92,6 +92,7 @@
 																	<td class="bg-info text-white " colspan="8" style="font-size:18px">MC-CODE : {{ $row->MACHINE_CODE }} </td>
 																	<td class="bg-info text-white "><button type="button" class="btn btn-sm btn-warning btn-block  my-1"><i class="fas fa-print" style="font-size:15px"></i></button></td>
 																</tr>
+																
 																<tr class="bg-secondary text-white">
 																	<td scope="col">#</td>
 																	<td scope="col">วันที่แจ้ง</td>
