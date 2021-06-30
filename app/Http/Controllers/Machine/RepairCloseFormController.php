@@ -271,7 +271,9 @@ class RepairCloseFormController extends Controller
       if ($RepairWorker->count() > 0) {
         $RepairWorker->delete();
       }
-      $DATA_EMP_NAME = isset($request->WORKOUT_NAME) ? $request->WORKOUT_NAME : EMPName::whereIn('UNID',$request->WORKER_UNID)->get();
+      $DATA_EMP_NAME = isset($request->WORKOUT_NAME) ? $request->WORKOUT_NAME : EMPName::whereIn('UNID',[$request->WORKER_UNID])->get();
+
+
       foreach ($DATA_EMP_NAME as $key => $row) {
         $WORKER_UNID          = $WORKER_TYPE == 'OUT' ?  '' : $row->UNID ;
         $WORKER_CODE          = $WORKER_TYPE == 'OUT' ?  '' : $row->EMP_CODE ;
@@ -279,7 +281,7 @@ class RepairCloseFormController extends Controller
         $WORKER_COST          = isset($request->WORKOUT_COST) ? $request->WORKOUT_COST[$key] != NULL ? $request->WORKOUT_COST[$key] : 0 : 0;
         $WORKER_REPAIR_DETAIL = isset($request->WORKOUT_DETAIL) ? $request->WORKOUT_DETAIL[$key] : '';
         $WORKER_NAME          = $WORKER_TYPE == 'OUT' ? $WORKER_CHECK_NAME->WORKER_NAME : $row->EMP_NAME ;
-
+        
         RepairWorker::insert([
           'UNID'                    =>  $this->randUNID('PMCS_CMMS_REPAIR_WORKER')
           ,'REPAIR_REQ_UNID'        =>  $REPAIR_REQ_UNID
@@ -312,8 +314,8 @@ class RepairCloseFormController extends Controller
         }
         $DATA_SPARPART = SparePart::whereIn('UNID',$SPAREPART_UNID)->get();
         foreach ($DATA_SPARPART as $key => $sub_row) {
-          $TOTAL_OUT = $request->SPAREPART_TOTAL_[$sub_row->UNID];
-          $COST = $request->SPAREPART_COST_[$sub_row->UNID];
+          $TOTAL_OUT  = $request->SPAREPART_TOTAL_[$sub_row->UNID];
+          $COST       = $request->SPAREPART_COST_[$sub_row->UNID];
           $TOTAL_COST = $COST * $TOTAL_OUT;
           RepairSparepart::insert([
             'UNID'                    =>  $this->randUNID('PMCS_CMMS_REPAIR_SPAREPART')
@@ -345,14 +347,14 @@ class RepairCloseFormController extends Controller
       $MINUTES           = $this->ConvertToMinutes($TIME_START,$TIME_END,$DATE_START,$DATE_END);
 
       $MACHINEREPAIRREQ->update([
-          'SPAREPART_START_DATE'=>$DATE_START
-          ,'SPAREPART_START_TIME'=>$TIME_START
-          ,'SPAREPART_END_DATE'=>$DATE_END
-          ,'SPAREPART_END_TIME'=>$TIME_END
-          ,'SPAREPART_RESULT_TIME' =>$MINUTES
-          ,'WORK_STEP'     =>  $WORK_STEP_NEXT
-          ,'MODIFY_TIME'  => Carbon::now()
-          ,'MODIFY_BY'    => Auth::user()->name
+          'SPAREPART_START_DATE'    =>  $DATE_START
+          ,'SPAREPART_START_TIME'   =>  $TIME_START
+          ,'SPAREPART_END_DATE'     =>  $DATE_END
+          ,'SPAREPART_END_TIME'     =>  $TIME_END
+          ,'SPAREPART_RESULT_TIME'  =>  $MINUTES
+          ,'WORK_STEP'              =>  $WORK_STEP_NEXT
+          ,'MODIFY_TIME'            =>  Carbon::now()
+          ,'MODIFY_BY'              =>  Auth::user()->name
       ]);
   }elseif ($WORK_STEP == 'WORK_STEP_4') {
       $TIME_START         = $request->WORKER_START_TIME;
@@ -410,7 +412,6 @@ class RepairCloseFormController extends Controller
     $MINUTES                = $DIFF - ($DAYS * 1440) - ($HOURS * 60);
     $DOWN_TIME              = $DAYS.'วัน'.$HOURS.'ชั่วโมง'.$MINUTES.'นาที';
    //*******************************************************************************************
-  // $RESULT_ALL_WORKER = $DATA_WORKER > 0 ? $DATA_WORKER.'฿' : '-' ;
     $html = '<div class="col-12 col-lg-10 ml-auto mr-auto" >
       <div class="page-divider"></div>
       <div class="row">

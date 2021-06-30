@@ -188,7 +188,10 @@
 											@endphp
 		                  @foreach ($dataset as $key => $row)
 												@php
-													$BG_COLOR 	 = $row->PRIORITY == '9' ? 'bg-danger text-white' : ($row->CLOSE_STATUS == '1' ? 'bg-success text-white' : 'bg-warning text-white');
+													$BG_COLOR    = $row->PRIORITY == '9' ? 'bg-danger text-white' :  'bg-warning text-white';
+										      if ($row->CLOSE_STATUS == '1') {
+										        $BG_COLOR = 'bg-success text-white';
+										      }
 													$WORK_STATUS = isset($array_EMP[$row->INSPECTION_CODE]) ? $array_EMP[$row->INSPECTION_CODE] : 'รอรับงาน';
 													$IMG         = isset($array_IMG[$row->INSPECTION_CODE]) ? asset('image/emp/'.$array_IMG[$row->INSPECTION_CODE]) : asset('../assets/img/noemp.png');
 													$DATE_DIFF   = $row->REC_WORK_DATE != '1900-01-01 00:00:00.000'? 'รับเมื่อ:'.Carbon\Carbon::parse($row->REC_WORK_DATE)->diffForHumans() : 'แจ้งเมื่อ:'.Carbon\Carbon::parse($row->CREATE_TIME)->diffForHumans();
@@ -196,7 +199,7 @@
 												<div class="col-lg-3">
 													<div class="card card-round">
 														<div class="card-body">
-															<div class="card-title text-center fw-mediumbold {{ $BG_COLOR }}">{{$row->MACHINE_CODE}}</div>
+															<div class="card-title text-center fw-mediumbold {{ $BG_COLOR }}"id="BG_{{ $row->UNID }}">{{$row->MACHINE_CODE}}</div>
 															<div class="card-list">
 																<div class="item-list">
 																	<div class="avatar">
@@ -544,12 +547,12 @@ function savestep(idform,steppoint){
 												 $('#closeform').attr('data-total_worker',res.total_worker);
 												 $('#closeform').attr('data-total_all',res.total_all);+
 												 $('#stepsave').attr('hidden',false);
-
 											 }
 										 }).done(function(res) {
 										      setTimeout(function(){
 										        $("#overlay").fadeOut(300);
 														$('#WORK_STEP_RESULT').html(res.html);
+														$('#stepsave').attr('hidden',false);
 														$('.stepclose').attr('hidden',true);
 	 												 	if (res.status == '1') {
 	 													 $('#stepsave').attr('hidden',true);
@@ -563,6 +566,8 @@ function savestep(idform,steppoint){
 									$('#CloseForm').modal('show');
 									$('.WORK_STEP_'+step_number).addClass('badge-primary fw-bold');
 									$('#WORK_STEP_'+step_number).addClass('active show');
+									$('#stepsave').attr('hidden',false);
+									$('.stepclose').attr('hidden',true);
 								}
 							}
 					//***************************** step ต่างๆ *********************************
@@ -570,6 +575,8 @@ function savestep(idform,steppoint){
 					 }else {
 						 $('#RepairForm').modal({backdrop: 'static', keyboard: false,focus:false});
 						 $("#RepairForm").modal("show");
+						 $('#stepsave').attr('hidden',false);
+						 $('.stepclose').attr('hidden',true);
 					 }
 
 				 }
@@ -714,11 +721,13 @@ function savestep(idform,steppoint){
 
 	 if (check_type == 'IN') {
 		 if (array_emp_unid != '') {
+
 			 nextstep('3');
 		 }
 	 }else if(check_type == 'OUT'){
 
 		var check = $(".tablecolumn").length;
+		console.log(check);
 		if (check > 0) {
 			nextstep('3');
 		}
@@ -852,6 +861,9 @@ $('#closeform').on('click',function(){
 							  title: 'ปิดเอกสารเรียบร้อย',
 							  timer: 1500,
 							}).then((result) => {
+								  $('#BG_'+repair_unid).removeClass('bg-danger');
+									$('#BG_'+repair_unid).removeClass('bg-warning');
+									$('#BG_'+repair_unid).addClass('bg-success');
 									$('#CloseForm').modal('hide');
 							});
 				 }else {
@@ -878,8 +890,16 @@ $('#closeform').on('click',function(){
 	 arr_spare_cost = []; ;
 	 number_count = '' ;
 	 loop_tabel_worker(array_emp_unid);
+	 // var table_id = $(thisdata).data('table');
+	 var max = $('#table_workerout .tablerow').length;
+	 for (var i = 1; i < max+1; i++) {
+		 $('#tablerow'+i).remove();
+	 }
 	 resetIndexes();
 	 loop_tabel_sparepart('','','','');
+	 for (var i = 1; i < 5; i++) {
+		document.getElementById("FRM_WORK_STEP_"+i).reset();
+	 }
  })
 </script>
 <script type="text/javascript">

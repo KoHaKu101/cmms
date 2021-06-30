@@ -9,12 +9,12 @@ use Codedge\Fpdf\Fpdf\Fpdf;
 
 class RepairSaveForm extends Fpdf
 {
-  // private $REPAIR_REQ_UNID;
-  function Header()
+  private $REPAIR_REQ_UNID;
+  function Header($UNID = NULL)
 {
-    // if ($UNID) {
-    //   $this->REPAIR_REQ_UNID = $UNID;
-    //   $dataset = MachineRepairREQ::where('MACHINE_LINE','=',$this->MACHINE_LINE)->count();
+    if ($UNID) {
+      $this->REPAIR_REQ_UNID = $UNID;
+      $dataset = MachineRepairREQ::where('UNID','=',$this->REPAIR_REQ_UNID)->first();
 
     //head ********************************************************************
     $logo = "assets/img/logo13.jpg";
@@ -40,10 +40,10 @@ class RepairSaveForm extends Fpdf
         $this->Text(158,21,iconv('UTF-8', 'cp874', '______________________'));
         $this->Ln(0);
         $this->Text(149,10,iconv('UTF-8', 'cp874', 'MRP6406-0018'   ));
-        $this->Text(158,16,iconv('UTF-8', 'cp874', date('d-m-Y')   ));
-        $this->Text(158,21,iconv('UTF-8', 'cp874', date('h:i:s')   ));
+        $this->Text(158,16,iconv('UTF-8', 'cp874', date('d-m-Y',strtotime($dataset->DOC_DATE))   ));
+        $this->Text(158,21,iconv('UTF-8', 'cp874', date('H:i:s',strtotime($dataset->REPAIR_REQ_TIME))   ));
       //data header
-     // }
+     }
     //end head ****************************************************************
 
 }

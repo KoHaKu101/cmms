@@ -31,12 +31,6 @@ class RepairSaveFormPDFController extends Controller
     $DATA_SPAREPART = RepairSparepart::where('REPAIR_REQ_UNID','=',$UNID)->get();
     $TYPE_WORKER = $DATA_WORKER[0]->WORKER_TYPE;
     $TYPE_SPARTPART = isset($DATA_SPAREPART[0]) ? $DATA_SPAREPART[0]->SPAREPART_TYPE_OUT : '';
-
-    $WORKER_START_DATE = $TYPE_WORKER == 'IN' ? $DATA_REPAIR_REQ->WORKERIN_START_DATE : $DATA_REPAIR_REQ->WORKEROUT_START_DATE;
-    $WORKER_START_TIME = $TYPE_WORKER == 'IN' ? $DATA_REPAIR_REQ->WORKERIN_START_TIME : $DATA_REPAIR_REQ->WORKEROUT_START_TIME;
-    $WORKER_END_DATE   = $TYPE_WORKER == 'IN' ? $DATA_REPAIR_REQ->WORKERIN_END_DATE   : $DATA_REPAIR_REQ->WORKEROUT_END_DATE;
-    $WORKER_END_TIME   = $TYPE_WORKER == 'IN' ? $DATA_REPAIR_REQ->WORKERIN_END_TIME   : $DATA_REPAIR_REQ->WORKEROUT_END_TIME;
-
     //*********** down time ********************************************
     $DOWNTIME = $DATA_REPAIR_REQ->DOWNTIME;
     $day = floor ($DOWNTIME / 1440);
@@ -79,7 +73,7 @@ class RepairSaveFormPDFController extends Controller
     $this->pdf->SetFont('THSarabunNew','',14 );
     $this->pdf->Rect(10,5,194,283);
     $this->pdf->SetAutoPageBreak(true, 5);
-    $height = array(5,8,10,17,34,49,59,4,6);
+    $height = array(5,6,10,17,34,49,59,4,6);
     //********************************  box A ************************************************************
     $this->pdf->Rect(150,69,54,14);
       $this->pdf->Rect(150,69,6,6);
@@ -87,23 +81,23 @@ class RepairSaveFormPDFController extends Controller
       $this->pdf->text(164,74,iconv('UTF-8', 'cp874', 'รวมระยะเวลาที่ใช้'));
       $this->pdf->text(162,80,iconv('UTF-8', 'cp874', $INSPECTION_DIFF));
     //********************************  box B ************************************************************
-    $this->pdf->Rect(150,118,54,14);
-      $this->pdf->Rect(150,118,6,6);
-      $this->pdf->text(152,122,iconv('UTF-8', 'cp874', 'B'));
-      $this->pdf->text(164,123,iconv('UTF-8', 'cp874', 'รวมระยะเวลาที่ใช้'));
-      $this->pdf->text(162,130,iconv('UTF-8', 'cp874',  ($TYPE_WORKER == 'IN' ? $WORKERIN_DIFF : $WORKEROUT_DIFF) ));
+    $this->pdf->Rect(150,103,54,14);
+      $this->pdf->Rect(150,103,6,6);
+      $this->pdf->text(152,107,iconv('UTF-8', 'cp874', 'B'));
+      $this->pdf->text(164,108,iconv('UTF-8', 'cp874', 'รวมระยะเวลาที่ใช้'));
+      $this->pdf->text(162,114,iconv('UTF-8', 'cp874', $WORKEROUT_DIFF));
     //********************************  box C ************************************************************
-    $this->pdf->Rect(150,152,54,14);
-      $this->pdf->Rect(150,152,6,6);
-      $this->pdf->text(152,156,iconv('UTF-8', 'cp874', 'C'));
-      $this->pdf->text(164,157,iconv('UTF-8', 'cp874', 'รวมระยะเวลาที่ใช้'));
-      $this->pdf->text(162,163,iconv('UTF-8', 'cp874', $SPAREPART_DIFF));
+    $this->pdf->Rect(150,140,54,14);
+      $this->pdf->Rect(150,140,6,6);
+      $this->pdf->text(152,144,iconv('UTF-8', 'cp874', 'C'));
+      $this->pdf->text(164,145,iconv('UTF-8', 'cp874', 'รวมระยะเวลาที่ใช้'));
+      $this->pdf->text(162,151,iconv('UTF-8', 'cp874', $SPAREPART_DIFF));
     //********************************  box D ************************************************************
-    // $this->pdf->Rect(150,157,54,14);
-    //   $this->pdf->Rect(150,157,6,6);
-    //   $this->pdf->text(152,161,iconv('UTF-8', 'cp874', 'D'));
-    //   $this->pdf->text(164,162,iconv('UTF-8', 'cp874', 'รวมระยะเวลาที่ใช้'));
-    //   $this->pdf->text(162,168,iconv('UTF-8', 'cp874', $WORKERIN_DIFF));
+    $this->pdf->Rect(150,157,54,14);
+      $this->pdf->Rect(150,157,6,6);
+      $this->pdf->text(152,161,iconv('UTF-8', 'cp874', 'D'));
+      $this->pdf->text(164,162,iconv('UTF-8', 'cp874', 'รวมระยะเวลาที่ใช้'));
+      $this->pdf->text(162,168,iconv('UTF-8', 'cp874', $WORKERIN_DIFF));
     //******************************* Box RepairBy Ane ReportBy ********************************************
     $this->pdf->Rect(148,199,52,35);
       $WORK_1 = isset($DATA_WORKER[0]->WORKER_NAME_TH) ? $DATA_WORKER[0]->WORKER_NAME_TH : '';
@@ -166,62 +160,68 @@ class RepairSaveFormPDFController extends Controller
   //******************************** Round Three *******************************************************
   $this->pdf->SetY(86);
     $this->pdf->Cell(194,6,iconv('UTF-8', 'cp874', 'การดำเนินการแก้ไข'),'1',1,'C',1);
-    $this->pdf->Cell(30,$height[1],iconv('UTF-8', 'cp874', 'ดำเนินการซ่อมโดย '),0,1,'R',0);
+    $this->pdf->Cell(50,$height[1],iconv('UTF-8', 'cp874', 'ดำเนินการซ่อมโดย : '),0,1,'C',0);
     $this->pdf->Cell(22,$height[1],$this->pdf->Image(($TYPE_WORKER == 'OUT' ? $Check : $UnCheck),$this->pdf->GetX()+15,$this->pdf->GetY(),6),0,0,'R',0);
-      $this->pdf->Cell(40,$height[1],iconv('UTF-8', 'cp874', 'ช่างซ่อมภายนอก / จ้างซ่อม'),0,0,'L',0);
+    $this->pdf->Cell(40,$height[1],iconv('UTF-8', 'cp874', 'ช่างซ่อมภายนอก / จ้างซ่อม'),0,1,'L',0);
+  //******************************* date start ************************************************************************
+    $this->pdf->Cell(30,$height[1],iconv('UTF-8', 'cp874', 'เริ่ม วันที่ : '),0,0,'R',0);
+      $this->pdf->Cell(30,$height[1],(isset($DATA_REPAIR_REQ->WORKEROUT_START_DATE) ? date('d-m-Y',strtotime($DATA_REPAIR_REQ->WORKEROUT_START_DATE)) : ''),0,0,'R',0);
+      $this->pdf->Text(40,109,'_______________________');
+      $this->pdf->Cell(30,$height[1],iconv('UTF-8', 'cp874', 'เวลา : '),0,0,'R',0);
+      $this->pdf->Cell(40,$height[1],(isset($DATA_REPAIR_REQ->WORKEROUT_START_DATE) ? date('H:i',strtotime($DATA_REPAIR_REQ->WORKEROUT_START_TIME)) : ''),0,1,'C',0);
+      $this->pdf->Text(100,109,'_______________________');
+  //******************************* date end ************************************************************************
+    $this->pdf->Cell(30,$height[1],iconv('UTF-8', 'cp874', 'เสร็จ วันที่ : '),0,0,'R',0);
+      $this->pdf->Cell(30,$height[1],(isset($DATA_REPAIR_REQ->WORKEROUT_END_DATE) ? date('d-m-Y',strtotime($DATA_REPAIR_REQ->WORKEROUT_END_DATE)) : ''),0,0,'R',0);
+      $this->pdf->Text(40,115  ,'_______________________');
+      $this->pdf->Cell(30,$height[1],iconv('UTF-8', 'cp874', 'เวลา : '),0,0,'R',0);
+      $this->pdf->Cell(40,$height[1],(isset($DATA_REPAIR_REQ->WORKEROUT_END_DATE) ? date('H:i',strtotime($DATA_REPAIR_REQ->WORKEROUT_END_TIME)) : ''),0,1,'C',0);
+      $this->pdf->Text(100,115 ,'_______________________');
+
     $this->pdf->Cell(22,$height[1],$this->pdf->Image(($TYPE_WORKER == 'IN' ? $Check : $UnCheck),$this->pdf->GetX()+15,$this->pdf->GetY(),6),0,0,'R',0);
       $this->pdf->Cell(40,$height[1],iconv('UTF-8', 'cp874', 'ช่างซ่อมภายในของบริษัท'),0,1,'L',0);
-
-    $this->pdf->Cell(30,$height[1],iconv('UTF-8', 'cp874', 'ดำเนินการซ่อม '),0,1,'R',0);
-
-  //******************************* date start ************************************************************************
-    $this->pdf->Cell(30,$height[1],iconv('UTF-8', 'cp874', 'เริ่ม วันที่ :'),0,0,'R',0);
-      $this->pdf->Cell(30,$height[1],(  date('d-m-Y',strtotime($WORKER_START_DATE)) ),0,0,'R',0);
-      $this->pdf->Text(40,122,'_______________________');
-      $this->pdf->Cell(30,$height[1],iconv('UTF-8', 'cp874', 'เวลา :'),0,0,'R',0);
-      $this->pdf->Cell(40,$height[1],(  date('H:i',strtotime($WORKER_START_TIME)) ),0,1,'C',0);
-      $this->pdf->Text(100,122,'_______________________');
-  //******************************* date end ************************************************************************
-    $this->pdf->Cell(30,$height[1],iconv('UTF-8', 'cp874', 'เสร็จ วันที่ :'),0,0,'R',0);
-      $this->pdf->Cell(30,$height[1],(  date('d-m-Y',strtotime($WORKER_END_DATE)) ),0,0,'R',0);
-      $this->pdf->Text(40,130  ,'_______________________');
-      $this->pdf->Cell(30,$height[1],iconv('UTF-8', 'cp874', 'เวลา :'),0,0,'R',0);
-      $this->pdf->Cell(40,$height[1],(  date('H:i',strtotime($WORKER_END_TIME)) ),0,1,'C',0);
-      $this->pdf->Text(100,130 ,'_______________________');
-    $this->pdf->setY(135);
-    $this->pdf->Cell(22,$height[1],iconv('UTF-8', 'cp874', $this->pdf->Image(($DATA_SPAREPART->count() == 0 ? $Check : $UnCheck),$this->pdf->GetX()+15,$this->pdf->GetY(),6)),0,0,'R',0);
-      $this->pdf->Cell(40,$height[1],iconv('UTF-8', 'cp874', 'ไม่เปลี่ยนอะไหล่'),0,0,'L',0);
-      $this->pdf->Cell(22,$height[1],iconv('UTF-8', 'cp874', $this->pdf->Image(($DATA_REPAIR_REQ->SPAREPART_START_DATE == NULL ? $Check : $UnCheck),$this->pdf->GetX()+15,$this->pdf->GetY(),6)),0,0,'R',0);
+      $this->pdf->Cell(30,$height[1],iconv('UTF-8', 'cp874', $this->pdf->Image(($DATA_SPAREPART->count() == 0 ? $Check : $UnCheck),$this->pdf->GetX()+22,$this->pdf->GetY(),6)),0,0,'R',0);
+      $this->pdf->Cell(40,$height[1],iconv('UTF-8', 'cp874', 'ไม่เปลี่ยนอะไหล่'),0,1,'L',0);
+      $this->pdf->Cell(30,$height[1],iconv('UTF-8', 'cp874', $this->pdf->Image(($DATA_SPAREPART->count() > 0 ? $Check : $UnCheck),$this->pdf->GetX()+22,$this->pdf->GetY(),6)),0,0,'R',0);
+      $this->pdf->Cell(40,$height[1],iconv('UTF-8', 'cp874', 'เปลี่ยนอะไหล่'),0,1,'L',0);
+      $this->pdf->Cell(40,$height[1],iconv('UTF-8', 'cp874', $this->pdf->Image(($DATA_REPAIR_REQ->SPAREPART_START_DATE == NULL ? $Check : $UnCheck),$this->pdf->GetX()+32,$this->pdf->GetY(),6)),0,0,'R',0);
       $this->pdf->Cell(40,$height[1],iconv('UTF-8', 'cp874', 'อะไหล่ภายใน'),0,1,'L',0);
-      $this->pdf->Cell(22,$height[1],iconv('UTF-8', 'cp874', $this->pdf->Image(($DATA_SPAREPART->count() > 0 ? $Check : $UnCheck),$this->pdf->GetX()+15,$this->pdf->GetY(),6)),0,0,'R',0);
-      $this->pdf->Cell(40,$height[1],iconv('UTF-8', 'cp874', 'เปลี่ยนอะไหล่'),0,0,'L',0);
-      $this->pdf->Cell(22,$height[1],iconv('UTF-8', 'cp874', $this->pdf->Image(($DATA_REPAIR_REQ->SPAREPART_START_DATE != NULL ? $Check : $UnCheck),$this->pdf->GetX()+15,$this->pdf->GetY(),6)),0,0,'R',0);
-      $this->pdf->Cell(24,$height[1],iconv('UTF-8', 'cp874', 'อะไหล่ภายนอก'),0,1,'L',0);
-
+      $this->pdf->Cell(40,$height[1],iconv('UTF-8', 'cp874', $this->pdf->Image(($DATA_REPAIR_REQ->SPAREPART_START_DATE != NULL ? $Check : $UnCheck),$this->pdf->GetX()+32,$this->pdf->GetY(),6)),0,0,'R',0);
+      $this->pdf->Cell(24,$height[1],iconv('UTF-8', 'cp874', 'อะไหล่ภายนอก'),0,0,'L',0);
     //******************************* date start ************************************************************************
-    $this->pdf->Cell(30,$height[1],iconv('UTF-8', 'cp874', 'วันที่สั่งซื้อ :'),0,0,'R',0);
-      $this->pdf->Cell(30,$height[1],(isset($DATA_REPAIR_REQ->SPAREPART_START_DATE) ? date('d-m-Y',strtotime($DATA_REPAIR_REQ->SPAREPART_START_DATE)) : ''),0,0,'R',0);
-      $this->pdf->Text(40,157 ,'_______________________');
-      $this->pdf->Cell(30,$height[1],iconv('UTF-8', 'cp874', 'เวลา :'),0,0,'R',0);
-      $this->pdf->Cell(40,$height[1],(isset($DATA_REPAIR_REQ->SPAREPART_START_DATE) ? date('H:i',strtotime($DATA_REPAIR_REQ->SPAREPART_START_TIME)) : ''),0,1,'C',0);
-      $this->pdf->Text(100,157 ,'_______________________');
+    $this->pdf->Cell(18,$height[1],iconv('UTF-8', 'cp874', 'วันที่สั่งซื้อ '),0,0,'L',0);
+      $this->pdf->Cell(20,$height[1],(isset($DATA_REPAIR_REQ->SPAREPART_START_DATE) ? date('d-m-Y',strtotime($DATA_REPAIR_REQ->SPAREPART_START_DATE)) : ''),'B',0,'C',0);
+      $this->pdf->Cell(10,$height[1],iconv('UTF-8', 'cp874', 'เวลา : '),0,0,'L',0);
+      $this->pdf->Cell(20,$height[1],(isset($DATA_REPAIR_REQ->SPAREPART_START_DATE) ? date('H:i',strtotime($DATA_REPAIR_REQ->SPAREPART_START_TIME)) : ''),'B',1,'C',0);
     //******************************* date end ************************************************************************
-      $this->pdf->Cell(30,$height[1],iconv('UTF-8', 'cp874', 'วันที่รับเข้า:'),0,0,'R',0);
-      $this->pdf->Cell(30,$height[1],(isset($DATA_REPAIR_REQ->SPAREPART_END_DATE) ? date('d-m-Y',strtotime($DATA_REPAIR_REQ->SPAREPART_END_DATE)) : ''),0,0,'R',0);
-      $this->pdf->Text(40,165 ,'_______________________');
-      $this->pdf->Cell(30,$height[1],iconv('UTF-8', 'cp874', 'เวลา :'),0,0,'R',0);
-      $this->pdf->Cell(40,$height[1],(isset($DATA_REPAIR_REQ->SPAREPART_END_DATE) ? date('H:i',strtotime($DATA_REPAIR_REQ->SPAREPART_END_TIME)) : ''),0,1,'C',0);
-      $this->pdf->Text(100,165 ,'_______________________');
+    $this->pdf->Cell(64,$height[1],iconv('UTF-8', 'cp874', ''),0,0,'R',0);
+      $this->pdf->Cell(18,$height[1],iconv('UTF-8', 'cp874', 'วันที่รับเข้า '),0,0,'L',0);
+      $this->pdf->Cell(20,$height[1],(isset($DATA_REPAIR_REQ->SPAREPART_END_DATE) ? date('d-m-Y',strtotime($DATA_REPAIR_REQ->SPAREPART_END_DATE)) : ''),'B',0,'C',0);
+      $this->pdf->Cell(10,$height[1],iconv('UTF-8', 'cp874', 'เวลา : '),0,0,'L',0);
+      $this->pdf->Cell(20,$height[1],(isset($DATA_REPAIR_REQ->SPAREPART_END_DATE) ? date('H:i',strtotime($DATA_REPAIR_REQ->SPAREPART_END_TIME)) : ''),'B',1,'C',0);
+    $this->pdf->Cell(45,$height[1],iconv('UTF-8', 'cp874', 'ดำเนินการซ่อม : '),0,1,'R',0);
     //******************************* date start ************************************************************************
-
-    $this->pdf->SetY(170);
+    $this->pdf->Cell(30,$height[1],iconv('UTF-8', 'cp874', 'เริ่ม วันที่ :'),0,0,'R',0);
+      $this->pdf->Cell(40,$height[1],(isset($DATA_REPAIR_REQ->WORKERIN_START_DATE) ? date('d-m-Y',strtotime($DATA_REPAIR_REQ->WORKERIN_START_DATE)) : '' ),0,0,'C',0);
+      $this->pdf->Text(40,163,'_______________________');
+      $this->pdf->Cell(20,$height[1],iconv('UTF-8', 'cp874', 'เวลา :'),0,0,'R',0);
+      $this->pdf->Cell(40,$height[1],(isset($DATA_REPAIR_REQ->WORKERIN_START_DATE) ? date('H:i',strtotime($DATA_REPAIR_REQ->WORKERIN_START_TIME)) : '' ),0,1,'C',0);
+      $this->pdf->Text(100,163,'_______________________');
+    //******************************* date end ************************************************************************
+    $this->pdf->Cell(30,$height[1],iconv('UTF-8', 'cp874', 'เสร็จ วันที่ :'),0,0,'R',0);
+      $this->pdf->Cell(40,$height[1],(isset($DATA_REPAIR_REQ->WORKERIN_END_DATE) ? date('d-m-Y',strtotime($DATA_REPAIR_REQ->WORKERIN_END_DATE)) : '' ),0,0,'C',0);
+      $this->pdf->Text(40,169,'_______________________');
+      $this->pdf->Cell(20,$height[1],iconv('UTF-8', 'cp874', 'เวลา :'),0,0,'R',0);
+      $this->pdf->Cell(40,$height[1],(isset($DATA_REPAIR_REQ->WORKERIN_END_DATE) ? date('H:i',strtotime($DATA_REPAIR_REQ->WORKERIN_END_TIME)) : '' ),0,1,'C',0);
+      $this->pdf->Text(100,169,'_______________________');
+      $this->pdf->Cell(194,$height[8],'',0,1,'R',0);
 
     $this->pdf->Cell(194,3,iconv('UTF-8', 'cp874', ''),'T',1,'R',0);
     $this->pdf->SetX(15);
     $this->pdf->MultiCell(184,6,iconv('UTF-8', 'cp874', 'วิธีแก้ไข : ' .$DATA_REPAIR_REQ->REPAIR_SUBSELECT_NAME.''),0,'L',0);
-    $this->pdf->Text(28,178,'_________________________________________________________________________________________________');
-    $this->pdf->Text(15,184,'_________________________________________________________________________________________________________');
+    $this->pdf->Text(28,184,'_________________________________________________________________________________________________');
     $this->pdf->Text(15,190,'_________________________________________________________________________________________________________');
+    $this->pdf->Text(15,196,'_________________________________________________________________________________________________________');
     $this->pdf->SetXY(12,199);
     $this->pdf->SetFont('THSarabunNew','',12 );
     $this->pdf->Cell(120,$height[0],iconv('UTF-8', 'cp874', 'รายการอะไหล่ที่ใช้ '),1,1,'C',1);

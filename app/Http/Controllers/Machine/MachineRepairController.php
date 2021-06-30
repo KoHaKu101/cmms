@@ -178,7 +178,10 @@ class MachineRepairController extends Controller
       }
     foreach ($dataset as $index => $sub_row) {
       $DATA_EMP    = EMPName::where('EMP_CODE',$sub_row->INSPECTION_CODE)->first();
-      $BG_COLOR    = $sub_row->PRIORITY == '9' ? 'bg-danger text-white' : ($sub_row->CLOSE_STATUS == '1' ? 'bg-success text-white' : 'bg-warning text-white');
+      $BG_COLOR    = $sub_row->PRIORITY == '9' ? 'bg-danger text-white' :  'bg-warning text-white';
+      if ($sub_row->CLOSE_STATUS == '1') {
+        $BG_COLOR = 'bg-success text-white';
+      }
       $IMG         = isset($DATA_EMP->EMP_ICON) ? asset('image/emp/'.$DATA_EMP->EMP_ICON) : asset('../assets/img/noemp.png');
       $WORK_STATUS = isset($sub_row->INSPECTION_NAME) ? $sub_row->INSPECTION_NAME_TH :'รอรับงาน';
       $DATE_DIFF   = $sub_row->REC_WORK_DATE != '1900-01-01 00:00:00.000'? 'รับเมื่อ:'.Carbon::parse($sub_row->REC_WORK_DATE)->diffForHumans() : 'แจ้งเมื่อ:'.Carbon::parse($sub_row->CREATE_TIME)->diffForHumans();
