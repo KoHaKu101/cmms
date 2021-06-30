@@ -37,6 +37,8 @@ class RepairSparepart extends Model
       ,'CREATE_TIME'
       ,'MODIFY_BY'
       ,'MODIFY_TIME'
+      ,'SPAREPART_PAY_TYPE'
+      ,'SPAREPART_STOCK_TYPE'
     ];
 
 }

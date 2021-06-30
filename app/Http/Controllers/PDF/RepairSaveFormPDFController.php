@@ -59,7 +59,6 @@ class RepairSaveFormPDFController extends Controller
     $SPAREPART_END   = date_create($DATA_REPAIR_REQ->SPAREPART_END_DATE.$DATA_REPAIR_REQ->SPAREPART_END_TIME);
     $SPAREPART_DIFF  = date_diff($SPAREPART_START,$SPAREPART_END)->format('%d วันที่ %h ชั่วโมง %i นาที');
 
-
     if (!$DATA_REPAIR_REQ) {
         return '<body style="background-color:powderblue;">
                 <br/><h1 align="center" style="color:red;"> No Data </h1>
@@ -79,6 +78,12 @@ class RepairSaveFormPDFController extends Controller
     $this->pdf->SetFont('THSarabunNew','',14 );
     $this->pdf->Rect(10,5,194,283);
     $this->pdf->SetAutoPageBreak(true, 5);
+    $NOBUT_SPAREPART = $UnCheck;
+    $BUY_SPAREPART   = $UnCheck;
+    if ($DATA_SPAREPART->count() > 0) {
+      $NOBUT_SPAREPART = $DATA_SPAREPART[0]->SPAREPART_STOCK_TYPE == 'IN' ? $Check : $UnCheck;
+      $BUY_SPAREPART   = $DATA_SPAREPART[0]->SPAREPART_STOCK_TYPE == 'OUT' ? $Check : $UnCheck;
+    }
     $height = array(5,8,10,17,34,49,59,4,6);
     //********************************  box A ************************************************************
     $this->pdf->Rect(150,69,54,14);
@@ -191,11 +196,11 @@ class RepairSaveFormPDFController extends Controller
     $this->pdf->setY(135);
     $this->pdf->Cell(22,$height[1],iconv('UTF-8', 'cp874', $this->pdf->Image(($DATA_SPAREPART->count() == 0 ? $Check : $UnCheck),$this->pdf->GetX()+15,$this->pdf->GetY(),6)),0,0,'R',0);
       $this->pdf->Cell(40,$height[1],iconv('UTF-8', 'cp874', 'ไม่เปลี่ยนอะไหล่'),0,0,'L',0);
-      $this->pdf->Cell(22,$height[1],iconv('UTF-8', 'cp874', $this->pdf->Image(($DATA_REPAIR_REQ->SPAREPART_START_DATE == NULL ? $Check : $UnCheck),$this->pdf->GetX()+15,$this->pdf->GetY(),6)),0,0,'R',0);
+      $this->pdf->Cell(22,$height[1],$this->pdf->Image($NOBUT_SPAREPART,$this->pdf->GetX()+15,$this->pdf->GetY(),6),0,0,'R',0);
       $this->pdf->Cell(40,$height[1],iconv('UTF-8', 'cp874', 'อะไหล่ภายใน'),0,1,'L',0);
       $this->pdf->Cell(22,$height[1],iconv('UTF-8', 'cp874', $this->pdf->Image(($DATA_SPAREPART->count() > 0 ? $Check : $UnCheck),$this->pdf->GetX()+15,$this->pdf->GetY(),6)),0,0,'R',0);
       $this->pdf->Cell(40,$height[1],iconv('UTF-8', 'cp874', 'เปลี่ยนอะไหล่'),0,0,'L',0);
-      $this->pdf->Cell(22,$height[1],iconv('UTF-8', 'cp874', $this->pdf->Image(($DATA_REPAIR_REQ->SPAREPART_START_DATE != NULL ? $Check : $UnCheck),$this->pdf->GetX()+15,$this->pdf->GetY(),6)),0,0,'R',0);
+      $this->pdf->Cell(22,$height[1],$this->pdf->Image($BUY_SPAREPART,$this->pdf->GetX()+15,$this->pdf->GetY(),6),0,0,'R',0);
       $this->pdf->Cell(24,$height[1],iconv('UTF-8', 'cp874', 'อะไหล่ภายนอก'),0,1,'L',0);
 
     //******************************* date start ************************************************************************

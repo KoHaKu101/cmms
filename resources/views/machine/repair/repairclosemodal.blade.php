@@ -343,9 +343,9 @@ body.modal-open {
               <div class="col-7 col-lg-3">
                 <label class="text-hidden">จำนวน</label>
                 <div>
-                  <button type="button" class="btn btn-primary btn-sm mx-1 " onclick="add_sparepart(1)">
+                  <button type="button" class="btn btn-primary btn-sm mx-1 " onclick="add_sparepart('CUT')">
                     ตัดสต็อก</button>
-                  <button type="button" class="btn btn-primary btn-sm " onclick="add_sparepart(2)">
+                  <button type="button" class="btn btn-primary btn-sm " onclick="add_sparepart('NOCUT')">
                     ไม่ตัดสต็อก</button>
                 </div>
 

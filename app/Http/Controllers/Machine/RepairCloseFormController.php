@@ -317,6 +317,12 @@ class RepairCloseFormController extends Controller
           $TOTAL_OUT  = $request->SPAREPART_TOTAL_[$sub_row->UNID];
           $COST       = $request->SPAREPART_COST_[$sub_row->UNID];
           $TOTAL_COST = $COST * $TOTAL_OUT;
+          $DATE_START        = isset($request->SPAREPART_START_DATE) ? $request->SPAREPART_START_DATE : NULL;
+          $TIME_START        = isset($request->SPAREPART_START_TIME) ? $request->SPAREPART_START_TIME : NULL;
+          $DATE_END          = isset($request->SPAREPART_END_DATE) ? $request->SPAREPART_END_DATE : NULL;
+          $TIME_END          = isset($request->SPAREPART_END_TIME) ? $request->SPAREPART_END_TIME : NULL;
+          $MINUTES           = $this->ConvertToMinutes($TIME_START,$TIME_END,$DATE_START,$DATE_END);
+          $SPAREPART_STOCK_TYPE = isset($DATE_START) ? 'OUT' : 'IN';
           RepairSparepart::insert([
             'UNID'                    =>  $this->randUNID('PMCS_CMMS_REPAIR_SPAREPART')
             ,'REPAIR_REQ_UNID'        =>  $REPAIR_REQ_UNID
@@ -327,7 +333,8 @@ class RepairCloseFormController extends Controller
             ,'SPAREPART_COST'         =>  $COST
             ,'SPAREPART_TOTAL_COST'   =>  $TOTAL_COST
             ,'SPAREPART_TOTAL_OUT'    =>  $TOTAL_OUT
-            ,'SPAREPART_TYPE_OUT'     =>  $request->SPAREPART_UNID_[$sub_row->UNID]
+            ,'SPAREPART_PAY_TYPE'     =>  $request->SPAREPART_UNID_[$sub_row->UNID]
+            ,'SPAREPART_STOCK_TYPE'   =>  $SPAREPART_STOCK_TYPE
             ,'SPAREPART_UNIT'         =>  $sub_row->UNIT
             ,'SPAREPART_MODEL'        =>  $sub_row->SPAREPART_MODEL
             ,'SPAREPART_SIZE'         =>  $sub_row->SPAREPART_SIZE
@@ -340,11 +347,7 @@ class RepairCloseFormController extends Controller
         }
       }
 
-      $DATE_START        = isset($request->SPAREPART_START_DATE) ? $request->SPAREPART_START_DATE : NULL;
-      $TIME_START        = isset($request->SPAREPART_START_TIME) ? $request->SPAREPART_START_TIME : NULL;
-      $DATE_END          = isset($request->SPAREPART_END_DATE) ? $request->SPAREPART_END_DATE : NULL;
-      $TIME_END          = isset($request->SPAREPART_END_TIME) ? $request->SPAREPART_END_TIME : NULL;
-      $MINUTES           = $this->ConvertToMinutes($TIME_START,$TIME_END,$DATE_START,$DATE_END);
+
 
       $MACHINEREPAIRREQ->update([
           'SPAREPART_START_DATE'    =>  $DATE_START
