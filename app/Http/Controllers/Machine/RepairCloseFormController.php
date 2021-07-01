@@ -453,7 +453,7 @@ class RepairCloseFormController extends Controller
                         <p>'.date('d-m-Y',strtotime($END_DATE)).'</p>
                       </div>
                       <div class="col-12 col-sm-6 col-md-4 info-invoice">
-                        <h5 class="sub">Down Time</h5>
+                        <h5 class="sub">ระยะเวลาที่ใช้ซ่อม</h5>
                           <p>'.$DOWN_TIME.'</p>
                       </div>
                 <div class="form-group">
