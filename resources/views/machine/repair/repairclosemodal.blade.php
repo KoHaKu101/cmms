@@ -139,7 +139,7 @@ body.modal-open {
                 <div class="col-6 col-sm-6 col-md-6 col-lg-4 mr-auto">
                   <label>เวลาตรวจสอบ</label>
                   <input type="time" class="form-control form-control-sm "
-                    id="INSPECTION_START_TIME" name="INSPECTION_START_TIME" value="{{ date('H:m') }}" required>
+                    id="INSPECTION_START_TIME" name="INSPECTION_START_TIME" value="{{ Carbon\Carbon::now()->isoFormat('hh:mm') }}" required>
                 </div>
               </div>
               <div class="row has-error">
@@ -151,7 +151,7 @@ body.modal-open {
                 <div class="col-6 col-sm-6 col-md-6 col-lg-4 mr-auto">
                   <label>เวลาตรวจสอบเสร็จ</label>
                   <input type="time" class="form-control form-control-sm"
-                    id="INSPECTION_END_TIME" name="INSPECTION_END_TIME" value="{{ date('H:m') }}" required>
+                    id="INSPECTION_END_TIME" name="INSPECTION_END_TIME" value="{{ Carbon\Carbon::now()->isoFormat('hh:mm') }}" required>
                 </div>
               </div>
               <div class="row has-error">
@@ -389,7 +389,7 @@ body.modal-open {
                     </div>
                     <div class="col-6 col-sm-6 col-md-4 mr-auto">
                       <label>เวลาสั่งซื้อ</label>
-                      <input type="time" class="form-control form-control-sm buy_sparepart" id="SPAREPART_START_TIME" name="SPAREPART_START_TIME" value="{{ date('H:i') }}" disabled>
+                      <input type="time" class="form-control form-control-sm buy_sparepart" id="SPAREPART_START_TIME" name="SPAREPART_START_TIME" value="{{ Carbon\Carbon::now()->isoFormat('hh:mm') }}" disabled>
                     </div>
                   </div>
                   <div class="row">
@@ -399,7 +399,7 @@ body.modal-open {
                     </div>
                     <div class="col-6 col-sm-6 col-md-4 mr-auto">
                       <label>เวลาสั่งซื้อ</label>
-                      <input type="time" class="form-control form-control-sm buy_sparepart" id="SPAREPART_END_TIME" name="SPAREPART_END_TIME" value="{{ date('H:i') }}" disabled>
+                      <input type="time" class="form-control form-control-sm buy_sparepart" id="SPAREPART_END_TIME" name="SPAREPART_END_TIME" value="{{ Carbon\Carbon::now()->isoFormat('hh:mm') }}" disabled>
                     </div>
                   </div>
              </div>
@@ -432,7 +432,7 @@ body.modal-open {
                 <div class="col-6 col-sm-6 col-md-4 mr-auto">
                   <label>เวลาซ่อม</label>
                   <input type="time" class="form-control form-control-sm " id="WORKER_START_TIME" name="WORKER_START_TIME"
-                  value="{{ date('H:i') }}" required>
+                  value="{{ Carbon\Carbon::now()->isoFormat('hh:mm') }}" required>
                 </div>
               </div>
               <div class="row">
@@ -444,7 +444,7 @@ body.modal-open {
                 <div class="col-6 col-sm-6 col-md-4 mr-auto">
                   <label>เวลาซ่อมเสร็จ</label>
                   <input type="time" class="form-control form-control-sm " id="WORKER_END_TIME" name="WORKER_END_TIME"
-                  value="{{ date('H:i') }}" required>
+                  value="{{ Carbon\Carbon::now()->isoFormat('hh:mm') }}" required>
                 </div>
               </div>
               <div class="row">

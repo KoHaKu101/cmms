@@ -553,16 +553,19 @@ class RepairCloseFormController extends Controller
     $RESULT_WORKEROUT       = $DATA_REPAIR_FIRST->WORKEROUT_RESULT_TIME;
     $DOWNTIME               = ($RESULT_INSPECTION + $RESULT_SPAREPART + $RESULT_WORKERIN + $RESULT_WORKEROUT);
 
-    $DATA_MACHINEREPAIRREQ = MachineRepairREQ::selectraw('max(MACHINE_REPORT_NO)MACHINE_REPORT_NO,max(DOC_DATE)DOC_DATE')->first();
-    $DATE_DOCNO            = Carbon::now()->addyears('543');
-    $MACHINE_REPORT_NO     = 'MRP' . $DATE_DOCNO->format('ym') . sprintf('-%04d', 1);
-    if ($DATA_MACHINEREPAIRREQ->MACHINE_REPORT_NO != '') {
-      $DATE_RESET_DOCNO     = Carbon::parse($DATA_MACHINEREPAIRREQ->DOC_DATE);
-      if ($DATE_RESET_DOCNO->format('m') == Carbon::now()->format('m') ) {
-        $EXPLOT             = str_replace('MRP'.$DATE_RESET_DOCNO->addyears('543')->format('ym').'-','',$DATA_MACHINEREPAIRREQ->MACHINE_REPORT_NO)+1;
-        $MACHINE_REPORT_NO  = 'MRP' . $DATE_RESET_DOCNO->format('ym'). sprintf('-%04d', $EXPLOT);
-      }
+    $DATA_MACHINEREPAIRREQ = MachineRepairREQ::selectraw('max(MACHINE_REPORT_NO)MACHINE_REPORT_NO,max(DOC_DATE)DOC_DATE')
+                                              ->where('DOC_YEAR',date('Y'))->where('DOC_MONTH',date('m'))->first();
+    $DOC_DATE = $DATA_MACHINEREPAIRREQ->DOC_DATE;
+    $REPORT_NO = $DATA_MACHINEREPAIRREQ->MACHINE_REPORT_NO;
+    $MACHINE_REPORT_NO = 'MRP'.Carbon::now()->addyears(543)->isoFormat('YYMM').'-'.sprintf('%04d', 1);
+    if (isset($REPORT_NO)) {
+      // if (Carbon::parse($DOC_DATE)->isoFormat('MM') == date('m')) {
+        $EXPLOT            = str_replace('MRP'.Carbon::parse($DOC_DATE)->addyears(543)->format('ym').'-','',$REPORT_NO)+1;
+        $MACHINE_REPORT_NO = 'MRP' . Carbon::parse($DOC_DATE)->format('ym'). sprintf('-%04d', $EXPLOT);
+      // }
     }
+
+
     $DATA_REPAIR->update([
       'DOWNTIME'              =>  $DOWNTIME
       ,'TOTAL_COST_SPAREPART' => $TOTAL_COST_SPAREPART
