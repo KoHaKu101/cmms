@@ -413,7 +413,11 @@ class RepairCloseFormController extends Controller
       $END_DATE = Carbon::create($DATA_REPAIR_REQ->WORKEROUT_END_DATE.$DATA_REPAIR_REQ->WORKEROUT_END_TIME);
     }
     //******************************** เวลา **********************************************
-    $DIFF                   = $DOC_DATE->diffInRealMinutes($END_DATE);
+    $RESULT_INSPECTION      = $DATA_REPAIR_REQ->INSPECTION_RESULT_TIME;
+    $RESULT_SPAREPART       = $DATA_REPAIR_REQ->SPAREPART_RESULT_TIME;
+    $RESULT_WORKERIN        = $DATA_REPAIR_REQ->WORKERIN_RESULT_TIME;
+    $RESULT_WORKEROUT       = $DATA_REPAIR_REQ->WORKEROUT_RESULT_TIME;
+    $DIFF                   = ($RESULT_INSPECTION + $RESULT_SPAREPART + $RESULT_WORKERIN + $RESULT_WORKEROUT);
     $DAYS                   = floor ($DIFF / 1440);
     $HOURS                  = floor (($DIFF - $DAYS * 1440) / 60);
     $MINUTES                = $DIFF - ($DAYS * 1440) - ($HOURS * 60);
