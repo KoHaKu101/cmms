@@ -720,10 +720,10 @@ function savestep(idform,steppoint){
  });
  $('#nextstep_3').on('click',function(){
 	 var check_type = $(this).data('type');
-
+	 // alert(check_type);
 	 if (check_type == 'IN') {
+		 // alert(array_emp_unid);
 		 if (array_emp_unid != '') {
-
 			 nextstep('3');
 		 }
 	 }else if(check_type == 'OUT'){
