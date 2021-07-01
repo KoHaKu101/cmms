@@ -94,7 +94,7 @@
 						        <center><h4 class="mt-1"><b> {{$dataset->MACHINE_CODE}} </b></h4></center>
 						        </div>
 						        <div class="card-body">
-						        <span>Machine Name : {{$dataset->MACHINE_NAME}}</span><br/>
+						        <span>Machine Name : {{$dataset->MACHINE_NAME_TH}}</span><br/>
 						        <span class="mt-3"> Line : {{$dataset->MACHINE_LINE}}</span><br/>
 						        <a href="{{ url('machine/repair/form/'.$dataset->UNID)}}" class="btn btn-success btn-sm btn-block my-1">
 						        <span style="font-size:13px">

@@ -232,7 +232,7 @@ class MachineRepairController extends Controller
     $machine = NULL;
     if (isset($search)) {
       $MACHINE_CODE = '%'.$search.'%';
-      $machine = Machine::where('MACHINE_CODE','like',$MACHINE_CODE)->get();
+      $machine = Machine::select('*')->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')->where('MACHINE_CODE','like',$MACHINE_CODE)->get();
     }
     return View('machine/repair/search',compact('machine'));
   }
