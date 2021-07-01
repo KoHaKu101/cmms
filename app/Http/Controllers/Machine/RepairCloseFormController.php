@@ -120,17 +120,23 @@ class RepairCloseFormController extends Controller
     $data_selectsubrepair = SelectSubRepair::where('REPAIR_MAINSELECT_UNID','=',$UNID)->get();
     $html = '<div class="row">';
     foreach ($data_selectsubrepair as $index => $data_row) {
-      $html.='<div class="col-sm-6 col-md-3">
+      $html.='
+      <style>
+      .card-stats .card-body-new {
+        padding: 0px!important;
+        }
+      </style>
+      <div class="col-sm-6 col-md-3">
         <a  onclick="selectrepairdetail(this)"  data-unid="'.$data_row->UNID.'" data-name="'.$data_row->REPAIR_SUBSELECT_NAME.'"style="cursor:pointer">
         <div class="card card-stats card-primary card-round">
-          <div class="card-body">
+          <div class="card-body card-body-new">
             <div class="row">
-              <div class="col-5">
+              <div class="col-2">
                 <div class="icon-big text-center">
                   <i class="fas fa-wrench"></i>
                 </div>
               </div>
-              <div class="col-7 col-stats">
+              <div class="col-10 col-stats">
                 <div class="numbers">
                   <p class="card-category">'.$data_row->REPAIR_SUBSELECT_NAME.'</p>
                 </div>

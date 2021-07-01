@@ -69,6 +69,11 @@
 											</ul>
 										</div>
 									</div>
+									<style>
+						      .card-stats .card-body {
+						        padding: 0px!important;
+						        }
+						      </style>
 									<div class="tab-content my-4">
 										<div class="tab-pane active " id="repair">
 											<div class="row">
@@ -79,12 +84,12 @@
 													<div class="card card-stats card-primary card-round">
 														<div class="card-body">
 															<div class="row">
-																<div class="col-5">
-																	<div class="icon-big text-center">
+																<div class="col-3">
+																	<div class="icon-big ml-2">
 																		<i class="fas fa-briefcase"></i>
 																	</div>
 																</div>
-																<div class="col-7 col-stats">
+																<div class="col-9 col-stats">
 																	<div class="numbers">
 																		<p class="card-category">{{$row->REPAIR_MAINSELECT_NAME}}</p>
 																	</div>
