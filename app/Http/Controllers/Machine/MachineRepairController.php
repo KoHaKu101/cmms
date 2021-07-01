@@ -240,7 +240,7 @@ class MachineRepairController extends Controller
 
       $dataset = SelectMainRepair::where('STATUS','=','9')->get();
       $datamachine = Machine::where('UNID','=',$UNID)->first();
-      $data_emp   = DB::select("select dbo.decode_utf8(EMP_TH_NAME_FIRST) as EMP_TH_NAME_FIRST,EMP_CODE,UNID from EMCS_EMPLOYEE where LINE_CODE = 'PD'");
+      $data_emp   = DB::select("select dbo.decode_utf8(EMP_TH_NAME_FIRST) as EMP_TH_NAME_FIRST,EMP_CODE,UNID from EMCS_EMPLOYEE where LINE_CODE = 'PD' and POSITION_CODE != 'OFF'");
     return View('machine/repair/formreq',compact('dataset','datamachine','data_emp'));
   }
   public function Store(Request $request,$MACHINE_UNID){
