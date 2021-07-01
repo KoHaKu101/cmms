@@ -76,6 +76,7 @@
 													<style>
 													.table>tbody>tr>td, .table>tbody>tr>th {
 													  font-size: 0.75rem;
+														vertical-align: text-top;
 													}
 
 													</style>
