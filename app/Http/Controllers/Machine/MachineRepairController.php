@@ -54,7 +54,7 @@ class MachineRepairController extends Controller
     $SERACH_TEXT =  $request->SEARCH;
     $LINE = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
     $MACHINE_LINE = isset($request->LINE) ? $request->LINE : '';
-    $MONTH = isset($request->MONTH) ? $request->MONTH : 0 ;
+    $MONTH = isset($request->MONTH) ? $request->MONTH : date('m') ;
     $DOC_STATUS = isset($request->DOC_STATUS) ? $request->DOC_STATUS : 0 ;
     $YEAR = isset($request->YEAR) ? $request->YEAR : date('Y') ;
     $DATA_EMP = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->where('EMP_STATUS','=',9)->get();
