@@ -308,21 +308,25 @@ class RepairCloseFormController extends Controller
       if ($REPAIRSPAREPART->count() > 0) {
           $REPAIRSPAREPART->delete();
       }
+      $DATE_START        = isset($request->SPAREPART_START_DATE) ? $request->SPAREPART_START_DATE : NULL;
+      $TIME_START        = isset($request->SPAREPART_START_TIME) ? $request->SPAREPART_START_TIME : NULL;
+      $DATE_END          = isset($request->SPAREPART_END_DATE) ? $request->SPAREPART_END_DATE : NULL;
+      $TIME_END          = isset($request->SPAREPART_END_TIME) ? $request->SPAREPART_END_TIME : NULL;
+      $MINUTES           = $this->ConvertToMinutes($TIME_START,$TIME_END,$DATE_START,$DATE_END);
+
+      $SPAREPART_STOCK_TYPE = isset($DATE_START) ? 'OUT' : 'IN';
       if (is_array($request->SPAREPART_UNID_)) {
         foreach ($request->SPAREPART_UNID_ as $key => $value) {
           $SPAREPART_UNID[] = $key;
         }
+
+
         $DATA_SPARPART = SparePart::whereIn('UNID',$SPAREPART_UNID)->get();
         foreach ($DATA_SPARPART as $key => $sub_row) {
           $TOTAL_OUT  = $request->SPAREPART_TOTAL_[$sub_row->UNID];
           $COST       = $request->SPAREPART_COST_[$sub_row->UNID];
           $TOTAL_COST = $COST * $TOTAL_OUT;
-          $DATE_START        = isset($request->SPAREPART_START_DATE) ? $request->SPAREPART_START_DATE : NULL;
-          $TIME_START        = isset($request->SPAREPART_START_TIME) ? $request->SPAREPART_START_TIME : NULL;
-          $DATE_END          = isset($request->SPAREPART_END_DATE) ? $request->SPAREPART_END_DATE : NULL;
-          $TIME_END          = isset($request->SPAREPART_END_TIME) ? $request->SPAREPART_END_TIME : NULL;
-          $MINUTES           = $this->ConvertToMinutes($TIME_START,$TIME_END,$DATE_START,$DATE_END);
-          $SPAREPART_STOCK_TYPE = isset($DATE_START) ? 'OUT' : 'IN';
+
           RepairSparepart::insert([
             'UNID'                    =>  $this->randUNID('PMCS_CMMS_REPAIR_SPAREPART')
             ,'REPAIR_REQ_UNID'        =>  $REPAIR_REQ_UNID
@@ -558,7 +562,7 @@ class RepairCloseFormController extends Controller
     $DOC_DATE = $DATA_MACHINEREPAIRREQ->DOC_DATE;
     $REPORT_NO = $DATA_MACHINEREPAIRREQ->MACHINE_REPORT_NO;
     $MACHINE_REPORT_NO = 'MRP'.Carbon::now()->addyears(543)->isoFormat('YYMM').'-'.sprintf('%04d', 1);
-    if (isset($REPORT_NO)) {
+    if ($REPORT_NO != "") {
       // if (Carbon::parse($DOC_DATE)->isoFormat('MM') == date('m')) {
         $EXPLOT            = str_replace('MRP'.Carbon::parse($DOC_DATE)->addyears(543)->format('ym').'-','',$REPORT_NO)+1;
         $MACHINE_REPORT_NO = 'MRP' . Carbon::parse($DOC_DATE)->format('ym'). sprintf('-%04d', $EXPLOT);
