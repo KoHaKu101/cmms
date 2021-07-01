@@ -421,7 +421,7 @@ class RepairCloseFormController extends Controller
     $DAYS                   = floor ($DIFF / 1440);
     $HOURS                  = floor (($DIFF - $DAYS * 1440) / 60);
     $MINUTES                = $DIFF - ($DAYS * 1440) - ($HOURS * 60);
-    $DOWN_TIME              = $DAYS.'วัน'.$HOURS.'ชั่วโมง'.$MINUTES.'นาที';
+    $DOWN_TIME              = $DAYS.' วัน '.$HOURS.' ชั่วโมง '.$MINUTES.' นาที';
    //*******************************************************************************************
     $html = '<div class="col-12 col-lg-10 ml-auto mr-auto" >
       <div class="page-divider"></div>
