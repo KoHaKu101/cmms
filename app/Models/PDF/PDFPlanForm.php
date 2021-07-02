@@ -62,7 +62,7 @@ if($this->UNID){
   $this->Cell(25,8, $this->normalize('MACHINE NO : '),'LTBR',0,'L',1);
   $this->Cell(90,8, iconv('UTF-8', 'cp874',$PM_PLAN_RESULT_FIRST->MACHINE_CODE.' '.$PM_PLAN_RESULT_FIRST->MACHINE_NAME),'LTBR',0,'L',);
   // $this->Cell(67.5,8, $this->normalize(''),'LBR',0,'L',);
-  $this->Cell(20,8,$this->normalize('PERIOD'),1,0,'C',);
+  $this->Cell(20,8,$this->normalize('PERIOD'),1,0,'C',1);
   $this->SetFont('THSarabunNew','BU',14);
 
   $this->Cell(60.5,8,$this->normalize('SYMBOL'),'LR',1,'L',);

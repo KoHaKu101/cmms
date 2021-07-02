@@ -117,6 +117,12 @@ left: auto;
 															<label>ประเภทเครื่องจักร</label>
 															<input type="text" class="form-control form-control-sm my-1" id="PM_MASTER_NAME" name="PM_MASTER_NAME" value="{{$PM_PLANSHOW->PM_MASTER_NAME}}" readonly>
 														</div>
+														<div class="col-md-1">
+															<label>รอบ</label>
+															<input type="text" class="form-control form-control-sm my-1" id="PLAN_DATE" name="PLAN_DATE" value="{{$PM_PLANSHOW->PLAN_PERIOD}} เดือน" readonly>
+														</div>
+													</div>
+													<duv class="row">
 														<div class="col-md-2">
 															<label>วันที่ตามแผน</label>
 															<input type="text" class="form-control form-control-sm my-1" id="PLAN_DATE" name="PLAN_DATE" value="{{$PM_PLANSHOW->PLAN_DATE}}" readonly>
@@ -125,6 +131,15 @@ left: auto;
 															<label>วันที่ทำการตรวจเช็ค</label>
 																<input type="date" class="form-control form-control-sm my-1" id="CHECK_DATE" name="CHECK_DATE"
 																value='{{ $PM_USER_AND_NOTE->CHECK_DATE }}'>
+
+														</div>
+														<div class="col-md-2">
+															<label>เริ่ม</label>
+															<input type="time" class="form-control form-control-sm my-1" id="START_TIME" name="START_TIME" value="{{date('H:i',strtotime($PM_PLANSHOW->START_TIME))}}">
+														</div>
+														<div class="col-md-2">
+															<label>เสร็จ</label>
+															<input type="time" class="form-control form-control-sm my-1" id="END_TIME" name="END_TIME" value="{{date('H:i',strtotime($PM_PLANSHOW->END_TIME))}}">
 														</div>
 													</div>
 												</div>

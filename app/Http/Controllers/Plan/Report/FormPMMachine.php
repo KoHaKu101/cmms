@@ -82,7 +82,7 @@ class FormPMMachine extends Controller
           }
 
        }else {
-         $this->pdf->Cell(15,$rowheight,$dataitem->PM_MASTER_DETAIL_VALUE_STD,'BR',0,'C',);
+         $this->pdf->Cell(15,$rowheight,iconv('UTF-8', 'cp874',$dataitem->PM_MASTER_DETAIL_VALUE_STD),'BR',0,'C',);
          $this->pdf->Cell(15,$rowheight,(double)$dataitem->PM_MASTER_DETAIL_VALUE_STD_MAX,'BR',0,'C',);
          $this->pdf->Cell(15,$rowheight,(double)$dataitem->PM_MASTER_DETAIL_VALUE_STD_MIN,'BR',0,'C',);
          $this->pdf->SetFont('Arial','B',8 );

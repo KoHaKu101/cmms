@@ -242,6 +242,10 @@ class MachinePlanController extends Controller
         }else {
           DB::beginTransaction();
             try {
+              $START_TIME = $request->START_TIME;
+              $END_TIME = $request->END_TIME;
+
+              $DOWNTIME = Carbon::parse($START_TIME)->diffInRealMinutes($END_TIME);
               foreach ($request->INPUT as $key => $value) {
                 $detail_name = MachinePmTemplateDetail::where('UNID',$key)->first();
                 $template_list = MachinePmTemplateList::where('UNID',$detail_name->PM_TEMPLATELIST_UNID_REF)->first();
@@ -292,7 +296,7 @@ class MachinePlanController extends Controller
                     ]);
                   }
                   $PLAN_PERIOD = $machine->MACHINE_RANK_MONTH;
-                  $this->IMPSandPlanUpdate($PM_PLAN_UNID,$CHECK_DATE,$MACHINE_UNID,$PM_MASTER_UNID);
+                  $this->IMPSandPlanUpdate($PM_PLAN_UNID,$CHECK_DATE,$MACHINE_UNID,$PM_MASTER_UNID,$START_TIME,$END_TIME,$DOWNTIME);
                   $this->LoopUpdatePlan($PLAN_PERIOD,$CHECK_DATE,$MACHINE_UNID,$PM_MASTER_UNID);
                   DB::commit();
                 }
@@ -329,6 +333,11 @@ class MachinePlanController extends Controller
       }
       DB::beginTransaction();
         try {
+          $START_TIME = $request->START_TIME;
+          $END_TIME = $request->END_TIME;
+
+          $DOWNTIME = Carbon::parse($START_TIME)->diffInRealMinutes($END_TIME);
+
           foreach ($request->INPUT as $key => $value) {
             $detail_name = Pmplanresult::where('PM_PLAN_UNID','=',$PM_PLAN_UNID)->where('PM_MASTER_DETAIL_UNID','=',$key)->first();
               if (!$detail_name) {
@@ -360,7 +369,7 @@ class MachinePlanController extends Controller
             $MACHINE_UNID = $PM_PLAN->MACHINE_UNID;
             $PM_MASTER_UNID = $PM_PLAN->PM_MASTER_UNID;
 
-            $this->IMPSandPlanUpdate($PM_PLAN_UNID,$CHECK_DATE,$MACHINE_UNID,$PM_MASTER_UNID);
+            $this->IMPSandPlanUpdate($PM_PLAN_UNID,$CHECK_DATE,$MACHINE_UNID,$PM_MASTER_UNID,$START_TIME,$END_TIME,$DOWNTIME);
             $this->LoopUpdatePlan($PLAN_PERIOD,$CHECK_DATE,$MACHINE_UNID,$PM_MASTER_UNID);
             DB::commit();
           }
@@ -512,11 +521,14 @@ class MachinePlanController extends Controller
           }
     }
   }
-  public function IMPSandPlanUpdate($PM_PLAN_UNID = NULL,$CHECK_DATE = NULL,$MACHINE_UNID = NULL,$PM_MASTER_UNID = NULL){
+  public function IMPSandPlanUpdate($PM_PLAN_UNID = NULL,$CHECK_DATE = NULL,$MACHINE_UNID = NULL,$PM_MASTER_UNID = NULL,$START_TIME=NULL,$END_TIME=NULL,$DOWNTIME=NULL){
     $MACHINE_RANK = Machine::select('MACHINE_RANK_MONTH')->where('UNID','=',$MACHINE_UNID)->first();
     $NEXT_DATE = Carbon::parse($CHECK_DATE)->addmonth($MACHINE_RANK->MACHINE_RANK_MONTH);
     MachinePlanPm::where('UNID',$PM_PLAN_UNID)->update([
       'PLAN_STATUS'                     => 'COMPLETE',
+      'START_TIME'                      => $START_TIME,
+      'END_TIME'                        => $END_TIME,
+      'DOWNTIME'                        => $DOWNTIME,
       'COMPLETE_DATE'                   => $CHECK_DATE,
       'MODIFY_BY'                       => Auth::user()->name,
       'MODIFY_TIME'                     => Carbon::now(),
@@ -534,7 +546,7 @@ class MachinePlanController extends Controller
     ]);
 
   }
-  public function LoopUpdatePlan($PLAN_PERIOD = NULL,$CHECK_DATE = NULL,$MACHINE_UNID = NULL,$PM_MASTER_UNID = NULL ){
+  public function LoopUpdatePlan($PLAN_PERIOD=NULL,$CHECK_DATE=NULL,$MACHINE_UNID=NULL,$PM_MASTER_UNID=NULL ){
     $totalloop          = 0;
     $totalmonth         = MailSetup::select('AUTOPLAN')->first();
     $preiodmonth        = $PLAN_PERIOD;

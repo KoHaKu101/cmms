@@ -43,7 +43,7 @@ class ReportSparePartController extends Controller
   }
   public function Index(Request $request){
     $DOC_YEAR  = $request->DOC_YEAR > 0 ? $request->DOC_YEAR : date('Y');
-    
+
     $SEARCH = $request->SEARCH != '' ? '%'.$request->SEARCH.'%' : '%';
     $STATUS = $request->STATUS;
 
@@ -177,25 +177,25 @@ class ReportSparePartController extends Controller
           <input type="text" class="form-control-sm bg-bluelight text-black form-control-plaintext" value="'.date('d/m/Y',strtotime($PLAN->PLAN_DATE)).'" readonly>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="form-group has-error">
           <label for="SPAREPART_CODE">วันที่เปลี่ยน</label>
           <input type="date" class="form-control form-control-sm bg-bluelight text-black"
           id="ACT_DATE" name="ACT_DATE" value="'.$COMPLETE_DATE.'"required>
         </div>
       </div>
-      <div class="col-md-2">
-        <div class="form-group">
-          <label for="SPAREPART_CODE">ราคา</label>
-          <input type="number" class="form-control-sm bg-bluelight text-black form-control-plaintext"
-          value="'.$PLAN->COST_STD.'" readonly >
-        </div>
-      </div>
-      <div class="col-md-2">
-        <div class="form-group">
-          <label for="SPAREPART_CODE">ราคาทั้งหมด</label>
-          <input type="number" class="form-control-sm bg-bluelight text-black form-control-plaintext"
-          value="'.$COST_ACT.'" readonly >
+      <div class="col-md-4">
+        <div class="row">
+          <div class="col-md-5 form-group has-error">
+            <label for="SPAREPART_CODE">เริ่มเวลา</label>
+            <input type="time" class="form-control form-control-sm bg-bluelight text-black "
+            id="START_TIME" name="START_TIME" value="'.date('H:i').'"required>
+          </div>
+          <div class="col-md-6 form-group has-error">
+            <label for="SPAREPART_CODE">เสร็จ เวลา</label>
+            <input type="time" class="form-control form-control-sm bg-bluelight text-black "
+            id="END_TIME" name="END_TIME" value="'.date('H:i').'"required>
+          </div>
         </div>
       </div>
     </div>
@@ -207,37 +207,54 @@ class ReportSparePartController extends Controller
           value="'.$DETAIL_SPAREPART->SPAREPART_MODEL.'"  readonly>
         </div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4">
         <div class="form-group">
           <label for="SPAREPART_CODE">size/ขนาด</label>
           <input type="text" class="form-control-sm bg-bluelight text-black form-control-plaintext"
           value="'.$DETAIL_SPAREPART->SPAREPART_SIZE.'" readonly>
         </div>
       </div>
-      <div class="col-md-2">
-        <div class="form-group">
-          <label for="SPAREPART_CODE">จำนวนตามแผน</label>
+      <div class="col-md-4">
+        <div class="row">
+        <div class="col-md-5 form-group">
+          <label for=" SPAREPART_CODE">จำนวนตามแผน</label>
           <input type="number" class="form-control-sm bg-bluelight text-black form-control-plaintext"
           value="'.$PLAN->PLAN_QTY.'"  readonly >
         </div>
-      </div>
-      <div class="col-md-2">
-        <div class="form-group has-error">
-          <label for="SPAREPART_CODE">จำนวนที่เปลี่ยน</label>
+        <div class="col-md-6 form-group has-error">
+          <label for=" SPAREPART_CODE">จำนวนที่เปลี่ยน</label>
           <input type="number" class="form-control form-control-sm bg-bluelight text-black"
           id="ACT_QTY" name="ACT_QTY" value="'.$ACT_QTY.'" min=0  required>
         </div>
+        </div>
+
       </div>
+
     </div>
 
     <div class="row">
-      <div class="col-md-12">
+      <div class="col-md-8">
         <div class="form-group">
           <label for="comment">หมายเหตุ/ข้อเสนอแนะ</label>
           <textarea class="form-control form-control-sm bg-bluelight text-black" id="REMARK" name="REMARK"
            rows="2">'.$REMARK.'</textarea>
         </div>
       </div>
+      <div class="col-md-4">
+        <div class="row">
+          <div class="col-md-5 form-group">
+            <label for="SPAREPART_CODE">ราคา</label>
+            <input type="text" class="form-control-sm bg-bluelight text-black form-control-plaintext"
+            value="'.number_format($PLAN->COST_STD).'" readonly >
+          </div>
+          <div class="col-md-6 form-group">
+            <label for="SPAREPART_CODE">ราคาทั้งหมด</label>
+            <input type="text" class="form-control-sm bg-bluelight text-black form-control-plaintext"
+            value="'.number_format($COST_ACT).'" readonly >
+          </div>
+        </div>
+
+        </div>
     </div>
       ';
     return Response()->json(['html' => $html,'btn_status' => $htmlfooter,'btn_confirm' => $htmlconform]);
@@ -362,13 +379,18 @@ class ReportSparePartController extends Controller
     if ($ACT_QTY > 0 && $COST_STD != '') {
       $COST_ACT = $ACT_QTY * $COST_STD;
     }
-
+    $START_TIME = $request->START_TIME;
+    $END_TIME = $request->END_TIME;
+    $DOWNTIME = Carbon::parse($START_TIME)->diffInRealMinutes($END_TIME);
     SparePartPlan::where('UNID','=',$request->PLAN_UNID)->update([
       'STATUS'         => 'COMPLETE'
       ,'REMARK'        => $request->REMARK
       ,'ACT_QTY'       => $ACT_QTY
       ,'COMPLETE_DATE' => $ACT_DATE
       ,'COST_ACT'      => $COST_ACT
+      ,'START_TIME'    => $START_TIME
+      ,'END_TIME'      => $END_TIME
+      ,'DOWNTIME'      => $DOWNTIME
       ,'USER_CHECK'    => $request->USER_CHECK
       ,'MODIFY_BY'     => Auth::user()->name
       ,'MODIFY_TIME'   => Carbon::now()
