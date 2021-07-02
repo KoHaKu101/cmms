@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Auth;
 use File;
+use Cookie;
 //******************** model ***********************
 use App\Models\Machine\Machine;
 use App\Models\Machine\MachineCheckSheet;
@@ -42,11 +43,21 @@ class DailyCheckController extends Controller
   }
 
   public function DailyList(Request $request){
-     $MACHINE_LINE = $request->MACHINE_LINE != '' ? '%'.$request->MACHINE_LINE.'%' : '%' ;
-     $MACHINE_CODE = $request->SEARCH_MACHINE != '' ? '%'.$request->SEARCH_MACHINE.'%' : '%' ;
-     $YEAR         = $request->YEAR != '' ? $request->YEAR : date('Y') ;
-     $MONTH        = $request->MONTH != '' ? $request->MONTH : date('n') ;
 
+    $COOKIE_MACHINE_LINE = $request->cookie('MACHINE_LINE');
+    $COOKIE_MACHINE_CODE = $request->cookie('MACHINE_CODE');
+    $COOKIE_YEAR         = $request->cookie('YEAR');
+    $COOKIE_MONTH        = $request->cookie('MONTH');
+
+     $MACHINE_LINE = $request->MACHINE_LINE    != '' ? '%'.$request->MACHINE_LINE.'%'   : (isset($COOKIE_MACHINE_LINE) ? $COOKIE_MACHINE_LINE : '%') ;
+     $MACHINE_CODE = $request->SEARCH_MACHINE  != '' ? '%'.$request->SEARCH_MACHINE.'%' : (isset($COOKIE_MACHINE_CODE) ? $COOKIE_MACHINE_CODE : '%') ;
+     $YEAR         = $request->YEAR            != '' ? $request->YEAR                   : (isset($COOKIE_YEAR)         ? $COOKIE_YEAR         : date('Y')) ;
+     $MONTH        = $request->MONTH           != '' ? $request->MONTH                  : (isset($COOKIE_MONTH)        ? $COOKIE_MONTH        : date('n')) ;
+     $MINUTES = 30;
+     Cookie::queue('MACHINE_LINE' ,$MACHINE_LINE  ,$MINUTES);
+     Cookie::queue('MACHINE_CODE' ,$MACHINE_CODE  ,$MINUTES);
+     Cookie::queue('YEAR'         ,$YEAR          ,$MINUTES);
+     Cookie::queue('MONTH'        ,$MONTH         ,$MINUTES);
 
      $DATA_MACHINE = Machine::select('*')->selectRaw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_V2')
                                          ->where('MACHINE_CODE','like',$MACHINE_CODE)

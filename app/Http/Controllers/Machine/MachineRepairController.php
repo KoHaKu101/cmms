@@ -45,7 +45,11 @@ class MachineRepairController extends Controller
    }
 
   public function Index(Request $request){
-    // dd($request->cookie('table_style'));
+    $cookie_array = array('0' => 'empcode','1' => 'selectmainrepair','2' => 'selectsubrepair','3' => 'priority' );
+    foreach ($cookie_array as $index => $row) {
+      Cookie::queue(Cookie::forget($row));
+    }
+    
     if ($request->cookie('table_style') == NUll) {
       Cookie::queue('table_style','2');
     }
