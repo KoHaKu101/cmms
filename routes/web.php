@@ -22,10 +22,12 @@ use App\Http\Controllers\Machine\DailyCheckController;
 use App\Http\Controllers\Machine\MachineSparePartController;
 use App\Http\Controllers\Machine\CookieController;
 use App\Http\Controllers\Machine\PerMissionController;
+//************************* History ************************************
+use App\Http\Controllers\Machine\HistoryRepairController;
 //************************* Repair *************************************
 use App\Http\Controllers\Machine\MachineRepairController;
 use App\Http\Controllers\Machine\RepairCloseFormController;
-use App\Http\Controllers\Machine\RepairHistoryController;
+
 //************************* Plan *************************************
 use App\Http\Controllers\Plan\MachinePlanController;
 use App\Http\Controllers\Plan\Report\PlanYearMachinePm;
@@ -106,7 +108,8 @@ Route::get('machine/repair/fetchdata'                     ,[MachineRepairControl
   Route::post('machine/repair/result'                     ,[RepairCloseFormController::class,'Result'])          ->name('repair.result');
   Route::post('machine/repair/closeform'                  ,[RepairCloseFormController::class,'CloseForm'])          ->name('repair.closeform');
 
-  Route::get('machine/repairhistory/list' , [RepairHistoryController::class,'HistoryList'])->name('repairhistory.list');
+  Route::get('machine/history/repairlist' , [HistoryRepairController::class,'RepairList'])->name('history.repairlist');
+  Route::get('machine/history/repairpdf/{UNID}' , [HistoryRepairController::class,'RepairPDF'])->name('history.repairpdf');
 
 //group not user
 Route::middleware('can:isAdminandManager')->group(function () {

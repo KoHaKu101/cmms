@@ -84,7 +84,12 @@
 														@foreach ($DATA_REPAIR_HEADER as $key => $row)
 																<tr>
 																	<th class="bg-info text-white " colspan="9" style="font-size:18px">MC-CODE : {{ $row->MACHINE_CODE }} </th>
-																	<th class="bg-info text-white text-right" ><button type="button" class="btn btn-sm btn-warning  my-1"><i class="fas fa-print" style="font-size:15px"></i></button></th>
+																	<th class="bg-info text-white text-right" >
+																		<button type="button" class="btn btn-sm btn-warning  my-1"
+																		onclick="window.open('/machine/history/repairpdf/{{$row->MACHINE_UNID}}','RepairSaveprint','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes')">
+																			<i class="fas fa-print" style="font-size:15px"></i>
+																		</button>
+																	</th>
 																</tr>
 
 																<tr class="bg-secondary text-white">
@@ -98,7 +103,7 @@
 																	<td scope="col">ราคา</td>
 																	<td scope="col">DownTime</td>
 																	{{-- <td scope="col">อะไหล่</td> --}}
-																	<td scope="col">ผู้รับงาน</td>
+																	<td scope="col">ผู้รายงาน</td>
 
 																</tr>
 																@php
@@ -109,23 +114,23 @@
 																<tr>
 																	<td >{{$i++}}</td>
 																	<td >{{date('d-m-Y',strtotime($sub_row->DOC_DATE))}}</td>
-																	<td >{{$sub_row->MACHINE_REPORT_NO}}</td>
-																	<td style="width:20%">{{ $sub_row->REPAIR_SUBSELECT_NAME }}</td>
-																	<td >{{ date('d-m-Y',strtotime($sub_row->WORKERIN_START_DATE)) }}</td>
+																	<td >{{$sub_row->DOC_NO}}</td>
+																	<td style="width:20%">{{ $sub_row->REPAIR_REQ_DETAIL }}</td>
+																	<td >{{ date('d-m-Y',strtotime($sub_row->REPAIR_DATE)) }}</td>
 																	<td style="width:20%">{{ $sub_row->REPAIR_DETAIL }}</td>
 
 																	<td style="width:16%">
-																		@if ($DATA_SPAREPART->where('REPAIR_REQ_UNID','=',$sub_row->UNID)->count() == 0)
+																		@if ($DATA_SPAREPART->where('REPAIR_REQ_UNID','=',$sub_row->REPAIR_REQ_UNID)->count() == 0)
 																			-
 																		@endif
-																		@foreach ($DATA_SPAREPART->where('REPAIR_REQ_UNID','=',$sub_row->UNID) as $key => $subsub_row)
+																		@foreach ($DATA_SPAREPART->where('REPAIR_REQ_UNID','=',$sub_row->REPAIR_REQ_UNID) as $key => $subsub_row)
 																			{{ $i_sub++.'.'.$subsub_row->SPAREPART_NAME }} <br>
 																		@endforeach
 																	</td>
-																	<td class="text-right">{{ $sub_row->TOTAL_COST_SPAREPART != 0 ? number_format($sub_row->TOTAL_COST_SPAREPART).'บาท' : '-'}} </td>
-																	<td class="text-right" >{{ $sub_row->DOWNTIME != 0 ? number_format($sub_row->DOWNTIME).'นาที' : '-'}} </td>
+																	<td class="text-right">{{ $sub_row->TOTAL_COST != 0 ? number_format($sub_row->TOTAL_COST).' บาท' : '-'}} </td>
+																	<td class="text-right" >{{ $sub_row->DOWN_TIME != 0 ? number_format($sub_row->DOWN_TIME).' นาที' : '-'}} </td>
 																	{{-- <td>อะไหล่</td> --}}
-																	<td >สุบรรณ์ เศษจันทร์</td>
+																	<td >{{ $sub_row->INSPECTION_BY_TH}} </td>
 																</tr>
 															@endforeach
 														@endforeach
@@ -148,28 +153,7 @@
 
 {{-- ส่วนjava --}}
 @section('javascript')
-{{-- <script>
-$(document).ready(function(){
-	var table = $('datatable').DataTable({
-			'processing' : true,
-			'serverSide' : true,
-			'ajax': "{{ route('machine.list') }}",
-			'column':[
-				{'data': 'MACHINE_LOCATION'},
-				{'data': 'MACHINE_NAME'},
-				{'data': 'MACHINE_CODE'}
-			],
-	});
 
-  $("#myInput").keyup (function() {
-		table.column($)
-    var value = $(this).val().toLowerCase();
-    $("#myTable tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-  });
-});
-</script> --}}
 
 
 @stop

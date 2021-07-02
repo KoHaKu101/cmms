@@ -254,6 +254,7 @@ class MachineController extends Controller
     ,'dataset','machineupload','machinetype','machineline','machinestatus','machineemp','machinerepair','machinesparepart'));
   }
   public function Update(Request $request,$UNID){
+    dd($request);
     $update = $request->MACHINE_UPDATE;
     $validated = $request->validate([
       'MACHINE_ICON' => 'mimes:jpeg,png,jpg',
@@ -274,8 +275,8 @@ class MachineController extends Controller
     $rankcode = MachineRankTable::select('MACHINE_RANK_CODE')->where('MACHINE_RANK_MONTH',$request->MACHINE_RANK_MONTH)->first();
 
     $MACHINE_CODE = strtoupper($request->MACHINE_CODE);
-     Machine::where('UNID',$UNID)->update([
 
+     Machine::where('UNID',$UNID)->update([
       'MACHINE_CODE'         => $MACHINE_CODE,
       'MACHINE_NAME'         => $request->MACHINE_NAME,
       'MACHINE_CHECK'        => $request->MACHINE_CHECK,

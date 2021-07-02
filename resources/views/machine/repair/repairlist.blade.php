@@ -639,6 +639,7 @@ function savestep(idform,steppoint){
 		$('#nextstep_3').attr('hidden',true);
 		$('#select_typeworker').attr('hidden',false);
 		$("#previous_worker").attr('onclick','previous_step(1)');
+		$('#nextstep_3').data('type','');
 	}
 	function type_worker(type_worker){
 		var check_type = type_worker;
@@ -647,14 +648,14 @@ function savestep(idform,steppoint){
 			 $('#WORK_IN').attr('hidden',false);
 			 $('.form_work_in').attr('id','FRM_WORK_STEP_2');
 			 $("#previous_worker").attr('onclick','previous_worker()');
-			 $('#nextstep_3').attr('data-type','IN');
+			 $('#nextstep_3').data('type','IN');
 			 $('#nextstep_3').attr('hidden',false);
 
 		}else {
 			$('#WORK_OUT').attr('hidden',false);
 			$('.form_work_out').attr('id','FRM_WORK_STEP_2');
 			$("#previous_worker").attr('onclick','previous_worker()');
-			$('#nextstep_3').attr('data-type','OUT');
+			$('#nextstep_3').data('type','OUT');
 			$('#nextstep_3').attr('hidden',false);
 		}
 		 $('#select_typeworker').attr('hidden',true);
@@ -719,15 +720,13 @@ function savestep(idform,steppoint){
 
  });
  $('#nextstep_3').on('click',function(){
-	 var check_type = $(this).data('type');
-	 // alert(check_type);
-	 if (check_type == 'IN') {
-		 // alert(array_emp_unid);
+	 var type_worker = $('#nextstep_3').data('type');
+	 console.log(type_worker);
+	 if (type_worker == 'IN') {
 		 if (array_emp_unid != '') {
 			 nextstep('3');
 		 }
-	 }else if(check_type == 'OUT'){
-
+	 }else if(type_worker == 'OUT'){
 		var check = $(".tablecolumn").length;
 		console.log(check);
 		if (check > 0) {

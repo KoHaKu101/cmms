@@ -17,7 +17,7 @@ use App\Models\Machine\EMPName;
 use App\Models\Machine\SparePart;
 use App\Models\Machine\RepairWorker;
 use App\Models\Machine\RepairSparepart;
-
+use App\Models\Machine\HistoryRepair;
 use App\Models\Machine\MachineRepairREQ;
 //************** Package form github ***************
 
@@ -550,8 +550,9 @@ class RepairCloseFormController extends Controller
 
   }
   public function CloseForm(Request $request){
-    $DATA_REPAIR =  MachineRepairREQ::where('UNID','=',$request->UNID_REPAIR);
-    $CHECK_WORKER = RepairWorker::where('REPAIR_REQ_UNID','=',$request->UNID_REPAIR)->get();
+    $UNID_REPAIR = $request->UNID_REPAIR;
+    $DATA_REPAIR =  MachineRepairREQ::where('UNID','=',$UNID_REPAIR);
+    $CHECK_WORKER = RepairWorker::where('REPAIR_REQ_UNID','=',$UNID_REPAIR)->get();
     if (!isset($CHECK_WORKER[0]->WORKER_TYPE)) {
       return Response()->json(['pass'=>'false']);
     }
@@ -573,10 +574,8 @@ class RepairCloseFormController extends Controller
     $REPORT_NO = $DATA_MACHINEREPAIRREQ->MACHINE_REPORT_NO;
     $MACHINE_REPORT_NO = 'MRP'.Carbon::now()->addyears(543)->isoFormat('YYMM').'-'.sprintf('%04d', 1);
     if ($REPORT_NO != "") {
-      // if (Carbon::parse($DOC_DATE)->isoFormat('MM') == date('m')) {
         $EXPLOT            = str_replace('MRP'.Carbon::parse($DOC_DATE)->addyears(543)->format('ym').'-','',$REPORT_NO)+1;
         $MACHINE_REPORT_NO = 'MRP' . Carbon::parse($DOC_DATE)->addyears(543)->format('ym'). sprintf('-%04d', $EXPLOT);
-      // }
     }
 
     $DATA_REPAIR->update([
@@ -589,10 +588,35 @@ class RepairCloseFormController extends Controller
       ,'MACHINE_REPORT_NO'    => $MACHINE_REPORT_NO
       ,'CLOSE_TIME'           => date('H:i:s')
       ,'CLOSE_DATE'           => date('Y-m-d')
-      ,'MODIFY_BY'            => Carbon::now()
-      ,'MODIFY_TIME'          => Auth::user()->name
+      ,'MODIFY_BY'            => Auth::user()->name
+      ,'MODIFY_TIME'          => Carbon::now()
     ]);
-
+    $REPAIR_DATE = $CHECK_WORKER[0]->WORKER_TYPE == 'IN' ? $DATA_REPAIR_FIRST->WORKERIN_END_DATE : $DATA_REPAIR_FIRST->WORKEROUT_END_DATE ;
+    // $TOTAL_COST = $CHECK_WORKER[0]->WORKER_TYPE == 'IN' ? $DATA_REPAIR_FIRST-> : $DATA_REPAIR_FIRST->
+     HistoryRepair::insert([
+       'UNID'               => $this->randUNID('PMCS_CMMS_HISTORY_REPAIR')
+      ,'REPAIR_REQ_UNID'    => $UNID_REPAIR
+      ,'MACHINE_UNID'       => $DATA_REPAIR_FIRST->MACHINE_UNID
+      ,'MACHINE_CODE'       => $DATA_REPAIR_FIRST->MACHINE_CODE
+      ,'MACHINE_NAME'       => $DATA_REPAIR_FIRST->MACHINE_NAME
+      ,'DOC_NO'             => $MACHINE_REPORT_NO
+      ,'DOC_DATE'           => $DATA_REPAIR_FIRST->DOC_DATE
+      ,'DOC_YEAR'           => $DATA_REPAIR_FIRST->DOC_YEAR
+      ,'DOC_MONTH'          => $DATA_REPAIR_FIRST->DOC_MONTH
+      ,'DOC_TYPE'           => 'REPAIR'
+      ,'REPAIR_REQ_DETAIL'  => $DATA_REPAIR_FIRST->REPAIR_SUBSELECT_NAME
+      ,'REPAIR_DETAIL'      => $DATA_REPAIR_FIRST->REPAIR_DETAIL
+      ,'REPAIR_DATE'        => $REPAIR_DATE
+      ,'REPAIR_BY'          => $CHECK_WORKER[0]->WORKER_NAME
+      ,'INSPECTION_BY'      => $DATA_REPAIR_FIRST->INSPECTION_NAME
+      ,'TOTAL_COST'         => $DATA_REPAIR_FIRST->TOTAL_COST_REPAIR
+      ,'APPROVED_BY'        => Auth::user()->name
+      ,'DOWN_TIME'          => $DOWNTIME
+      ,'CREATE_BY'          => Auth::user()->name
+      ,'CREATE_TIME'        => Carbon::now()
+      ,'MODIFY_BY'          => Auth::user()->name
+      ,'MODIFY_TIME'        => Carbon::now()
+     ]);
     return Response()->json(['pass'=>'true']);
   }
   public function ConvertToMinutes($TIME_START=NULL,$TIME_END=NULL,$DATE_START=NULL,$DATE_END=NULL){
