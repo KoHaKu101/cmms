@@ -256,16 +256,20 @@ class MachineController extends Controller
   public function Update(Request $request,$UNID){
     $update = $request->MACHINE_UPDATE;
     $MACHINE_CODE = strtoupper($request->MACHINE_CODE);
-    $CHECK_MACHINE_CODE = Machine::where('MACHINE_CODE',$MACHINE_CODE)->first();
+    $CHECK_MACHINE_CODE = Machine::where('UNID',$UNID)->first();
     $validated = $request->validate([
       'MACHINE_ICON' => 'mimes:jpeg,png,jpg',
       ],
       [
       'MACHINE_ICON.mimes'   => 'เฉพาะไฟล์ jpeg, png, jpg',
       ]);
-     if ($MACHINE_CODE == $CHECK_MACHINE_CODE->MACHINE_CODE) {
-       alert()->error('มีรหัสเครื่องนี้แล้ว')->autoclose('1500');
-       return Redirect()->back();
+
+     if ($MACHINE_CODE != $CHECK_MACHINE_CODE->MACHINE_CODE) {
+       $CHECK_MACHINE_CODE = Machine::where('MACHINE_CODE',$MACHINE_CODE)->first();
+       if ($MACHINE_CODE == $CHECK_MACHINE_CODE->MACHINE_CODE) {
+         alert()->error('มีรหัสเครื่องนี้แล้ว')->autoclose('1500');
+         return Redirect()->back();
+       }
      }
     if ($request->hasFile('MACHINE_ICON')) {
       if ($request->file('MACHINE_ICON')->isValid()) {

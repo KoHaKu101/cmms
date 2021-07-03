@@ -609,7 +609,7 @@ class RepairCloseFormController extends Controller
       ,'REPAIR_DATE'        => $REPAIR_DATE
       ,'REPAIR_BY'          => $CHECK_WORKER[0]->WORKER_NAME
       ,'INSPECTION_BY'      => $DATA_REPAIR_FIRST->INSPECTION_NAME
-      ,'TOTAL_COST'         => $DATA_REPAIR_FIRST->TOTAL_COST_REPAIR
+      ,'TOTAL_COST'         => $TOTAL_COST_REPAIR
       ,'APPROVED_BY'        => Auth::user()->name
       ,'DOWN_TIME'          => $DOWNTIME
       ,'CREATE_BY'          => Auth::user()->name
