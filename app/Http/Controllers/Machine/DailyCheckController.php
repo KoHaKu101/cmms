@@ -43,14 +43,13 @@ class DailyCheckController extends Controller
   }
 
   public function DailyList(Request $request){
-
     $COOKIE_MACHINE_LINE = $request->cookie('MACHINE_LINE');
     $COOKIE_MACHINE_CODE = $request->cookie('MACHINE_CODE');
     $COOKIE_YEAR         = $request->cookie('YEAR');
     $COOKIE_MONTH        = $request->cookie('MONTH');
 
-     $MACHINE_LINE = $request->MACHINE_LINE    != '' ? '%'.$request->MACHINE_LINE.'%'   : (isset($COOKIE_MACHINE_LINE) ? $COOKIE_MACHINE_LINE : '%') ;
-     $MACHINE_CODE = $request->SEARCH_MACHINE  != '' ? '%'.$request->SEARCH_MACHINE.'%' : (isset($COOKIE_MACHINE_CODE) ? $COOKIE_MACHINE_CODE : '%') ;
+     $MACHINE_LINE = $request->MACHINE_LINE    != '' ? $request->MACHINE_LINE           : (isset($COOKIE_MACHINE_LINE) ? $COOKIE_MACHINE_LINE : 0) ;
+     $MACHINE_CODE = $request->SEARCH_MACHINE  == '' ? ''                               : ($COOKIE_MACHINE_CODE != "" ? $COOKIE_MACHINE_CODE : $request->SEARCH_MACHINE);
      $YEAR         = $request->YEAR            != '' ? $request->YEAR                   : (isset($COOKIE_YEAR)         ? $COOKIE_YEAR         : date('Y')) ;
      $MONTH        = $request->MONTH           != '' ? $request->MONTH                  : (isset($COOKIE_MONTH)        ? $COOKIE_MONTH        : date('n')) ;
      $MINUTES = 30;
@@ -60,8 +59,17 @@ class DailyCheckController extends Controller
      Cookie::queue('MONTH'        ,$MONTH         ,$MINUTES);
 
      $DATA_MACHINE = Machine::select('*')->selectRaw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_V2')
-                                         ->where('MACHINE_CODE','like',$MACHINE_CODE)
-                                         ->where('MACHINE_LINE','like',$MACHINE_LINE)
+                                         ->where(function($query) use ($MACHINE_CODE){
+                                           if ($MACHINE_CODE != '') {
+                                             $query->where('MACHINE_CODE','like','%'.$MACHINE_CODE.'%');
+                                           }
+                                         })
+                                         ->where(function($query) use ($MACHINE_LINE){
+                                           if ($MACHINE_LINE > 0) {
+                                             $query->where('MACHINE_LINE','like','%'.$MACHINE_LINE.'%');
+                                           }
+
+                                         })
                                          ->where('MACHINE_STATUS','=','9')
                                          ->orderBy('MACHINE_CODE')
                                          ->paginate(10);
@@ -69,8 +77,6 @@ class DailyCheckController extends Controller
     $DATA_CHECKSHEET = MachineCheckSheet::where('CHECK_MONTH','=',$MONTH)
                                           ->where('CHECK_YEAR','=',$YEAR)
                                           ->get();
-      $MACHINE_LINE = str_replace('%','',$MACHINE_LINE);
-      $MACHINE_CODE = str_replace('%','',$MACHINE_CODE);
 
       return view('machine.dailycheck.dailylist',compact('DATA_MACHINE','DATA_CHECKSHEET','MONTH','YEAR','MACHINE_LINE','MACHINE_CODE'));
   }

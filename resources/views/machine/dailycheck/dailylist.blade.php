@@ -59,7 +59,7 @@
 
 												<h4 class="card-title text-white">Line</h4>
 													<select class="form-control form-control-sm input-group filled text-info mx-3" id="MACHINE_LINE" name="MACHINE_LINE">
-														<option value selected>ALL</option>
+														<option value="0" >ALL</option>
 														@for ($l=1; $l < 7; $l++)
 															<option value="L{{$l}}" {{ $MACHINE_LINE == 'L'.$l ? 'selected' : ''}}>L{{$l}}</option>
 														@endfor
