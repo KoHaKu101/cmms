@@ -41,7 +41,7 @@ class MachineTypeTableController extends Controller
   public function Index(Request $request){
     $SEARCH = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '%';
 
-    $dataset = MachineTypeTable::where('TYPE_NAME','like',$SEARCH)->paginate(8);
+    $dataset = MachineTypeTable::where('TYPE_NAME','like',$SEARCH)->orderBy('TYPE_NAME')->orderBy('TYPE_CODE')->paginate(8);
     $SEARCH = str_replace('%','',$SEARCH);
     return View('machine/add/typemachine/typemachinelist',compact('dataset','SEARCH'));
   }

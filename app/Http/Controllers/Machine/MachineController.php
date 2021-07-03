@@ -207,7 +207,7 @@ class MachineController extends Controller
                                                        ->where('UNID',$UNID)->first();
 
     $machineupload               = MachineUpload::where('UPLOAD_UNID_REF',$UNID)->get();
-    $machinetype                 = MachineTypeTable::where('TYPE_STATUS','=','9')->get();
+    $machinetype                 = MachineTypeTable::where('TYPE_STATUS','=','9')->orderBy('TYPE_NAME')->orderBy('TYPE_CODE')->get();
     $machinestatus               = MachineStatusTable::where('STATUS','=','9')->get();
     $machineemp                  = MachineEMP::select('*')->selectRaw('dbo.decode_utf8(EMP_NAME) as EMP_NAME,
                                                                       dbo.decode_utf8(EMP_NAME_LAST) as EMP_NAME_LAST')
