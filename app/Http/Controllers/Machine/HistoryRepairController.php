@@ -61,6 +61,8 @@ class HistoryRepairController extends Controller
                                             ->orderBy('MACHINE_CODE')->get();
 
     $DATA_REPAIR_SPAREPART = RepairSparepart::orderBy('SPAREPART_NAME')->get();
+    $DATA_WORKER    = RepairWorker::select('*')->selectraw('dbo.decode_utf8(WORKER_NAME) as WORKER_NAME_TH')->orderBy('WORKER_NAME')->get();
+
     $this->pdf->AddFont('THSarabunNew','','THSarabunNew.php');
     $this->pdf->AddFont('THSarabunNew','B','THSarabunNew_b.php');
     $this->pdf->SetFont('THSarabunNew','',14 );
@@ -82,19 +84,26 @@ class HistoryRepairController extends Controller
                               )->where('MACHINE_UNID','=',$grouprow->MACHINE_UNID)->orderBy('DOC_DATE')->get();
       foreach ($DATA_HISTORY_REPAIR as $index => $row) {
         $this->pdf->setX(5);
-        $array_Text = array();
-        foreach ($DATA_REPAIR_SPAREPART->where('REPAIR_REQ_UNID','=',$row->REPAIR_REQ_UNID) as $subindex => $subrow) {
-          $array_Text[] = $subindex++.'. '.$subrow->SPAREPART_NAME;
+        $array_text_sparepart = array();
+        $no_sparepart = 1;
+        $no_woker = 1;
+        foreach ($DATA_REPAIR_SPAREPART->where('REPAIR_REQ_UNID','=',$row->REPAIR_REQ_UNID) as $subindex => $row_sparepart) {
+          $array_text_sparepart[] = $no_sparepart++.'. '.$row_sparepart->SPAREPART_NAME;
           $array_n[] =  "\n";
         }
-        $TEXT = implode("\n",$array_Text);
+        $array_text_worker = array();
+        foreach ($DATA_WORKER->where('REPAIR_REQ_UNID','=',$row->REPAIR_REQ_UNID) as $key => $row_woker) {
+          $array_text_worker[] = $no_woker++.'. '.$row_woker->WORKER_NAME_TH;
+        }
+        $TEXT = implode("\n",$array_text_sparepart);
+        $TEXT_WOKER = implode("\n",$array_text_worker);
         $X= $this->pdf->getX();
         $this->pdf->SetWidths(array(10,16,22,40,40,16,16,35,20,24,24,24));
         $this->pdf->SetAligns(array('C','C','L','L','L','C','R','L','R','L','L','L'));
         $this->pdf->Row(array($index+1,date('d-m-Y',strtotime($row->DOC_DATE)),$row->DOC_NO,iconv('UTF-8','cp874', $row->REPAIR_REQ_DETAIL)
         ,iconv('UTF-8', 'cp874',$row->REPAIR_DETAIL),date('d-m-Y',strtotime($row->REPAIR_DATE)),iconv('UTF-8','cp874',number_format($row->DOWN_TIME).' นาที')
         ,iconv('UTF-8', 'cp874',$TEXT),iconv('UTF-8','cp874',number_format($row->TOTAL_COST).' บาท'),iconv('UTF-8','cp874',$row->INSPECTION_BY_TH)
-        ,iconv('UTF-8','cp874',$row->REPAIR_BY_TH),iconv('UTF-8','cp874',$row->APPROVED_BY_TH)
+        ,iconv('UTF-8','cp874',$TEXT_WOKER),iconv('UTF-8','cp874',$row->APPROVED_BY_TH)
         )) ;
 
         $Y= $this->pdf->getY();

@@ -42,7 +42,6 @@ class HistoryHeaderFooter extends Fpdf
         $this->setX(160);
           $this->Cell(23, 6, iconv('UTF-8', 'cp874', 'Receive Date : '),0,0,'R',0);
           $this->Cell(23, 6, iconv('UTF-8', 'cp874', date('d-m-Y',strtotime($dataset->MACHINE_STARTDATE))),'B',0,'L',0);
-
       $this->setY(31);
         $this->Cell(22, 6, iconv('UTF-8', 'cp874', 'Model : '),0,0,'R',0);
         $this->Cell(35, 6, iconv('UTF-8', 'cp874', $dataset->MACHINE_MODEL),'B',0,'L',0);
@@ -83,10 +82,11 @@ function Footer()
   {
     $this->AddFont('THSarabunNew','','THSarabunNew.php');
     $this->AddFont('THSarabunNew','B','THSarabunNew_b.php');
-    $this->SetY(-20);
-    // footer
-    $this->SetX(15);
+    $this->SetY(-10);
 
+    // footer
+    $this->SetX(264);
+    $this->Cell(24, 5, iconv('UTF-8', 'cp874', 'PQM-F-MA-06 Rev.5 -13/03/49'),0,0,'C',0);
 
   }
 

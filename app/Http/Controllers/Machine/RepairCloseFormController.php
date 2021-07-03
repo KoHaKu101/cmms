@@ -276,8 +276,7 @@ class RepairCloseFormController extends Controller
       if ($RepairWorker->count() > 0) {
         $RepairWorker->delete();
       }
-      $DATA_EMP_NAME = isset($request->WORKOUT_NAME) ? $request->WORKOUT_NAME : EMPName::whereIn('UNID',[$request->WORKER_UNID])->get();
-
+      $DATA_EMP_NAME = isset($request->WORKOUT_NAME) ? $request->WORKOUT_NAME : EMPName::whereIn('UNID',$request->WORKER_UNID)->get();
       foreach ($DATA_EMP_NAME as $key => $row) {
         $WORKER_UNID          = $WORKER_TYPE == 'OUT' ?  '' : $row->UNID ;
         $WORKER_CODE          = $WORKER_TYPE == 'OUT' ?  '' : $row->EMP_CODE ;
