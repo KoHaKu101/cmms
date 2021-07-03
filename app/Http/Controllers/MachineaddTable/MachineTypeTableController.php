@@ -10,6 +10,7 @@ use Auth;
 use File;
 //******************** model ***********************
 use App\Models\MachineAddTable\MachineTypeTable;
+use App\Models\Machine\Machine;
 use App\Models\Machine\Protected;
 //************** Package form github ***************
 use RealRashid\SweetAlert\Facades\Alert;
@@ -119,6 +120,9 @@ public function Update(Request $request,$UNID) {
     'MODIFY_BY'       => Auth::user()->name,
     'MODIFY_TIME'     => Carbon::now(),
 
+  ]);
+  Machine::where('MACHINE_TYPE',$DATA_MACHINE_TYPE->TYPE_NAME)->update([
+    'MACHINE_TYPE' => $request->TYPE_NAME
   ]);
   alert()->success('อัพเดทรายการสำเร็จ')->autoclose('1500');
   return Redirect()->back();
