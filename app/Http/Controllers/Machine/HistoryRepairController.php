@@ -45,10 +45,11 @@ class HistoryRepairController extends Controller
     $DATA_REPAIR_HEADER = HistoryRepair::select('MACHINE_UNID','MACHINE_CODE','MACHINE_NAME')
                                             ->groupBy('MACHINE_UNID','MACHINE_CODE','MACHINE_NAME')
                                             ->orderBy('MACHINE_CODE')->get();
-    $DATA_REPAIR = HistoryRepair::select('*')->selectraw('dbo.decode_utf8(INSPECTION_BY) as INSPECTION_BY_TH')
-                                   ->orderBy('MACHINE_CODE')->get();
-    $DATA_SPAREPART = RepairSparepart::orderBy('SPAREPART_NAME')->get();
-    return view('machine.history.list',compact('DATA_REPAIR','DATA_REPAIR_HEADER','DATA_SPAREPART'));
+    $DATA_REPAIR        = HistoryRepair::select('*')->selectraw('dbo.decode_utf8(INSPECTION_BY) as INSPECTION_BY_TH')
+                                        ->orderBy('MACHINE_CODE')->get();
+    $DATA_SPAREPART     = RepairSparepart::orderBy('SPAREPART_NAME')->get();
+    $COMPACT_NAME = compact('DATA_REPAIR','DATA_REPAIR_HEADER','DATA_SPAREPART');
+    return view('machine.history.list',$COMPACT_NAME);
   }
   public function RepairPDF($MACHINE_UNID){
     $MACHINE_UNID =  0 ;
@@ -61,7 +62,7 @@ class HistoryRepairController extends Controller
                                             ->orderBy('MACHINE_CODE')->get();
 
     $DATA_REPAIR_SPAREPART = RepairSparepart::orderBy('SPAREPART_NAME')->get();
-    $DATA_WORKER    = RepairWorker::select('*')->selectraw('dbo.decode_utf8(WORKER_NAME) as WORKER_NAME_TH')->orderBy('WORKER_NAME')->get();
+    // $DATA_WORKER    = RepairWorker::select('*')->selectraw('dbo.decode_utf8(WORKER_NAME) as WORKER_NAME_TH')->orderBy('WORKER_NAME')->get();
 
     $this->pdf->AddFont('THSarabunNew','','THSarabunNew.php');
     $this->pdf->AddFont('THSarabunNew','B','THSarabunNew_b.php');
@@ -79,7 +80,7 @@ class HistoryRepairController extends Controller
 
       $DATA_HISTORY_REPAIR = HistoryRepair::select('*')->selectraw(
                               'dbo.decode_utf8(INSPECTION_BY) as INSPECTION_BY_TH,
-                               dbo.decode_utf8(REPAIR_BY)     as REPAIR_BY_TH,
+                               dbo.decode_utf8(REPORT_BY)     as REPORT_BY_TH,
                                dbo.decode_utf8(APPROVED_BY)   as APPROVED_BY_TH '
                               )->where('MACHINE_UNID','=',$grouprow->MACHINE_UNID)->orderBy('DOC_DATE')->get();
       foreach ($DATA_HISTORY_REPAIR as $index => $row) {
@@ -91,19 +92,14 @@ class HistoryRepairController extends Controller
           $array_text_sparepart[] = $no_sparepart++.'. '.$row_sparepart->SPAREPART_NAME;
           $array_n[] =  "\n";
         }
-        $array_text_worker = array();
-        foreach ($DATA_WORKER->where('REPAIR_REQ_UNID','=',$row->REPAIR_REQ_UNID) as $key => $row_woker) {
-          $array_text_worker[] = $no_woker++.'. '.$row_woker->WORKER_NAME_TH;
-        }
         $TEXT = implode("\n",$array_text_sparepart);
-        $TEXT_WOKER = implode("\n",$array_text_worker);
         $X= $this->pdf->getX();
         $this->pdf->SetWidths(array(10,16,22,40,40,16,16,35,20,24,24,24));
         $this->pdf->SetAligns(array('C','C','L','L','L','C','R','L','R','L','L','L'));
         $this->pdf->Row(array($index+1,date('d-m-Y',strtotime($row->DOC_DATE)),$row->DOC_NO,iconv('UTF-8','cp874', $row->REPAIR_REQ_DETAIL)
         ,iconv('UTF-8', 'cp874',$row->REPAIR_DETAIL),date('d-m-Y',strtotime($row->REPAIR_DATE)),iconv('UTF-8','cp874',number_format($row->DOWN_TIME).' นาที')
-        ,iconv('UTF-8', 'cp874',$TEXT),iconv('UTF-8','cp874',number_format($row->TOTAL_COST).' บาท'),iconv('UTF-8','cp874',$row->INSPECTION_BY_TH)
-        ,iconv('UTF-8','cp874',$TEXT_WOKER),iconv('UTF-8','cp874',$row->APPROVED_BY_TH)
+        ,iconv('UTF-8', 'cp874',$TEXT),iconv('UTF-8','cp874',number_format($row->TOTAL_COST).' บาท'),iconv('UTF-8','cp874',$row->REPORT_BY_TH)
+        ,iconv('UTF-8','cp874',$row->INSPECTION_BY_TH),iconv('UTF-8','cp874',$row->APPROVED_BY_TH)
         )) ;
 
         $Y= $this->pdf->getY();

@@ -49,7 +49,7 @@ class MachineRepairController extends Controller
     foreach ($cookie_array as $index => $row) {
       Cookie::queue(Cookie::forget($row));
     }
-    
+
     if ($request->cookie('table_style') == NUll) {
       Cookie::queue('table_style','2');
     }
@@ -244,7 +244,11 @@ class MachineRepairController extends Controller
 
       $dataset = SelectMainRepair::where('STATUS','=','9')->get();
       $datamachine = Machine::where('UNID','=',$UNID)->first();
-      $data_emp   = DB::select("select dbo.decode_utf8(EMP_TH_NAME_FIRST) as EMP_TH_NAME_FIRST,EMP_CODE,UNID from EMCS_EMPLOYEE where LINE_CODE = 'PD' and POSITION_CODE != 'OFF'");
+      $data_emp   = DB::select("select dbo.decode_utf8(EMP_TH_NAME_FIRST) as EMP_TH_NAME_FIRST,EMP_CODE,UNID
+                                from EMCS_EMPLOYEE
+                                where  POSITION_CODE IN ('LD','ASSTMGR','CF')
+                                and EMP_STATUS = '9'
+	                              and LINE_CODE NOT IN ('QA','QC','PC','FNL','EG','MK','HR','AC') ");
     return View('machine/repair/formreq',compact('dataset','datamachine','data_emp'));
   }
   public function Store(Request $request,$MACHINE_UNID){

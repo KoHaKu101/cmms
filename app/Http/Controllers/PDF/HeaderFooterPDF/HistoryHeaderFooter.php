@@ -30,7 +30,7 @@ class HistoryHeaderFooter extends Fpdf
       $this->Cell(20,18,$this->Image($logo,6,6,18),1,0,'C',0);
       // header
       $this->SetFont('THSarabunNew','b',20);
-        $this->Cell(248, 18, iconv('UTF-8', 'cp874', 'รายงาน ใบประวัติการซ่อมเครื่องจักร '.$dataset->MACHINE_CODE),1,0,'C');
+        $this->Cell(248, 18, iconv('UTF-8', 'cp874', 'รายงาน ใบประวัติการซ่อมเครื่องจักร / อุปกรณ์ '.$dataset->MACHINE_CODE),1,0,'C');
         $this->Cell(19, 18, iconv('UTF-8', 'cp874', ''),1,1,'C',0);
         $this->SetFont('THSarabunNew','',12);
       $this->setY(25);
