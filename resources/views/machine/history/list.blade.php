@@ -152,7 +152,7 @@
 													</style>
 													@foreach ($DATA_REPAIR_HEADER as $key => $row)
 															<tr>
-																<th class="bg-info text-white " colspan="6" style="font-size:18px">MC-CODE : {{ $row->MACHINE_CODE }} </th>
+																<th class="bg-info text-white " colspan="7" style="font-size:18px">MC-CODE : {{ $row->MACHINE_CODE }} </th>
 																<th class="bg-info text-white text-right" >
 																	<button type="button" class="btn btn-sm btn-warning  my-1"
 																	onclick="window.open('/machine/history/repairpdf/{{$row->MACHINE_UNID}}','RepairSaveprint','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes')">
@@ -160,54 +160,30 @@
 																	</button>
 																</th>
 															</tr>
-
 															<tr class="bg-secondary text-white">
 																<td scope="col">#</td>
 																<td scope="col">Rank</td>
 																<td scope="col">ระยะรอบ(เดือน)</td>
 																<td scope="col">วันที่ตามแผน</td>
 																<td scope="col">วันที่ตรวจเช็ค</td>
-
 																<td scope="col">เวลาหยุดเครื่อง</td>
-																<td scope="col">หมายเหตุ</td>
-
+																<td scope="col">หมายเหตุ/รายละเอียดเพิ่มเติม</td>
+																<td scope="col">ผู้ตรวจเช็ค</td>
 															</tr>
 															@php
 																$i = 1 ;
 																$i_sub = 1 ;
 															@endphp
 															<tr>
-																<td style="width:16%">1</td>
-																<td style="width:16%">A</td>
-																<td style="width:16%">3 เดือน</td>
-																<td style="width:16%">01-03-07</td>
-																<td style="width:16%">03-03-07</td>
-																<td style="width:16%">30 นาที</td>
-																<td style="width:16%">-</td>
+																<td style="width:3%" class="text-center">1</td>
+																<td style="width:3%" class="text-center">A</td>
+																<td style="width:8%">3 เดือน</td>
+																<td style="width:8%">01-03-07</td>
+																<td style="width:8%">03-03-07</td>
+																<td style="width:8%">30 นาที</td>
+																<td style="width:40%">-</td>
+																<td style="width:6%">สุบรรณ์</td>
 															</tr>
-														{{-- @foreach ($DATA_REPAIR->where('MACHINE_UNID','=',$row->MACHINE_UNID) as $index => $sub_row) --}}
-
-															{{-- <tr>
-																<td >{{$i++}}</td>
-																<td >{{date('d-m-Y',strtotime($sub_row->DOC_DATE))}}</td>
-																<td >{{$sub_row->DOC_NO}}</td>
-																<td style="width:20%">{{ $sub_row->REPAIR_REQ_DETAIL }}</td>
-																<td >{{ date('d-m-Y',strtotime($sub_row->REPAIR_DATE)) }}</td>
-																<td style="width:20%">{{ $sub_row->REPAIR_DETAIL }}</td>
-
-																<td style="width:16%">
-																	@if ($DATA_SPAREPART->where('REPAIR_REQ_UNID','=',$sub_row->REPAIR_REQ_UNID)->count() == 0)
-																		-
-																	@endif
-																	@foreach ($DATA_SPAREPART->where('REPAIR_REQ_UNID','=',$sub_row->REPAIR_REQ_UNID) as $key => $subsub_row)
-																		{{ $i_sub++.'.'.$subsub_row->SPAREPART_NAME }} <br>
-																	@endforeach
-																</td>
-																<td class="text-right">{{ $sub_row->TOTAL_COST != 0 ? number_format($sub_row->TOTAL_COST).' บาท' : '-'}} </td>
-																<td class="text-right" >{{ $sub_row->DOWN_TIME != 0 ? number_format($sub_row->DOWN_TIME).' นาที' : '-'}} </td>
-																<td >{{ $sub_row->INSPECTION_BY_TH}} </td>
-															</tr> --}}
-														{{-- @endforeach --}}
 													@endforeach
 												</table>
 											</div>
