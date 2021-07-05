@@ -16,15 +16,16 @@ use App\Models\Machine\SparePart;
 use App\Models\Machine\RepairWorker;
 use App\Models\Machine\RepairSparepart;
 use App\Models\Machine\HistoryRepair;
+use App\Models\Machine\MachineRepairREQ;
 
 use App\Http\Controllers\PDF\HeaderFooterPDF\HistoryHeaderFooter as HistoryHeaderFooter;
 //************** Package form github ***************
 
 class HistoryRepairController extends Controller
 {
-  public function __construct(HistoryHeaderFooter $HistoryHeaderFooter){
+  public function __construct(){
     $this->middleware('auth');
-    $this->pdf = $HistoryHeaderFooter;
+
   }
   public function randUNID($table){
     $number = date("ymdhis", time());
@@ -51,7 +52,8 @@ class HistoryRepairController extends Controller
     $COMPACT_NAME = compact('DATA_REPAIR','DATA_REPAIR_HEADER','DATA_SPAREPART');
     return view('machine.history.list',$COMPACT_NAME);
   }
-  public function RepairPDF($MACHINE_UNID){
+  public function RepairPDF(HistoryHeaderFooter $HistoryHeaderFooter,$MACHINE_UNID){
+    $this->pdf = $HistoryHeaderFooter;
     $MACHINE_UNID =  0 ;
      $GROUP_HISTORY_REPAIR = HistoryRepair::select('MACHINE_CODE','MACHINE_UNID')
                                           ->where(function($query) use ($MACHINE_UNID){
@@ -123,5 +125,34 @@ class HistoryRepairController extends Controller
     }
 
     $this->pdf->Output();
+  }
+  public function SaveHistory($UNID_REPAIR,$MACHINE_REPORT_NO,$REPAIR_DATE,$TOTAL_COST_REPAIR,$DOWNTIME){
+    $DATA_REPAIR =  MachineRepairREQ::where('UNID','=',$UNID_REPAIR)->first();
+    $APPROVED_BY = DB::table('PMCS_EMP_NAME')->select('EMP_NAME')->leftJoin('EMCS_EMPLOYEE','PMCS_EMP_NAME.EMP_CODE','=','EMCS_EMPLOYEE.EMP_CODE')
+                     ->where('POSITION_CODE','=','ASSTMGR')->where('EMCS_EMPLOYEE.EMP_STATUS','=','9')->first();
+    HistoryRepair::insert([
+      'UNID'               => $this->randUNID('PMCS_CMMS_HISTORY_REPAIR')
+     ,'REPAIR_REQ_UNID'    => $UNID_REPAIR
+     ,'MACHINE_UNID'       => $DATA_REPAIR->MACHINE_UNID
+     ,'MACHINE_CODE'       => $DATA_REPAIR->MACHINE_CODE
+     ,'MACHINE_NAME'       => $DATA_REPAIR->MACHINE_NAME
+     ,'DOC_NO'             => $MACHINE_REPORT_NO
+     ,'DOC_DATE'           => $DATA_REPAIR->DOC_DATE
+     ,'DOC_YEAR'           => $DATA_REPAIR->DOC_YEAR
+     ,'DOC_MONTH'          => $DATA_REPAIR->DOC_MONTH
+     ,'DOC_TYPE'           => 'REPAIR'
+     ,'REPAIR_REQ_DETAIL'  => $DATA_REPAIR->REPAIR_SUBSELECT_NAME
+     ,'REPAIR_DETAIL'      => $DATA_REPAIR->REPAIR_DETAIL
+     ,'REPAIR_DATE'        => $REPAIR_DATE
+     ,'TOTAL_COST'         => $TOTAL_COST_REPAIR
+     ,'REPORT_BY'          => $DATA_REPAIR->INSPECTION_NAME
+     ,'INSPECTION_BY'      => Auth::user()->name
+     ,'APPROVED_BY'        => $APPROVED_BY->EMP_NAME
+     ,'DOWN_TIME'          => $DOWNTIME
+     ,'CREATE_BY'          => Auth::user()->name
+     ,'CREATE_TIME'        => Carbon::now()
+     ,'MODIFY_BY'          => Auth::user()->name
+     ,'MODIFY_TIME'        => Carbon::now()
+    ]);
   }
 }

@@ -253,7 +253,6 @@ class MachineRepairController extends Controller
   }
   public function Store(Request $request,$MACHINE_UNID){
       //******************* Request parameter *******************//
-      // MachineRepairREQ::select('*')->delete();
       $CLOSE_STATUS = '9';
         $MACHINE_UNID = $MACHINE_UNID;
         $EMP_CODE = $request->cookie('empcode');
@@ -266,7 +265,6 @@ class MachineRepairController extends Controller
         $DATA_SELECTMACHINEREPAIR = SelectMainRepair::where('UNID','=',$SELECT_MAIN_REPAIR_UNID)->first();
         $DATA_SELECTSUBREPAIR = SelectSubRepair::where('UNID','=',$SELECT_SUB_REPAIR_UNID)->first();
         $DATA_EMP = DB::select("select EMP_TH_NAME_FIRST,EMP_CODE,UNID from EMCS_EMPLOYEE where LINE_CODE = 'PD' and EMP_CODE = '".$EMP_CODE."'");
-        // $DATA_EMP = MachineEMP::where('EMP_CODE','=',$EMP_CODE)->where('REF_UNID','=',$MACHINE_UNID)->first();
       //******************* docno *******************//
       $DATA_MACHINEREPAIRREQ = MachineRepairREQ::selectraw('max(DOC_NO)DOC_NO,max(DOC_DATE)DOC_DATE')->first();
       $DATE_DOCNO            = Carbon::now()->addyears('543');
@@ -279,6 +277,7 @@ class MachineRepairController extends Controller
         }
       }
       //******************* insert *******************//
+      // dd($PRIORITY);
       MachineRepairREQ::insert([
         'UNID'=> $UNID
         ,'MACHINE_UNID'          => $DATA_MACHINE->UNID

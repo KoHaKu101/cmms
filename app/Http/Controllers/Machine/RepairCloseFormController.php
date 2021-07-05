@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Auth;
 use Cookie;
 use Gate;
+use App\Http\Controllers\Machine\HistoryRepairController;
 //******************** model ***********************
 use App\Models\MachineAddTable\SelectMainRepair;
 use App\Models\MachineAddTable\SelectSubRepair;
@@ -552,8 +553,6 @@ class RepairCloseFormController extends Controller
     $UNID_REPAIR = $request->UNID_REPAIR;
     $DATA_REPAIR =  MachineRepairREQ::where('UNID','=',$UNID_REPAIR);
     $CHECK_WORKER = RepairWorker::where('REPAIR_REQ_UNID','=',$UNID_REPAIR)->get();
-    $APPROVED_BY = DB::table('PMCS_EMP_NAME')->select('EMP_NAME')->leftJoin('EMCS_EMPLOYEE','PMCS_EMP_NAME.EMP_CODE','=','EMCS_EMPLOYEE.EMP_CODE')
-                     ->where('POSITION_CODE','=','ASSTMGR')->where('EMCS_EMPLOYEE.EMP_STATUS','=','9')->first();
     if (!isset($CHECK_WORKER[0]->WORKER_TYPE)) {
       return Response()->json(['pass'=>'false']);
     }
@@ -593,30 +592,10 @@ class RepairCloseFormController extends Controller
       ,'MODIFY_TIME'          => Carbon::now()
     ]);
     $REPAIR_DATE = $CHECK_WORKER[0]->WORKER_TYPE == 'IN' ? $DATA_REPAIR_FIRST->WORKERIN_END_DATE : $DATA_REPAIR_FIRST->WORKEROUT_END_DATE ;
-     HistoryRepair::insert([
-       'UNID'               => $this->randUNID('PMCS_CMMS_HISTORY_REPAIR')
-      ,'REPAIR_REQ_UNID'    => $UNID_REPAIR
-      ,'MACHINE_UNID'       => $DATA_REPAIR_FIRST->MACHINE_UNID
-      ,'MACHINE_CODE'       => $DATA_REPAIR_FIRST->MACHINE_CODE
-      ,'MACHINE_NAME'       => $DATA_REPAIR_FIRST->MACHINE_NAME
-      ,'DOC_NO'             => $MACHINE_REPORT_NO
-      ,'DOC_DATE'           => $DATA_REPAIR_FIRST->DOC_DATE
-      ,'DOC_YEAR'           => $DATA_REPAIR_FIRST->DOC_YEAR
-      ,'DOC_MONTH'          => $DATA_REPAIR_FIRST->DOC_MONTH
-      ,'DOC_TYPE'           => 'REPAIR'
-      ,'REPAIR_REQ_DETAIL'  => $DATA_REPAIR_FIRST->REPAIR_SUBSELECT_NAME
-      ,'REPAIR_DETAIL'      => $DATA_REPAIR_FIRST->REPAIR_DETAIL
-      ,'REPAIR_DATE'        => $REPAIR_DATE
-      ,'TOTAL_COST'         => $TOTAL_COST_REPAIR
-      ,'REPORT_BY'          => $DATA_REPAIR_FIRST->INSPECTION_NAME
-      ,'INSPECTION_BY'      => Auth::user()->name
-      ,'APPROVED_BY'        => $APPROVED_BY->EMP_NAME
-      ,'DOWN_TIME'          => $DOWNTIME
-      ,'CREATE_BY'          => Auth::user()->name
-      ,'CREATE_TIME'        => Carbon::now()
-      ,'MODIFY_BY'          => Auth::user()->name
-      ,'MODIFY_TIME'        => Carbon::now()
-     ]);
+    
+    $SAVE_HISTORYREPAIR = new HistoryRepairController;
+
+    $SAVE_HISTORYREPAIR->SaveHistory($UNID_REPAIR,$MACHINE_REPORT_NO,$REPAIR_DATE,$TOTAL_COST_REPAIR,$DOWNTIME);
     return Response()->json(['pass'=>'true']);
   }
   public function ConvertToMinutes($TIME_START=NULL,$TIME_END=NULL,$DATE_START=NULL,$DATE_END=NULL){

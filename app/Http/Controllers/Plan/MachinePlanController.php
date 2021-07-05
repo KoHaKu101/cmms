@@ -29,7 +29,7 @@ use App\Http\Controllers\Machine\UploadImgController;
 
 class MachinePlanController extends Controller
 {
-  protected  $paging =10;
+  protected  $paging = 10;
 
   public function __construct(){
     $this->middleware('auth');

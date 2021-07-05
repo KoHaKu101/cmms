@@ -152,7 +152,7 @@
 													</style>
 													@foreach ($DATA_REPAIR_HEADER as $key => $row)
 															<tr>
-																<th class="bg-info text-white " colspan="7" style="font-size:18px">MC-CODE : {{ $row->MACHINE_CODE }} </th>
+																<th class="bg-info text-white " colspan="9" style="font-size:18px">MC-CODE : {{ $row->MACHINE_CODE }} </th>
 																<th class="bg-info text-white text-right" >
 																	<button type="button" class="btn btn-sm btn-warning  my-1"
 																	onclick="window.open('/machine/history/repairpdf/{{$row->MACHINE_UNID}}','RepairSaveprint','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes')">
@@ -167,6 +167,8 @@
 																<td scope="col">วันที่ตามแผน</td>
 																<td scope="col">วันที่ตรวจเช็ค</td>
 																<td scope="col">เวลาหยุดเครื่อง</td>
+																<td scope="col">ประเภทเครื่องจักร</td>
+																<td scope="col">รายการตรวจเช็ค</td>
 																<td scope="col">หมายเหตุ/รายละเอียดเพิ่มเติม</td>
 																<td scope="col">ผู้ตรวจเช็ค</td>
 															</tr>
@@ -181,8 +183,13 @@
 																<td style="width:8%">01-03-07</td>
 																<td style="width:8%">03-03-07</td>
 																<td style="width:8%">30 นาที</td>
-																<td style="width:40%">-</td>
-																<td style="width:6%">สุบรรณ์</td>
+																<td style="width:10%">AUTO DRILL</td>
+																<td style="width:16%">1.MOTOR<br>
+																	2.SERVO<br>
+																	3.HYDRAULIC UNIT
+																</td>
+																<td style="width:26%">-</td>
+																<td style="width:8%">สุบรรณ์</td>
 															</tr>
 													@endforeach
 												</table>
