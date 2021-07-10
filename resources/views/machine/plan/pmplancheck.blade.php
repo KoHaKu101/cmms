@@ -3,6 +3,7 @@
 @section('css')
 
 <link rel="stylesheet" href="{{ asset('assets/css/useinproject/_magnific-popup.scss')}}">
+<link href="{{asset('assets/css/select2.min.css')}}" rel="stylesheet" />
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <style>
 .selectgroup-input-check:checked+.selectgroup-button-check {
@@ -320,11 +321,80 @@ left: auto;
 															</div>
 															<div class="row">
 																<div class="col-md-12">
+																	<div class="form-group col-md-10 ml-auto mr-auto">
+																				<label for="PM_MASTERPLPAN_REMARK">รายการอะไหล่ที่เปลี่ยน</label>
+																				<div class="row">
+																					@if (!isset($SPAREPART_RESULT) )
+																						<div class="col-md-6 SPAREPART">
+																							<label>อะไหล่</label>
+																							<select class="form-control form-control-sm " id="SPAREPART" name="SPAREPART">
+																								@foreach ($SPAREPART as $number => $sparepart_row)
+																									<option value="{{ $sparepart_row->UNID }}"
+																										data-cost="{{ $sparepart_row->SPAREPART_COST }}">
+																										{{$sparepart_row->SPAREPART_CODE.' '.$sparepart_row->SPAREPART_NAME}}
+																									</option>
+																								@endforeach
+																							</select>
+																						</div>
+																						<div class="col-6 col-sm-4 col-md-2">
+																							<label>จำนวน</label>
+																								<input type="number" class="bg-info text-white form-control form-control-sm" id="TOTAL_SPAREPART" name="TOTAL_SPAREPART">
+																						</div>
+																						<div class="col-6 col-sm-4 col-md-2">
+																							<label>ราคา</label>
+																								<input type="number" class="bg-info text-white form-control form-control-sm" id="COST_SPAREPART" name="COST_SPAREPART">
+																						</div>
+																						<div class="col-6 col-sm-4 col-md-2">
+																							<label class="text-white"> แอบมองอยุ่นะ</label>
+																							<button type="button" class="btn btn-sm btn-primary mx-2" id="add_sparepart"><i class="fas fa-plus mr-2"></i>เพิ่ม</button>
+																						</div>
+																					@endif
+
+																					<div class="col-md-12">
+																						<div class="table table-responsive" >
+																							<table class="table table-bordered table-head-bg-info table-bordered-bd-info mt-2">
+																								<thead>
+																									<tr>
+																										<th width="4%">#</th>
+																										<th width="16%">รหัส</th>
+																										<th>รายการ</th>
+																										<th width="5%" class="text-center">จำนวน</th>
+																										<th width="10%" class="text-center">ราคา</th>
+																										<th width="15%" class="text-center">ราคาทั้งหมด</th>
+																										<th width="18%">action</th>
+																									</tr>
+																								</thead>
+																								<tbody id="RESULT_SPAREPART">
+																									@if (isset($SPAREPART_RESULT) > 0)
+																										@foreach ($SPAREPART_RESULT as $key => $sparepart)
+																											<tr>
+																												<td>{{ $key+1 }}</td>
+																												<td>{{$sparepart->SPAREPART_CODE}}</td>
+																												<td>{{$sparepart->SPAREPART_NAME}}</td>
+																												<td class="text-center">{{$sparepart->TOTAL_PIC}}</td>
+																												<td class="text-right">{{number_format($sparepart->SPAREPART_COST).' บาท'}}</td>
+																												<td class="text-right">{{number_format($sparepart->TOTAL_COST).' บาท'}}</td>
+
+																												<td>-</td>
+																											</tr>
+																										@endforeach
+																									@endif
+																								</tbody>
+																							</table>
+																						</div>
+																					</div>
+																				</div>
+																	</div>
+																</div>
+															</div>
+															<div class="row">
+																<div class="col-md-10 ml-auto mr-auto">
 																	<div class="form-group">
 																		<label for="PM_MASTERPLPAN_REMARK">ข้อเสนอแนะ</label>
 																		<textarea class="form-control" id="PM_MASTERPLPAN_REMARK" name="PM_MASTERPLPAN_REMARK" rows="3" {{ $PM_PLANSHOW->PLAN_STATUS != 'NEW' ? 'Readonly' : '' }}>{{ $PM_PLANSHOW->PLAN_STATUS != 'NEW' ? $PM_USER_AND_NOTE->PM_MASTERPLPAN_REMARK : ''}}</textarea>
 																	</div>
 																</div>
+
 															</div>
 
 															<div class="card-action">
@@ -371,14 +441,14 @@ left: auto;
 												<div class="row">
 													<div class="col col-lg-12">
 														<form action="{{ route('pm.planlistupload') }}" id="FRM_UPLOAD" name="FRM_UPLOAD" method="POST" enctype="multipart/form-data">
-															@method('POST')
 															@csrf
 															<div class="col col-lg-12 form-inline">
 																<div class="form-group mx-1">
 																	<label for="exampleFormControlFile1">แนบรูปภาพปฏิบัติงาน</label>
 																	<input type="file" class="form-control-file" id="FILE_NAME" name="FILE_NAME"
 																	accept="image/*"required>
-																	<input type="hidden" id="IMG_PLAN_UNID"name="IMG_PLAN_UNID"value="{{$PM_PLANSHOW->UNID}}" >
+																	<input type="hidden" id="IMG_PLAN_UNID"name="IMG_PLAN_UNID"
+																	value="{{$PM_PLANSHOW->UNID}}" >
 																</div>
 															</div>
 															<div class="col col-lg-12">
@@ -392,7 +462,7 @@ left: auto;
 													<div class="col col-lg">
 														<div class="card">
 															<div class="card-body">
-																<div class="row image-gallery">
+																<div class="row image-gallery" id="IMG_SHOW">
 																	@if (isset($PLAN_UPLOAD_IMG))
 																		@foreach ($PLAN_UPLOAD_IMG as $INDEXIMG => $IMG)
 																			<a href="{{asset('../../image/planresult/'.$IMG->UNID_REF.'/'.$IMG->FILE_NAME.'?t='.time())}}"
@@ -425,8 +495,76 @@ left: auto;
 	<script src="{{ asset('assets/js/useinproject/bootstrap-toggle.min.js') }}"></script>
 	<script src="{{ asset('assets/js/useinproject/jquery.magnific-popup.min.js') }}"></script>
 	<script src="{{ asset('assets/js/useinproject/appcommon.js') }}"></script>
+	<script src="{{ asset('assets/js/select2.min.js') }}"></script>
 <script>
-		// This will create a single gallery from all elements that have class "gallery-item"
+$(document).ready(function(){
+	$('#SPAREPART').select2({
+		placeholder: "กรุณาเลือก",
+		width:'100%',
+	 containerCssClass:'bg-info text-white',
+	});
+});
+var sparepart_total = {};
+var arr_spare_total = [];
+var sparepart_cost = {};
+var arr_spare_cost = [];
+
+function loop_tabel_sparepart(unid,total,cost){
+	arr_spare_total.push({unid:unid,total:total});
+	arr_spare_cost.push({unid:unid,cost:cost});
+	$.each(arr_spare_total,function(key, value){
+		sparepart_total[value.unid] = value.total;
+	});
+	$.each(arr_spare_cost,function(key, value){
+		sparepart_cost[value.unid]  = value.cost;
+	});
+
+	var url = "{{ route('pm.sparepart') }}";
+	$.ajax({
+			 type:'POST',
+			 url: url,
+			 datatype: 'json',
+			 data: {SPAREPART 		 : sparepart_total,
+			 				SPAREPART_COST : sparepart_cost},
+			 success:function(data){
+				 $('#RESULT_SPAREPART').html(data.html);
+			 }
+		 });
+	 };
+
+	$('#SPAREPART').on('change',function(){
+		var unid = $('#SPAREPART option:selected').val();
+		var cost = $('#SPAREPART option:selected').data('cost');
+		$('#TOTAL_SPAREPART').val('1');
+		$('#COST_SPAREPART').val(cost);
+	});
+	$('#add_sparepart').on('click',function(){
+		var unid = $('#SPAREPART').val();
+		var total = $('#TOTAL_SPAREPART').val();
+		var cost = $('#COST_SPAREPART').val();
+		loop_tabel_sparepart(unid,total,cost);
+	});
+	function editsparepart(thisdata){
+		var unid = $(thisdata).data('unid');
+		var cost = $(thisdata).data('cost');
+		var total = $(thisdata).data('total');
+		$('#TOTAL_SPAREPART').val(cost);
+		$('#COST_SPAREPART').val(total);
+		$('#SPAREPART').val(unid);
+		$('#SPAREPART').select2({
+			width:'100%',
+		}).trigger('change');
+	};
+	function removesparepart(thisdata){
+		var unid = $(thisdata).data('unid');
+		for( var i = 0; i < arr_spare_total.length; i++){
+				if ( arr_spare_total[i].unid == unid) {
+						arr_spare_total.splice(i, 1);
+						arr_spare_cost.splice(i,1);
+				}
+		}
+		loop_tabel_sparepart(unid);
+	}
 	$(".image-gallery a").click(function(e) {
   	var file = $(this).attr("href");
 		var imgunid = $(this).data("imgunid");
@@ -467,7 +605,69 @@ left: auto;
 		});
 
 	});
+	$('#FRM_UPLOAD').submit(function(e){
+		e.preventDefault();
+		var url  = "{{ route('pm.planlistupload') }}";
+		var formData = new FormData(this);
+		$.ajax({
+			type:'POST',
+			url: url,
+			data: formData,
+			cache:false,
+			contentType: false,
+			processData: false,
+			success: function(data){
+				if (data.result = 'true') {
+					Swal.fire({
+					  icon: 'success',
+					  title: 'อัปโหลดไฟล์สำเร็จ',
+					  timer: 1500,
+					});
+					$('#IMG_SHOW').html(data.html);
+					$(".image-gallery a").click(function(e) {
+				  	var file = $(this).attr("href");
+						var imgunid = $(this).data("imgunid");
+				  		$.magnificPopup.open({
+					    items: {
+				      	src: $('<img src="' + file + '" class="col-6 col-md-2 my-1 mx--4 hv-100"/><button type="button" class="deleteimg btn btn-danger" ><i class="fas fa-trash"></i></button>'),
+				      	type: 'inline'
+				    	},
+				    	closeBtnInside: false,
+				  		});
+				  		e.preventDefault();
+							$(".deleteimg").on('click',function(e){
+								e.preventDefault();
+								Swal.fire({
+				  				title: 'ต้องการลบรูปใช่มั้ย?',
+				  				showDenyButton: true,
+				  				confirmButtonText: `Delete`,
+				  				denyButtonText: `Cancel`,
+								}).then((result) => {
+				  			if (result.isConfirmed) {
 
+									$.ajax({
+				  					type: "POST",
+				  					url: '{{route('pm.deleteimg')}}',
+										dataType: 'JSON',
+				  					data: {"_token": "{{ csrf_token() }}",
+													  'imgunid' : imgunid},
+				  					success: function(data){
+											if (data.result = 'true') {
+												var imgunid = data.imgunid;
+												$("#"+imgunid).remove();
+											}
+
+										}
+									});
+				  			}
+						})
+						});
+
+					});
+				}
+			}
+		});
+	});
 	</script>
 
 

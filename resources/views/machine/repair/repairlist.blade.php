@@ -358,7 +358,7 @@ $(document).ready(function(){
 	var arr_spare_total = [];
 	var arr_spare_type = [];
 	var arr_spare_cost = [];
-	let number_count = 1;
+	let number_count = 0;
 
 
 //******************************* function ************************
@@ -721,14 +721,12 @@ function savestep(idform,steppoint){
  });
  $('#nextstep_3').on('click',function(){
 	 var type_worker = $('#nextstep_3').data('type');
-	 console.log(type_worker);
 	 if (type_worker == 'IN') {
 		 if (array_emp_unid != '') {
 			 nextstep('3');
 		 }
 	 }else if(type_worker == 'OUT'){
 		var check = $(".tablecolumn").length;
-		console.log(check);
 		if (check > 0) {
 			nextstep('3');
 		}
@@ -767,6 +765,7 @@ function savestep(idform,steppoint){
 	 var number_check = 0;
 	 if (name != '') {
 		 $("#table_workerout").each(function () {
+			 number_count++;
 			var tds = '<tr id="tablerow'+number_count+'" class="tablerow">';
 			jQuery.each($('tr:last td', this), function () {
 					number_check++;
@@ -794,7 +793,7 @@ function savestep(idform,steppoint){
 			tds += '</tr>';
 					$('tbody', this).append(tds);
 		});
-		number_count++;
+
 		$('#add_workerout').html('<i class="fas fa-plus" > เพิ่ม</i>');
 		$('.WORKEROUT_NAME').val('');
 		$('.WORKEROUT_COST').val('');
@@ -814,8 +813,8 @@ function savestep(idform,steppoint){
 	 $('.WORKEROUT_DETAIL').val(detail);
 	 $('table#table_workerout tr#tablerow'+table_id).remove();
 		resetIndexes();
-	 if( i == 1 ) {
-		 number_count = 1 ;
+	 if( i == 0 ) {
+		 number_count = 0 ;
 	 }
  }
  function deleteworkout(thisdata){
@@ -823,28 +822,31 @@ function savestep(idform,steppoint){
 	 var i = $('#table_workerout .tablecolumn').length;
 	 $('table#table_workerout tr#tablerow'+table_id).remove();
 	 resetIndexes();
-	if( i == 1 ) {
-		number_count = 1 ;
+	if( i == 0 ) {
+		number_count = 0 ;
 	}
  }
 function resetIndexes(){
-    var count = 1;
+    var count = 0;
     $('.tablerow').each(function(){
-        if( count > 0){
+			count++;
+        if( count > 0 ){
         $(this).attr('id', 'tablerow' + count);
 				 $('#tablerow'+count+' .tablecolumn').attr('id', 'tablecolumn' + count);
             $('#tablerow'+count+' .tablecolumn').html(count);
 						$('#tablerow'+count+' .editworkout').attr('data-table',  count);
 						$('#tablerow'+count+' .deleteworkout').attr('data-table',  count);
         }
-        count++;
+
+				// console.log(count);
 				number_count = count;
     });
 	}
 $('#closeform').on('click',function(){
-	var total_sparepart = $(this).data('total_sparepart');
-	var total_worker	  = $(this).data('total_worker');
-	var total_all 			= $(this).data('total_all');
+	// data('total_sparepart')
+	var total_sparepart = $(this).attr('data-total_sparepart');
+	var total_worker	  = $(this).attr('data-total_worker');
+	var total_all 			= $(this).attr('data-total_all');
 	var url 						= "{{ route('repair.closeform') }}";
 	var repair_unid		  = $("#UNID_REPAIR_REQ").val();
 	$.ajax({
@@ -865,9 +867,10 @@ $('#closeform').on('click',function(){
 								  $('#BG_'+repair_unid).removeClass('bg-danger');
 									$('#BG_'+repair_unid).removeClass('bg-warning');
 									$('#BG_'+repair_unid).addClass('bg-success');
-									// $('#CloseForm').modal('hide');
+
 									$('#stepsave').attr('hidden',true);
 									$('.stepclose').attr('hidden',false);
+
 							});
 				 }else {
 					 Swal.fire({
@@ -894,11 +897,15 @@ $('#closeform').on('click',function(){
 	 arr_spare_cost = []; ;
 	 number_count = '' ;
 	 loop_tabel_worker(array_emp_unid);
-	 // var table_id = $(thisdata).data('table');
+	 loop_removeclass();
+	 $('#WORK_IN').attr('hidden',true);
+	 $('#WORK_OUT').attr('hidden',true);
+	 $('#select_typeworker').attr('hidden',false);
 	 var max = $('#table_workerout .tablerow').length;
 	 for (var i = 1; i < max+1; i++) {
 		 $('#tablerow'+i).remove();
 	 }
+	 $('table#table_workerout tr#tablerow').remove();
 	 resetIndexes();
 	 loop_tabel_sparepart('','','','');
 	 for (var i = 1; i < 5; i++) {

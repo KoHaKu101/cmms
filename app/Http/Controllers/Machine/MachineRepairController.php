@@ -277,7 +277,6 @@ class MachineRepairController extends Controller
         }
       }
       //******************* insert *******************//
-      // dd($PRIORITY);
       MachineRepairREQ::insert([
         'UNID'=> $UNID
         ,'MACHINE_UNID'          => $DATA_MACHINE->UNID

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 
-class HistoryRepair extends Model
+class HistoryPlanPM extends Model
 {
 
     use HasFactory;
@@ -32,6 +32,8 @@ class HistoryRepair extends Model
       ,'DOC_TYPE'
       ,'CHECK_DATE'
       ,'CHECK_BY'
+      ,'START_TIME'
+      ,'END_TIME'
       ,'DOWN_TIME'
       ,'RANK'
       ,'PERIOD'

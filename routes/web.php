@@ -23,7 +23,7 @@ use App\Http\Controllers\Machine\MachineSparePartController;
 use App\Http\Controllers\Machine\CookieController;
 use App\Http\Controllers\Machine\PerMissionController;
 //************************* History ************************************
-use App\Http\Controllers\Machine\HistoryRepairController;
+use App\Http\Controllers\Machine\HistoryController;
 //************************* Repair *************************************
 use App\Http\Controllers\Machine\MachineRepairController;
 use App\Http\Controllers\Machine\RepairCloseFormController;
@@ -108,8 +108,9 @@ Route::get('machine/repair/fetchdata'                     ,[MachineRepairControl
   Route::post('machine/repair/result'                     ,[RepairCloseFormController::class,'Result'])          ->name('repair.result');
   Route::post('machine/repair/closeform'                  ,[RepairCloseFormController::class,'CloseForm'])          ->name('repair.closeform');
 
-  Route::get('machine/history/repairlist' , [HistoryRepairController::class,'RepairList'])->name('history.repairlist');
-  Route::get('machine/history/repairpdf/{UNID}' , [HistoryRepairController::class,'RepairPDF'])->name('history.repairpdf');
+  Route::get('machine/history/repairlist' , [HistoryController::class,'RepairList'])->name('history.repairlist');
+  Route::get('machine/history/repairpdf/{UNID?}' , [HistoryController::class,'RepairPDF'])->name('history.repairpdf');
+  Route::get('machine/history/planpdf/{UNID?}' ,   [HistoryController::class,'PlanPDF'])->name('history.planpdf');
 
 //group not user
 Route::middleware('can:isAdminandManager')->group(function () {
@@ -239,6 +240,7 @@ Route::get('machine/pdf/plan/planpmmonth/{YEAR}/{MONTH?}'    ,[PlanMonthMachineP
 Route::get('machine/pm/planlist'                             ,[MachinePlanController::class,'PMPlanList'])  ->name('pm.planlist');
 Route::post('machine/pm/planlist'                            ,[MachinePlanController::class,'PMPlanList']);
 Route::get('machine/pm/plancheck/{UNID}'                     ,[MachinePlanController::class,'PMPlanCheckForm']) ->name('pm.plancheck');
+Route::post('machine/pm/change/sparepart'                     ,[MachinePlanController::class,'SparePart']) ->name('pm.sparepart');
 Route::get('machine/pm/planedit/{UNID}'                      ,[MachinePlanController::class,'PMPlanEditForm']) ->name('pm.planedit');
 Route::post('machine/pm/planlist/save'                       ,[MachinePlanController::class,'PMPlanListSave']) ->name('pm.planlistsave');
 Route::post('machine/pm/planedit/update'                     ,[MachinePlanController::class,'PMPlanListUpdate']) ->name('pm.planlistupdate');

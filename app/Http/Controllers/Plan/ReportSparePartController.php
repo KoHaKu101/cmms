@@ -20,6 +20,7 @@ use App\Models\SettingMenu\MailSetup;
 
 //***************** Controller ************************
 use App\Http\Controllers\MachineAddTable\SparPartController;
+use App\Http\Controllers\Machine\HistoryController;
 use App\Http\Controllers\Plan\headerandfooter\PlanMonthHeaderFooter as planmonthheaderfooter;
 class ReportSparePartController extends Controller
 {
@@ -370,7 +371,8 @@ class ReportSparePartController extends Controller
     }elseif ($request->ACT_QTY == 0) {
       return Response()->json(['res' => false,'name'=>'กรุณาใส่จำนวนที่เปลี่ยน']);
     }
-    $PLAN = SparePartPlan::where('UNID','=',$request->PLAN_UNID)->first();
+    $PLAN_UNID = $request->PLAN_UNID;
+    $PLAN = SparePartPlan::where('UNID','=',$PLAN_UNID)->first();
     $SPAREPART = SparePart::where('UNID','=',$PLAN->SPAREPART_UNID)->first();
     $COST_STD = $PLAN->COST_STD;
     $ACT_QTY = $request->ACT_QTY;
@@ -382,7 +384,7 @@ class ReportSparePartController extends Controller
     $START_TIME = $request->START_TIME;
     $END_TIME = $request->END_TIME;
     $DOWNTIME = Carbon::parse($START_TIME)->diffInRealMinutes($END_TIME);
-    SparePartPlan::where('UNID','=',$request->PLAN_UNID)->update([
+    SparePartPlan::where('UNID','=',$PLAN_UNID)->update([
       'STATUS'         => 'COMPLETE'
       ,'REMARK'        => $request->REMARK
       ,'ACT_QTY'       => $ACT_QTY
@@ -418,6 +420,8 @@ class ReportSparePartController extends Controller
                                                      ,'MODIFY_BY'     => Auth::user()->name
                                                      ,'MODIFY_TIME'   => Carbon::now()
                                           ]);
+    $SAVE_HISTORY = New HistoryController;
+    $SAVE_HISTORY->SaveHistoryPDM($PLAN_UNID,$DOWNTIME);
       return Response()->json(['res' => true]);
 
   }

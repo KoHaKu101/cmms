@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 
-class HistoryRepair extends Model
+class PmPlanSparepart extends Model
 {
 
     use HasFactory;
@@ -17,28 +17,24 @@ class HistoryRepair extends Model
     public $timestamps = false;
     protected $primaryKey = "UNID";
     protected $keyType = 'BigInteger';
-    public $table ='PMCS_CMMS_HISTORY_REPAIR';
+    public $table ='PMCS_CMMS_PM_SPAREPART';
 
     protected $fillable = ['UNID'
-      ,'REPAIR_REQ_UNID'
       ,'PM_PLAN_UNID'
-      ,'SPAREPART_PLAN_UNID'
-      ,'MACHINE_UNID'
+      ,'PLAN_DATE'
+      ,'MACHINE_PLAN_UNID'
       ,'MACHINE_CODE'
+      ,'MACHINE_LINE'
       ,'MACHINE_NAME'
-      ,'DOC_NO'
-      ,'DOC_DATE'
-      ,'DOC_YEAR'
-      ,'DOC_MONTH'
-      ,'DOC_TYPE'
-      ,'REPAIR_REQ_DETAIL'
-      ,'REPAIR_DETAIL'
-      ,'REPAIR_DATE'
-      ,'REPAIR_BY'
+      ,'PM_USER_CHECK'
+      ,'CHANGE_DATE'
+      ,'SPAREPART_UNID'
+      ,'SPAREPART_CODE'
+      ,'SPAREPART_NAME'
+      ,'SPAREPART_COST'
       ,'TOTAL_COST'
+      ,'TOTAL_PIC'
       ,'INSPECTION_BY'
-      ,'APPROVED_BY'
-      ,'DOWN_TIME'
       ,'CREATE_BY'
       ,'CREATE_TIME'
       ,'MODIFY_BY'

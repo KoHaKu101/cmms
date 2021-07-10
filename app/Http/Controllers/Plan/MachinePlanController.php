@@ -17,6 +17,8 @@ use App\Models\Machine\Pmplanresult;
 use App\Models\Machine\MachineLine;
 use App\Models\Machine\Uploadimg;
 use App\Models\Machine\MasterIMPS;
+use App\Models\Machine\Sparepart;
+use App\Models\Machine\PmPlanSparepart;
 //******************** model addtable ***********************
 use App\Models\MachineAddTable\MachinePmTemplateDetail;
 use App\Models\MachineAddTable\MachinePmTemplateList;
@@ -26,7 +28,7 @@ use App\Models\SettingMenu\MailSetup;
 
 //***************** Controller ************************
 use App\Http\Controllers\Machine\UploadImgController;
-
+use App\Http\Controllers\Machine\HistoryController;
 class MachinePlanController extends Controller
 {
   protected  $paging = 10;
@@ -139,7 +141,7 @@ class MachinePlanController extends Controller
 
     $PM_PLANSHOW = MachinePlanPm::where('UNID','=',$UNID)->first();
     $PM_PLAN = MachinePlanPm::where('UNID','=',$UNID)->get();
-
+    $SPAREPART = Sparepart::where('STATUS','!=','1')->orderBy('SPAREPART_NAME')->get();
     $PLAN_DATE_DIFF       = Carbon::now()->diffInDays(Carbon::parse($PM_PLAN[0]->PLAN_DATE),false);
 
     $PLAN_NEXT            = MailSetup::select('PLAN_CHECK')->first();
@@ -170,15 +172,17 @@ class MachinePlanController extends Controller
 
 
         $PM_USER_AND_NOTE = Pmplanresult::where('PM_PLAN_UNID',$UNID)->first();
+        $SPAREPART_RESULT = PmPlanSparepart::where('PM_PLAN_UNID','=',$UNID)->orderBy('SPAREPART_NAME')->get();
         return view('machine.plan.pmplancheck',
-        compact('PM_PLAN','PM_LIST','PM_DETAIL','PM_PLANSHOW','PLAN_UPLOAD_IMG','PM_USER_AND_NOTE'));
+        compact('PM_PLAN','PM_LIST','PM_DETAIL','PM_PLANSHOW','PLAN_UPLOAD_IMG','PM_USER_AND_NOTE','SPAREPART','SPAREPART_RESULT'));
       }
 
 
    return view('machine.plan.pmplancheck',
-   compact('PM_PLAN','PM_LIST','PM_DETAIL','PM_PLANSHOW','PLAN_UPLOAD_IMG','PM_USER_AND_NOTE'));
+   compact('PM_PLAN','PM_LIST','PM_DETAIL','PM_PLANSHOW','PLAN_UPLOAD_IMG','PM_USER_AND_NOTE','SPAREPART'));
   }
   public function PMPlanEditForm($UNID){
+
     Pmplanresult::where('PM_PLAN_UNID','=',$UNID)->update([
       'PM_MASTER_STATUS' => 'EDIT',
     ]);
@@ -201,12 +205,15 @@ class MachinePlanController extends Controller
         $PM_DETAIL = Pmplanresult::where('PM_PLAN_UNID',$UNID)->orderBy('PM_MASTER_DETAIL_INDEX','ASC')->get();
         $pmplanresult = Pmplanresult::where('PM_PLAN_UNID',$UNID)->get();
         $PM_USER_AND_NOTE = Pmplanresult::where('PM_PLAN_UNID',$UNID)->first();
+        $SPAREPART_RESULT = PmPlanSparepart::where('PM_PLAN_UNID','=',$UNID)->orderBy('SPAREPART_NAME')->get();
+        $SPAREPART = Sparepart::where('STATUS','!=','1')->orderBy('SPAREPART_NAME')->get();
         return view('machine.plan.pmplanedit',
-        compact('PM_PLAN','PM_LIST','PM_DETAIL','PM_PLANSHOW','PLAN_UPLOAD_IMG','pmplanresult','PM_USER_AND_NOTE'));
+        compact('PM_PLAN','PM_LIST','PM_DETAIL','PM_PLANSHOW','PLAN_UPLOAD_IMG','pmplanresult','PM_USER_AND_NOTE','SPAREPART','SPAREPART_RESULT'));
 
   }
 
   public function PMPlanListSave(Request $request){
+
     //validated
       $validated = $request->validate([
           'PM_USER_CHECK' => 'required|max:255',
@@ -224,6 +231,8 @@ class MachinePlanController extends Controller
       $PM_USER_CHECK  = $request->PM_USER_CHECK;
       $CHECK_DATE     = $request->CHECK_DATE;
       $MACHINE_UNID   = $request->MACHINE_PLAN_UNID;
+      $SPAREPART_TOTAL= $request->SPAREPART_TOTAL;
+      $ARRAY_COST     = $request->SPAREPART_COST;
       $LIMIT_RETURN_DATE = Carbon::parse($PM_PLAN_DATE)->diffInMonths(Carbon::parse($CHECK_DATE),false);
 
       if ($LIMIT_RETURN_DATE < 0) {
@@ -298,6 +307,10 @@ class MachinePlanController extends Controller
                   $PLAN_PERIOD = $machine->MACHINE_RANK_MONTH;
                   $this->IMPSandPlanUpdate($PM_PLAN_UNID,$CHECK_DATE,$MACHINE_UNID,$PM_MASTER_UNID,$START_TIME,$END_TIME,$DOWNTIME);
                   $this->LoopUpdatePlan($PLAN_PERIOD,$CHECK_DATE,$MACHINE_UNID,$PM_MASTER_UNID);
+                  $TOTAL_COST_SPAREPART = $this->SaveSparePart($PM_PLAN_UNID,$CHECK_DATE,$SPAREPART_TOTAL,$ARRAY_COST,$PM_USER_CHECK);
+                  $SAVEHISTORYPM = new HistoryController;
+                  $SAVEHISTORYPM->SaveHistoryPM($PM_PLAN_UNID,$DOWNTIME,$REMARK,$CHECK_DATE,$PM_USER_CHECK,$TOTAL_COST_SPAREPART );
+
                   DB::commit();
                 }
                 catch (Exception $e) {
@@ -306,6 +319,7 @@ class MachinePlanController extends Controller
                   return redirect()->back();
                 }
                 $pmplanresult = Pmplanresult::where('PM_PLAN_UNID',$PM_PLAN_UNID)->get();
+
                 return redirect('machine/pm/plancheck/'.$PM_PLAN_UNID)->with(compact('pmplanresult'));
               }
             }
@@ -323,6 +337,8 @@ class MachinePlanController extends Controller
     $PM_PLAN_UNID   = $request->PM_PLAN_UNID;
     $PM_USER_CHECK  = $request->PM_USER_CHECK;
     $CHECK_DATE     = $request->CHECK_DATE;
+    $SPAREPART_TOTAL= $request->SPAREPART_TOTAL;
+    $ARRAY_COST     = $request->SPAREPART_COST;
     $PM_PLAN = MachinePlanPm::where('UNID','=',$PM_PLAN_UNID)->first();
     $LIMIT_RETURN_DATE = Carbon::parse($PM_PLAN_DATE)->diffInMonths(Carbon::parse($CHECK_DATE),false);
 
@@ -371,6 +387,10 @@ class MachinePlanController extends Controller
 
             $this->IMPSandPlanUpdate($PM_PLAN_UNID,$CHECK_DATE,$MACHINE_UNID,$PM_MASTER_UNID,$START_TIME,$END_TIME,$DOWNTIME);
             $this->LoopUpdatePlan($PLAN_PERIOD,$CHECK_DATE,$MACHINE_UNID,$PM_MASTER_UNID);
+            $TOTAL_COST_SPAREPART = $this->SaveSparePart($PM_PLAN_UNID,$CHECK_DATE,$SPAREPART_TOTAL,$ARRAY_COST,$PM_USER_CHECK);
+            
+            $SAVEHISTORYPM = new HistoryController;
+            $SAVEHISTORYPM->SaveHistoryPM($PM_PLAN_UNID,$DOWNTIME,$REMARK,$CHECK_DATE,$PM_USER_CHECK,$TOTAL_COST_SPAREPART);
             DB::commit();
           }
            catch (Exception $e) {
@@ -384,6 +404,7 @@ class MachinePlanController extends Controller
 
         }
   public function PMPlanListUpload(Request $request){
+
     $validated = $request->validate([
       'FILE_NAME' => 'mimes:jpeg,png,jpg',
       ],
@@ -428,22 +449,30 @@ class MachinePlanController extends Controller
       if ($checkimg_saved) {
         $saveimg = new UploadImgController;
         $dataimgshow = $saveimg->SaveImg($plan_unid,$new_name,$img_ext);
-        alert()->success('บันทึกภาพสำเร็จ')->autoclose('1500');
+        // alert()->success('บันทึกภาพสำเร็จ')->autoclose('1500');
 
       }
       $dataimg = Uploadimg::where('UNID_REF','=',$plan_unid)->get();
       $PMPLANRESULT = Pmplanresult::where('PM_PLAN_UNID',$plan_unid)->count();
-      if ($PMPLANRESULT > 0) {
-        return redirect('machine/pm/plancheck/'.$plan_unid)->with('autofocus','BTN_UPLOAD');
+      $html = '';
+      foreach ($dataimg as $key => $row_img) {
+        $IMG = asset('../../image/planresult/'.$row_img->UNID_REF.'/'.$row_img->FILE_NAME.'?t='.time());
+        $html.='<a href="'.$IMG.'"
+              class="col-6 col-md-2 my-1 mx--4 hv-100" id="'.$row_img->UNID.'" data-imgunid="'.$row_img->UNID.'">
+              <img src="'.$IMG.'"
+              style="width: 290px;height: 100;left: 0px; top: 0px;" class="img-fluid">
+            </a>';
       }
-      return redirect()->back()->with('autofocus','BTN_UPLOAD');
+      if ($PMPLANRESULT > 0) {
+        return Response()->json(['result' => true,'html' => $html]);
+      }
+      return Response()->json(['result' => true,'html' => $html]);
 
 
   }
   public function DeleteImg(Request $request){
     $imgunid = $request->imgunid;
-
-      $deletestep = Uploadimg::where('UNID','=',$imgunid)->first();
+        $deletestep = Uploadimg::where('UNID','=',$imgunid)->first();
       $plan_unid = $deletestep->UNID_REF;
       $filename = $deletestep->FILE_NAME;
       $data  = array();
@@ -600,5 +629,103 @@ class MachinePlanController extends Controller
   }
   public function PMPlanPrint(){
     return view('machine.plan.planpm');
+  }
+  public function SparePart(Request $request){
+
+    $array_unid = array();
+    $html = '' ;
+    if (!is_array($request->SPAREPART)) {
+      return Response()->json(['html' => $html]);
+    }
+    foreach ($request->SPAREPART as $key => $row) {
+      $array_unid[$key] = $row;
+    }
+    $array_cost = $request->SPAREPART_COST;
+    $DATA_SPAREPART = SparePart::whereIn('UNID',array_keys($array_unid))->orderBy('SPAREPART_NAME')->get();
+
+    foreach ($DATA_SPAREPART as $key => $row_result) {
+      $UNID_SPAREPART = $row_result->UNID;
+      $TOTAL_SPAREPART = $array_unid[$UNID_SPAREPART];
+      $COST = $array_cost[$UNID_SPAREPART] ;
+      $TOTAL_COST = $COST * $TOTAL_SPAREPART ;
+      $html.= '<tr>
+               <td>'.$key+1 .'</td>
+               <td>'.$row_result->SPAREPART_CODE.'</td>
+               <td>'.$row_result->SPAREPART_NAME.'</td>
+               <td class="text-center">'.$TOTAL_SPAREPART.'
+                 <input type="hidden" value="'.$TOTAL_SPAREPART.'"
+                    id="SPAREPART_TOTAL['.$UNID_SPAREPART.']" name="SPAREPART_TOTAL['.$UNID_SPAREPART.']">
+                 <input type="hidden" value="'.$TOTAL_COST.'"
+                    id="SPAREPART_COST['.$UNID_SPAREPART.']" name="SPAREPART_COST['.$UNID_SPAREPART.']">
+               </td>
+               <td class="text-right">'.number_format($COST).' บาท</td>
+               <td class="text-right">'.number_format($TOTAL_COST).' บาท</td>
+               <td>
+                <button type="button" class="btn btn-sm btn-warning mx-1 my-1"
+                  onclick="editsparepart(this)"
+                  data-unid="'.$UNID_SPAREPART.'"
+                  data-cost="'.$COST.'"
+                  data-total="'.$TOTAL_SPAREPART.'"
+                  ><i class="fas fa-edit"></i> แก้ไข</button>
+                <button type="button" class="btn btn-sm btn-danger mx-1 my-1"
+                  onclick="removesparepart(this)"
+                  data-unid="'.$UNID_SPAREPART.'" ><i class="fas fa-trash"></i> ลบ</button>
+               </td>
+      </tr>';
+    }
+    return Response()->json(['html' => $html]);
+  }
+  public function SaveSparePart($PM_PLAN_UNID,$CHECK_DATE,$SPAREPART_TOTAL,$ARRAY_COST,$PM_USER_CHECK){
+    $array_unid = array();
+    $PLAN_UNID = $PM_PLAN_UNID;
+    $CHANGE_DATE = $CHECK_DATE;
+    $SPAREPART_TOTAL = $SPAREPART_TOTAL;
+    $ARRAY_COST = $ARRAY_COST;
+    if (is_array($SPAREPART_TOTAL)) {
+      foreach ($SPAREPART_TOTAL as $key => $row) {
+        $array_unid[$key] = $row;
+      }
+      $DATA_PLAN = MachinePlanPm::where('UNID','=',$PLAN_UNID)->first();
+      $DATA_SPAREPART = SparePart::whereIn('UNID',array_keys($array_unid))->get();
+      $PmPlanSparepart = PmPlanSparepart::where('PM_PLAN_UNID','=',$PLAN_UNID);
+
+      if ($PmPlanSparepart->count() > 0) {
+        $PmPlanSparepart->delete();
+      }
+      $TOTAL_COST_SPAREPART_ALL = 0;
+      foreach ($DATA_SPAREPART as $key => $row_sparepart) {
+
+        $TOTAL_COST_SPAREPART = $TOTAL_COST_SPAREPART_ALL;
+
+        $TOTAL_PIC = $SPAREPART_TOTAL[$row_sparepart->UNID];
+        $SPAREPART_COST = $ARRAY_COST[$row_sparepart->UNID];
+        $TOTAL_COST =  $SPAREPART_COST * $TOTAL_PIC ;
+
+        $TOTAL_COST_SPAREPART_ALL = $TOTAL_COST_SPAREPART + $TOTAL_COST;
+        PmPlanSparepart::insert([
+          'UNID'                =>$this->randUNID('PMCS_CMMS_PM_SPAREPART')
+          ,'PM_PLAN_UNID'       =>$DATA_PLAN->UNID
+          ,'PLAN_DATE'          =>$DATA_PLAN->PLAN_DATE
+          ,'MACHINE_PLAN_UNID'  =>$DATA_PLAN->MACHINE_UNID
+          ,'MACHINE_CODE'       =>$DATA_PLAN->MACHINE_CODE
+          ,'MACHINE_LINE'       =>$DATA_PLAN->MACHINE_LINE
+          ,'MACHINE_NAME'       =>$DATA_PLAN->MACHINE_NAME
+          ,'PM_USER_CHECK'      =>$PM_USER_CHECK
+          ,'CHANGE_DATE'        =>$CHANGE_DATE
+          ,'SPAREPART_UNID'     =>$row_sparepart->UNID
+          ,'SPAREPART_CODE'     =>$row_sparepart->SPAREPART_CODE
+          ,'SPAREPART_NAME'     =>$row_sparepart->SPAREPART_NAME
+          ,'SPAREPART_COST'     =>$ARRAY_COST[$row_sparepart->UNID]
+          ,'TOTAL_COST'         =>$TOTAL_COST
+          ,'TOTAL_PIC'          =>$TOTAL_PIC
+          ,'INSPECTION_BY'      =>Auth::user()->name
+          ,'CREATE_BY'          =>Auth::user()->name
+          ,'CREATE_TIME'        =>Carbon::now()
+          ,'MODIFY_BY'          =>Auth::user()->name
+          ,'MODIFY_TIME'        =>Carbon::now()
+        ]);
+      }
+      return $TOTAL_COST_SPAREPART_ALL;
+    }
   }
 }

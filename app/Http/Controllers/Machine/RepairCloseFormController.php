@@ -592,8 +592,8 @@ class RepairCloseFormController extends Controller
       ,'MODIFY_TIME'          => Carbon::now()
     ]);
     $REPAIR_DATE = $CHECK_WORKER[0]->WORKER_TYPE == 'IN' ? $DATA_REPAIR_FIRST->WORKERIN_END_DATE : $DATA_REPAIR_FIRST->WORKEROUT_END_DATE ;
-    
-    $SAVE_HISTORYREPAIR = new HistoryRepairController;
+
+    $SAVE_HISTORYREPAIR = new HistoryController;
 
     $SAVE_HISTORYREPAIR->SaveHistory($UNID_REPAIR,$MACHINE_REPORT_NO,$REPAIR_DATE,$TOTAL_COST_REPAIR,$DOWNTIME);
     return Response()->json(['pass'=>'true']);
