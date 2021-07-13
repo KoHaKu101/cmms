@@ -61,9 +61,10 @@ class PerMissionController extends Controller
    return View('machine.setting.permission.list',compact('DATA_USER'));
  }
  public function Store(Request $request){
-
    $role = $request->role;
-   $check_role = array("user","manager","admin");
+
+
+   $check_role = array("user","manager_ma","manager_pd","admin");
    if (!in_array($role,$check_role)) {
      alert()->error('เกิดข้อผิดพลาด')->autoclose('1000');
      return redirect()->back();
@@ -76,7 +77,7 @@ class PerMissionController extends Controller
      'name' => $request->name,
      'email' => $request->email,
      'password' => Hash::make($request->password),
-     'role' => $role,
+     'role_v2' => $role,
      'created_at'=> $time,
      'updated_at'=> $time,
    ]);
@@ -86,7 +87,7 @@ class PerMissionController extends Controller
  public function Update(Request $request){
 
    $role = $request->role;
-   $check_role = array("user","manager","admin");
+   $check_role = array("user","manager_ma","manager_pd","admin");
    if (!in_array($role,$check_role)) {
      alert()->error('เกิดข้อผิดพลาด')->autoclose('1000');
      return redirect()->back();
@@ -100,14 +101,14 @@ class PerMissionController extends Controller
       'name' => $request->name,
       'email' => $request->email,
       'password' => $password,
-      'role' => $role,
+      'role_v2' => $role,
       'updated_at'=> $time,
     ]);
   }else {
     $data->update([
       'name' => $request->name,
       'email' => $request->email,
-      'role' => $role,
+      'role_v2' => $role,
       'updated_at'=> $time,
     ]);
   }

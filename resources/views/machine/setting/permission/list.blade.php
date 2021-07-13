@@ -56,13 +56,13 @@
     										</thead>
     										<tbody>
                           @php
-                            $role = array('user' => 'User','manager' => 'Manager','admin' => 'Admin');
+                            $role = array('user' => 'User','manager_ma' => 'Manager_MA','manager_pd' => 'Manager_PD','admin' => 'Admin');
                           @endphp
                           @foreach ($DATA_USER as $index => $row)
     											<tr>
     												<td>{{$index+1}}</td>
     												<td>{{$row->name}}</td>
-    												<td>{{$role[$row->role]}}</td>
+    												<td>{{$role[$row->role_v2]}}</td>
     												<td>12/06/2021 08:07</td>
                             <td>
                               <button type="button" class="btn btn-warning btn-sm mx-1 my-1"
@@ -71,7 +71,7 @@
                               data-name="{{$row->name}}"
                               data-password = "{{ $row->password }}"
                               data-email="{{$row->email}}"
-                              data-role="{{$row->role}}">
+                              data-role="{{$row->role_v2}}">
                                 <i class="fas fa-edit"></i>แก้ไข</button>
                               @can ('isAdmin')
                                 <button type="button" class="btn btn-danger btn-sm mx-1 my-1"
@@ -134,10 +134,13 @@
   											<label for="email" class="col-lg-4 col-md-3 col-sm-4 mt-sm-2 text-right mr-2">สิทธิ์การใช้งาน</label>
   											<div class="col-lg-6 col-md-9 col-sm-8 role">
   												<select class="form-control form-control-sm" id="role" name="role" required>
-                            <option value>กรุณาเลือก</option>
-                            <option value="user">User</option>
-                            <option value="manager">Manager</option>
-                            <option value="admin">Admin</option>
+														<option value>กรุณาเลือก</option>
+														@foreach ($role as $key => $value)
+															<option value="{{$key}}">{{$value}}</option>
+	                            {{-- <option value="{{$key}}">{{$value}}</option> --}}
+	                            {{-- <option value="{{$key}}">{{$value}}</option> --}}
+														@endforeach
+
                           </select>
   											</div>
   										</div>

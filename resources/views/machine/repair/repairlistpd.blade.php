@@ -102,7 +102,7 @@
 							<div class="col-md-12">
 								<div class="card ">
 								  <div class="card-header bg-primary  ">
-										<form action="{{ route('repair.list') }}" method="POST" id="FRM_SEARCH"enctype="multipart/form-data">
+										<form action="{{ route('pd.repairlist') }}" method="POST" id="FRM_SEARCH"enctype="multipart/form-data">
 											@method('GET')
 											@csrf
 								        <div class="row ">
@@ -133,7 +133,7 @@
 															<select class="form-control form-control-sm mt-1 mx-1" id="DOC_STATUS" name="DOC_STATUS"onchange="changesubmit()">
 																<option value="0">ทั้งหมด</option>
 																<option value="9" {{ $DOC_STATUS == "9" ? 'selected' : "" }}>กำลังดำเนินการ</option>
-																<option value="1" {{ $DOC_STATUS == "1" ? 'selected' : "" }}>ปิดเอกสาร</option>
+																<option value="1" {{ $DOC_STATUS == "1" ? 'selected' : "" }}>ดำเนินการเรียบร้อย</option>
 															</select>
 														<label class="text-white mx-1">ค้นหา : </label>
 								              <div class="input-group mx-1">
@@ -218,18 +218,21 @@
 
 																</div>
 															</div>
-															<div class="row ">
-																<div class="col-md-12 text-center">
-																	<button class="btn  btn-primary  btn-sm"
-																	onclick="rec_work(this)"
-																	data-unid="{{ $row->UNID }}"
-																	data-docno="{{ $row->DOC_NO }}"
-																	data-detail="{{ $row->REPAIR_SUBSELECT_NAME }}">
-																		SELECT
-																	</button>
-																</div>
+															@if ($row->CLOSE_STATUS == '1')
+																<div class="row ">
+																	<div class="col-md-12 text-center">
+																		<button class="btn  btn-primary  btn-sm"
+																		onclick="rec_work(this)"
+																		data-unid="{{ $row->UNID }}"
+																		data-docno="{{ $row->DOC_NO }}"
+																		data-detail="{{ $row->REPAIR_SUBSELECT_NAME }}">
+																			SELECT
+																		</button>
+																	</div>
 
-															</div>
+																</div>
+															@endif
+
 														</div>
 													</div>
 												</div>
@@ -263,7 +266,8 @@
 															$REC_WORK_STATUS  = isset($array_EMP[$sub_row->INSPECTION_CODE]) ? $array_EMP[$sub_row->INSPECTION_CODE] : 'รอรับงาน';
 															$BTN_COLOR_STATUS = $sub_row->INSPECTION_CODE == '' ? 'btn-mute' : ($sub_row->CLOSE_STATUS == '1' ? 'btn-success' : 'btn-info') ;
 															$BTN_COLOR 			  = $sub_row->INSPECTION_CODE == '' ? 'btn-danger' : 'btn-secondary' ;
-															$BTN_TEXT  			  = $sub_row->INSPECTION_CODE == '' ? 'รอรับงาน' : ($sub_row->CLOSE_STATUS == '1' ? 'เรียบร้อย' : 'กำลังดำเนินการ') ;
+															$BTN_TEXT  			  = $sub_row->INSPECTION_CODE == '' ? 'รอรับงาน' : ($sub_row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ' : 'กำลังดำเนินการ') ;
+															$BTN_TEXT					= $sub_row->PD_CODE != '' ? 'ปิดเอกสารแล้ว' : $BTN_TEXT;
 														@endphp
 								            <tr >
 															<td>{{ $key+1 }}</td>
@@ -285,7 +289,7 @@
 								                  </td>
 								                  <td >
 																		@can('isAdminandManager')
-																			<button onclick="rec_work(this)" type="button"
+																			<button  {{ $sub_row->CLOSE_STATUS == '1' ? 'onclick=rec_work(this)' : '' }} type="button"
 																			data-unid="{{ $sub_row->UNID }}"
 																			data-docno="{{ $sub_row->DOC_NO }}"
 																			data-detail="{{ $sub_row->REPAIR_SUBSELECT_NAME }}"
@@ -331,7 +335,7 @@
 <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
 <script>
 $(document).ready(function(){
-		var url = "{{ route('repair.fetchdata') }}";
+		var url = "{{ route('pd.fetchdata') }}";
 		var data = $('#FRM_SEARCH').serialize();
 		var loaddata_table_all = function (){
 			$.ajax({
@@ -389,45 +393,66 @@ function styletable(table_style){
 				 success:function(result){
 					 $("#overlayinpage").fadeOut(300);
 					 $("#WORK_STEP_RESULT").html(result.html);
-					 $('#stepsave').html(result.footer)
+					 $('#stepsave').html(result.footer);
 					 $('#TITLE_DOCNO_SUB').html(docno);
-					 $('#show-detail').html('อาการเสีย : '+detail)
+					 $('#show-detail').html('อาการเสีย : '+detail);
 					 $("#Result").modal('show');
+					 $('#ConFirm').on('click',function(event){
+				 		event.preventDefault();
+						$("#overlay").fadeIn(300);
+				 		var urlsub = "{{ route('pd.confirm') }}";
+				 		var unid = $(this).attr('data-unid');
+				 		var emp_code = $('#EMP_CODE').val();
+				 		if (emp_code != "") {
+				 			$.ajax({
+				 					 type:'POST',
+				 					 url: urlsub,
+				 					 data: {REPAIR_REQ_UNID : unid,
+				 			 		 				USER_PD_CODE    : emp_code},
+				 					 datatype: 'json',
+				 					 success:function(result){
+				 						 $("#overlay").fadeOut(300);
+										 if (result.pass) {
+											 Swal.fire({
+				 				 				  icon: 'success',
+				 				 				  title: 'บันทึกสำเร็จ',
+				 				 				  timer: 1500,
+				 				 				}).then((Result)=>{
+													$.ajax({
+										 					 type:'POST',
+										 					 url: url,
+										 					 data: {REPAIR_REQ_UNID : repair_unid},
+										 					 datatype: 'json',
+										 					 success:function(result){
+																 $("#WORK_STEP_RESULT").html(result.html);
+																 $('#stepsave').html(result.footer);
+															 }
+														 });
+												});
+										 }else {
+											 Swal.fire({
+ 								 				  icon: 'error',
+ 								 				  title: 'เกิดข้อผิดพลาด',
+ 								 				  timer: 1500,
+ 								 				});
+										 }
+
+				 					 }
+				 				 });
+				 		}else {
+							$("#overlay").fadeOut(300);
+				 			Swal.fire({
+				 				  icon: 'error',
+				 				  title: 'กรุณาใส่ชื่อผู้ตรวจสอบ',
+				 				  timer: 1500,
+				 				});
+				 		}
+
+				 	});
 				 }
 			 });
 	}
-	$('#ConFirm').on('click',function(event){
-		event.preventDefault();
 
-		var url = "{{ route('pd.confirm') }}";
-		var unid = $(this).attr('data-unid');
-		var emp_code = $('#EMP_CODE').val();
-		if (emp_code != "") {
-			$("#overlayinpage").fadeIn(300);
-			$.ajax({
-					 type:'POST',
-					 url: url,
-					 data: {REPAIR_REQ_UNID : unid,
-			 		 				USER_PD_CODE    : emp_code},
-					 datatype: 'json',
-					 success:function(result){
-						 $("#overlayinpage").fadeOut(300);
-						 $("#WORK_STEP_RESULT").html(result.html);
-						 $('#stepsave').html(result.footer)
-						 $('#TITLE_DOCNO_SUB').html(docno);
-						 $('#show-detail').html('อาการเสีย : '+detail)
-						 $("#Result").modal('show');
-					 }
-				 });
-		}else {
-			Swal.fire({
-				  icon: 'error',
-				  title: 'กรุณาใส่ชื่อผู้ตรวจสอบ',
-				  timer: 1500,
-				});
-		}
-
-	});
 
 </script>
 <script type="text/javascript">

@@ -26,7 +26,9 @@ class RepairSaveFormPDFController extends Controller
   public function RepairSaveForm($UNID = NULL){
     $Check = "assets/img/checkBox.png";
     $UnCheck = "assets/img/Uncheck.png";
-    $DATA_REPAIR_REQ = MachineRepairREQ::select('*')->selectraw("dbo.decode_utf8(INSPECTION_NAME)as INSPECTION_NAME")->where('UNID','=',$UNID)->first();
+    $DATA_REPAIR_REQ = MachineRepairREQ::select('*')->selectraw("dbo.decode_utf8(INSPECTION_NAME)as INSPECTION_NAME
+                                                                ,dbo.decode_utf8(PD_NAME) as PD_NAME_TH ")
+                                                                ->where('UNID','=',$UNID)->first();
     $DATA_WORKER = RepairWorker::select('WORKER_TYPE')->selectraw('dbo.decode_utf8(WORKER_NAME) as WORKER_NAME_TH')->where('REPAIR_REQ_UNID','=',$UNID)->get();
     $DATA_SPAREPART = RepairSparepart::where('REPAIR_REQ_UNID','=',$UNID)->get();
     $TYPE_WORKER = $DATA_WORKER[0]->WORKER_TYPE;
@@ -262,24 +264,32 @@ class RepairSaveFormPDFController extends Controller
     $this->pdf->Cell(110,$height[0],iconv('UTF-8', 'cp874', 'รวมทั้งหมด '),1,0,'C',1);
     $this->pdf->Cell(20,$height[0],iconv('UTF-8', 'cp874', number_format($DATA_REPAIR_REQ->TOTAL_COST_SPAREPART)),1,1,'C',1);
     $this->pdf->SetY(260);
-    $this->pdf->Cell(194,8,iconv('UTF-8', 'cp874', '*การรับประกันหลังซ่อม : .......................................................................................................................................................................................................................................'),0,1,'L',0);
+    $this->pdf->Cell(194,13,iconv('UTF-8', 'cp874', '*การรับประกันหลังซ่อม : .......................................................................................................................................................................................................................................'),0,1,'L',0);
 
     $this->pdf->Cell(80,$height[0],iconv('UTF-8', 'cp874', 'สรุประยะเวลาการซ่อมเครื่องจักร (A+B+C)'),1,0,'C',0);
     $this->pdf->Cell(60,$height[0],iconv('UTF-8', 'cp874', 'ฝ่ายผลิตลงชื่อรับ '),1,0,'C',0);
     $this->pdf->Cell(54,$height[0],iconv('UTF-8', 'cp874', 'วันที่ตรวจสอบ '),1,1,'C',0);
-    $this->pdf->Cell(80,15,iconv('UTF-8', 'cp874', ''),1,0,'C',0);
-    $this->pdf->Cell(60,15,iconv('UTF-8', 'cp874', ''),1,0,'C',0);
-    $this->pdf->Cell(54,15,iconv('UTF-8', 'cp874', ''),1,1,'C',0);
+    $this->pdf->Cell(80,10,iconv('UTF-8', 'cp874', ''),1,0,'C',0);
+    $this->pdf->Cell(60,10,iconv('UTF-8', 'cp874', ''),1,0,'C',0);
+    $this->pdf->Cell(54,10,iconv('UTF-8', 'cp874', ''),1,1,'C',0);
     $this->pdf->Text(10,292,iconv('UTF-8', 'cp874', 'อายุการจัดเก็บ 1 ปี'));
     $this->pdf->Text(170,292,iconv('UTF-8', 'cp874', 'FM-MA-08 REV.3 :15 Oct 09'));
 
-    $this->pdf->Text(22,282,iconv('UTF-8', 'cp874',$hour));
-    $this->pdf->Text(46,282,iconv('UTF-8', 'cp874',$minutes));
-    $this->pdf->Text(73,282,iconv('UTF-8', 'cp874',$DATA_REPAIR_REQ->DOWNTIME));
-
-    $this->pdf->Text(15,283,iconv('UTF-8', 'cp874','...................ชม.'));
-    $this->pdf->Text(40,283,iconv('UTF-8', 'cp874','...................นาที'));
-    $this->pdf->Text(65,283,iconv('UTF-8', 'cp874','รวม...................นาที'));
+    $this->pdf->Text(22,284,iconv('UTF-8', 'cp874',$hour));
+    $this->pdf->Text(46,284,iconv('UTF-8', 'cp874',$minutes));
+    $this->pdf->Text(73,284,iconv('UTF-8', 'cp874',$DATA_REPAIR_REQ->DOWNTIME));
+    // $this->pdf->SetFont('THSarabunNew','',16 );
+    $this->pdf->Text(109,284,iconv('UTF-8', 'cp874',$DATA_REPAIR_REQ->PD_NAME_TH));
+    if ($DATA_REPAIR_REQ->PD_CHECK_DATE != '') {
+      $DATE = date('d-m-Y',strtotime($DATA_REPAIR_REQ->PD_CHECK_DATE));
+    }else {
+      $DATE = '';
+    }
+    $this->pdf->Text(169,284,iconv('UTF-8', 'cp874',$DATE));
+    // $this->pdf->SetFont('THSarabunNew','',12 );
+    $this->pdf->Text(15,285,iconv('UTF-8', 'cp874','...................ชม.'));
+    $this->pdf->Text(40,285,iconv('UTF-8', 'cp874','...................นาที'));
+    $this->pdf->Text(65,285,iconv('UTF-8', 'cp874','รวม...................นาที'));
 
     $this->pdf->Output();
   }

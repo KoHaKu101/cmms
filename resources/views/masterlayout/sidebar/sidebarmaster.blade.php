@@ -28,11 +28,14 @@
                  <ul class="nav nav-collapse">
              ';
 
-             if (Gate::allows('isManager')) {
+             if (Gate::allows('isManager_Ma')) {
                   $MenuSubitem=Menusubitem::where('SUBUNID_REF',$_UNID)->where('SUBMENU_STATUS','=',9)->orderby('SUBMENU_INDEX','ASC')->get();
-              } else {
-                  $MenuSubitem = Menusubitem::where('SUBUNID_REF',$_UNID)->orderby('SUBMENU_INDEX','ASC')->get();
+              } elseif ((Gate::allows('isAdmin'))) {
+                $MenuSubitem = Menusubitem::where('SUBUNID_REF',$_UNID)->orderby('SUBMENU_INDEX','ASC')->get();
+              }elseif (Gate::allows('isManager_Pd')) {
+                $MenuSubitem = Menusubitem::where('SUBUNID_REF',$_UNID)->where('SUBMENU_STATUS','=',8)->orderby('SUBMENU_INDEX','ASC')->get();
               }
+
 
             foreach ($MenuSubitem as $subvalue) {
 

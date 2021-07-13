@@ -19,8 +19,9 @@ use App\Models\Machine\EMPName;
 use App\Models\Machine\RepairWorker;
 use App\Models\Machine\RepairSparepart;
 use App\Models\Machine\MachineLine;
-
+use App\Models\Machine\EMPALL;
 use App\Models\Machine\MachineRepairREQ;
+use App\Models\Machine\History;
 //************** Package form github ***************
 use App\Exports\MachineExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -58,7 +59,7 @@ class PDRepairController extends Controller
     $LINE = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
     $MACHINE_LINE = isset($request->LINE) ? $request->LINE : '';
     $MONTH = isset($request->MONTH) ? $request->MONTH : date('m') ;
-    $DOC_STATUS = isset($request->DOC_STATUS) ? $request->DOC_STATUS : 0 ;
+    $DOC_STATUS = isset($request->DOC_STATUS) ? $request->DOC_STATUS : 9 ;
     $YEAR = isset($request->YEAR) ? $request->YEAR : date('Y') ;
     $DATA_EMP = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->where('EMP_STATUS','=',9)->get();
     $dataset = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
@@ -86,9 +87,10 @@ class PDRepairController extends Controller
                                                   })
                                             ->where(function ($query) use ($DOC_STATUS) {
                                                   if ($DOC_STATUS > 0) {
-                                                      $query->where('CLOSE_STATUS', '=', $DOC_STATUS);
+                                                      $query->where('PD_CHECK_STATUS', '=', $DOC_STATUS);
                                                    }
                                                  })
+                                            ->orderBy('PD_CODE','ASC')
                                             ->orderBy('DOC_YEAR','DESC')
                                             ->orderBy('DOC_MONTH','DESC')
                                             ->orderBy('DOC_NO','DESC')
@@ -130,9 +132,10 @@ class PDRepairController extends Controller
                                                   })
                                             ->where(function ($query) use ($DOC_STATUS) {
                                                   if ($DOC_STATUS > 0) {
-                                                      $query->where('CLOSE_STATUS', '=', $DOC_STATUS);
+                                                      $query->where('PD_CHECK_STATUS', '=', $DOC_STATUS);
                                                    }
                                                  })
+                                            ->orderBy('PD_CODE','ASC')
                                             ->orderBy('DOC_YEAR','DESC')
                                             ->orderBy('DOC_MONTH','DESC')
                                             ->orderBy('DOC_NO','DESC')
@@ -144,7 +147,8 @@ class PDRepairController extends Controller
       $REC_WORK_STATUS  = isset($row->INSPECTION_CODE) ? $row->INSPECTION_NAME_TH : 'รอรับงาน';
       $BTN_COLOR_STATUS = $row->INSPECTION_CODE == '' ? 'btn-mute' : ($row->CLOSE_STATUS == '1' ? 'btn-success' : 'btn-info') ;
       $BTN_COLOR 			  = $row->INSPECTION_CODE == '' ? 'btn-danger' : 'btn-secondary' ;
-      $BTN_TEXT  			  = $row->INSPECTION_CODE == '' ? 'รอรับงาน' : ($row->CLOSE_STATUS == '1' ? 'ปิดเอกสาร' : 'การดำเนินงาน') ;
+      $BTN_TEXT  			  = $row->INSPECTION_CODE == '' ? 'รอรับงาน' : ($row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ' : 'การดำเนินงาน') ;
+      $BTN_TEXT					= $row->PD_CODE != '' ? 'ปิดเอกสารแล้ว' : $BTN_TEXT;
       $html.= '<tr>
                 <td>'.$key+1 .'</td>
                 <td >'.date('d-m-Y',strtotime($row->DOC_DATE)).'</td>
@@ -165,8 +169,14 @@ class PDRepairController extends Controller
                   </button>
                 </td>';
                 if (Gate::allows("isAdminandManager")) {
+                  if ($row->CLOSE_STATUS == 1) {
+                    $BTN_CONFIRM = "onclick=rec_work(this)";
+                  }else {
+                    $BTN_CONFIRM = '';
+                  }
                   $html.='<td >
-                      <button onclick="rec_work(this)" type="button"
+                      <button '.$BTN_CONFIRM.'
+                      type="button"
                       data-unid="'.$row->UNID.'"
                       data-docno="'.$row->DOC_NO.'"
                       data-detail="'.$row->REPAIR_SUBSELECT_NAME.'"
@@ -211,21 +221,23 @@ class PDRepairController extends Controller
                       }
                     $html_style .='</div>
                 </div>
-              </div>
-              <div class="row ">
-                <div class="col-md-12 text-center">
-                  <button class="btn  btn-primary  btn-sm"
-                  onclick="rec_work(this)"
-                  data-unid="'.$sub_row->UNID.'"
-                  data-docno="'.$sub_row->DOC_NO.'"
-                  data-detail="'.$sub_row->REPAIR_SUBSELECT_NAME.'">
-                    SELECT
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>';
+              </div>';
+              if ($sub_row->CLOSE_STATUS == 1) {
+                $html_style.='<div class="row ">
+                  <div class="col-md-12 text-center">
+                    <button class="btn  btn-primary  btn-sm"
+                    onclick="rec_work(this)"
+                    data-unid="'.$sub_row->UNID.'"
+                    data-docno="'.$sub_row->DOC_NO.'"
+                    data-detail="'.$sub_row->REPAIR_SUBSELECT_NAME.'">
+                      SELECT
+                    </button>
+                  </div>
+                </div>';
+              }
+            $html_style.='</div>
+                        </div>
+                      </div>';
       }
     return Response()->json(['html'=>$html,'html_style' => $html_style]);
   }
@@ -298,13 +310,15 @@ class PDRepairController extends Controller
     $DATA_SPAREPART     = RepairSparepart::select('SPAREPART_CODE','SPAREPART_NAME','SPAREPART_TOTAL_OUT','SPAREPART_COST','SPAREPART_TOTAL_COST')
                                           ->where('REPAIR_REQ_UNID','=',$UNID_REPAIR)->orderBy('SPAREPART_NAME')->get();
 
-    $REPAIR_REQ         = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH')
+    $REPAIR_REQ         = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH
+                                                                   ,dbo.decode_utf8(PD_NAME) as PD_NAME_TH')
                                           ->where('UNID','=',$UNID_REPAIR)->first();
     $DATA_PD            = DB::select("select dbo.decode_utf8(EMP_TH_NAME_FIRST) as EMP_TH_NAME_FIRST_TH
+                                            ,dbo.decode_utf8(EMP_TH_NAME_LAST) as EMP_TH_NAME_LAST_TH
                                             ,EMP_CODE
                                       from EMCS_EMPLOYEE  where LINE_CODE = 'PD' and EMP_STATUS = '9'");
 
-    $PLANING_CHECK_BY   = isset($REPAIR_REQ->PD_CHECK_BY) ? $REPAIR_REQ->PD_CHECK_BY : '';
+    $PLANING_CHECK_BY   = isset($REPAIR_REQ->PD_CODE) ? $REPAIR_REQ->PD_CODE : '';
     $DOC_DATE           =  Carbon::create($REPAIR_REQ->DOC_DATE.$REPAIR_REQ->REPAIR_REQ_TIME) ;
     if (isset($REPAIR_REQ->WORKERIN_END_DATE)) {
       $END_DATE = Carbon::create($REPAIR_REQ->WORKERIN_END_DATE.$REPAIR_REQ->WORKERIN_END_TIME);
@@ -326,7 +340,7 @@ class PDRepairController extends Controller
      $TEXT = '<select class="form-control form-control-sm col-lg-4 " id="EMP_CODE" name="EMP_CODE">
              <option value>กรุณาเลือก</option>';
              foreach ($DATA_PD as $index => $row_pd) {
-               $TEXT.='<option value="'.$row_pd->EMP_CODE.'">'.$row_pd->EMP_TH_NAME_FIRST_TH.'</option>';
+               $TEXT.='<option value="'.$row_pd->EMP_CODE.'">'.$row_pd->EMP_TH_NAME_FIRST_TH.' '.$row_pd->EMP_TH_NAME_LAST_TH.'</option>';
              }
             $TEXT.='</select>';
      $BTN = '<button type="button" class="btn btn-secondary btn-sm  text-right"
@@ -334,7 +348,7 @@ class PDRepairController extends Controller
                <i class="fas fa-clipboard-check fa-2x"> ปิดเอกสาร</i>
              </button>';
    }else {
-     $TEXT = '<input type="text" class="form-control form-control-sm col-lg-4" value="'.$PLANING_CHECK_BY.'" readonly>';
+     $TEXT = '<input type="text" class="form-control-sm form-control-plaintext bg-success text-white text-center mx-2 col-lg-4" value="'.$REPAIR_REQ->PD_NAME_TH.'" >';
      $BTN  = '<button type="button" class="btn btn-secondary btn-sm text-right"
                data-dismiss="modal" >
                  <i class="fas fa-door-open fa-2x"> ออก</i>
@@ -464,7 +478,24 @@ class PDRepairController extends Controller
 
   }
  public function ConFirm(Request $request){
-   dd($request);
+
+   $UNID     = $request->REPAIR_REQ_UNID;
+   $PD_CODE  = $request->USER_PD_CODE;
+   $DATA_PD  = EMPALL::select("EMP_TH_NAME_FIRST",'EMP_TH_NAME_LAST','EMP_CODE','UNID')->where('EMP_CODE','=',$PD_CODE)->where('EMP_STATUS','=','9')->first();
+   $PD_NAME  = $DATA_PD->EMP_TH_NAME_FIRST.' '.$DATA_PD->EMP_TH_NAME_LAST;
+
+   MachineRepairREQ::where('UNID','=',$UNID)->update([
+      'PD_UNID'       => $DATA_PD->UNID
+     ,'PD_CODE'       => $DATA_PD->EMP_CODE
+     ,'PD_NAME'       => $PD_NAME
+     ,'PD_CHECK_DATE' => date('Y-m-d')
+     ,'PD_CHECK_TIME' => date('H:i:s')
+     ,'PD_CHECK_STATUS' => 1
+   ]);
+   History::where('REPAIR_REQ_UNID','=',$UNID)->update([
+     'PD_CHECK_BY' => $DATA_PD->UNID
+   ]);
+   return Response()->json(['pass'=>'true']);
  }
 
 }

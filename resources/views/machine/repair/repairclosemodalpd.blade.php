@@ -54,6 +54,7 @@ body.modal-open {
     }
   }
 </style>
+
 <div class="modal fade" id="Result" tabindex="-1" role="dialog" aria-labelledby="exampleModalLalavel" aria-hidden="true">
   <div id="overlay">
     <div class="cv-spinner">
@@ -91,7 +92,7 @@ body.modal-open {
               <div class="col-md-12 col-lg-10 modal-footer" id="stepsave">
 
               </div>
-              
+
             </div>
           </div>
 
