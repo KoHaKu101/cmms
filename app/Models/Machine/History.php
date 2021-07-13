@@ -38,6 +38,7 @@ class History extends Model
       ,'TOTAL_COST'
       ,'INSPECTION_BY'
       ,'APPROVED_BY'
+      ,'PD_CHECK_BY'
       ,'DOWN_TIME'
       ,'CREATE_BY'
       ,'CREATE_TIME'

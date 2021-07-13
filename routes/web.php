@@ -25,6 +25,7 @@ use App\Http\Controllers\Machine\PerMissionController;
 //************************* History ************************************
 use App\Http\Controllers\Machine\HistoryController;
 //************************* Repair *************************************
+use App\Http\Controllers\Machine\PDRepairController;
 use App\Http\Controllers\Machine\MachineRepairController;
 use App\Http\Controllers\Machine\RepairCloseFormController;
 
@@ -87,6 +88,11 @@ Route::get('/machine/repair/savepdf/{UNID}',    'App\Http\Controllers\PDF\Repair
 //Cookie
 Route::get('/cookie/set',[CookieController::class,'setCookie'])->name('cookie.set');
 Route::get('/cookie/get',[CookieController::class,'getCookie'])->name('cookie.get');
+//repair for pd
+Route::get('machine/pd/repairlist'                       ,[PDRepairController::class,'Index'])        ->name('pd.repairlist');
+Route::get('machine/pd/fetchdata'                        ,[PDRepairController::class,'FetchData'])    ->name('pd.fetchdata');
+Route::post('machine/pd/result'                           ,[PDRepairController::class,'ShowResult'])   ->name('pd.result');
+Route::post('machine/pd/confirm'                           ,[PDRepairController::class,'ConFirm'])   ->name('pd.confirm');
 //repair
 
 Route::get('machine/repair/repairlist'                    ,[MachineRepairController::class,'Index'])             ->name('repair.list');
@@ -223,15 +229,15 @@ Route::get('machine/spart/report'                            ,[ReportSparePartCo
   Route::get('machine/spart/report/planpdm/list'                 ,[ReportSparePartController::class,'PlanPDMList']) ->name('SparPart.Report.PlanPDMList');
 //machine sparepart
 Route::get('machine/machinespart/getlistsparepart/{UNID}'     ,[MachineSparePartController::class,'GetListSparepart']) ->name('MachineSparPart.GetListSparepart');
-Route::get('machine/machinespart/save'                        ,[MachineSparePartController::class,'Save']) ->name('MachineSparPart.Save');
-Route::post('machine/machinespart/update'                     ,[MachineSparePartController::class,'Update']) ->name('MachineSparPart.Update');
-Route::get('machine/machinespart/delete'                      ,[MachineSparePartController::class,'Delete']) ->name('MachineSparPart.Delete');
-Route::get('machine/machinespart/statusopen'                  ,[MachineSparePartController::class,'StatusOpen']) ->name('MachineSparPart.StatusOpen');
+  Route::get('machine/machinespart/save'                        ,[MachineSparePartController::class,'Save']) ->name('MachineSparPart.Save');
+  Route::post('machine/machinespart/update'                     ,[MachineSparePartController::class,'Update']) ->name('MachineSparPart.Update');
+  Route::get('machine/machinespart/delete'                      ,[MachineSparePartController::class,'Delete']) ->name('MachineSparPart.Delete');
+  Route::get('machine/machinespart/statusopen'                  ,[MachineSparePartController::class,'StatusOpen']) ->name('MachineSparPart.StatusOpen');
 //postion emp
 route::get('machine/position/positionlist/{POSITION_CODE?}'  ,[PositionEmpController::class,'List']) ->name('position.list');
-route::post('machine/position/save'                          ,[PositionEmpController::class,'Save']) ->name('position.save');
-route::post('machine/position/update'                        ,[PositionEmpController::class,'Update']) ->name('position.update');
-route::get('machine/position/delete'                        ,[PositionEmpController::class,'Delete']) ->name('position.delete');
+  route::post('machine/position/save'                          ,[PositionEmpController::class,'Save']) ->name('position.save');
+  route::post('machine/position/update'                        ,[PositionEmpController::class,'Update']) ->name('position.update');
+  route::get('machine/position/delete'                        ,[PositionEmpController::class,'Delete']) ->name('position.delete');
   //***************************** PlanPm ****************************************
 Route::get('machine/plan/planpm'                             ,[MachinePlanController::class,'PMPlanPrint']) ->name('plan.pm');
 Route::post('machine/plan/planpmpdf'                         ,[MachinePlanController::class,'PdfPlanPm']) ->name('plan.pmpdf');

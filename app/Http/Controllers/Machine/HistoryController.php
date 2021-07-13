@@ -48,20 +48,44 @@ class HistoryController extends Controller
 
 
   public function RepairList(Request $request){
-    $DOC_TYPE = isset($request->DOC_TYPE) ? $request->DOC_TYPE : 'REPAIR';
+    $DOC_TYPE   = isset($request->DOC_TYPE)   ? $request->DOC_TYPE  : ($request->cookie('DOC_TYPE')   != '' ? $request->cookie('DOC_TYPE')  : 'REPAIR');
+    $DOC_YEAR   = isset($request->DOC_YEAR)   ? $request->DOC_YEAR  : ($request->cookie('DOC_YEAR')   != '' ? $request->cookie('DOC_YEAR')  : date('Y')) ;
+    $DOC_MONTH  = isset($request->DOC_MONTH)  ? $request->DOC_MONTH : ($request->cookie('DOC_MONTH')  != '' ? $request->cookie('DOC_MONTH') : date('n')) ;
+    $SEARCH     = isset($request->SEARCH)     ? $request->SEARCH    : ($request->cookie('SEARCH')     != '' ? $request->cookie('SEARCH')    : '') ;
+
+    $MINUTES = 30;
+    Cookie::queue('DOC_TYPE'  ,$DOC_TYPE  ,$MINUTES);
+    Cookie::queue('DOC_YEAR'  ,$DOC_YEAR  ,$MINUTES);
+    Cookie::queue('DOC_MONTH' ,$DOC_MONTH ,$MINUTES);
+    Cookie::queue('SEARCH'    ,$SEARCH    ,$MINUTES);
     $DATA_REPAIR_HEADER = History::select('MACHINE_UNID','MACHINE_CODE','MACHINE_NAME')
                                             ->where(function($query) use($DOC_TYPE){
                                               $query->where('DOC_TYPE','=',$DOC_TYPE);
                                             })
+                                            ->where(function($query) use($DOC_YEAR){
+                                              if ($DOC_YEAR > 0) {
+                                                $query->where('DOC_YEAR','=',$DOC_YEAR);
+                                              }
+                                            })
+                                            ->where(function($query) use($DOC_MONTH){
+                                              if ($DOC_MONTH > 0) {
+                                                $query->where('DOC_MONTH','=',$DOC_MONTH);
+                                              }
+                                            })
+                                            ->where(function($query) use ($SEARCH){
+                                              if ($SEARCH != '') {
+                                                $query->where('MACHINE_CODE','like','%'.$SEARCH.'%');
+                                              }
+                                            })
                                             ->groupBy('MACHINE_UNID','MACHINE_CODE','MACHINE_NAME')
-                                            ->orderBy('MACHINE_CODE')->get();
+                                            ->orderBy('MACHINE_CODE')->paginate(5);
 
     if ($DOC_TYPE == 'REPAIR') {
       $DATA_REPAIR        = History::select('*')->selectraw('dbo.decode_utf8(INSPECTION_BY) as INSPECTION_BY_TH')
                                           ->where('DOC_TYPE','=','REPAIR')
                                           ->orderBy('MACHINE_CODE')->get();
       $DATA_SPAREPART     = RepairSparepart::orderBy('SPAREPART_NAME')->get();
-      $COMPACT_NAME = compact('DATA_REPAIR','DATA_REPAIR_HEADER','DATA_SPAREPART','DOC_TYPE');
+      $COMPACT_NAME = compact('DOC_TYPE','DATA_REPAIR_HEADER','DOC_YEAR','DOC_MONTH','SEARCH','DATA_SPAREPART','DATA_REPAIR');
     }elseif ($DOC_TYPE == 'PLAN_PM') {
       $DATA_PLANPM        = History::select('*')->selectraw('dbo.decode_utf8(INSPECTION_BY) as INSPECTION_BY_TH')
                                           ->where('DOC_TYPE','=','PLAN_PM')
@@ -74,7 +98,13 @@ class HistoryController extends Controller
                                         ->groupBy('PM_MASTER_LIST_INDEX')
                                         ->orderBy('PM_MASTER_LIST_INDEX')->get();
 
-      $COMPACT_NAME = compact('DATA_PLANPM','DATA_REPAIR_HEADER','DATA_MASTERTEMPLAT','DOC_TYPE','DATA_MACHINE_PLAN');
+      $COMPACT_NAME = compact('DOC_TYPE','DATA_REPAIR_HEADER','DOC_YEAR','DOC_MONTH','SEARCH','DATA_MASTERTEMPLAT','DATA_PLANPM','DATA_MACHINE_PLAN');
+    }elseif ($DOC_TYPE == 'PLAN_PDM') {
+      $DATA_PLAN_PDM        = History::select('*')->selectraw('dbo.decode_utf8(INSPECTION_BY) as INSPECTION_BY_TH')
+                                          ->where('DOC_TYPE','=','PLAN_PDM')
+                                          ->orderBy('MACHINE_CODE')->get();
+      $DATA_SPAREPART_PLAN  = SparePartPlan::orderBy('SPAREPART_NAME')->get();
+      $COMPACT_NAME = compact('DOC_TYPE','DATA_REPAIR_HEADER','DOC_YEAR','DOC_MONTH','SEARCH','DATA_PLAN_PDM','DATA_SPAREPART_PLAN');
     }
 
     return view('machine.history.list',$COMPACT_NAME);
