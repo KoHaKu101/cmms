@@ -189,8 +189,10 @@
 		                  @foreach ($dataset as $key => $row)
 												@php
 													$BG_COLOR    = $row->PRIORITY == '9' ? 'bg-danger text-white' :  'bg-warning text-white';
-										      if ($row->CLOSE_STATUS == '1') {
+										      if ($row->PD_CHECK_STATUS == '1') {
 										        $BG_COLOR = 'bg-success text-white';
+										      }elseif ($row->CLOSE_STATUS == '1') {
+														$BG_COLOR = 'bg-info text-white';
 										      }
 													$WORK_STATUS = isset($array_EMP[$row->INSPECTION_CODE]) ? $array_EMP[$row->INSPECTION_CODE] : 'รอรับงาน';
 													$IMG         = isset($array_IMG[$row->INSPECTION_CODE]) ? asset('image/emp/'.$array_IMG[$row->INSPECTION_CODE]) : asset('../assets/img/noemp.png');
@@ -209,8 +211,10 @@
 																	<div class="info-user ml-3">
 																		<div class="username" style=""id="WORK_STATUS_{{$row->UNID}}">{{ $WORK_STATUS }}</div>
 																		<div class="status" >{{$row->REPAIR_SUBSELECT_NAME}}</div>
-																		@if ($row->CLOSE_STATUS == '1')
-																		<div class="status" id="DATE_DIFF_{{$row->UNID}}" > ดำเนินงานสำเร็จ</div>
+																		@if ($row->PD_CHECK_STATUS == '1')
+																			<div class="status" id="DATE_DIFF_{{$row->UNID}}" > ปิดเอกสารสำเร็จ</div>
+																		@elseif ($row->CLOSE_STATUS == '1')
+																			<div class="status" id="DATE_DIFF_{{$row->UNID}}" > ดำเนินงานสำเร็จ</div>
 																		@else
 																		<div class="status" id="DATE_DIFF_{{$row->UNID}}">{{$DATE_DIFF}}</div>
 																		@endif
@@ -264,10 +268,12 @@
 								          @foreach ($dataset as $key => $sub_row)
 														@php
 															$REC_WORK_STATUS  = isset($array_EMP[$sub_row->INSPECTION_CODE]) ? $array_EMP[$sub_row->INSPECTION_CODE] : 'รอรับงาน';
-															$BTN_COLOR_STATUS = $sub_row->INSPECTION_CODE == '' ? 'btn-mute' : ($sub_row->CLOSE_STATUS == '1' ? 'btn-success' : 'btn-info') ;
+															$BTN_COLOR_STATUS = $sub_row->INSPECTION_CODE == '' ? 'btn-mute' : ($sub_row->CLOSE_STATUS == '1' ? 'btn-info' : 'btn-warning') ;
+															$BTN_COLOR_STATUS = $sub_row->PD_CHECK_STATUS != 9 ? 'btn-success' : $BTN_COLOR_STATUS;
+
 															$BTN_COLOR 			  = $sub_row->INSPECTION_CODE == '' ? 'btn-danger' : 'btn-secondary' ;
 															$BTN_TEXT  			  = $sub_row->INSPECTION_CODE == '' ? 'รอรับงาน' : ($sub_row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ' : 'กำลังดำเนินการ') ;
-															$BTN_TEXT					= $sub_row->PD_CODE != '' ? 'ปิดเอกสารแล้ว' : $BTN_TEXT;
+															$BTN_TEXT					= $sub_row->PD_CHECK_STATUS != 9 ? 'ปิดเอกสารแล้ว' : $BTN_TEXT;
 														@endphp
 								            <tr >
 															<td>{{ $key+1 }}</td>
@@ -279,10 +285,10 @@
 								              <td >  				{{ $sub_row->MACHINE_NAME }}		    </td>
 															<td >  				{{ $sub_row->REPAIR_SUBSELECT_NAME }}		    </td>
 								                  <td >
-								                    <button type="button"class="btn {{$BTN_COLOR_STATUS}} btn-block btn-sm my-1 text-left"style="color:black;font-size:13px"
+								                    <button type="button"class="btn {{$BTN_COLOR_STATUS}} btn-block btn-sm my-1 text-left"
 																		{{ $sub_row->CLOSE_STATUS == '1' ? 'onclick=pdfsaverepair("'.$sub_row->UNID.'")' : ''}}>
-																			<i class="{{ $sub_row->CLOSE_STATUS == '1' ? 'fas fa-print' : '' }}"></i>
-								                      <span class="btn-label " >
+																			<i class="{{ $sub_row->CLOSE_STATUS == '1' ? 'fas fa-print' : '' }}"style="color:black;font-size:13px"></i>
+								                      <span class="btn-label " style="color:black;font-size:13px">
 																				{{ $BTN_TEXT }}
 								                      </span>
 								                    </button>

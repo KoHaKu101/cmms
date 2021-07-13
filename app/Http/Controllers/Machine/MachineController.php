@@ -345,8 +345,13 @@ class MachineController extends Controller
 
   }
 
-  public function UserHomePage(){
-    return View('machine.userpage.userhomepage');
+  public function UserHomePage($role = NULL){
+    if ($role == 'ma') {
+      return View('machine.userpage.userhomepageforma');
+    }elseif($role == 'pd') {
+      return View('machine.userpage.userhomepageforpd');
+    }
+
   }
 
   public function SaveImg($image = NULL,$new_name = NULL,$MACHINE_LINE = NULL){

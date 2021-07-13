@@ -145,10 +145,11 @@ class PDRepairController extends Controller
     $html_style = '';
     foreach ($dataset as $key => $row) {
       $REC_WORK_STATUS  = isset($row->INSPECTION_CODE) ? $row->INSPECTION_NAME_TH : 'รอรับงาน';
-      $BTN_COLOR_STATUS = $row->INSPECTION_CODE == '' ? 'btn-mute' : ($row->CLOSE_STATUS == '1' ? 'btn-success' : 'btn-info') ;
+      $BTN_COLOR_STATUS = $row->INSPECTION_CODE == '' ? 'btn-mute' : ($row->CLOSE_STATUS == '1' ? 'btn-info' : 'btn-warning') ;
+      $BTN_COLOR_STATUS = $row->PD_CHECK_STATUS != 9 ? 'btn-success' : $BTN_COLOR_STATUS ;
       $BTN_COLOR 			  = $row->INSPECTION_CODE == '' ? 'btn-danger' : 'btn-secondary' ;
       $BTN_TEXT  			  = $row->INSPECTION_CODE == '' ? 'รอรับงาน' : ($row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ' : 'การดำเนินงาน') ;
-      $BTN_TEXT					= $row->PD_CODE != '' ? 'ปิดเอกสารแล้ว' : $BTN_TEXT;
+      $BTN_TEXT					= $row->PD_CHECK_STATUS != 9 ? 'ปิดเอกสารแล้ว' : $BTN_TEXT;
       $html.= '<tr>
                 <td>'.$key+1 .'</td>
                 <td >'.date('d-m-Y',strtotime($row->DOC_DATE)).'</td>
@@ -159,11 +160,11 @@ class PDRepairController extends Controller
                 <td >'.$row->REPAIR_SUBSELECT_NAME.'</td>d
 
                 <td >
-                  <button type="button"class="btn '.$BTN_COLOR_STATUS.' btn-block btn-sm my-1 text-left"style="color:black;font-size:13px"
+                  <button type="button"class="btn '.$BTN_COLOR_STATUS.' btn-block btn-sm my-1 text-left"
                   '.($row->CLOSE_STATUS == '1' ? 'onclick=pdfsaverepair("'.$row->UNID.'")' : '').'>
-                    <i class="'.($row->CLOSE_STATUS == '1' ? 'fas fa-print' : '').'"></i>
+                    <i class="'.($row->CLOSE_STATUS == '1' ? 'fas fa-print' : '').'"style="color:black;font-size:13px"></i>
 
-                    <span class="btn-label " >
+                    <span class="btn-label " style="color:black;font-size:13px">
                       '.$BTN_TEXT.'
                     </span>
                   </button>
@@ -195,8 +196,11 @@ class PDRepairController extends Controller
     foreach ($dataset as $index => $sub_row) {
       $DATA_EMP    = EMPName::where('EMP_CODE',$sub_row->INSPECTION_CODE)->first();
       $BG_COLOR    = $sub_row->PRIORITY == '9' ? 'bg-danger text-white' :  'bg-warning text-white';
-      if ($sub_row->CLOSE_STATUS == '1') {
+      
+      if ($sub_row->PD_CHECK_STATUS == '1') {
         $BG_COLOR = 'bg-success text-white';
+      }elseif ($sub_row->CLOSE_STATUS == '1') {
+        $BG_COLOR = 'bg-info text-white';
       }
       $IMG         = isset($DATA_EMP->EMP_ICON) ? asset('image/emp/'.$DATA_EMP->EMP_ICON) : asset('../assets/img/noemp.png');
       $WORK_STATUS = isset($sub_row->INSPECTION_NAME) ? $sub_row->INSPECTION_NAME_TH :'รอรับงาน';
@@ -214,11 +218,15 @@ class PDRepairController extends Controller
                   <div class="info-user ml-3">
                     <div class="username" id="WORK_STATUS_'.$sub_row->UNID.'">'.$WORK_STATUS.'</div>
                     <div class="status" >'.$sub_row->REPAIR_SUBSELECT_NAME.'</div>';
-                    if ($sub_row->CLOSE_STATUS == '1'){
-                    $html_style .='<div class="status" id="DATE_DIFF_'.$sub_row->UNID.'" > ดำเนินงานสำเร็จ</div>';
-                      }else {
-                    $html_style .='<div class="status" id="DATE_DIFF_'.$sub_row->UNID.'">'.$DATE_DIFF.'</div>';
-                      }
+                    if ($sub_row->PD_CHECK_STATUS == '1'){
+                      $html_style .='<div class="status" id="DATE_DIFF_'.$sub_row->UNID.'" > ปิดเอกสารสำเร็จ</div>';
+                    }
+                    elseif ($sub_row->CLOSE_STATUS == '1'){
+                      $html_style .='<div class="status" id="DATE_DIFF_'.$sub_row->UNID.'" > ดำเนินงานสำเร็จ</div>';
+                    }
+                    else{
+                      $html_style .='<div class="status" id="DATE_DIFF_'.$sub_row->UNID.'">'.$DATE_DIFF.'</div>';
+                    }
                     $html_style .='</div>
                 </div>
               </div>';

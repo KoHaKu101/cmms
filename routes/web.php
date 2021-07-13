@@ -73,18 +73,32 @@ use App\Models\SettingMenu\Menusubitem;
 | contains the "web" middleware group. Now create something great!
 |
 */
+if (Gate::allows('isManager_Ma')) {
+  Route::get('/', function () {
+      return redirect('/machine/user/homepage/ma');
+  })->middleware('auth');
+}elseif (Gate::allows('isManager_Pd')) {
+  Route::get('/', function () {
+      return redirect('/machine/user/homepage/pd');
+  })->middleware('auth');
+}else {
+  Route::get('/', function () {
+      return redirect('/dashboard');
+  })->middleware('auth');
+}
 
-Route::get('/', function () {
-    return redirect('/machine/user/homepage');
-})->middleware('auth');
 //Logout
 Route::get('/user/logout/',[MenuController::class,'Logout'])->name('user.logout');
 Route::middleware(['auth:sanctum', 'verified']);
 //user Page
-Route::get('/machine/user/homepage',            [MachineController::class,'UserHomePage'])->name('user.homepage');
+Route::get('/machine/user/homepage/{role?}',            [MachineController::class,'UserHomePage'])->name('user.homepage');
 Route::get('/machine/repair/pdf/{UNID}',        'App\Http\Controllers\PDF\MachineRepairPDFController@RepairPdf');
 Route::get('/machine/repair/savepdf/{UNID}',    'App\Http\Controllers\PDF\RepairSaveFormPDFController@RepairSaveForm');
 
+Route::get('/machine/dashboard/dashboard',[DashboardController::class,'Dashboard']);
+Route::get('/machine',[DashboardController::class,'Dashboard']);
+Route::get('/machine/dashboard',[DashboardController::class,'Dashboard'])->name('dashboard.dashboard');
+Route::get('/dashboard',[DashboardController::class,'Dashboard'])->name('dashboard');
 //Cookie
 Route::get('/cookie/set',[CookieController::class,'setCookie'])->name('cookie.set');
 Route::get('/cookie/get',[CookieController::class,'getCookie'])->name('cookie.get');
@@ -119,17 +133,14 @@ Route::get('machine/repair/fetchdata'                     ,[MachineRepairControl
   Route::get('machine/history/planpdf/{UNID?}' ,   [HistoryController::class,'PlanPDF'])->name('history.planpdf');
 
 //group not user
-Route::middleware('can:isAdminandManager')->group(function () {
+Route::middleware('can:User')->group(function () {
 //PDF FILE
 Route::get('/machine/repairhistory/pdf/{UNID}', 'App\Http\Controllers\PDF\MachineHistoryRepairPDFController@RepairHistory');
 Route::get('/machine/systemcheck/pdf/{UNID}',   'App\Http\Controllers\PDF\MachineSystemCheckPDFController@SystemCheckPdf');
   Route::get('/machine/assets/machineall/{LINE?}', [MachinePDFController::class,'MachinePDF']);
 //Dashboard
 Route::get('/machine/dashboard/sumaryline',[DashboardController::class,'Sumaryline'])->name('dashboard.sumaryline');
-  Route::get('/machine/dashboard/dashboard',[DashboardController::class,'Dashboard']);
-  Route::get('/machine',[DashboardController::class,'Dashboard']);
-  Route::get('/machine/dashboard',[DashboardController::class,'Dashboard'])->name('dashboard.dashboard');
-  Route::get('/dashboard',[DashboardController::class,'Dashboard'])->name('dashboard');
+
 // calendar
  Route::get('/machine/calendar',[CalendarController::class,'Index']);
 //Notification
