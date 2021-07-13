@@ -133,7 +133,7 @@ Route::get('machine/repair/fetchdata'                     ,[MachineRepairControl
   Route::get('machine/history/planpdf/{UNID?}' ,   [HistoryController::class,'PlanPDF'])->name('history.planpdf');
 
 //group not user
-Route::middleware('can:User')->group(function () {
+// Route::middleware('can:isUser')->group(function () {
 //PDF FILE
 Route::get('/machine/repairhistory/pdf/{UNID}', 'App\Http\Controllers\PDF\MachineHistoryRepairPDFController@RepairHistory');
 Route::get('/machine/systemcheck/pdf/{UNID}',   'App\Http\Controllers\PDF\MachineSystemCheckPDFController@SystemCheckPdf');
@@ -269,7 +269,7 @@ Route::get('machine/pm/planlist/print/{UNID}'                ,[FormPMMachine::cl
   Route::post('machine/system/check/storelist'          ,[SysCheckController::class,'StoreList'])   ->name('syscheck.storelist');
   Route::get('machine/system/remove/{UNID}/{MC}'        ,[SysCheckController::class,'DeletePMMachine'])   ->name('syscheck.remove');
   Route::post('machine/system/check/storedate'          ,[SysCheckController::class,'StoreDate']);
-});
+// });
   //***************************** SETTING ****************************************
 //config
   Route::get('machine/config/home'                  ,[MailConfigController::class,'Index'])->name('machine.config');
