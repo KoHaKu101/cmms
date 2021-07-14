@@ -99,8 +99,8 @@
 									        <thead>
 									          <tr>
 									            <th  width="20px">#</th>
-									            <th  width="100px">Machine NO.</th>
-									            <th  width="300px">Machine Name</th>
+									            <th  width="50px">Machine NO.</th>
+									            <th  width="250px">Machine Name</th>
 									            <th  width="50px">LINE</th>
 									            <th  width="90px">Upload</th>
 									            <th width="120px">View</th>
