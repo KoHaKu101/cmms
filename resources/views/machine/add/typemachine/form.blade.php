@@ -37,9 +37,9 @@
 								</a>
 							</div>
 							<div class="col-md-11 ">
-								<form action="{{ route('machinetypetable.store') }}" method="POST" enctype="multipart/form-data">
+								<form action="{{ route('machinetypetable.store') }}" method="POST" enctype="multipart/form-data" id="FRM_SAVE_TYPE">
 									@csrf
-									<button class="btn btn-primary btn-xs" type="submit">
+									<button class="btn btn-primary btn-xs" type="submit" id="BTN_SUBMIT">
 										<span class="fas fa-save fa-lg ">	Save	</span>
 									</button>
 							</div>
@@ -53,7 +53,6 @@
 							<div class="card-header bg-primary">
 								<h4 class="ml-3 mt-2" style="color:white;" >ลงทะเบียนประเภทเครื่องจักร </h4>
 							</div>
-
 							<div class="card-body">
 								<div class="row">
 									<!-- ช่อง1-->
@@ -68,24 +67,19 @@
 											<div class="form-group has-error">
 												<label for="TYPE_CODE">รหัสประเภทเครื่องจักร</label>
 													<input type="text" class="form-control" id="TYPE_CODE" name="TYPE_CODE" placeholder="รหัสประเภทเครื่องจักร" required >
-
 											</div>
 											<div class="col-md-6 col-lg-12">
 												<div class="form-group ">
 													<label for="EMP_NAME">อธิบายเพิ่มเติม</label>
 													<textarea class="form-control" id="TYPE_NOTE" name="TYPE_NOTE" rows="6"></textarea>
 												</div>
-
 											</div>
-
-
 										</div>
 										<!-- ช่อง3-->
 										<div class="col-md-6 col-lg-4">
 											<div class="form-group has-error">
 												<label for="TYPE_NAME">ชื่อประเภทเครื่องจักร</label>
 												<input type="text" class="form-control" id="TYPE_NAME" name="TYPE_NAME" placeholder="ชื่อประเภทเครื่องจักร" required >
-
 											</div>
 											<div class="form-check has-error">
 												<label for="TYPE_STATUS">เปิด/ปิด</label><br>
@@ -98,13 +92,13 @@
 													<span class="form-radio-sign">ปิด</span>
 												</label>
 											</div>
-
 										</div>
-
-
 									</div>
 								</div>
-
+							</div>
+						</div>
+					</div>
+				</form>
 
 
 
@@ -118,6 +112,13 @@
 
 {{-- ส่วนjava --}}
 @section('javascript')
-
+<script>
+$('#FRM_SAVE_TYPE').submit(function(){
+	$("#BTN_SUBMIT", this)
+		.html("Please Wait...")
+		.attr('disabled', 'disabled');
+	return true;
+});
+</script>
 @stop
 {{-- ปิดส่วนjava --}}

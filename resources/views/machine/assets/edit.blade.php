@@ -403,6 +403,21 @@
 			  }
 			});
 	 }
+	 
+		 $('#FRM_SAVE_PM').submit(function(){
+			 $("#BTN_SUBMIT_PM", this)
+				 .html("Please Wait...")
+				 .attr('disabled', 'disabled');
+			 return true;
+		});
+
+
+	 $('#FRM_UPLOAD_MANUAL').submit(function(){
+	 		$("#BTN_SUBMIT_MANUAL", this)
+	 			.html("Please Wait...")
+	 			.attr('disabled', 'disabled');
+	 		return true;
+	 });
  </script>
 @stop
 {{-- ปิดส่วนjava --}}

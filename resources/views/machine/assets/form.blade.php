@@ -37,9 +37,9 @@
 								</a>
 							</div>
 							<div class="form-group gx-4">
-								<form action="{{ route('machine.store') }}" method="POST" enctype="multipart/form-data">
+								<form action="{{ route('machine.store') }}" method="POST" enctype="multipart/form-data" id="FRM_MACHINE_SAVE">
 									@csrf
-									<button class="btn btn-primary btn-xs" type="submit">
+									<button class="btn btn-primary btn-xs" type="submit" id="BTN_SUBMIT">
 										<span class="fas fa-save fa-lg">	save	</span>
 									</button>
 							</div>
@@ -201,6 +201,13 @@
 
 {{-- ส่วนjava --}}
 @section('javascript')
-
+<script>
+$('#FRM_MACHINE_SAVE').submit(function(){
+		$("#BTN_SUBMIT", this)
+			.html("Please Wait...")
+			.attr('disabled', 'disabled');
+		return true;
+});
+</script>
 @stop
 {{-- ปิดส่วนjava --}}

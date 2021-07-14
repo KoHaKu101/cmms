@@ -7,14 +7,15 @@
 <div class="modal fade" id="UPLOAD_MANUAL" tabindex="-1" role="dialog" aria-labelledby="exampleModalLalavel" aria-hidden="true">
   <div class="modal-dialog modal-md">
     <div class="modal-content ">
+      <form action="{{ route('machine.storeupload') }}" method="POST" enctype="multipart/form-data" id="FRM_UPLOAD_MANUAL" name="FRM_UPLOAD_MANUAL">
+        @csrf
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-				<form action="{{ route('machine.storeupload') }}" method="POST" enctype="multipart/form-data" id="FRM_UPLOAD_MANUAL" name="FRM_UPLOAD_MANUAL">
-					@csrf
+
   				<div class="row">
   					<div class="col-md-12 col-lg-12">
   						<div class="form-group">
@@ -37,7 +38,7 @@
             </div>
 		        <div class="modal-footer">
   	           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	              <input type="submit" class="btn btn-primary" value="Save changes"></input>
+	             <button type="submit" class="btn btn-primary"  id="BTN_SUBMIT_MANUAL">Save changes</input>
             </div>
 	      </form>
       </div>

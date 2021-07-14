@@ -44,7 +44,7 @@
 								<div class="card ">
                 	@if(session('success'))
 									@endif
-									<form action="{{ route('pmtemplate.storelist') }}" method="post" enctype="multipart/form-data">
+									<form action="{{ route('pmtemplate.storelist') }}" method="post" enctype="multipart/form-data" id="FRM_SAVE_PM">
 						        @csrf
 										<div class="card-header bg-primary">
 											<h4 class="ml-3 mt-2" style="color:white;" > ประเภทรายการ {{ $datapmtemplate->PM_TEMPLATE_NAME }} : รายการ
@@ -62,12 +62,12 @@
 												<div class="col-md-6 col-lg-9">
 											</div>
 											<div class="col-md-6 col-lg-1">
-												<button class="btn btn-primary btn-sm" >
+												<button class="btn btn-primary btn-sm" id="BTN_SUBMIT">
 													<i class="fas fa-save" style="color:white;font-size:15px" name="save" value="save"> Save</i>
 												</button>
 											</div>
 											<div class="col-md-6 col-lg-1">
-												<button class="btn btn-primary btn-sm " name="save" value="new">
+												<button class="btn btn-primary btn-sm " name="save" value="new" id="BTN_SUBMIT_NEW">
 													<i class="fas fa-save" style="color:white;font-size:15px"> Save and New</i>
 												</button>
 											</div>
@@ -88,5 +88,16 @@
 
 {{-- ส่วนjava --}}
 @section('javascript')
+	<script>
+	$('#FRM_SAVE_PM').submit(function(){
+		$("#BTN_SUBMIT", this)
+			.html("Please Wait...")
+			.attr('disabled', 'disabled');
+			$("#BTN_SUBMIT_NEW", this)
+				.html("Please Wait...")
+				.attr('disabled', 'disabled');
+		return true;
+	});
+	</script>
 @stop
 {{-- ปิดส่วนjava --}}

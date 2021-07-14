@@ -182,9 +182,14 @@
 {{-- ส่วนjava --}}
 @section('javascript')
 
-<script>
-
-</script>
+	<script>
+	$('#FRM_SAVE_TEMPLAT').submit(function(){
+		$("#BTN_SUBMIT_TEMPLAT", this)
+			.html("Please Wait...")
+			.attr('disabled', 'disabled');
+		return true;
+	});
+	</script>
 
 <script src="{{ asset('assets/js/useinproject/addtable/systemlist.js') }}">
 

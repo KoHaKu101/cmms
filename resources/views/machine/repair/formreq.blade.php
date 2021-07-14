@@ -224,17 +224,13 @@
 													onclick="previousstep(this)"
 													data-step="step4">
 														<i class="fas fa-arrow-alt-circle-left mr-1"></i>Previous</button>
-													<button type="submit" class="btn btn-primary"><i class="fas fa-save mr-1"></i>Save</button>
+													<button type="submit" class="btn btn-primary" id="BTN_SAVE_REPAIR"><i class="fas fa-save mr-1"></i>Save</button>
 												</div>
 											</form>
 										</div>
 									</div>
 								</div>
-
-
 						</div>
-
-
 				</div>
 			</div>
 </div>
@@ -357,7 +353,12 @@
 	// 		]
 	// 		});
 	// });
-
+	$('#FRM_SENDREPORT').submit(function(){
+		$("#BTN_SAVE_REPAIR", this)
+			.html("Please Wait...")
+			.attr('disabled', 'disabled');
+		return true;
+ });
 	</script>
 
 

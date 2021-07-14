@@ -523,6 +523,12 @@ $(document).ready(function() {
  function submitbtn(){
 	 $('#BTN_SUBMIT').click();
  }
+ $('#FRM_SPAREPART').submit(function(){
+	 $("#BTN_SUBMIT", this)
+		 .html("Please Wait...")
+		 .attr('disabled', 'disabled');
+	 return true;
+ });
 </script>
 
 @stop

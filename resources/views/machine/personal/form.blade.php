@@ -37,9 +37,9 @@
 								</a>
 							</div>
 							<div class="col-md-11 ">
-								<form action="{{ route('personal.store') }}" method="POST" enctype="multipart/form-data">
+								<form action="{{ route('personal.store') }}" method="POST" enctype="multipart/form-data" id="FRM_EMP_SAVE">
 									@csrf
-									<button class="btn btn-primary btn-xs" type="submit">
+									<button class="btn btn-primary btn-xs" type="submit" id="BTN_SUBMIT">
 										<span class="fas fa-save fa-lg ">	Save	</span>
 									</button>
 							</div>
@@ -74,7 +74,7 @@
 												<div class="row">
 													<div class="col-md-6 has-error">
 														<lebel>ประจำ LINE</lebel>
-														<select class="form-control form-control" id="EMP_LINE" name="EMP_LINE">
+														<select class="form-control form-control" id="EMP_LINE" name="EMP_LINE" required>
 														<option value>--แสดงทั้งหมด--</option>
 														@foreach($datalineselect as $dataline)
 														<option value="{{ $dataline->LINE_CODE}}"> {{$dataline->LINE_NAME}} </option>
@@ -83,7 +83,7 @@
 														</div>
 													<div class="col-md-6 has-error">
 														<lebel>สถานะ</lebel>
-														<select class="form-control form-control" id="EMP_STATUS" name="EMP_STATUS">
+														<select class="form-control form-control" id="EMP_STATUS" name="EMP_STATUS" required>
 														<option value>--แสดงทั้งหมด--</option>
 														<option value="9"> แสดง </option>
 														<option value="1"> ซ่อน </option>
@@ -140,6 +140,13 @@
 
 {{-- ส่วนjava --}}
 @section('javascript')
-
+	<script>
+	$('#FRM_EMP_SAVE').submit(function(){
+	    $("#BTN_SUBMIT", this)
+	      .html("Please Wait...")
+	      .attr('disabled', 'disabled');
+	    return true;
+	});
+	</script>
 @stop
 {{-- ปิดส่วนjava --}}

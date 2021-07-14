@@ -80,7 +80,7 @@ function deletesparepart(thisdata){
   var machine_unid = $('#MACHINE_UNID').val();
   var sparepart_name = $(thisdata).data('sparepart_name');
   var sparepart_unid = $(thisdata).data('sparepart_unid');
-  console.log(machine_unid+'|'+sparepart_name+'|'+sparepart_unid);
+  
   var url = '/machine/machinespart/delete';
   var data = { MACHINE_UNID : machine_unid,
                SPAREPART_UNID : sparepart_unid,

@@ -16,7 +16,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form action="{{ route('pmtemplate.store') }}" method="post" enctype="multipart/form-data">
+      <form action="{{ route('pmtemplate.store') }}" method="post" enctype="multipart/form-data" id="FRM_SAVE_TEMPLAT">
         @csrf
         <div class="modal-body">
           <div class="card-body ml-2">
@@ -32,7 +32,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="submit" class="btn btn-primary" id="BTN_SUBMIT_TEMPLAT">Save</button>
         </div>
       </form>
     </div>

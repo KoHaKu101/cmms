@@ -53,6 +53,10 @@ class SysCheckController extends Controller
     }
     $machine = Machine::select('MACHINE_RANK_MONTH','MACHINE_RANK_CODE','UNID')->where('MACHINE_CODE',$request->MACHINE_CODE)->first();
     if ($machine->MACHINE_RANK_CODE) {
+      if ($request->PM_TEMPLATE_UNID_REF == Null) {
+        alert()->warning('กรุณาเลือกรายการ');
+        return redirect()->back();
+      }
       foreach ($request->PM_TEMPLATE_UNID_REF as $dataset => $value) {
         $masterimpsunid = $request->PM_TEMPLATE_UNID_REF[$dataset];
         $datapmtemplate = MachinePmTemplate::select('PM_TEMPLATE_NAME')

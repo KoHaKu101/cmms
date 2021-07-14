@@ -7,6 +7,8 @@
 <div class="modal fade" id="PMMachine" tabindex="-1" role="dialog" aria-labelledby="exampleModalLalavel" aria-hidden="true">
   <div class="modal-dialog modal-md">
     <div class="modal-content ">
+      <form action="{{url('/machine/system/check/storelist')}}" method="POST" enctype="multipart/form-data" id="FRM_SAVE_PM">
+        @csrf
       <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLabel">รายการตรวจเช็ค</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -14,8 +16,7 @@
         </button>
       </div>
       <div class="modal-body">
-				<form action="{{url('/machine/system/check/storelist')}}" method="POST" enctype="multipart/form-data" >
-					@csrf
+
           <input type="hidden" id="MACHINE_CODE" name="MACHINE_CODE" value="{{ $dataset->MACHINE_CODE }}" >
 
           <div class="col-md-8 col-lg-12 ml-2">
@@ -47,11 +48,10 @@
                </tbody>
              </table>
           </div>
-
             </div>
 		        <div class="modal-footer">
   	           <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
-	              <input type="submit" class="btn btn-primary" value="บันทึก"></input>
+	              <button type="submit" class="btn btn-primary"  id="BTN_SUBMIT_PM">บันทึก</button>
             </div>
 	      </form>
       </div>
