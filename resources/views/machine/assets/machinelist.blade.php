@@ -164,9 +164,8 @@
 															<td> {{ $REPAIR_LAST_DATE }}  </td>
 								              <td>
 								                  <button type="button" class="btn btn-secondary btn-sm btn-block my-1"
-								                  onclick="printhistory( '{{$row->UNID}}' )" id="button" style="width:80px">
+								                  onclick="window.open('/machine/history/repairpdf/{{$row->UNID}}','RepairSaveprint','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes')" id="button" style="width:80px">
 								                    <span class="float-left">
-
 								                      <i  style="font-size:17px"class="icon-printer mx-1 mt-1"></i>
 								                      Print
 								                    </span>

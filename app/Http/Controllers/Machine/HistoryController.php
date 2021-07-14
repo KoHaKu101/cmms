@@ -112,12 +112,12 @@ class HistoryController extends Controller
   public function RepairPDF(HistoryHeaderFooterRepair $HistoryHeaderFooterRepair,$MACHINE_UNID = NULL){
     $this->pdf = $HistoryHeaderFooterRepair;
     $MACHINE_UNID =  isset($MACHINE_UNID) ? $MACHINE_UNID : 0 ;
-     $GROUP_HISTORY_REPAIR = History::select('MACHINE_CODE','MACHINE_UNID')
+     $GROUP_HISTORY_REPAIR = Machine::select('MACHINE_CODE','UNID')
                                           ->where(function($query) use ($MACHINE_UNID){
                                             if ($MACHINE_UNID > 0) {
-                                              $query->where('MACHINE_UNID','=',$MACHINE_UNID);
+                                              $query->where('UNID','=',$MACHINE_UNID);
                                             }
-                                          })->groupBy('MACHINE_UNID')->groupBy('MACHINE_CODE')
+                                          })->groupBy('UNID')->groupBy('MACHINE_CODE')
                                             ->orderBy('MACHINE_CODE')->get();
 
     $DATA_REPAIR_SPAREPART = RepairSparepart::orderBy('SPAREPART_NAME')->get();
@@ -130,7 +130,7 @@ class HistoryController extends Controller
     foreach ($GROUP_HISTORY_REPAIR as $groupindex => $grouprow) {
       $this->pdf->AliasNbPages();
       $this->pdf->AddPage(['L','A4',]);
-      $this->pdf->header($grouprow->MACHINE_UNID);
+      $this->pdf->header($grouprow->UNID);
       $this->pdf->setXY(5,44);
       $this->pdf->setAutoPageBreak(false);
       $this->pdf->Rect(5,5,287,194);
@@ -140,7 +140,7 @@ class HistoryController extends Controller
                               'dbo.decode_utf8(INSPECTION_BY) as INSPECTION_BY_TH,
                                dbo.decode_utf8(REPORT_BY)     as REPORT_BY_TH,
                                dbo.decode_utf8(APPROVED_BY)   as APPROVED_BY_TH '
-                              )->where('MACHINE_UNID','=',$grouprow->MACHINE_UNID)->orderBy('DOC_DATE')->get();
+                              )->where('MACHINE_UNID','=',$grouprow->UNID)->orderBy('DOC_DATE')->get();
       foreach ($DATA_HISTORY_REPAIR as $index => $row) {
         $this->pdf->setX(5);
         $array_text_sparepart = array();
