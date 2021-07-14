@@ -24,6 +24,7 @@ use App\Models\Machine\MasterIMPS;
 use App\Models\Machine\MasterIMPSGroup;
 use App\Models\Machine\MachineSparePart;
 use App\Models\Machine\BomMachine;
+use App\Models\Machine\History;
 
 use App\Models\MachineaddTable\MachinePmTemplate;
 use App\Models\MachineaddTable\MachinePmTemplateDetail;
@@ -216,9 +217,9 @@ class MachineController extends Controller
     $machineline                 = MachineLine::select('LINE_CODE','LINE_NAME')
                                               ->where('LINE_STATUS','=','9')
                                               ->get();
-    $machinerepair               = MachineRepairREQ::where('MACHINE_UNID','=',$UNID)
-                                                ->where('CLOSE_STATUS','=','9')
-                                                ->get();
+    $machinerepair               = History::select('*')->selectraw('dbo.decode_utf8(REPORT_BY) as REPORT_BY_TH')
+                                                    ->where('MACHINE_UNID','=',$UNID)
+                                                    ->get();
 
     $machinepmtemplate           = MachinePmTemplate::whereNotIn('PM_TEMPLATE_NAME',MasterIMPS::select('PM_TEMPLATE_NAME')
                                                     ->where('MACHINE_CODE',$dataset->MACHINE_CODE))

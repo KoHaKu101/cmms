@@ -357,6 +357,16 @@
 					 'bSort': false,
 
 				 });
+				 $('#table_history').DataTable({
+					 "searching": false,
+ 					 "pageLength": 10,
+ 					 "bLengthChange": false,
+ 					 "bFilter": true,
+ 					 "bInfo": false,
+ 					 "bAutoWidth": false,
+ 					 'bSort': false,
+
+ 				 });
 	 });
 	 function edituploadfile(thisdata){
 		 var uploadtopicname = $(thisdata).data('uploadtopicname');
