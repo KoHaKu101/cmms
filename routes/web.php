@@ -133,7 +133,7 @@ Route::get('machine/repair/fetchdata'                     ,[MachineRepairControl
   Route::get('machine/history/planpdf/{UNID?}' ,   [HistoryController::class,'PlanPDF'])->name('history.planpdf');
 
 //group not user
-// Route::middleware('can:isUser')->group(function () {
+Route::middleware('can:isUser')->group(function () {
 //PDF FILE
 Route::get('/machine/repairhistory/pdf/{UNID}', 'App\Http\Controllers\PDF\MachineHistoryRepairPDFController@RepairHistory');
 Route::get('/machine/systemcheck/pdf/{UNID}',   'App\Http\Controllers\PDF\MachineSystemCheckPDFController@SystemCheckPdf');
@@ -269,7 +269,7 @@ Route::get('machine/pm/planlist/print/{UNID}'                ,[FormPMMachine::cl
   Route::post('machine/system/check/storelist'          ,[SysCheckController::class,'StoreList'])   ->name('syscheck.storelist');
   Route::get('machine/system/remove/{UNID}/{MC}'        ,[SysCheckController::class,'DeletePMMachine'])   ->name('syscheck.remove');
   Route::post('machine/system/check/storedate'          ,[SysCheckController::class,'StoreDate']);
-// });
+});
   //***************************** SETTING ****************************************
 //config
   Route::get('machine/config/home'                  ,[MailConfigController::class,'Index'])->name('machine.config');
@@ -289,10 +289,9 @@ Route::get('machine/setting/submenu/home/{UNID}'    ,[MenuSubController::class,'
   Route::post('machine/setting/submenu/update/{UNID}' ,[MenuSubController::class,'Update']);
   Route::get('machine/setting/submenu/delete/{UNID}'   ,[MenuSubController::class,'Delete']);
 // admin config permisssion
-// Route::middleware('can:isAdmin')->group(function () {
+
     Route::get('machine/config/permission'                ,[PerMissionController::class,'Home'])->name('permission.home');
     Route::post('machine/config/permission/store'           ,[PerMissionController::class,'Store'])->name('permission.store');
     Route::post('machine/config/permission/update'        ,[PerMissionController::class,'Update'])->name('permission.update');
     Route::get('machine/config/permission/confirm'        ,[PerMissionController::class,'Confirm'])->name('permission.confirm');
     Route::get('machine/config/permission/delete'        ,[PerMissionController::class,'Delete'])->name('permission.delete');
-// });
