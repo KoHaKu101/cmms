@@ -347,9 +347,9 @@ class MachineController extends Controller
   }
 
   public function UserHomePage($role = NULL){
-    if (Gate::allows('isManager_Ma')) {
+    if (Gate::allows('isManager_Ma') || Gate::allows('isAdmin')) {
       return View('machine.userpage.userhomepageforma');
-    }elseif(Gate::allows('isManager_Pd')) {
+    }elseif(Gate::allows('isManager_Pd') || Gate::allows('isAdmin')) {
       return View('machine.userpage.userhomepageforpd');
     }else {
       return redirect(route('dashboard'));
