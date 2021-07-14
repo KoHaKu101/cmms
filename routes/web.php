@@ -74,13 +74,11 @@ use App\Models\SettingMenu\Menusubitem;
 |
 */
 if (Gate::allows('isManager_Ma')) {
-  Route::get('/', function () {
-      return redirect('/machine/user/homepage/ma');
-  })->middleware('auth');
+  Route::get('/machine/user/homepage/ma', [MachineController::class,'UserHomePage'])->name('user.homepage');
+
 }elseif (Gate::allows('isManager_Pd')) {
-  Route::get('/', function () {
-      return redirect('/machine/user/homepage/pd');
-  })->middleware('auth');
+  Route::get('/machine/user/homepage/pd', [MachineController::class,'UserHomePage'])->name('user.homepage');
+
 }else {
   Route::get('/', function () {
       return redirect('/dashboard');
