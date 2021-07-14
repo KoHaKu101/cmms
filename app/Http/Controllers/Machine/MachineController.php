@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Auth;
 use File;
 use Cookie;
+use Gate;
 use Illuminate\Http\Response;
 
 //******************** model ***********************
@@ -346,10 +347,12 @@ class MachineController extends Controller
   }
 
   public function UserHomePage($role = NULL){
-    if ($role == 'ma') {
+    if (Gate::allows('isManager_Ma')) {
       return View('machine.userpage.userhomepageforma');
-    }elseif($role == 'pd') {
+    }elseif(Gate::allows('isManager_Pd')) {
       return View('machine.userpage.userhomepageforpd');
+    }else {
+      return route('dashboard');
     }
 
   }
