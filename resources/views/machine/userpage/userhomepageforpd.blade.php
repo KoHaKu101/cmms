@@ -51,7 +51,7 @@
 										</div>
 										<a href="{{ route('pd.repairlist') }}">
 											<div class="card-body">
-												<img src="{{ asset('assets/img/userhomepage/pm.png') }}" class="ml-4"style="width:150px;height:150px">
+												<img src="{{ asset('assets/img/userhomepage/documentpd.jpg') }}" class="ml-4"style="width:200px;height:150px">
 											</div>
 										</a>
 									</div>
