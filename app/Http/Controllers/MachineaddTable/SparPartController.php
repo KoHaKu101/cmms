@@ -51,11 +51,7 @@ class SparPartController extends Controller
                                                         ->orwhere('SPAREPART_SIZE','like','%'.$SEARCH.'%');
                                                 }
                                                })
-                                              ->where(function ($query) use ($SPAREPART_UNID) {
-                                               if ($SPAREPART_UNID != '') {
-                                                  $query->where('UNID', '=', $SPAREPART_UNID);
-                                                }
-                                              })->orderBy('SPAREPART_CODE','ASC')->paginate($PAGE_PAGINATE,['*'],'sparepartpage');
+                                              ->orderBy('SPAREPART_CODE','ASC')->paginate($PAGE_PAGINATE,['*'],'sparepartpage');
 
     $DATA_MACHINESPAREPART = MachineSparePart::where('SPAREPART_UNID','=',$SPAREPART_UNID)
                                              ->orderBy('MACHINE_CODE')->paginate(10,['*'],'machinepage');
