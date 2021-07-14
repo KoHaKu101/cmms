@@ -40,8 +40,14 @@
 										<span class="fas fa-arrow-left fa-lg">Back </span>
 									</button>
 								</a>
-              @elsecan('isManager')
+              @elsecan('isManager_Ma')
 								<a href="{{ url('machine/repair/repairlist') }}">
+									<button class="btn btn-warning  btn-xs ">
+										<span class="fas fa-arrow-left fa-lg">Back </span>
+									</button>
+								</a>
+							@elsecan('isManager_Pd')
+								<a href="{{ route('pd.repairlist') }}">
 									<button class="btn btn-warning  btn-xs ">
 										<span class="fas fa-arrow-left fa-lg">Back </span>
 									</button>
