@@ -49,7 +49,10 @@
 			@can('isAdmin')
 				@include('masterlayout.logomaster')
 				@include('masterlayout.navbar.navbarmaster')
-			@elsecan('isManager')
+			@elsecan('isManager_Ma')
+				@include('masterlayout.logomaster')
+				@include('masterlayout.navbar.navbarmaster')
+			@elsecan('isManager_Pd')
 				@include('masterlayout.logomaster')
 				@include('masterlayout.navbar.navbarmaster')
 			@else
@@ -61,7 +64,9 @@
 		@yield('sidebar')
 		@can('isAdmin')
 			@include('masterlayout.sidebar.sidebarmaster')
-	  @elsecan('isManager')
+	  @elsecan('isManager_Pd')
+			@include('masterlayout.sidebar.sidebarmaster')
+		@elsecan('isManager_Ma')
 			@include('masterlayout.sidebar.sidebarmaster')
 	  @else
 

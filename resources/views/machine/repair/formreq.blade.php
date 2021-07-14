@@ -101,9 +101,6 @@
 												</div>
 												@endforeach
 
-
-
-
 											</div>
 											<div class="card-action text-center">
 												<a href="{{ route('repair.repairsearch') }}" class="btn btn-warning mx-1 my-1"

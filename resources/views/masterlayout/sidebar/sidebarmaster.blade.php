@@ -9,8 +9,12 @@
         use App\Models\SettingMenu\Menusubitem;
 
         // use Gate;
+        if (Gate::allows('isManager_Pd')) {
+          $Mainmenu=Mainmenu::where('MENU_STATUS','=',8)->orderBy('MENU_INDEX','ASC')->get();
+        }else {
+          $Mainmenu=Mainmenu::orderBy('MENU_INDEX','ASC')->get();
+        }
 
-        $Mainmenu=Mainmenu::orderBy('MENU_INDEX','ASC')->get();
 
          foreach( $Mainmenu as $value ) {
            $_Main = $value['MENU_NAME'];

@@ -309,7 +309,12 @@ class MachineRepairController extends Controller
       foreach ($cookie_array as $index => $row) {
         Cookie::queue(Cookie::forget($row));
       }
-      return redirect()->route('repair.list');
+      if (Gate::allows('isManager_Pd')) {
+      return redirect()->route('pd.repairlist');
+      }else {
+        return redirect()->route('repair.list');
+      }
+
   }
   public function Edit($UNID) {
     $data_repairreq = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME')
