@@ -352,7 +352,7 @@ class MachineController extends Controller
     }elseif(Gate::allows('isManager_Pd')) {
       return View('machine.userpage.userhomepageforpd');
     }else {
-      return route('dashboard');
+      return redirect(route('dashboard'));
     }
 
   }
