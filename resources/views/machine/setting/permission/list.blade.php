@@ -117,7 +117,7 @@
                       <div class="form-group form-show-validation row has-error">
   											<label for="email" class="col-lg-4 col-md-3 col-sm-4 mt-sm-2 text-right mr-2">อีเมล์</label>
   											<div class="col-lg-6 col-md-9 col-sm-8">
-  												<input type="email" class="form-control form-control-sm" id="email" name="email"  required autocomplete="off">
+  												<input type="text" class="form-control form-control-sm" id="email" name="email"  required autocomplete="off">
   											</div>
   										</div>
                       <div class="form-group form-show-validation row has-error">
