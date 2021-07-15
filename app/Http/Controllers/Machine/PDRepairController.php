@@ -62,7 +62,8 @@ class PDRepairController extends Controller
     $DOC_STATUS = isset($request->DOC_STATUS) ? $request->DOC_STATUS : 9 ;
     $YEAR = isset($request->YEAR) ? $request->YEAR : date('Y') ;
     $DATA_EMP = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->where('EMP_STATUS','=',9)->get();
-    $dataset = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
+    $dataset = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH
+                                                        ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH')
                                             ->where(function ($query) use ($MACHINE_LINE) {
                                                   if ($MACHINE_LINE != '') {
                                                      $query->where('MACHINE_LINE', '=', $MACHINE_LINE);
@@ -106,8 +107,9 @@ class PDRepairController extends Controller
     $MONTH          = isset($request->MONTH) ? $request->MONTH : 0 ;
     $DOC_STATUS     = isset($request->DOC_STATUS) ? $request->DOC_STATUS : 0 ;
     $YEAR           = isset($request->YEAR) ? $request->YEAR : date('Y') ;
+
     $dataset        = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH
-                                                                ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH')
+                                                               ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH')
                                             ->where(function ($query) use ($MACHINE_LINE) {
                                                   if ($MACHINE_LINE != '') {
                                                      $query->where('MACHINE_LINE', '=', $MACHINE_LINE);
@@ -140,16 +142,23 @@ class PDRepairController extends Controller
                                             ->orderBy('DOC_MONTH','DESC')
                                             ->orderBy('DOC_NO','DESC')
                                             ->paginate(10);
+
     $SEARCH         = $SERACH_TEXT;
     $html = '';
     $html_style = '';
     foreach ($dataset as $key => $row) {
       $REC_WORK_STATUS  = isset($row->INSPECTION_CODE) ? $row->INSPECTION_NAME_TH : 'รอรับงาน';
       $BTN_COLOR_STATUS = $row->INSPECTION_CODE == '' ? 'btn-mute' : ($row->CLOSE_STATUS == '1' ? 'btn-info' : 'btn-warning') ;
-      $BTN_COLOR_STATUS = $row->PD_CHECK_STATUS != 9 ? 'btn-success' : $BTN_COLOR_STATUS ;
-      $BTN_COLOR 			  = $row->INSPECTION_CODE == '' ? 'btn-danger' : 'btn-secondary' ;
-      $BTN_TEXT  			  = $row->INSPECTION_CODE == '' ? 'รอรับงาน' : ($row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ' : 'การดำเนินงาน') ;
-      $BTN_TEXT					= $row->PD_CHECK_STATUS != 9 ? 'ปิดเอกสารแล้ว' : $BTN_TEXT;
+      $BTN_COLOR 			  = $row->INSPECTION_CODE == '' ? 'btn-danger' : 'btn-danger' ;
+      $BTN_TEXT  			  = $row->INSPECTION_CODE == '' ? 'รอรับงาน' : ($row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ' : 'กำลังดำเนินการ') ;
+      $BTN_TEXT_SUB     = '';
+      if ($row->PD_CHECK_STATUS == 1) {
+        $BTN_TEXT = 'ปิดเอกสารแล้ว;';
+        $BTN_COLOR_STATUS =  'btn-success';
+        $BTN_COLOR = 'btn-secondary';
+        $BTN_TEXT_SUB = 'fas fa-clipboard-check mx-1';
+      }
+
       $html.= '<tr>
                 <td>'.$key+1 .'</td>
                 <td >'.date('d-m-Y',strtotime($row->DOC_DATE)).'</td>
@@ -184,7 +193,7 @@ class PDRepairController extends Controller
                       class="btn '.$BTN_COLOR.' btn-block btn-sm my-1 text-left"
                      >
                        <span class="btn-label">
-                       <i class="fas fa-clipboard-check mx-1"></i>'.$REC_WORK_STATUS.'
+                       <i class="'.$BTN_TEXT_SUB.'"></i>'.$REC_WORK_STATUS.'
                      </span>
                      </button></td>';
                    }else {
@@ -196,7 +205,7 @@ class PDRepairController extends Controller
     foreach ($dataset as $index => $sub_row) {
       $DATA_EMP    = EMPName::where('EMP_CODE',$sub_row->INSPECTION_CODE)->first();
       $BG_COLOR    = $sub_row->PRIORITY == '9' ? 'bg-danger text-white' :  'bg-warning text-white';
-      
+
       if ($sub_row->PD_CHECK_STATUS == '1') {
         $BG_COLOR = 'bg-success text-white';
       }elseif ($sub_row->CLOSE_STATUS == '1') {
@@ -238,7 +247,7 @@ class PDRepairController extends Controller
                     data-unid="'.$sub_row->UNID.'"
                     data-docno="'.$sub_row->DOC_NO.'"
                     data-detail="'.$sub_row->REPAIR_SUBSELECT_NAME.'">
-                      SELECT
+                      ปิดเอกสาร
                     </button>
                   </div>
                 </div>';

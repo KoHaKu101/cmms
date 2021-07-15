@@ -132,8 +132,8 @@
 															<label class="text-white mx-2">เอกสาร : </label>
 															<select class="form-control form-control-sm mt-1 mx-1" id="DOC_STATUS" name="DOC_STATUS"onchange="changesubmit()">
 																<option value="0">ทั้งหมด</option>
-																<option value="9" {{ $DOC_STATUS == "9" ? 'selected' : "" }}>กำลังดำเนินการ</option>
-																<option value="1" {{ $DOC_STATUS == "1" ? 'selected' : "" }}>ดำเนินการเรียบร้อย</option>
+																<option value="9" {{ $DOC_STATUS == "9" ? 'selected' : "" }}>ยังไม่ปิดเอกสาร</option>
+																<option value="1" {{ $DOC_STATUS == "1" ? 'selected' : "" }}>ปิดเอกสารแล้ว</option>
 															</select>
 														<label class="text-white mx-1">ค้นหา : </label>
 								              <div class="input-group mx-1">
@@ -230,7 +230,7 @@
 																		data-unid="{{ $row->UNID }}"
 																		data-docno="{{ $row->DOC_NO }}"
 																		data-detail="{{ $row->REPAIR_SUBSELECT_NAME }}">
-																			SELECT
+																			ปิดเอกสาร
 																		</button>
 																	</div>
 
@@ -267,13 +267,19 @@
 								        <tbody id="result">
 								          @foreach ($dataset as $key => $sub_row)
 														@php
-															$REC_WORK_STATUS  = isset($array_EMP[$sub_row->INSPECTION_CODE]) ? $array_EMP[$sub_row->INSPECTION_CODE] : 'รอรับงาน';
+															$REC_WORK_STATUS  = isset($array_EMP[$sub_row->INSPECTION_CODE]) ? $sub_row->INSPECTION_NAME_TH : 'รอรับงาน';
 															$BTN_COLOR_STATUS = $sub_row->INSPECTION_CODE == '' ? 'btn-mute' : ($sub_row->CLOSE_STATUS == '1' ? 'btn-info' : 'btn-warning') ;
-															$BTN_COLOR_STATUS = $sub_row->PD_CHECK_STATUS != 9 ? 'btn-success' : $BTN_COLOR_STATUS;
 
-															$BTN_COLOR 			  = $sub_row->INSPECTION_CODE == '' ? 'btn-danger' : 'btn-secondary' ;
+															$BTN_COLOR 			  = $sub_row->INSPECTION_CODE == '' ? 'btn-danger' : 'btn-danger' ;
 															$BTN_TEXT  			  = $sub_row->INSPECTION_CODE == '' ? 'รอรับงาน' : ($sub_row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ' : 'กำลังดำเนินการ') ;
-															$BTN_TEXT					= $sub_row->PD_CHECK_STATUS != 9 ? 'ปิดเอกสารแล้ว' : $BTN_TEXT;
+															$BTN_TEXT_SUB     = '';
+															if ($sub_row->PD_CHECK_STATUS == 1) {
+																$BTN_TEXT = 'ปิดเอกสารแล้ว;';
+																$BTN_COLOR_STATUS =  'btn-success';
+																$BTN_COLOR = 'btn-secondary';
+																$BTN_TEXT_SUB = 'fas fa-clipboard-check mx-1';
+															}
+
 														@endphp
 								            <tr >
 															<td>{{ $key+1 }}</td>
@@ -301,7 +307,7 @@
 																			data-detail="{{ $sub_row->REPAIR_SUBSELECT_NAME }}"
 																			class="btn {{$BTN_COLOR}} btn-block btn-sm my-1 text-left">
 																			 <span class="btn-label">
-																				 <i class="fas fa-clipboard-check mx-1"></i>{{$REC_WORK_STATUS}}
+																				 <i class="{{ $BTN_TEXT_SUB }}"></i>{{$REC_WORK_STATUS}}
 																			 </span>
 																		 </button>
 																		@else
