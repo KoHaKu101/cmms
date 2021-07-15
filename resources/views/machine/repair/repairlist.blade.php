@@ -167,7 +167,7 @@
 											<div class="col-6 col-sm-6 col-md-3 col-lg-2 ml-auto my-1">
 												<div class="selectgroup w-100">
 													<label class="selectgroup-item" >
-														<input type="radio"  class="selectgroup-input" onchange="styletable(1)" {{ Cookie::get('table_style') == '1' ? 'checked' : ''}} name="styletable">
+														<input type="radio"  class="selectgroup-input" onchange="styletable(1)" {{ Cookie::get('table_style') == '1' ? 'checked' : (Cookie::get('table_style') == '' ? 'checked' : '')}} name="styletable">
 														<span class="selectgroup-button"><i class="fas fa-th-large"></i></span>
 													</label>
 													<label class="selectgroup-item"  >
@@ -329,12 +329,18 @@
 <script src="{{ asset('assets/js/ajax/ajax-csrf.js') }}"></script>
 <script src="{{ asset('assets/js/select2.min.js') }}"></script>
 <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
+<script src="{{ asset('assets/js/js.cookie.min.js') }}"></script>
 {{-- <script src="{{ asset('assets/js/useinproject/jquery-1.11.0.min.js') }}"></script> --}}
 <script>
+
 $(document).ready(function(){
-		var url = "{{ route('repair.fetchdata') }}";
-		var data = $('#FRM_SEARCH').serialize();
-		var loaddata_table_all = function (){
+		var cookie_tablestyle = "{{Cookie::get('table_style')}}";
+		if (cookie_tablestyle == '') {
+				styletable('1');
+		}
+		var loaddata_table_all = function loaddata_table(){
+			var url = "{{ route('repair.fetchdata') }}";
+			var data = $('#FRM_SEARCH').serialize();
 			$.ajax({
 						 type:'GET',
 						 url: url,
@@ -837,13 +843,10 @@ function resetIndexes(){
 						$('#tablerow'+count+' .editworkout').attr('data-table',  count);
 						$('#tablerow'+count+' .deleteworkout').attr('data-table',  count);
         }
-
-				// console.log(count);
 				number_count = count;
     });
 	}
 $('#closeform').on('click',function(){
-	// data('total_sparepart')
 	var total_sparepart = $(this).attr('data-total_sparepart');
 	var total_worker	  = $(this).attr('data-total_worker');
 	var total_all 			= $(this).attr('data-total_all');
@@ -867,10 +870,8 @@ $('#closeform').on('click',function(){
 								  $('#BG_'+repair_unid).removeClass('bg-danger');
 									$('#BG_'+repair_unid).removeClass('bg-warning');
 									$('#BG_'+repair_unid).addClass('bg-success');
-
 									$('#stepsave').attr('hidden',true);
 									$('.stepclose').attr('hidden',false);
-
 							});
 				 }else {
 					 Swal.fire({
@@ -882,11 +883,13 @@ $('#closeform').on('click',function(){
 				 }
 			 }
 		 });
- // $('#CloseForm').modal('hide');
  })
  $('#CloseForm').on('hidden.bs.modal', function (e) {
 	 for (var i = 1; i < 5; i++) {
-		document.getElementById("FRM_WORK_STEP_"+i).reset();
+		 var number = $('#FRM_WORK_STEP_'+i).length;
+		 if (number == 1 ) {
+			 $("#FRM_WORK_STEP_"+i)[0].reset();
+		 }
 	 }
 	 array_emp_unid = []; ;
 	 sparepart_total = {}; ;
@@ -898,6 +901,7 @@ $('#closeform').on('click',function(){
 	 number_count = '' ;
 	 loop_tabel_worker(array_emp_unid);
 	 loop_removeclass();
+	 loaddata_table();
 	 $('#WORK_IN').attr('hidden',true);
 	 $('#WORK_OUT').attr('hidden',true);
 	 $('#select_typeworker').attr('hidden',false);

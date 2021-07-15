@@ -248,7 +248,7 @@ class MachineRepairController extends Controller
                                 from EMCS_EMPLOYEE
                                 where  POSITION_CODE IN ('LD','ASSTMGR','CF')
                                 and EMP_STATUS = '9'
-	                              and LINE_CODE NOT IN ('QA','QC','PC','FNL','EG','MK','HR','AC') ");
+	                              and LINE_CODE NOT IN ('QA','QC','PC','FNL','EG','MK','HR','AC','QS') ");
     return View('machine/repair/formreq',compact('dataset','datamachine','data_emp'));
   }
   public function Store(Request $request,$MACHINE_UNID){

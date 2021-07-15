@@ -167,18 +167,18 @@
 											<div class="col-6 col-sm-6 col-md-3 col-lg-2 ml-auto my-1">
 												<div class="selectgroup w-100">
 													<label class="selectgroup-item" >
-														<input type="radio"  class="selectgroup-input" onchange="styletable(1)" {{ Cookie::get('table_style') == '1' ? 'checked' : ''}} name="styletable">
+														<input type="radio"  class="selectgroup-input" onchange="styletable(1)" {{ Cookie::get('table_style_pd') == '1' ? 'checked' : (Cookie::get('table_style_pd') == '' ? 'checked' : '')}} name="styletable">
 														<span class="selectgroup-button"><i class="fas fa-th-large"></i></span>
 													</label>
 													<label class="selectgroup-item"  >
-														<input type="radio" class="selectgroup-input" onchange="styletable(2)" {{ Cookie::get('table_style') == '2' ? 'checked' : ''}} name="styletable">
+														<input type="radio" class="selectgroup-input" onchange="styletable(2)" {{ Cookie::get('table_style_pd') == '2' ? 'checked' : ''}} name="styletable">
 														<span class="selectgroup-button"><i class="fas fa-list-ol"></i></span>
 													</label>
 												</div>
 											</div>
 										</div>
 
-		                <div class="row" id="table_style" {{ Cookie::get('table_style') == '1' ? '' : 'hidden'}} >
+		                <div class="row" id="table_style" {{ Cookie::get('table_style_pd') == '1' ? '' : 'hidden'}} >
 											@php
 												$array_EMP = array();
 												foreach ($DATA_EMP as $index => $row_emp) {
@@ -242,7 +242,7 @@
 												</div>
 		                    @endforeach
 		                </div>
-								    <div class="table-responsive" id="list_table" {{ Cookie::get('table_style') == '2' ? '' : 'hidden'}} >
+								    <div class="table-responsive" id="list_table" {{ Cookie::get('table_style_pd') == '2' ? '' : 'hidden'}} >
 								      <table class="display table table-striped table-hover">
 								        <thead class="thead-light">
 								          <tr>
@@ -347,10 +347,15 @@
 <script src="{{ asset('assets/js/ajax/ajax-csrf.js') }}"></script>
 <script src="{{ asset('assets/js/select2.min.js') }}"></script>
 <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
+<script type="module" src="{{ asset('assets/js/js.cookie.min.js') }}"></script>
 <script>
 $(document).ready(function(){
 		var url = "{{ route('pd.fetchdata') }}";
 		var data = $('#FRM_SEARCH').serialize();
+		var cookie_tablestyle = "{{Cookie::get('table_style_pd')}}";
+		if (cookie_tablestyle == '') {
+				styletable('1');
+		}
 		var loaddata_table_all = function (){
 			$.ajax({
 						 type:'GET',
@@ -383,11 +388,11 @@ function styletable(table_style){
 	if (table_style == '1') {
 		$('#table_style').attr('hidden',false);
 		$('#list_table').attr('hidden',true);
-		 setcookie('table_style','1');
+		 setcookie('table_style_pd','1');
 	}else {
 		$('#table_style').attr('hidden',true);
 		$('#list_table').attr('hidden',false);
-		 setcookie('table_style','2');
+		 setcookie('table_style_pd','2');
 	}
 }
 

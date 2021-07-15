@@ -51,8 +51,8 @@ class PDRepairController extends Controller
       Cookie::queue(Cookie::forget($row));
     }
 
-    if ($request->cookie('table_style') == NUll) {
-      Cookie::queue('table_style','2');
+    if ($request->cookie('table_style_pd') == NUll) {
+      Cookie::queue('table_style_pd','2');
     }
     $SEARCH      = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
     $SERACH_TEXT =  $request->SEARCH;
