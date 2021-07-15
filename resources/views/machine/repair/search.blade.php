@@ -71,14 +71,7 @@
 						  <div class="card-header">
 						  <div class="row justify-content-md-center">
 						    <div class="col-md-6 col-lg-5 ">
-									<div id="control">
-											<button onclick="openCamera()" class="w-50">Open Camera</button>
-											<button onclick="capture()" class="w-50">Capture</button>
-									</div>
-									<div id="preview">
-											<video id="camera" width="100%" height="auto" autoplay></video>
-											<canvas id="canvas"></canvas>
-									</div>
+						      <h3 >กรอกรหัสเครื่อง / แสกนQR Code</h3>
 									<form action="{{ route('repair.repairsearch') }}" method="POST">
 										@method('GET')
 										@csrf
@@ -138,136 +131,7 @@
 
 {{-- ส่วนjava --}}
 @section('javascript')
-{{-- <script src="{{ asset('assets/js/instascan.min.js') }}"></script> --}}
 
-<script>
-        const RECENT_4_URLS = 'RECENT_4_URLS'
-        const DEFAULT_URL = 'https://puuga.github.io/web-qr/'
 
-        function readRecent4UrlsThenFillToElement () {
-            const localStorage = window.localStorage
-            if (localStorage.getItem(RECENT_4_URLS)) {
-                const recent4Urls = JSON.parse(localStorage.getItem(RECENT_4_URLS))
-                let content = ''
-                for (const url of recent4Urls) {
-                    content += makeHtmlResultContent(url)
-                }
-                const resultElement = document.getElementById('result')
-                resultElement.innerHTML = resultElement.innerHTML + content
-            }
-        }
-
-        async function openCamera () {
-            // try open rear camera then default camera
-            try {
-                await openRearCamera()
-            } catch (error) {
-                try {
-                    await openDefaultCamera()
-                } catch (error) {
-                    alert('No support or no permission, try again')
-										console.log(error);
-                }
-            }
-        }
-
-        async function openRearCamera () {
-            const constraints = (window.constraints = {
-                audio: false,
-                video: { facingMode: { exact: 'environment' } }
-            });
-
-            return await openCameraWith(constraints)
-        }
-
-        async function openDefaultCamera () {
-            const constraints = (window.constraints = {
-                audio: false,
-                video: true
-            });
-
-            return await openCameraWith(constraints)
-        }
-
-        async function openCameraWith (constraint = {}) {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia(constraints)
-                const cameraElement = document.getElementById('camera')
-                cameraElement.srcObject = stream
-
-                const videoTracks = stream.getVideoTracks()
-                console.log('Got stream with constraints:', constraints)
-                console.log('videoTracks: ' + videoTracks)
-                console.log('Using video device: ' + videoTracks[0].label)
-                return true
-            } catch (error) {
-                console.log(error);
-                throw error
-            }
-        }
-
-        async function capture () {
-            const canvas = document.getElementById('canvas')
-            const video = document.getElementById('camera')
-            canvas.width = video.videoWidth
-            canvas.height = video.videoHeight
-            canvas.getContext('2d').drawImage(video, 0, 0, video.videoWidth, video.videoHeight)
-
-            await detectQR(canvas)
-        }
-
-        async function detectQR (canvasElement = {}) {
-            try {
-                const barcodeDetector = new BarcodeDetector({formats: ['qr_code']})
-                const barcodes = await barcodeDetector.detect(canvasElement)
-                console.log('barcodes', barcodes)
-
-                const resultElement = document.getElementById('result')
-                if (barcodes.length === 0) {
-                    resultElement.innerHTML = 'Not found any QR'
-                } else {
-                    let result = `Found ${barcodes.length} QR<br>`
-                    for (const barcode of barcodes) {
-                        console.log('barcode', barcode)
-                        console.log('barcode.rawValue', barcode.rawValue)
-
-                        if (barcode.rawValue.startsWith('http')) {
-                            result += makeHtmlResultContent(barcode.rawValue)
-                        } else {
-                            result += `${barcode.rawValue}<br>`
-                        }
-                    }
-                    resultElement.innerHTML = result
-                }
-            } catch {
-                throw error
-            }
-        }
-
-        function makeHtmlResultContent (url = '') {
-            return `<button onclick="redirectTo('${url}')">GO !</button> ${url}<br>`
-        }
-
-        function redirectTo (url = DEFAULT_URL) {
-            if (url !== DEFAULT_URL) {
-                saveRecent(url)
-            }
-
-            window.location.href = url
-        }
-
-        function saveRecent (url = '') {
-            const localStorage = window.localStorage
-            const recent4Urls = JSON.parse(localStorage.getItem(RECENT_4_URLS)) || []
-
-            if (recent4Urls.length === 4) {
-                recent4Urls.pop()
-            }
-
-            recent4Urls.unshift(url)
-
-            localStorage.setItem(RECENT_4_URLS, JSON.stringify(recent4Urls))
-        }
-    </script>
 @stop
 {{-- ปิดส่วนjava --}}
