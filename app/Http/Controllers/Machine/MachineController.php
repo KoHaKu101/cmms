@@ -348,12 +348,19 @@ class MachineController extends Controller
   }
 
   public function UserHomePage($role = NULL){
-    if (Gate::allows('isManager_Ma') || Gate::allows('isAdmin')) {
+    // dd(Gate::allows('isManager_Pd') || Gate::allows('isAdmin'));
+    if (Gate::allows('isManager_Ma')) {
       return View('machine.userpage.userhomepageforma');
-    }elseif(Gate::allows('isManager_Pd') || Gate::allows('isAdmin')) {
+    }elseif(Gate::allows('isManager_Pd')) {
       return View('machine.userpage.userhomepageforpd');
-    }else {
-      return redirect(route('dashboard'));
+    }elseif (Gate::allows('isAdmin')) {
+      if ($role == 'pd') {
+        return View('machine.userpage.userhomepageforpd');
+      }elseif ($role == 'ma') {
+        return View('machine.userpage.userhomepageforma');
+      }else {
+        return Redirect(route('dashboard'));
+      }
     }
 
   }
