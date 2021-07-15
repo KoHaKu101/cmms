@@ -104,7 +104,7 @@
 	<script type="text/javascript" src="{{ asset('/assets/js/plugin/sweetalert/sweetalert2.js') }}"></script>
 	@can('isAdmin')
 		<script type="text/javascript" src="{{ asset('assets/js/useinproject/dashboard/notifity.js') }}"></script>
-	@elsecan('isManager')
+	@elsecan('isManager_Ma')
 		<script type="text/javascript" src="{{ asset('assets/js/useinproject/dashboard/notifity.js') }}"></script>
 	@else
 
