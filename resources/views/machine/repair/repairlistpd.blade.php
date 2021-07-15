@@ -268,7 +268,7 @@
 								          @foreach ($dataset as $key => $sub_row)
 														@php
 															$REC_WORK_STATUS  = isset($array_EMP[$sub_row->INSPECTION_CODE]) ? $sub_row->INSPECTION_NAME_TH : 'รอรับงาน';
-															$BTN_COLOR_STATUS = $sub_row->INSPECTION_CODE == '' ? 'btn-mute' : ($sub_row->CLOSE_STATUS == '1' ? 'btn-info' : 'btn-warning') ;
+															$BTN_COLOR_STATUS = $sub_row->INSPECTION_CODE == '' ? 'btn-mute' : ($sub_row->CLOSE_STATUS == '1' ? 'btn-success' : 'btn-warning') ;
 
 															$BTN_COLOR 			  = $sub_row->INSPECTION_CODE == '' ? 'btn-danger' : 'btn-danger' ;
 															$BTN_TEXT  			  = $sub_row->INSPECTION_CODE == '' ? 'รอรับงาน' : ($sub_row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ' : 'กำลังดำเนินการ') ;
@@ -277,10 +277,12 @@
 												      if ($sub_row->PD_CHECK_STATUS == 1) {
 												        $BTN_TEXT = 'ปิดเอกสารแล้ว';
 												        $BTN_COLOR_STATUS =  'btn-success';
-												        $BTN_COLOR = 'btn-secondary';
 												        $BTN_TEXT_SUB = 'flaticon-success mx-1';
 												        $REC_WORK_STATUS = $BTN_TEXT;
 												      }
+															if ($sub_row->CLOSE_STATUS == 1) {
+																$BTN_COLOR = 'btn-secondary';
+															}
 
 														@endphp
 								            <tr >
@@ -356,7 +358,7 @@ $(document).ready(function(){
 		if (cookie_tablestyle == '') {
 				styletable('1');
 		}
-		var loaddata_table_all = function (){
+		var loaddata_table_all = function loopdata_table(){
 			$.ajax({
 						 type:'GET',
 						 url: url,
@@ -432,6 +434,7 @@ function styletable(table_style){
 				 					 success:function(result){
 				 						 $("#overlay").fadeOut(300);
 										 if (result.pass) {
+											 loopdata_table();	
 											 Swal.fire({
 				 				 				  icon: 'success',
 				 				 				  title: 'บันทึกสำเร็จ',
