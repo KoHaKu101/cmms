@@ -148,15 +148,17 @@ class PDRepairController extends Controller
     $html_style = '';
     foreach ($dataset as $key => $row) {
       $REC_WORK_STATUS  = isset($row->INSPECTION_CODE) ? $row->INSPECTION_NAME_TH : 'รอรับงาน';
-      $BTN_COLOR_STATUS = $row->INSPECTION_CODE == '' ? 'btn-mute' : ($row->CLOSE_STATUS == '1' ? 'btn-info' : 'btn-warning') ;
-      $BTN_COLOR 			  = $row->INSPECTION_CODE == '' ? 'btn-danger' : 'btn-danger' ;
+      $BTN_COLOR_STATUS = $row->INSPECTION_CODE == '' ? 'btn-mute' : ($row->CLOSE_STATUS == '1' ? 'btn-success' : 'btn-warning') ;
+      $BTN_COLOR 			  = $row->INSPECTION_CODE == '' ? 'btn-danger' : ($row->CLOSE_STATUS == '1' ? 'btn-secondary' :'btn-danger') ;
       $BTN_TEXT  			  = $row->INSPECTION_CODE == '' ? 'รอรับงาน' : ($row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ' : 'กำลังดำเนินการ') ;
-      $BTN_TEXT_SUB     = '';
+      $BTN_TEXT_SUB     = $row->CLOSE_STATUS == 1 ? 'fas fa-clipboard-check mx-1' : '';
+      // $BTN
       if ($row->PD_CHECK_STATUS == 1) {
-        $BTN_TEXT = 'ปิดเอกสารแล้ว;';
+        $BTN_TEXT = 'ปิดเอกสารแล้ว';
         $BTN_COLOR_STATUS =  'btn-success';
         $BTN_COLOR = 'btn-secondary';
-        $BTN_TEXT_SUB = 'fas fa-clipboard-check mx-1';
+        $BTN_TEXT_SUB = 'flaticon-success mx-1';
+        $REC_WORK_STATUS = $BTN_TEXT;
       }
 
       $html.= '<tr>
