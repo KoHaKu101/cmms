@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c9d78c5afaf3f5245c59156e4e7bfb89",
+    "content-hash": "f80e6f46b17f5c39a7fb83b7283b7287",
     "packages": [
         {
             "name": "5dmatweb/streamlab",
@@ -1793,6 +1793,61 @@
                 }
             ],
             "time": "2020-06-13T08:05:20+00:00"
+        },
+        {
+            "name": "khanamiryan/qrcode-detector-decoder",
+            "version": "1.0.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/khanamiryan/php-qrcode-detector-decoder.git",
+                "reference": "b96163d4f074970dfe67d4185e75e1f4541b30ca"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/khanamiryan/php-qrcode-detector-decoder/zipball/b96163d4f074970dfe67d4185e75e1f4541b30ca",
+                "reference": "b96163d4f074970dfe67d4185e75e1f4541b30ca",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7 | ^7.5 | ^8.0 | ^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Zxing\\": "lib/"
+                },
+                "files": [
+                    "lib/Common/customFunctions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT",
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Ashot Khanamiryan",
+                    "email": "a.khanamiryan@gmail.com",
+                    "homepage": "https://github.com/khanamiryan",
+                    "role": "Developer"
+                }
+            ],
+            "description": "QR code decoder / reader",
+            "homepage": "https://github.com/khanamiryan/php-qrcode-detector-decoder/",
+            "keywords": [
+                "barcode",
+                "qr",
+                "zxing"
+            ],
+            "support": {
+                "issues": "https://github.com/khanamiryan/php-qrcode-detector-decoder/issues",
+                "source": "https://github.com/khanamiryan/php-qrcode-detector-decoder/tree/1.0.5.1"
+            },
+            "time": "2021-04-21T08:02:08+00:00"
         },
         {
             "name": "laminas/laminas-escaper",
