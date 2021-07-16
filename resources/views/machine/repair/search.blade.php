@@ -4,7 +4,7 @@
 @endsection
 @section('tittle','homepage')
 @section('css')
-
+  <link rel="stylesheet" href="{{asset('assets/js/dist/css/qrcode-reader.css')}}">
 
 @endsection
 {{-- ส่วนหัว --}}
@@ -72,6 +72,14 @@
 						  <div class="row justify-content-md-center">
 						    <div class="col-md-6 col-lg-5 ">
 						      <h3 >กรอกรหัสเครื่อง / แสกนQR Code</h3>
+									<label for="single">Single input (rebound click, depending on target input's content):</label>
+								  <input id="single2" type="text" size="50">
+								  <button type="button" id="openreader-single2"
+								    data-qrr-target="#single2"
+								    data-qrr-audio-feedback="true"
+										{{-- onclick="cameraphone()" --}}
+										>Read or follow QRCode</button>
+										<div id="div"></div>
 									<form action="{{ route('repair.repairsearch') }}" method="POST">
 										@method('GET')
 										@csrf
@@ -131,7 +139,18 @@
 
 {{-- ส่วนjava --}}
 @section('javascript')
+	{{-- <script src="{{asset('assets/js/dist/js/require.js')}}"></script> --}}
+	<script src="{{asset('assets/js/dist/js/getusermedia.bundle.js')}}"></script>
 
+	<script>
+	$(document).ready(function(){
+		navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+		  .then(stream => video.srcObject = stream)
+		  .catch(e => log(e.name + ": "+ e.message));
 
+		var log = msg => div.innerHTML += msg + "<br>";
+	});
+
+	</script>
 @stop
 {{-- ปิดส่วนjava --}}
