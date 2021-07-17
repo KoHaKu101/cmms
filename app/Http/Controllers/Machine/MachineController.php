@@ -70,8 +70,8 @@ class MachineController extends Controller
     Cookie::queue('MACHINE_RANK_CODE',$COOKIE_MACHINE_RANK_CODE,$MINUTES);
     Cookie::queue('MACHINE_STATUS',$COOKIE_MACHINE_STATUS,$MINUTES);
 
-    $LINE = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
-    $RANK = MachineRankTable::where('MACHINE_RANK_STATUS','=','9')->orderBy('MACHINE_RANK_CODE')->get();
+    $LINE = MachineLine::select('LINE_CODE','LINE_NAME')->where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
+    $RANK = MachineRankTable::select('MACHINE_RANK_CODE')->where('MACHINE_RANK_STATUS','=','9')->orderBy('MACHINE_RANK_CODE')->get();
 
     $MACHINE_CHECK      = $COOKIE_MACHINE_CHECK;
     $MACHINE_LINE       = $COOKIE_LINE;
@@ -79,7 +79,8 @@ class MachineController extends Controller
     $MACHINE_STATUS     = $COOKIE_MACHINE_STATUS;
     $SEARCH             = $request->SEARCH ;
 
-      $machine = Machine::select('*')->selectRaw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH,dbo.decode_utf8(MACHINE_TYPE) as MACHINE_TYPE_TH')
+      $machine = Machine::select('PLAN_LAST_DATE','REPAIR_LAST_DATE','MACHINE_LINE','UNID','MACHINE_CODE','MACHINE_RANK_CODE')
+                        ->selectRaw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH,dbo.decode_utf8(MACHINE_TYPE) as MACHINE_TYPE_TH')
                         ->where(function ($query) use ($MACHINE_LINE) {
                                if ($MACHINE_LINE > 0) {
                                   $query->where('MACHINE_LINE', '=', $MACHINE_LINE);

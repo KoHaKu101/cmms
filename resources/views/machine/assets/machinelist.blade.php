@@ -130,14 +130,8 @@
 								        <tbody >
 								          @foreach ($machine as $key => $row)
 														@php
-														$PLAN_LAST_DATE = '';
-														$REPAIR_LAST_DATE = '';
-														  if (isset($row->PLAN_LAST_DATE)) {
-															 $PLAN_LAST_DATE = $row->PLAN_LAST_DATE == '1900-01-01' ? '' : $row->PLAN_LAST_DATE;
-														  }
-															if (isset($row->REPAIR_LAST_DATE)) {
-																$REPAIR_LAST_DATE = $row->REPAIR_LAST_DATE == '1900-01-01' ? '' : $row->REPAIR_LAST_DATE;
-															}
+														$PLAN_LAST_DATE = isset($row->PLAN_LAST_DATE) ? ($row->PLAN_LAST_DATE == '1900-01-01' ? '' : $row->PLAN_LAST_DATE) : '' ;
+														$REPAIR_LAST_DATE = isset($row->REPAIR_LAST_DATE) ? ($row->REPAIR_LAST_DATE == '1900-01-01' ? '' : $row->REPAIR_LAST_DATE) : '' ;
 														@endphp
 								            <tr class="mt-4">
 								              <td >

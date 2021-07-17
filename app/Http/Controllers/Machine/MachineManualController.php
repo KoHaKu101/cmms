@@ -38,32 +38,33 @@ class MachineManualController extends Controller
     return $number;
   }
   public function Index(Request $request){
-    $LINE = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
+    $LINE         = MachineLine::select('LINE_NAME','LINE_CODE')->where('LINE_NAME','like','Line'.'%')->where('LINE_STATUS','=','9')->orderBy('LINE_NAME')->get();
     $MACHINE_LINE = isset($request->MACHINE_LINE) ? $request->MACHINE_LINE : '';
-    $SEARCH = isset($request->SEARCH) ? $request->SEARCH : '';
-    $dataset = Machine::select('*')->selectRaw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
-                      ->where(function ($query) use ($MACHINE_LINE) {
-                             if ($MACHINE_LINE != '') {
-                                $query->where('MACHINE_LINE', '=', $MACHINE_LINE);
-                              }
-                             })
-                      ->where(function ($query) use ($SEARCH) {
-                            if ($SEARCH != "") {
-                               $query->where('MACHINE_CODE', 'like', '%'.$SEARCH.'%')
-                                     ->orwhere('MACHINE_TYPE','like','%'.$SEARCH.'%')
-                                     ->orwhere('MACHINE_NAME','like','%'.$SEARCH.'%')
-                                     ->orwhere('MACHINE_MODEL','like','%'.$SEARCH.'%');
-                             }
-                            })
-                      ->where('MACHINE_TYPE_STATUS','=','9')
-                      ->orderBy('MACHINE_LINE','ASC')
-                      ->orderBy('MACHINE_CODE')->paginate(10);
-        $data_upload = MachineUpload::select('UPLOAD_UNID_REF')->get();
+    $SEARCH       = isset($request->SEARCH) ? $request->SEARCH : '';
+    $dataset      = Machine::select('MACHINE_LINE','UNID','MACHINE_CODE','MACHINE_TYPE')
+                            ->selectRaw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
+                            ->where(function ($query) use ($MACHINE_LINE) {
+                                   if ($MACHINE_LINE != '') {
+                                      $query->where('MACHINE_LINE', '=', $MACHINE_LINE);
+                                    }
+                                   })
+                            ->where(function ($query) use ($SEARCH) {
+                                  if ($SEARCH != "") {
+                                     $query->where('MACHINE_CODE', 'like', '%'.$SEARCH.'%')
+                                           ->orwhere('MACHINE_TYPE','like','%'.$SEARCH.'%')
+                                           ->orwhere('MACHINE_NAME','like','%'.$SEARCH.'%')
+                                           ->orwhere('MACHINE_MODEL','like','%'.$SEARCH.'%');
+                                   }
+                                  })
+                            ->where('MACHINE_TYPE_STATUS','=','9')
+                            ->orderBy('MACHINE_LINE','ASC')
+                            ->orderBy('MACHINE_CODE')->paginate(10);
+    $data_upload   = MachineUpload::select('UPLOAD_UNID_REF')->get();
     return View('machine/manual/manuallist',compact('dataset','MACHINE_LINE','SEARCH','LINE','data_upload'));
   }
 
   public function Show($UNID) {
-    $dataset = Machine::where('UNID','=',$UNID)->first();
+    $dataset    = Machine::select('MACHINE_CODE')->where('UNID','=',$UNID)->first();
     $dataupload = MachineUpload::where('UPLOAD_UNID_REF','=',$UNID)->get();
     return view('machine/manual/show',compact('dataset','dataupload'));
 
