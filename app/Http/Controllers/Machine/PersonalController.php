@@ -9,7 +9,6 @@ use Auth;
 use File;
 use Illuminate\Http\Request;
 //******************** model ***********************
-use App\Models\Machine\PositionEMP;
 use App\Models\Machine\MachineEMP;
 use App\Models\Machine\MachineLine;
 use App\Models\Machine\EMPName;
@@ -62,11 +61,8 @@ class PersonalController extends Controller
     return View('machine/personal/personallist',compact('dataset','SEARCH','data_emppaytype','data_emppostion'));
   }
   public function Create(){
-
     $datalineselect = MachineLine::all();
-    $data_position = PositionEMP::select('*')->selectraw('dbo.decode_utf8(EMP_POSITION_NAME) as EMP_POSITION_NAME')
-                                ->whereraw('EMP_POSITION_LIMIT != LITMIT_STOCK')->where('STATUS','=','9')->get();
-    return View('machine/personal/form',compact('datalineselect','data_position'));
+    return View('machine/personal/form',compact('datalineselect'));
   }
 
   public function Store(Request $request){

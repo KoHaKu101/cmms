@@ -18,7 +18,6 @@ use App\Http\Controllers\Machine\UploadImgController;
 
 //************** Package form github ***************
 use RealRashid\SweetAlert\Facades\Alert;
-// use Intervention\Image\ImageManagerStatic as Image;
 
 
 class DailyCheckController extends Controller

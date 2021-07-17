@@ -263,6 +263,7 @@ class MachineRepairController extends Controller
         }
         ImageDestroy($img_master);
         ImageDestroy($img_create);
+        dd($FILE);
         $qrcode = new Zxing\QrReader($current_path);
         $text = $qrcode->text();
         unlink($current_path);

@@ -50,7 +50,6 @@
 									<input type="hidden" id="MACHINE_LINE" name="MACHINE_LINE" value="{{ $MACHINE_LINE }}">
 									<span class="fas fa-print fa-lg">	Print	</span>
 								</button>
-
 							</div>
 						</div>
           </div>
@@ -89,13 +88,11 @@
 														<option value="3" {{ $MACHINE_CHECK == "3" ? 'selected': '' }}>รอผลิต</option>
 														<option value="4" {{ $MACHINE_CHECK == "4" ? 'selected': '' }}>แผนผลิต</option>
 													</select>
-
 														<label class="text-white mx-2">สถานะ : </label>
 														<select class="form-control form-control-sm mt-1 mx-1" id="MACHINE_STATUS" name="MACHINE_STATUS" onchange="changerank()" >
 															<option value="9" {{ $MACHINE_STATUS == "9" ? 'selected' : "" }}>แสดง</option>
 															<option value="1" {{ $MACHINE_STATUS == "1" ? 'selected' : "" }}>ซ่อน</option>
 														</select>
-
 											</div>
 								      <div class="col-md-4 form-inline">
 												<label class="text-white mx-2">SEARCH : </label>
@@ -130,7 +127,6 @@
 								            <th>แจ้งซ่อม</th>
 								          </tr>
 								        </thead>
-
 								        <tbody >
 								          @foreach ($machine as $key => $row)
 														@php

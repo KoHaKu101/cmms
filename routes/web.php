@@ -15,7 +15,6 @@ use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Dashboard\CalendarController;
 use App\Http\Controllers\Machine\MachineController;
 use App\Http\Controllers\Machine\PersonalController;
-use App\Http\Controllers\Machine\PositionEmpController;
 use App\Http\Controllers\Machine\MachineManualController;
 use App\Http\Controllers\Machine\SysCheckController;
 use App\Http\Controllers\Machine\MailConfigController;
@@ -244,11 +243,6 @@ Route::get('machine/machinespart/getlistsparepart/{UNID}'     ,[MachineSparePart
   Route::post('machine/machinespart/update'                     ,[MachineSparePartController::class,'Update']) ->name('MachineSparPart.Update');
   Route::get('machine/machinespart/delete'                      ,[MachineSparePartController::class,'Delete']) ->name('MachineSparPart.Delete');
   Route::get('machine/machinespart/statusopen'                  ,[MachineSparePartController::class,'StatusOpen']) ->name('MachineSparPart.StatusOpen');
-//postion emp
-route::get('machine/position/positionlist/{POSITION_CODE?}'  ,[PositionEmpController::class,'List']) ->name('position.list');
-  route::post('machine/position/save'                          ,[PositionEmpController::class,'Save']) ->name('position.save');
-  route::post('machine/position/update'                        ,[PositionEmpController::class,'Update']) ->name('position.update');
-  route::get('machine/position/delete'                        ,[PositionEmpController::class,'Delete']) ->name('position.delete');
   //***************************** PlanPm ****************************************
 Route::get('machine/plan/planpm'                             ,[MachinePlanController::class,'PMPlanPrint']) ->name('plan.pm');
 Route::post('machine/plan/planpmpdf'                         ,[MachinePlanController::class,'PdfPlanPm']) ->name('plan.pmpdf');

@@ -31,14 +31,17 @@
                         </thead>
                        <tbody class="data-machine">
                          @foreach($machinepmtemplateremove as $index => $datapmremove)
+                           @php
+                            $UNID = $datapmremove->UNID;
+                           @endphp
                            <tr>
                              <td>
                                {{ $index+1  }}
                              </td>
                              <td><div class="form-check">
                              <label class="form-check-label">
-                               <input class="form-check-input add-machine PM_TEMPLATE_UNID_REFREMOVE" type="checkbox" value="{{ $datapmremove->UNID }}"
-                               id="PM_TEMPLATE_UNID_REFREMOVE{{ $datapmremove->UNID }}" name="PM_TEMPLATE_UNID_REFREMOVE{{ $datapmremove->UNID }}"
+                               <input class="form-check-input add-machine PM_TEMPLATE_UNID_REFREMOVE" type="checkbox" value="{{ $UNID }}"
+                               id="PM_TEMPLATE_UNID_REFREMOVE{{ $UNID }}" name="PM_TEMPLATE_UNID_REFREMOVE{{ $UNID }}"
                                >
                                <span class="form-check-sign">{{$datapmremove->PM_TEMPLATE_NAME}}</span>
                              </label>

@@ -13,7 +13,6 @@ use Gate;
 //******************** model ***********************
 use App\Models\Machine\Machine;
 use App\Models\Machine\SparePart;
-use App\Models\Machine\RepairWorker;
 use App\Models\Machine\RepairSparepart;
 use App\Models\Machine\History;
 use App\Models\Machine\MachineRepairREQ;

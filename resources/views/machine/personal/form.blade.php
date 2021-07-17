@@ -110,18 +110,6 @@
 													</div>
 												</div>
 											</div>
-											{{-- <div class="form-group col-md-12 has-error">
-												<lebel>ตำแหน่ง</lebel>
-												<select class="form-control form-control" id="POSITION" name="POSITION" required>
-												<option value>--แสดงทั้งหมด--</option>
-
-												@foreach ($data_position as $key => $row_position)
-													<option value="{{$row_position->EMP_POSITION_CODE}}">{{$row_position->EMP_POSITION_NAME}}</option>
-												@endforeach
-
-												</select>
-											</div> --}}
-
 
 										</div>
 									</div>

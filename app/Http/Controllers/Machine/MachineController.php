@@ -19,7 +19,6 @@ use App\Models\Machine\Protected;
 use App\Models\Machine\MachineUpload;
 use App\Models\Machine\MachineLine;
 use App\Models\Machine\MachineEMP;
-use App\Models\Machine\MachineRepairREQ;
 use App\Models\Machine\MasterIMPS;
 use App\Models\Machine\MasterIMPSGroup;
 use App\Models\Machine\MachineSparePart;
@@ -30,26 +29,14 @@ use App\Models\MachineaddTable\MachinePmTemplate;
 use App\Models\MachineaddTable\MachinePmTemplateDetail;
 use App\Models\MachineaddTable\MachineTypeTable;
 use App\Models\MachineAddTable\MachineStatusTable;
-use App\Models\MachineAddTable\MachineSysTemTable;
-use App\Models\MachineaddTable\MachinePmTemplateList;
 use App\Models\MachineAddTable\MachineRankTable;
-
-
-
 //************** Package form github ***************
 use RealRashid\SweetAlert\Facades\Alert;
-use App\Exports\MachineExport;
-use Maatwebsite\Excel\Facades\Excel;
-
-
-
 
 class MachineController extends Controller
 {
   public function __construct(){
     $this->middleware('auth');
-
-
   }
   public function randUNID($table){
     $number = date("ymdhis", time());
@@ -76,23 +63,22 @@ class MachineController extends Controller
     $COOKIE_LINE              = $request->LINE              != '' ? $request->LINE              : $request->cookie('LINE');
     $COOKIE_MACHINE_RANK_CODE = $request->MACHINE_RANK_CODE != '' ? $request->MACHINE_RANK_CODE : $request->cookie('MACHINE_RANK_CODE');
     $COOKIE_MACHINE_STATUS    = $request->MACHINE_STATUS    != '' ? $request->MACHINE_STATUS    : $request->cookie('MACHINE_STATUS');
-    $MINUTES = 30;
 
+    $MINUTES = 30;
     Cookie::queue('MACHINE_CHECK',$COOKIE_MACHINE_CHECK,$MINUTES);
     Cookie::queue('LINE',$COOKIE_LINE,$MINUTES);
     Cookie::queue('MACHINE_RANK_CODE',$COOKIE_MACHINE_RANK_CODE,$MINUTES);
     Cookie::queue('MACHINE_STATUS',$COOKIE_MACHINE_STATUS,$MINUTES);
 
-
     $LINE = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
     $RANK = MachineRankTable::where('MACHINE_RANK_STATUS','=','9')->orderBy('MACHINE_RANK_CODE')->get();
 
-    $MACHINE_CHECK = $COOKIE_MACHINE_CHECK;
-    $SEARCH = $request->SEARCH ;
+    $MACHINE_CHECK      = $COOKIE_MACHINE_CHECK;
+    $MACHINE_LINE       = $COOKIE_LINE;
+    $MACHINE_RANK_CODE  = $COOKIE_MACHINE_RANK_CODE;
+    $MACHINE_STATUS     = $COOKIE_MACHINE_STATUS;
+    $SEARCH             = $request->SEARCH ;
 
-    $MACHINE_LINE = $COOKIE_LINE;
-    $MACHINE_RANK_CODE = $COOKIE_MACHINE_RANK_CODE;
-    $MACHINE_STATUS = $COOKIE_MACHINE_STATUS;
       $machine = Machine::select('*')->selectRaw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH,dbo.decode_utf8(MACHINE_TYPE) as MACHINE_TYPE_TH')
                         ->where(function ($query) use ($MACHINE_LINE) {
                                if ($MACHINE_LINE > 0) {
@@ -126,8 +112,8 @@ class MachineController extends Controller
   }
 
   public function Create(){
-    $machineline = MachineLine::select('LINE_CODE','LINE_NAME')->where('LINE_STATUS','=','9')->get();
-    $machinetype = MachineTypeTable::where('TYPE_STATUS','=','9')->get();
+    $machineline   = MachineLine::select('LINE_CODE','LINE_NAME')->where('LINE_STATUS','=','9')->get();
+    $machinetype   = MachineTypeTable::where('TYPE_STATUS','=','9')->get();
     $machinestatus = MachineStatusTable::where('STATUS','=','9')->get();
     $machinerank   = MachineRankTable::where('MACHINE_RANK_STATUS','!=','1')->get();
     return View('machine/assets/form',compact('machineline','machinetype','machinestatus','machinerank'));
@@ -135,27 +121,27 @@ class MachineController extends Controller
   public function Store(Request $request){
 
     $validated = $request->validate([
-      'MACHINE_CODE'           => 'required|unique:PMCS_MACHINE|max:50',
-      'MACHINE_ICON' => 'mimes:jpeg,png,jpg',
+      'MACHINE_CODE'    => 'required|unique:PMCS_MACHINE|max:50',
+      'MACHINE_ICON'    => 'mimes:jpeg,png,jpg',
       ],
       [
       'MACHINE_CODE.required'  => 'กรุณราใส่รหัสเครื่องจักร',
       'MACHINE_CODE.unique'    => 'มีรหัสเครื่องแล้ว',
-      'MACHINE_ICON.mimes'   => 'เฉพาะไฟล์ jpeg, png, jpg',
+      'MACHINE_ICON.mimes'     => 'เฉพาะไฟล์ jpeg, png, jpg',
       ]);
       if ($request->hasFile('MACHINE_ICON')) {
-        if ($request->file('MACHINE_ICON')->isValid()) {
           $image = $request->file('MACHINE_ICON');
           $new_name = rand() . '.' . $image->getClientOriginalExtension();
           $this->SaveImg($image,$new_name,$request->MACHINE_LINE);
           $last_img = $new_name;
-        }
+
       } else {
         $last_img = "";
       }
-      $UNID = $this->randUNID('PMCS_MACHINE');
+
+      $UNID         = $this->randUNID('PMCS_MACHINE');
       $MACHINE_CODE = strtoupper($request->MACHINE_CODE);
-      $rankcode = MachineRankTable::select('MACHINE_RANK_CODE')->where('MACHINE_RANK_MONTH',$request->MACHINE_RANK_MONTH)->first();
+      $rankcode     = MachineRankTable::select('MACHINE_RANK_CODE')->where('MACHINE_RANK_MONTH',$request->MACHINE_RANK_MONTH)->first();
       Machine::insert([
           'MACHINE_CODE'         => $MACHINE_CODE,
           'MACHINE_NAME'         => $request->MACHINE_NAME,
@@ -207,46 +193,50 @@ class MachineController extends Controller
     $dataset                     = Machine::select('*')->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME
                                                                     ,dbo.decode_utf8(PURCHASE_FORM) as PURCHASE_FORM')
                                                        ->where('UNID',$UNID)->first();
+    $MACHINE_CODE                = $dataset->MACHINE_CODE;
+    $MasterIMPS_SELECT           = MasterIMPS::select('PM_TEMPLATE_UNID_REF')->where('MACHINE_UNID',$UNID)->get();
 
     $machineupload               = MachineUpload::where('UPLOAD_UNID_REF',$UNID)->get();
     $machinetype                 = MachineTypeTable::where('TYPE_STATUS','=','9')->orderBy('TYPE_NAME')->orderBy('TYPE_CODE')->get();
     $machinestatus               = MachineStatusTable::where('STATUS','=','9')->get();
-    $machineemp                  = MachineEMP::select('*')->selectRaw('dbo.decode_utf8(EMP_NAME) as EMP_NAME,
-                                                                      dbo.decode_utf8(EMP_NAME_LAST) as EMP_NAME_LAST')
-                                                          ->where('MACHINE_CODE','=',$dataset->MACHINE_CODE)->get();
+    $machineemp                  = MachineEMP::select('EMP_CODE','COUNTRY_CODE','EMP_KA','EMP_TYPE')
+                                              ->selectRaw('dbo.decode_utf8(EMP_NAME) as EMP_NAME,
+                                                           dbo.decode_utf8(EMP_NAME_LAST) as EMP_NAME_LAST')
+                                              ->where('MACHINE_CODE','=',$MACHINE_CODE)->get();
     $machineline                 = MachineLine::select('LINE_CODE','LINE_NAME')
                                               ->where('LINE_STATUS','=','9')
                                               ->get();
-    $machinerepair               = History::select('*')->selectraw('dbo.decode_utf8(REPORT_BY) as REPORT_BY_TH')
-                                                    ->where('MACHINE_UNID','=',$UNID)
-                                                    ->get();
+    $machinerepair               = History::select('DOC_NO','DOC_DATE','REPAIR_REQ_DETAIL','DOWN_TIME')
+                                              ->selectraw('dbo.decode_utf8(REPORT_BY) as REPORT_BY_TH')
+                                              ->where('MACHINE_UNID','=',$UNID)
+                                              ->get();
 
-    $machinepmtemplate           = MachinePmTemplate::whereNotIn('PM_TEMPLATE_NAME',MasterIMPS::select('PM_TEMPLATE_NAME')
-                                                    ->where('MACHINE_CODE',$dataset->MACHINE_CODE))
-                                                    ->orderBy('CREATE_TIME','ASC')->paginate(6);
-    $machinepmtemplateremove     = MachinePmTemplate::whereIn('PM_TEMPLATE_NAME',MasterIMPS::select('PM_TEMPLATE_NAME')
-                                                    ->where('MACHINE_CODE',$dataset->MACHINE_CODE))
-                                                    ->orderBy('CREATE_TIME','ASC')->paginate(6);
     $machinerank                 = MachineRankTable::select('MACHINE_RANK_MONTH','MACHINE_RANK_CODE')
                                                     ->where('MACHINE_RANK_STATUS','!=','1')->get();
 
-    $masterimps                  =  MasterIMPS::where('MACHINE_UNID',$UNID)->orderBy('CREATE_TIME','ASC')->get();
+    $masterimps                  =  MasterIMPS::select('PM_TEMPLATE_NAME','PM_TEMPLATE_UNID_REF','PM_LAST_DATE')
+                                              ->where('MACHINE_UNID',$UNID)->orderBy('CREATE_TIME','ASC')->get();
 
-    $masterimpsgroup             =  MasterIMPSGroup::orderBy('PM_TEMPLATELIST_INDEX','ASC')->get();
-    $pmlistdetail                =  MachinePmTemplateDetail::orderBy('PM_DETAIL_INDEX','ASC')->get();
+    $masterimpsgroup             =  MasterIMPSGroup::select('PM_TEMPLATELIST_NAME','PM_TEMPLATELIST_UNID_REF','PM_TEMPLATE_UNID_REF')
+                                                    ->where('MACHINE_UNID',$UNID)->orderBy('PM_TEMPLATELIST_INDEX','ASC')->get();
+    $pmlistdetail                =  MachinePmTemplateDetail::select('PM_TEMPLATELIST_UNID_REF','PM_DETAIL_NAME','PM_DETAIL_STD')
+                                                            ->orderBy('PM_DETAIL_INDEX','ASC')->get();
     $machinesparepart            =  MachineSparePart::where('MACHINE_UNID','=',$UNID)->where('STATUS','=','9')
-                                             ->get();
-    $machinepmtemplateremove     = MachinePmTemplate::whereIn('PM_TEMPLATE_NAME',MasterIMPS::select('PM_TEMPLATE_NAME')->where('MACHINE_UNID',$UNID))->orderBy('CREATE_TIME','ASC')->paginate(6);
-    $machinepmtemplate           = MachinePmTemplate::whereNotIn('PM_TEMPLATE_NAME',MasterIMPS::select('PM_TEMPLATE_NAME')->where('MACHINE_UNID',$UNID))->orderBy('CREATE_TIME','ASC')->paginate(6);
+                                                    ->get();
 
-
-    $DATA_PRODUCT             = BomMachine::select('MACHINE_CODE','MACHINE_NAME','PDCS_BOM_MACHINE.PRODUCT_CODE','PDCS_BOM_MACHINE.FORMULA_CODE'
+    $machinepmtemplateremove     = MachinePmTemplate::select('UNID','PM_TEMPLATE_NAME')->whereIn('UNID',$MasterIMPS_SELECT)
+                                                    ->orderBy('CREATE_TIME','ASC')
+                                                    ->paginate(6);
+    $machinepmtemplate           = MachinePmTemplate::select('UNID','PM_TEMPLATE_NAME')->whereNotIn('UNID',$MasterIMPS_SELECT)
+                                                    ->orderBy('CREATE_TIME','ASC')
+                                                    ->paginate(6);
+    $DATA_PRODUCT                = BomMachine::select('MACHINE_CODE','MACHINE_NAME','PDCS_BOM_MACHINE.PRODUCT_CODE','PDCS_BOM_MACHINE.FORMULA_CODE'
                                                       ,'BASE_PRODUCTS.PRODUCT_NAME_TH','PROCESS_NO','PROCESS_CODE'
                                                       ,'ON_CT','ON_CT_HR','ON_CT_DAY','ON_PLAN_STATUS','WORKING_HR')
                                             ->selectRaw('dbo.decode_utf8(PROCESS_NAME) as PROCESS_NAME')
                                             ->leftjoin('PDCS_BOM_MASTER','PDCS_BOM_MASTER.PRODUCT_CODE','=','PDCS_BOM_MACHINE.PRODUCT_CODE')
                                             ->leftjoin('BASE_PRODUCTS','PDCS_BOM_MACHINE.PRODUCT_CODE','=','BASE_PRODUCTS.PRODUCT_CODE')
-                                            ->where('MACHINE_CODE','=',$dataset->MACHINE_CODE)
+                                            ->where('MACHINE_CODE','=',$MACHINE_CODE)
                                             ->where('BOM_STATUS','=','9')
                                             ->orderBy('PDCS_BOM_MACHINE.PRODUCT_CODE')
                                             ->orderBy('PROCESS_NO')
@@ -284,8 +274,6 @@ class MachineController extends Controller
       $last_img = $update;
     }
     $rankcode = MachineRankTable::select('MACHINE_RANK_CODE')->where('MACHINE_RANK_MONTH',$request->MACHINE_RANK_MONTH)->first();
-
-
 
      Machine::where('UNID',$UNID)->update([
       'MACHINE_CODE'         => $MACHINE_CODE,
