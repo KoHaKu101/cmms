@@ -273,7 +273,7 @@ class MachineRepairController extends Controller
         ImageDestroy($img_master);
         ImageDestroy($img_create);
 
-        \Artisan::call('cache:clear && composer install');
+        
         $qrcode = new Zxing\QrReader($current_path);
         dd($qrcode);
         $text = $qrcode->text();
