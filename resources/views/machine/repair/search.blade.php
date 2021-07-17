@@ -73,13 +73,13 @@
 									@method('GET')
 									@csrf
 								  {{-- <div class="row justify-content-md-center"> --}}
-										<div class="row justify-content-md-center">
-											<div class="col-12 col-md-6 col-lg-5 ">
+										<div class="row justify-content-center">
+											<div class="col-12 col-md-5 col-lg-4 ">
 												<h3 >กรอกรหัสเครื่อง / แสกนQR Code</h3>
 											</div>
 										</div>
-										<div class="row justify-content-md-center">
-											<div class="col-7 col-md-6 col-lg-5 ">
+										<div class="row justify-content-center">
+											<div class="col-7 col-md-6 col-lg-4 ">
 												<div class="input-group mb-3">
 													<input type="text" class="form-control" id="search" name="search"
 													 placeholder="กรอกรหัสเครื่อง / แสกนQR Code ที่นี้" autofocus value="{{ $SEARCH }}">
@@ -99,7 +99,7 @@
 											}
 											</style>
 
-											<div class="col-5 col-md-2 col-lg-2 ">
+											<div class="col-5 col-md-2 col-lg-1 ">
 												<button type="button" class="btn btn-warning show-btn"
 												id="SCANQRCODE"
 												>QR CODE</button>
