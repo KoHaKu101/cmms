@@ -246,7 +246,7 @@ class MachineRepairController extends Controller
         $img_height  = ImagesY($img_master);
         $width       = 689;
         $height      = 689;
-        $img_create  = $FILE;
+        $img_create  = $img_master;
         if ($FILE_SIZE > 100) {
           $img_create  = ImageCreateTrueColor($width, $height);
           ImageCopyResampled($img_create, $img_master, 0, 0, 0, 0, $width+1, $height+1, $img_widht, $img_height);
