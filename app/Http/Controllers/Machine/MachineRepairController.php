@@ -243,6 +243,7 @@ class MachineRepairController extends Controller
   }
   public function PrepareSearch(Request $request){
     $text = '';
+
     if (file_exists($request->QRCODE_FILE)) {
         $FILE        = $request->file('QRCODE_FILE');
         $new_name    = rand() . '.' . $FILE->getClientOriginalExtension();
@@ -272,7 +273,7 @@ class MachineRepairController extends Controller
         ImageDestroy($img_master);
         ImageDestroy($img_create);
 
-
+        \Artisan::call('cache:clear && composer install');
         $qrcode = new Zxing\QrReader($current_path);
         dd($qrcode);
         $text = $qrcode->text();

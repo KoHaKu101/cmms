@@ -57,14 +57,15 @@ class MachineSparePartController extends Controller
           }
     $html = '';
           foreach ($DATA_SPAREPART as $key => $row_sparepart) {
+            $SPAREPART_UNID = $row_sparepart->UNID;
         $html.= '<div>
-                <form name="FRM_'.$row_sparepart->UNID.'" id="FRM_'.$row_sparepart->UNID.'" method="GET">
-                  <tr id="'.$row_sparepart->UNID.'">
+                <form name="FRM_'.$SPAREPART_UNID.'" id="FRM_'.$SPAREPART_UNID.'" method="GET">
+                  <tr id="'.$SPAREPART_UNID.'">
                     <td>
                       <div class="form-check">
                       <label class="form-check-label">
-                        <input class="form-check-input add-machine" type="checkbox" value="'.$row_sparepart->UNID.'"
-                        id="SPAREPART_UNID'.$row_sparepart->UNID.'" name="SPAREPART_UNID'.$row_sparepart->UNID.'"
+                        <input class="form-check-input add-machine" type="checkbox" value="'.$SPAREPART_UNID.'"
+                        id="SPAREPART_UNID'.$SPAREPART_UNID.'" name="SPAREPART_UNID'.$SPAREPART_UNID.'"
                         >
                         <span class="form-check-sign">'.$row_sparepart->SPAREPART_NAME.'</span>
                       </label>
@@ -74,9 +75,9 @@ class MachineSparePartController extends Controller
                     <td>
                       <div class="input-group">
                         <input type="number" class="form-control form-control-sm bg-info text-white add-period"
-                         id="PERIOD_'.$row_sparepart->UNID.'" name="PERIOD_'.$row_sparepart->UNID.'" data-unid="'.$row_sparepart->UNID.'"
+                         id="PERIOD_'.$SPAREPART_UNID.'" name="PERIOD_'.$SPAREPART_UNID.'" data-unid="'.$SPAREPART_UNID.'"
                          min=0 max=12 onchange="';
-                    $html.="addmachinetosparepart('".$row_sparepart->UNID."')";
+                    $html.="addmachinetosparepart('".$SPAREPART_UNID."')";
 
                    $html.='" value="'.$MACHINE->MACHINE_RANK_MONTH.'">
                       </div>
@@ -84,9 +85,9 @@ class MachineSparePartController extends Controller
                     <td>
                       <div class="input-group">
                         <input type="date" class="form-control form-control-sm bg-info text-white add-datestart"
-                         id="DATESTART_'.$row_sparepart->UNID.'" name="DATESTART_'.$row_sparepart->UNID.'" data-unid="'.$row_sparepart->UNID.'"
+                         id="DATESTART_'.$SPAREPART_UNID.'" name="DATESTART_'.$SPAREPART_UNID.'" data-unid="'.$SPAREPART_UNID.'"
                          onchange="';
-                    $html.="addmachinetosparepart('".$row_sparepart->UNID."')";
+                    $html.="addmachinetosparepart('".$SPAREPART_UNID."')";
 
                    $html.='" value="'.date("Y-m-d").'">
                       </div>
@@ -94,9 +95,9 @@ class MachineSparePartController extends Controller
                     <td>
                       <div class="input-group">
                         <input type="number" class="form-control form-control-sm bg-info text-white add-qty"
-                         id="SPAREPART_QTY_'.$row_sparepart->UNID.'" name="SPAREPART_QTY_'.$row_sparepart->UNID.'" data-unid="'.$row_sparepart->UNID.'"
+                         id="SPAREPART_QTY_'.$SPAREPART_UNID.'" name="SPAREPART_QTY_'.$SPAREPART_UNID.'" data-unid="'.$SPAREPART_UNID.'"
                           min=0 onchange="';
-                     $html.="addmachinetosparepart('".$row_sparepart->UNID."')";
+                     $html.="addmachinetosparepart('".$SPAREPART_UNID."')";
 
                     $html.='" value="0">
                       </div>
@@ -115,64 +116,64 @@ class MachineSparePartController extends Controller
     if (!isset($totalmonth->AUTOPLAN)) {
         return Response()->json(['res' => false]);
     }
-    $MACHINE_UNID  = $request->MACHINE_UNID ;
-    $MACHINE_CODE = $request->MACHINE_CODE;
-    $PERIOD        = $request->PERIOD ;
-    $DATESTART     = $request->DATESTART;
-    $SPARTPART_UNID = $request->SPARTPART_UNID;
-    $SPAREPART_QTY = $request->SPAREPART_QTY;
-    $MACHINE = Machine::where('UNID','=',$MACHINE_UNID)->first();
-    $SPAREPART = SparePart::where('UNID','=',$SPARTPART_UNID)->first();
-    $count_sparepart = MachineSparePart::where('MACHINE_UNID','=',$MACHINE_UNID)
+    $MACHINE_UNID     = $request->MACHINE_UNID ;
+    $MACHINE_CODE     = $request->MACHINE_CODE;
+    $PERIOD           = $request->PERIOD ;
+    $DATESTART        = $request->DATESTART;
+    $SPARTPART_UNID   = $request->SPARTPART_UNID;
+    $SPAREPART_QTY    = $request->SPAREPART_QTY;
+    $MACHINE          = Machine::where('UNID','=',$MACHINE_UNID)->first();
+    $SPAREPART        = SparePart::where('UNID','=',$SPARTPART_UNID)->first();
+    $count_sparepart  = MachineSparePart::where('MACHINE_UNID','=',$MACHINE_UNID)
                                        ->where('SPAREPART_UNID','=',$SPARTPART_UNID)
                                        ->count();
 
-    $SPAREPART_COST = $SPAREPART->SPAREPART_COST ;
-    $SPAREPART_PLAN = new SparPartController;
+    $SPAREPART_COST   = $SPAREPART->SPAREPART_COST ;
+    $SPAREPART_PLAN   = new SparPartController;
 
     if ($count_sparepart > 0) {
       MachineSparePart::where('MACHINE_UNID','=',$MACHINE->UNID)
                       ->where('SPAREPART_UNID','=',$SPAREPART->UNID)
                       ->update([
-                         'MACHINE_UNID'=> $MACHINE_UNID
-                        ,'MACHINE_CODE'=> $MACHINE_CODE
-                        ,'SPAREPART_UNID'=> $SPARTPART_UNID
-                        ,'SPAREPART_NAME'=>$SPAREPART->SPAREPART_NAME
-                        ,'SPAREPART_CODE'=>$SPAREPART->SPAREPART_CODE
-                        ,'STATUS'=> 9
-                        ,'REMARK'=> ''
-                        ,'SPAREPART_QTY'=> $SPAREPART_QTY
-                        ,'UNIT'  => $SPAREPART->UNIT
-                        ,'PERIOD'=> $PERIOD
-                        ,'LAST_CHANGE'=> $DATESTART
-                        ,'NEXT_PLAN_DATE'=> ''
-                        ,'COST_STD'=> $SPAREPART_COST
-                        ,'MODIFY_BY'          => Auth::user()->name
-                        ,'MODIFY_TIME'        => Carbon::now()
+                         'MACHINE_UNID'     => $MACHINE_UNID
+                        ,'MACHINE_CODE'     => $MACHINE_CODE
+                        ,'SPAREPART_UNID'   => $SPARTPART_UNID
+                        ,'SPAREPART_NAME'   => $SPAREPART->SPAREPART_NAME
+                        ,'SPAREPART_CODE'   => $SPAREPART->SPAREPART_CODE
+                        ,'STATUS'           => 9
+                        ,'REMARK'           => ''
+                        ,'SPAREPART_QTY'    => $SPAREPART_QTY
+                        ,'UNIT'             => $SPAREPART->UNIT
+                        ,'PERIOD'           => $PERIOD
+                        ,'LAST_CHANGE'      => $DATESTART
+                        ,'NEXT_PLAN_DATE'   => ''
+                        ,'COST_STD'         => $SPAREPART_COST
+                        ,'MODIFY_BY'        => Auth::user()->name
+                        ,'MODIFY_TIME'      => Carbon::now()
                       ]);
         SparePartPlan::Where('MACHINE_UNID','=',$MACHINE_UNID)
-                    ->where('SPAREPART_UNID','=',$SPARTPART_UNID)
-                    ->where('STATUS','=','NEW')
-                    ->where('PLAN_DATE','>',Carbon::parse($DATESTART))->delete();
+                      ->where('SPAREPART_UNID','=',$SPARTPART_UNID)
+                      ->where('STATUS','=','NEW')
+                      ->where('PLAN_DATE','>',Carbon::parse($DATESTART))->delete();
     }else {
      $checkdata = MachineSparePart::insert([
-       'UNID'=> $this->randUNID('PMCS_CMMS_MACHINE_SPAREPART')
-       ,'MACHINE_UNID'=> $MACHINE_UNID
-       ,'MACHINE_CODE'=> $MACHINE_CODE
-       ,'SPAREPART_UNID'=> $SPARTPART_UNID
-       ,'SPAREPART_NAME'=>$SPAREPART->SPAREPART_NAME
-       ,'SPAREPART_CODE'=>$SPAREPART->SPAREPART_CODE
-       ,'STATUS'=> 9
-       ,'REMARK'=> ''
-       ,'SPAREPART_QTY'=> $SPAREPART_QTY
-       ,'PERIOD'=> $PERIOD
-       ,'LAST_CHANGE'=> $DATESTART
-       ,'NEXT_PLAN_DATE'=> ''
-       ,'COST_STD'=>         $SPAREPART_COST
-       ,'CREATE_BY'          => Auth::user()->name
-       ,'CREATE_TIME'        => Carbon::now()
-       ,'MODIFY_BY'          => Auth::user()->name
-       ,'MODIFY_TIME'        => Carbon::now()
+       'UNID'             => $this->randUNID('PMCS_CMMS_MACHINE_SPAREPART')
+       ,'MACHINE_UNID'    => $MACHINE_UNID
+       ,'MACHINE_CODE'    => $MACHINE_CODE
+       ,'SPAREPART_UNID'  => $SPARTPART_UNID
+       ,'SPAREPART_NAME'  =>$SPAREPART->SPAREPART_NAME
+       ,'SPAREPART_CODE'  =>$SPAREPART->SPAREPART_CODE
+       ,'STATUS'          => 9
+       ,'REMARK'          => ''
+       ,'SPAREPART_QTY'   => $SPAREPART_QTY
+       ,'PERIOD'          => $PERIOD
+       ,'LAST_CHANGE'     => $DATESTART
+       ,'NEXT_PLAN_DATE'  => ''
+       ,'COST_STD'        => $SPAREPART_COST
+       ,'CREATE_BY'       => Auth::user()->name
+       ,'CREATE_TIME'     => Carbon::now()
+       ,'MODIFY_BY'       => Auth::user()->name
+       ,'MODIFY_TIME'     => Carbon::now()
      ]);
    }
    $SPAREPART_PLAN->PlanSave($MACHINE_UNID,$PERIOD,$DATESTART,$SPARTPART_UNID,$SPAREPART_QTY,$SPAREPART_COST);
@@ -193,8 +194,8 @@ class MachineSparePartController extends Controller
         ,'SPAREPART_QTY'       => $SPAREPART_QTY
         ,'PERIOD'              => $PERIOD
         ,'LAST_CHANGE'         => $PLAN_DATE
-        ,'MODIFY_BY'            => Auth::user()->name
-        ,'MODIFY_TIME'          => Carbon::now()
+        ,'MODIFY_BY'           => Auth::user()->name
+        ,'MODIFY_TIME'         => Carbon::now()
       ]);
       $MACHINE_UNID = $machinesparepart->MACHINE_UNID;
       $SPARTPART_UNID = $machinesparepart->SPAREPART_UNID;
