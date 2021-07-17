@@ -192,7 +192,9 @@ class MachineController extends Controller
   public function Edit($UNID) {
     //ใช้
     $dataset                     = Machine::select('*')->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME
-                                                                    ,dbo.decode_utf8(PURCHASE_FORM) as PURCHASE_FORM')
+                                                                    ,dbo.decode_utf8(PURCHASE_FORM) as PURCHASE_FORM
+                                                                    ,dbo.decode_utf8(CREATE_BY) as CREATE_BY
+                                                                    ,dbo.decode_utf8(MODIFY_BY) as MODIFY_BY')
                                                        ->where('UNID',$UNID)->first();
     $MACHINE_CODE                = $dataset->MACHINE_CODE;
     $MasterIMPS_SELECT           = MasterIMPS::select('PM_TEMPLATE_UNID_REF')->where('MACHINE_UNID',$UNID)->get();
