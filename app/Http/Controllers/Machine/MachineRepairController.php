@@ -7,9 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Middleware\VerifyCsrfToken;
 use Carbon\Carbon;
+use App\Services\PayUService\Exception;
 use Auth;
 use Cookie;
 use Gate;
+use Zxing;
+use File;
 //******************** model ***********************
 use App\Models\MachineAddTable\SelectMainRepair;
 use App\Models\MachineAddTable\SelectSubRepair;
@@ -231,14 +234,54 @@ class MachineRepairController extends Controller
     return Response()->json(['html'=>$html,'html_style' => $html_style]);
   }
   public function PrepareSearch(Request $request){
+    $text = '';
+    if (file_exists($request->QRCODE_FILE)) {
+        $FILE        = $request->file('QRCODE_FILE');
+        $new_name    = rand() . '.' . $FILE->getClientOriginalExtension();
+        $img_ext     = $FILE->getClientOriginalExtension();
+        $FILE_SIZE   = (filesize($FILE) / 1024);
+        $image       = file_get_contents($FILE);
+        $img_master  = imagecreatefromstring($image);
+        $img_widht   = ImagesX($img_master);
+        $img_height  = ImagesY($img_master);
+        $width       = 689;
+        $height      = 689;
+        $img_create  = $FILE;
+        if ($FILE_SIZE > 100) {
+          $img_create  = ImageCreateTrueColor($width, $height);
+          ImageCopyResampled($img_create, $img_master, 0, 0, 0, 0, $width+1, $height+1, $img_widht, $img_height);
+        }
+        $path = public_path('image/qrcode');
+          if(!File::isDirectory($path)){
+          File::makeDirectory($path, 0777, true, true);
+          }
+        $current_path = $path.'/'.$new_name;
+        if (strtoupper($img_ext) == 'JPEG' || strtoupper($img_ext) == 'JPG') {
+          $checkimg_saved = imagejpeg($img_create,$current_path);
+        }elseif (strtoupper($img_ext) == 'PNG') {
+          $checkimg_saved = imagepng($img_create,$current_path);
+        }
+        ImageDestroy($img_master);
+        ImageDestroy($img_create);
+        $qrcode = new Zxing\QrReader($current_path);
+        $text = $qrcode->text();
+        unlink($current_path);
+        if (!$text) {
+          alert()->error('ภาพไม่ชัด กรุณาลองใหม่')->autoClose(1500);
+          return redirect()->back();
+        }
 
-    $search = $request->search;
-    $machine = NULL;
-    if (isset($search)) {
-      $MACHINE_CODE = '%'.$search.'%';
-      $machine = Machine::select('*')->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')->where('MACHINE_CODE','like',$MACHINE_CODE)->get();
     }
-    return View('machine/repair/search',compact('machine'));
+
+    // dd($text);
+    $SEARCH = $text != '' ? $text : $request->search;
+    $machine = NULL;
+    if (isset($SEARCH)) {
+      $MACHINE_CODE = '%'.$SEARCH.'%';
+      $machine = Machine::select('*')->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
+                                     ->where('MACHINE_CODE','like',$MACHINE_CODE)->get();
+    }
+    return View('machine/repair/search',compact('machine','SEARCH'));
   }
   public function Create($UNID){
 

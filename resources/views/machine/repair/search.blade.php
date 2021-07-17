@@ -69,26 +69,46 @@
 	        <div class="container mt-2">
 						<div class="card">
 						  <div class="card-header">
-						  <div class="row justify-content-md-center">
-						    <div class="col-md-6 col-lg-5 ">
-						      <h3 >กรอกรหัสเครื่อง / แสกนQR Code</h3>
-									<form action="{{ route('repair.repairsearch') }}" method="POST">
-										@method('GET')
-										@csrf
-										<div class="input-group mb-3">
-											<input type="text" class="form-control" id="search" name="search"
-											 placeholder="กรอกรหัสเครื่อง / แสกนQR Code ที่นี้" autofocus>
-											<div class="input-group-append">
-												<span class="input-group-text" id="basic-addon2">
-													<button type="submit" class="btn btn-primary btn-sm btn-link"><i class="fas fa-search"></i></button>
-												</span>
+								<form action="{{ route('repair.repairsearch') }}" method="POST" id="FRM_SEARCH" enctype="multipart/form-data">
+									@method('GET')
+									@csrf
+								  {{-- <div class="row justify-content-md-center"> --}}
+										<div class="row justify-content-md-center">
+											<div class="col-12 col-md-6 col-lg-5 ">
+												<h3 >กรอกรหัสเครื่อง / แสกนQR Code</h3>
+											</div>
+										</div>
+										<div class="row justify-content-md-center">
+											<div class="col-7 col-md-6 col-lg-5 ">
+												<div class="input-group mb-3">
+													<input type="text" class="form-control" id="search" name="search"
+													 placeholder="กรอกรหัสเครื่อง / แสกนQR Code ที่นี้" autofocus value="{{ $SEARCH }}">
+													 <input type="file"  hidden id="QRCODE_FILE" name="QRCODE_FILE" accept="image/*" capture>
+													<div class="input-group-append">
+														<span class="input-group-text" id="basic-addon2">
+															<button type="submit" class="btn btn-primary btn-sm btn-link"><i class="fas fa-search"></i></button>
+														</span>
+													</div>
+												</div>
+									    </div>
+											<style>
+											@media all and (min-width: 883px) {
+													.show-btn{
+															display: none;
+													}
+											}
+											</style>
+
+											<div class="col-5 col-md-2 col-lg-2 ">
+												<button type="button" class="btn btn-warning show-btn"
+												id="SCANQRCODE"
+												>QR CODE</button>
 											</div>
 										</div>
 
-									</form>
 
-						    </div>
-						  </div>
+								  {{-- </div> --}}
+								</form>
 						  </div>
 						  <div class="card-body">
 						    <div class="row">
@@ -117,7 +137,7 @@
 						    </div>
 						  </div>
 						</div>
-						
+
 				</div>
 				</div>
 			</div>
@@ -131,7 +151,18 @@
 
 {{-- ส่วนjava --}}
 @section('javascript')
+<script>
+ $('#SCANQRCODE').on('click',function(){
+	 $('#QRCODE_FILE').click();
 
+ });
+ $('#QRCODE_FILE').on('change',function(){
+	 var file_qr =  $('#QRCODE_FILE').length ;
 
+	 if (file_qr) {
+		 $('#FRM_SEARCH').submit();
+	 }
+ });
+</script>
 @stop
 {{-- ปิดส่วนjava --}}

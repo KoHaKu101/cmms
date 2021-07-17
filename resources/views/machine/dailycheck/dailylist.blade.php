@@ -42,30 +42,28 @@
 											@method('GET')
 											@csrf
 											<div class="row">
-												<div class="col-md-8 form-inline">
+												<div class="col-md-12 col-lg-8 form-inline">
 													<h4 class="card-title text-white">Daily CheckSheet ปี :</h4>
-													<select class="form-control form-control-sm input-group filled text-info mx-3" id="YEAR" name="YEAR">
+													<select class="form-control form-control-sm input-group filled text-info my-1 mx-3 col-4 col-md" id="YEAR" name="YEAR">
 														@for ($m=date('Y')-2; $m < date('Y')+2; $m++)
 															<option value="{{$m}}" {{  $YEAR == $m ? 'selected' : '' }}>{{$m}}</option>
 														@endfor
 													</select>
 													<h4 class="card-title text-white"> เดือน : </h4>
-
-													<select class="form-control form-control-sm input-group filled text-info mx-3" id="MONTH" name="MONTH">
+													<select class="form-control form-control-sm input-group filled text-info my-1 mx-3 col-4 col-md" id="MONTH" name="MONTH">
 															@for ($i=1; $i < 13; $i++)
 																<option value="{{$i}}" {{ $MONTH_NAME_TH[$MONTH] == $MONTH_NAME_TH[$i] ? 'selected' : '' }}>{{$MONTH_NAME_TH[$i]}}</option>
 															@endfor
 													</select>
-
 												<h4 class="card-title text-white">Line</h4>
-													<select class="form-control form-control-sm input-group filled text-info mx-3" id="MACHINE_LINE" name="MACHINE_LINE">
+													<select class="form-control form-control-sm input-group filled text-info my-1 mx-3 col col-md-2" id="MACHINE_LINE" name="MACHINE_LINE">
 														<option value="0" >ALL</option>
 														@for ($l=1; $l < 7; $l++)
 															<option value="L{{$l}}" {{ $MACHINE_LINE == 'L'.$l ? 'selected' : ''}}>L{{$l}}</option>
 														@endfor
 													</select>
 												</div>
-												<div class="col-md-4 my-3">
+												<div class="col-md-6 my-3">
 													<div class="card-title text-white">
 														<div class="input-group">
 															<input type="text" id="SEARCH_MACHINE" name="SEARCH_MACHINE" class="ml-3 col-9 form-control form-control-sm"

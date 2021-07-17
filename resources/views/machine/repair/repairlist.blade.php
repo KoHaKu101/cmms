@@ -108,21 +108,21 @@
 								        <div class="row ">
 													<div class="col-md-12 col-lg-12 form-inline my-1">
 															<label class="text-white mx-2">ปี : </label>
-															<select class="form-control form-control-sm mt-1 mx-1" id="YEAR" name="YEAR" onchange="changesubmit()">
+															<select class="form-control form-control-sm mt-1 mx-1 col-3 col-md-1" id="YEAR" name="YEAR" onchange="changesubmit()">
 																<option value="0">ทั้งหมด</option>
 																@for ($y=date('Y')-2; $y < date('Y')+1; $y++)
 																	<option value="{{$y}}" {{ $YEAR == $y ?'selected' : ''}}>{{$y}}</option>
 																@endfor
 															</select>
 															<label class="text-white mx-2">เดือน : </label>
-															<select class="form-control form-control-sm mt-1 mx-1" id="MONTH" name="MONTH" onchange="changesubmit()">
+															<select class="form-control form-control-sm mt-1 mx-1 col-4 col-md" id="MONTH" name="MONTH" onchange="changesubmit()">
 																<option value="0">ทั้งหมด</option>
 																@for ($m=1; $m < 13; $m++)
 																	<option value="{{$m}}" {{ $MONTH == $m ?'selected' : ''}}>{{$months[$m]}}</option>
 																@endfor
 															</select>
 															<label class="text-white mx-2">Line : </label>
-															<select class="form-control form-control-sm mt-1 mx-1" id="LINE"name='LINE' onchange="changesubmit()">
+															<select class="form-control form-control-sm mt-1 mx-1 col-3 col-md-1" id="LINE"name='LINE' onchange="changesubmit()">
 																 <option value="">ทั้งหมด</option>
 																@foreach ($LINE as $index => $row_line)
 																	<option value="{{ $row_line->LINE_CODE }}"
@@ -130,14 +130,14 @@
 																@endforeach
 															</select>
 															<label class="text-white mx-2">เอกสาร : </label>
-															<select class="form-control form-control-sm mt-1 mx-1" id="DOC_STATUS" name="DOC_STATUS"onchange="changesubmit()">
+															<select class="form-control form-control-sm mt-1 mx-1 col-3 col-md" id="DOC_STATUS" name="DOC_STATUS"onchange="changesubmit()">
 																<option value="0">ทั้งหมด</option>
 																<option value="9" {{ $DOC_STATUS == "9" ? 'selected' : "" }}>กำลังดำเนินการ</option>
 																<option value="1" {{ $DOC_STATUS == "1" ? 'selected' : "" }}>ปิดเอกสาร</option>
 															</select>
 														<label class="text-white mx-1">ค้นหา : </label>
-								              <div class="input-group mx-1">
-								                <input  type="search" id="SEARCH"  name="SEARCH" class="form-control form-control-sm mt-1 col-lg-9" placeholder="ค้นหา........."
+								              <div class="col-6 col-md-3 input-group mx-1">
+								                <input  type="search" id="SEARCH"  name="SEARCH" class="form-control form-control-sm mt-1 " placeholder="ค้นหา........."
 																value="{{ $SEARCH }}">
 								                <div class="input-group-prepend">
 								                  <button type="submit" class="btn btn-search pr-1 btn-xs	mt-1" id="BTN_SUBMIT">
@@ -145,8 +145,6 @@
 								                  </button>
 								                </div>
 								              </div>
-														{{-- </div> --}}
-														{{-- <div class="col-md-12 col-lg-1 text-right"> --}}
 														<div class="col-md-7 col-lg-1 text-right">
 															<a href="{{ route('repair.repairsearch') }}"class="btn btn-warning  btn-xs mt-1 ">
 																<span style="font-size: 13px;margin-bottom: 7px;">	แจ้งซ่อม</span>
