@@ -57,15 +57,18 @@ class MachineRepairController extends Controller
       Cookie::queue('table_style','2');
     }
 
-    $SEARCH      = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
-    $SERACH_TEXT =  $request->SEARCH;
-    $LINE = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
+    $SEARCH       = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
+    $SERACH_TEXT  =  $request->SEARCH;
+    $LINE         = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
     $MACHINE_LINE = isset($request->LINE) ? $request->LINE : '';
-    $MONTH = isset($request->MONTH) ? $request->MONTH : date('m') ;
-    $DOC_STATUS = isset($request->DOC_STATUS) ? $request->DOC_STATUS : 0 ;
-    $YEAR = isset($request->YEAR) ? $request->YEAR : date('Y') ;
-    $DATA_EMP = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->where('EMP_STATUS','=',9)->get();
-    $dataset = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
+    $MONTH        = isset($request->MONTH) ? $request->MONTH : date('m') ;
+    $DOC_STATUS   = isset($request->DOC_STATUS) ? $request->DOC_STATUS : 0 ;
+    $YEAR         = isset($request->YEAR) ? $request->YEAR : date('Y') ;
+    $DATA_EMP     = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->where('EMP_STATUS','=',9)->get();
+    $dataset      = MachineRepairREQ::select('INSPECTION_CODE','CLOSE_STATUS','DOC_DATE','DOC_NO','MACHINE_LINE','MACHINE_CODE'
+                                                ,'MACHINE_NAME','REPAIR_SUBSELECT_NAME','UNID','PRIORITY','REC_WORK_DATE')
+                                                ->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH
+                                                  ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH')
                                             ->where(function ($query) use ($MACHINE_LINE) {
                                                   if ($MACHINE_LINE != '') {
                                                      $query->where('MACHINE_LINE', '=', $MACHINE_LINE);
@@ -108,8 +111,10 @@ class MachineRepairController extends Controller
     $MONTH          = isset($request->MONTH) ? $request->MONTH : 0 ;
     $DOC_STATUS     = isset($request->DOC_STATUS) ? $request->DOC_STATUS : 0 ;
     $YEAR           = isset($request->YEAR) ? $request->YEAR : date('Y') ;
-    $dataset        = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH
-                                                                ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH')
+    $dataset        = MachineRepairREQ::select('INSPECTION_CODE','CLOSE_STATUS','DOC_DATE','DOC_NO','MACHINE_LINE','MACHINE_CODE'
+                                                ,'MACHINE_NAME','REPAIR_SUBSELECT_NAME','UNID','PRIORITY','REC_WORK_DATE')
+                                            ->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH
+                                                        ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH')
                                             ->where(function ($query) use ($MACHINE_LINE) {
                                                   if ($MACHINE_LINE != '') {
                                                      $query->where('MACHINE_LINE', '=', $MACHINE_LINE);
@@ -145,10 +150,12 @@ class MachineRepairController extends Controller
     $html = '';
     $html_style = '';
     foreach ($dataset as $key => $row) {
-      $REC_WORK_STATUS  = isset($row->INSPECTION_CODE) ? $row->INSPECTION_NAME_TH : 'รอรับงาน';
-      $BTN_COLOR_STATUS = $row->INSPECTION_CODE == '' ? 'btn-mute' : ($row->CLOSE_STATUS == '1' ? 'btn-success' : 'btn-info') ;
-      $BTN_COLOR 			  = $row->INSPECTION_CODE == '' ? 'btn-danger' : 'btn-secondary' ;
-      $BTN_TEXT  			  = $row->INSPECTION_CODE == '' ? 'รอรับงาน' : ($row->CLOSE_STATUS == '1' ? 'ปิดเอกสาร' : 'การดำเนินงาน') ;
+      $INSPECTION_CODE  = $row->INSPECTION_CODE;
+      $CLOSE_STATUS     = $row->CLOSE_STATUS;
+      $REC_WORK_STATUS  = !isset($INSPECTION_CODE) ? 'รอรับงาน'     : $row->INSPECTION_NAME_TH;
+      $BTN_COLOR_STATUS = !isset($INSPECTION_CODE) ? 'btn-mute'    : ($CLOSE_STATUS == '1' ? 'btn-success' : 'btn-info') ;
+      $BTN_COLOR 			  = !isset($INSPECTION_CODE) ? 'btn-danger'  : 'btn-secondary' ;
+      $BTN_TEXT  			  = !isset($INSPECTION_CODE) ? 'รอรับงาน'     : ($CLOSE_STATUS == '1' ? 'ปิดเอกสาร' : 'การดำเนินงาน') ;
       $html.= '<tr>
                 <td>'.$key+1 .'</td>
                 <td >'.date('d-m-Y',strtotime($row->DOC_DATE)).'</td>
@@ -160,8 +167,8 @@ class MachineRepairController extends Controller
 
                 <td >
                   <button type="button"class="btn '.$BTN_COLOR_STATUS.' btn-block btn-sm my-1 text-left"style="color:black;font-size:13px"
-                  '.($row->CLOSE_STATUS == '1' ? 'onclick=pdfsaverepair("'.$row->UNID.'")' : '').'>
-                    <i class="'.($row->CLOSE_STATUS == '1' ? 'fas fa-print' : '').'"></i>
+                  '.($CLOSE_STATUS == '1' ? 'onclick=pdfsaverepair("'.$row->UNID.'")' : '').'>
+                    <i class="'.($CLOSE_STATUS == '1' ? 'fas fa-print' : '').'"></i>
 
                     <span class="btn-label " >
                       '.$BTN_TEXT.'
@@ -187,6 +194,7 @@ class MachineRepairController extends Controller
         </tr>';
       }
     foreach ($dataset as $index => $sub_row) {
+      $SUBROW_UNID = $sub_row->UNID;
       $DATA_EMP    = EMPName::where('EMP_CODE',$sub_row->INSPECTION_CODE)->first();
       $BG_COLOR    = $sub_row->PRIORITY == '9' ? 'bg-danger text-white' :  'bg-warning text-white';
       if ($sub_row->CLOSE_STATUS == '1') {
@@ -203,15 +211,15 @@ class MachineRepairController extends Controller
                 <div class="item-list">
                   <div class="avatar">
                     <img src="'.$IMG.'" alt="..." class="avatar-img rounded-circle"
-                    id="IMG_'.$sub_row->UNID.'">
+                    id="IMG_'.$SUBROW_UNID.'">
                   </div>
                   <div class="info-user ml-3">
-                    <div class="username" id="WORK_STATUS_'.$sub_row->UNID.'">'.$WORK_STATUS.'</div>
+                    <div class="username" id="WORK_STATUS_'.$SUBROW_UNID.'">'.$WORK_STATUS.'</div>
                     <div class="status" >'.$sub_row->REPAIR_SUBSELECT_NAME.'</div>';
                     if ($sub_row->CLOSE_STATUS == '1'){
-                    $html_style .='<div class="status" id="DATE_DIFF_'.$sub_row->UNID.'" > ดำเนินงานสำเร็จ</div>';
+                    $html_style .='<div class="status" id="DATE_DIFF_'.$SUBROW_UNID.'" > ดำเนินงานสำเร็จ</div>';
                       }else {
-                    $html_style .='<div class="status" id="DATE_DIFF_'.$sub_row->UNID.'">'.$DATE_DIFF.'</div>';
+                    $html_style .='<div class="status" id="DATE_DIFF_'.$SUBROW_UNID.'">'.$DATE_DIFF.'</div>';
                       }
                     $html_style .='</div>
                 </div>
@@ -220,7 +228,7 @@ class MachineRepairController extends Controller
                 <div class="col-md-12 text-center">
                   <button class="btn  btn-primary  btn-sm"
                   onclick="rec_work(this)"
-                  data-unid="'.$sub_row->UNID.'"
+                  data-unid="'.$SUBROW_UNID.'"
                   data-docno="'.$sub_row->DOC_NO.'"
                   data-detail="'.$sub_row->REPAIR_SUBSELECT_NAME.'">
                     SELECT
@@ -263,8 +271,9 @@ class MachineRepairController extends Controller
         }
         ImageDestroy($img_master);
         ImageDestroy($img_create);
-        dd($FILE);
+
         $qrcode = new Zxing\QrReader($current_path);
+        dd($qrcode);
         $text = $qrcode->text();
         unlink($current_path);
         if (!$text) {
