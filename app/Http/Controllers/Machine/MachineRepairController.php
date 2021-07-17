@@ -272,6 +272,7 @@ class MachineRepairController extends Controller
         ImageDestroy($img_master);
         ImageDestroy($img_create);
 
+
         $qrcode = new Zxing\QrReader($current_path);
         dd($qrcode);
         $text = $qrcode->text();
