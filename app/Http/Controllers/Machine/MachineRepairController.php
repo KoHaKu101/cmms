@@ -274,9 +274,17 @@ class MachineRepairController extends Controller
 
 
         $qrcode = new QrReader($current_path);
-        dd($qrcode);
+        // dd($qrcode);
         $text = $qrcode->text();
-        unlink($current_path);
+
+        $count_file = count(scandir($path));
+
+        if ($count_file > 3) {
+          File::deleteDirectory($path);
+        }else {
+          File::delete($current_path);
+        }
+
         if (!$text) {
           alert()->error('ภาพไม่ชัด กรุณาลองใหม่')->autoClose(1500);
           return redirect()->back();

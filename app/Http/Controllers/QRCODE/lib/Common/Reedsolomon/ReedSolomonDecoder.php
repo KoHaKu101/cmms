@@ -16,7 +16,7 @@
  */
 
 namespace App\Http\Controllers\QRCODE\lib\Common\Reedsolomon;
-
+use App\Http\Controllers\QRCODE\lib\Common\function_by_me;
 /**
  * <p>Implements Reed-Solomon decoding, as the name implies.</p>
  *
@@ -62,7 +62,8 @@ final class ReedSolomonDecoder
     public function decode(&$received, $twoS)
     {
         $poly                 = new GenericGFPoly($this->field, $received);
-        $syndromeCoefficients = fill_array(0, $twoS, 0);
+        $function_by_me       = new function_by_me;
+        $syndromeCoefficients = $function_by_me->fill_array(0, $twoS, 0);
         $noError              = true;
         for ($i = 0; $i < $twoS; $i++) {
             $eval                                                        = $poly->evaluateAt($this->field->exp($i + $this->field->getGeneratorBase()));

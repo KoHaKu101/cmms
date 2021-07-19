@@ -19,7 +19,7 @@ namespace App\Http\Controllers\QRCODE\lib\Qrcode\Decoder;
 
 use App\Http\Controllers\QRCODE\lib\FormatException;
 use App\Http\Controllers\QRCODE\lib\Common\BitMatrix;
-
+use App\Http\Controllers\QRCODE\lib\Common\function_by_me;
 /**
  * @author Sean Owen
  */
@@ -69,7 +69,8 @@ final class BitMatrixParser
 
         $readingUp = true;
         if ($version->getTotalCodewords()) {
-            $result = fill_array(0, $version->getTotalCodewords(), 0);
+            $function_by_me = new function_by_me;
+            $result = $function_by_me->fill_array(0, $version->getTotalCodewords(), 0);
         } else {
             $result = [];
         }

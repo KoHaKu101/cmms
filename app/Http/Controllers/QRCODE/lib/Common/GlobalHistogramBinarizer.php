@@ -20,7 +20,7 @@ namespace App\Http\Controllers\QRCODE\lib\Common;
 use App\Http\Controllers\QRCODE\lib\Binarizer;
 use App\Http\Controllers\QRCODE\lib\LuminanceSource;
 use App\Http\Controllers\QRCODE\lib\NotFoundException;
-
+use App\Http\Controllers\QRCODE\lib\Common\function_by_me;
 
 /**
  * This Binarizer implementation uses the old ZXing global histogram approach. It is suitable
@@ -53,19 +53,13 @@ class GlobalHistogramBinarizer extends Binarizer
         parent::__construct($source);
 
         $this->luminances = self::$EMPTY;
-        $this->buckets    = $this->fill_array(0, self::$LUMINANCE_BUCKETS, 0);
+        $file_array       = new function_by_me;
+        $this->buckets    = $file_array->fill_array(0, self::$LUMINANCE_BUCKETS, 0);
         $this->source     = $source;
     }
 
     // Applies simple sharpening to the row data to improve performance of the 1D Readers.
-    function fill_array($index, $count, $value)
-    {
-        if ($count <= 0) {
-            return [0];
-        }
 
-        return array_fill($index, $count, $value);
-    }
 
     public function getBlackRow($y, $row = null)
     {

@@ -16,7 +16,7 @@
  */
 
 namespace App\Http\Controllers\QRCODE\lib\Qrcode\Decoder;
-
+use App\Http\Controllers\QRCODE\lib\Common\function_by_me;
 /**
  * <p>Encapsulates a block of data within a QR Code. QR Codes may split their data into
  * multiple blocks, each of which is a unit of data and error-correction codewords. Each
@@ -72,10 +72,11 @@ final class DataBlock
         $numResultBlocks = 0;
         foreach ($ecBlockArray as $ecBlock) {
             $ecBlockCount = $ecBlock->getCount();
+            $function_by_me = new function_by_me;
             for ($i = 0; $i < $ecBlockCount; $i++) {
                 $numDataCodewords           = $ecBlock->getDataCodewords();
                 $numBlockCodewords          = $ecBlocks->getECCodewordsPerBlock() + $numDataCodewords;
-                $result[$numResultBlocks++] = new DataBlock($numDataCodewords, fill_array(0, $numBlockCodewords, 0));
+                $result[$numResultBlocks++] = new DataBlock($numDataCodewords, $function_by_me->fill_array(0, $numBlockCodewords, 0));
             }
         }
 

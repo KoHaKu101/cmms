@@ -23,6 +23,7 @@ use App\Http\Controllers\QRCODE\lib\Common\BitSource;
 use App\Http\Controllers\QRCODE\lib\Common\CharacterSetECI;
 use App\Http\Controllers\QRCODE\lib\Common\DecoderResult;
 use App\Http\Controllers\QRCODE\lib\Common\StringUtils;
+use App\Http\Controllers\QRCODE\lib\Common\function_by_me;
 
 
 /**
@@ -290,8 +291,8 @@ final class DecodedBitStreamParser
         if (8 * $count > $bits->available()) {
             throw FormatException::getFormatInstance();
         }
-
-        $readBytes = fill_array(0, $count, 0);
+        $function_by_me = new function_by_me;
+        $readBytes = $function_by_me->fill_array(0, $count, 0);
         for ($i = 0; $i < $count; $i++) {
             $readBytes[$i] = $bits->readBits(8);//(byte)
         }

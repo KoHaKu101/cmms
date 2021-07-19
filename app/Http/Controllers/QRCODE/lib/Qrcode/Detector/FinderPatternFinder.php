@@ -21,6 +21,7 @@ use App\Http\Controllers\QRCODE\lib\BinaryBitmap;
 use App\Http\Controllers\QRCODE\lib\Common\BitMatrix;
 use App\Http\Controllers\QRCODE\lib\NotFoundException;
 use App\Http\Controllers\QRCODE\lib\ResultPoint;
+use App\Http\Controllers\QRCODE\lib\Common\function_by_me;
 
 /**
  * <p>This class attempts to find finder patterns in a QR Code. Finder patterns are the square
@@ -51,9 +52,9 @@ class FinderPatternFinder
     {
         $this->image = $image;
 
-
+        $file_array = new function_by_me;
         $this->possibleCenters      = [];//new ArrayList<>();
-        $this->crossCheckStateCount = fill_array(0, 5, 0);
+        $this->crossCheckStateCount = $file_array->fill_array(0, 5, 0);
         $this->resultPointCallback  = $resultPointCallback;
     }
 

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\QRCODE\lib\Common;
 
+use App\Http\Controllers\QRCODE\lib\Common\function_by_me;
+
 final class BitMatrix
 {
     private $width;
@@ -11,6 +13,7 @@ final class BitMatrix
 
     public function __construct($width, $height = false, $rowSize = false, $bits = false)
     {
+
         if (!$height) {
             $height = $width;
         }
@@ -18,7 +21,8 @@ final class BitMatrix
             $rowSize = (int)(($width + 31) / 32);
         }
         if (!$bits) {
-            $bits = fill_array(0, $rowSize * $height, 0);
+            $function_by_me = new function_by_me;
+            $bits = $function_by_me->fill_array(0, $rowSize * $height, 0);
 //            [];//new int[rowSize * height];
         }
         $this->width   = $width;
@@ -444,9 +448,9 @@ final class BitMatrix
         if (!isset($this->bits[$offset])) {
             $this->bits[$offset] = 0;
         }
-
+        $function_by_me = new function_by_me;
         // return (($this->bits[$offset] >> ($x & 0x1f)) & 1) != 0;
-        return (uRShift($this->bits[$offset], ($x & 0x1f)) & 1) != 0;//было >>> вместо >>, не знаю как эмулировать беззнаковый сдвиг
+        return ($function_by_me->uRShift($this->bits[$offset], ($x & 0x1f)) & 1) != 0;//было >>> вместо >>, не знаю как эмулировать беззнаковый сдвиг
     }
 
 //  @Override

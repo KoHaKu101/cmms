@@ -25,7 +25,7 @@ use App\Http\Controllers\QRCODE\lib\Common\DecoderResult;
 use App\Http\Controllers\QRCODE\lib\Common\Reedsolomon\GenericGF;
 use App\Http\Controllers\QRCODE\lib\Common\Reedsolomon\ReedSolomonDecoder;
 use App\Http\Controllers\QRCODE\lib\Common\Reedsolomon\ReedSolomonException;
-
+use App\Http\Controllers\QRCODE\lib\Common\function_by_me;
 /**
  * <p>The main class which implements QR Code decoding -- as opposed to locating and extracting
  * the QR Code from an image.</p>
@@ -164,7 +164,8 @@ final class Decoder
         foreach ($dataBlocks as $dataBlock) {
             $totalBytes += $dataBlock->getNumDataCodewords();
         }
-        $resultBytes  = fill_array(0, $totalBytes, 0);
+        $function_by_me = new function_by_me;
+        $resultBytes  = $function_by_me->fill_array(0, $totalBytes, 0);
         $resultOffset = 0;
 
 // Error-correct and copy data blocks together into a stream of bytes
@@ -194,7 +195,8 @@ final class Decoder
     {
         $numCodewords = count($codewordBytes);
 // First read into an array of ints
-        $codewordsInts = fill_array(0, $numCodewords, 0);
+        $function_by_me = new function_by_me;
+        $codewordsInts = $function_by_me->fill_array(0, $numCodewords, 0);
         for ($i = 0; $i < $numCodewords; $i++) {
             $codewordsInts[$i] = $codewordBytes[$i] & 0xFF;
         }

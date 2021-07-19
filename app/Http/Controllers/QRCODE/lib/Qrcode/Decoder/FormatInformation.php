@@ -16,7 +16,7 @@
  */
 
 namespace App\Http\Controllers\QRCODE\lib\Qrcode\Decoder;
-
+use App\Http\Controllers\QRCODE\lib\Common\function_by_me;
 /**
  * <p>Encapsulates a QR Code's format information, including the data mask used and
  * error correction level.</p>
@@ -146,16 +146,17 @@ final class FormatInformation
 
     public static function numBitsDiffering($a, $b)
     {
+        $function_by_me = new function_by_me;
         $a ^= $b; // a now has a 1 bit exactly where its bit differs with b's
         // Count bits set quickly with a series of lookups:
         return self::$BITS_SET_IN_HALF_BYTE[$a & 0x0F] +
-            self::$BITS_SET_IN_HALF_BYTE[(int)(uRShift($a, 4) & 0x0F)] +
-            self::$BITS_SET_IN_HALF_BYTE[(uRShift($a, 8) & 0x0F)] +
-            self::$BITS_SET_IN_HALF_BYTE[(uRShift($a, 12) & 0x0F)] +
-            self::$BITS_SET_IN_HALF_BYTE[(uRShift($a, 16) & 0x0F)] +
-            self::$BITS_SET_IN_HALF_BYTE[(uRShift($a, 20) & 0x0F)] +
-            self::$BITS_SET_IN_HALF_BYTE[(uRShift($a, 24) & 0x0F)] +
-            self::$BITS_SET_IN_HALF_BYTE[(uRShift($a, 28) & 0x0F)];
+            self::$BITS_SET_IN_HALF_BYTE[(int)($function_by_me->uRShift($a, 4) & 0x0F)] +
+            self::$BITS_SET_IN_HALF_BYTE[($function_by_me->uRShift($a, 8) & 0x0F)] +
+            self::$BITS_SET_IN_HALF_BYTE[($function_by_me->uRShift($a, 12) & 0x0F)] +
+            self::$BITS_SET_IN_HALF_BYTE[($function_by_me->uRShift($a, 16) & 0x0F)] +
+            self::$BITS_SET_IN_HALF_BYTE[($function_by_me->uRShift($a, 20) & 0x0F)] +
+            self::$BITS_SET_IN_HALF_BYTE[($function_by_me->uRShift($a, 24) & 0x0F)] +
+            self::$BITS_SET_IN_HALF_BYTE[($function_by_me->uRShift($a, 28) & 0x0F)];
     }
 
     public function getErrorCorrectionLevel()

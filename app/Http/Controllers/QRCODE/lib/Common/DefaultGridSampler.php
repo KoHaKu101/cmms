@@ -18,7 +18,7 @@
 namespace App\Http\Controllers\QRCODE\lib\Common;
 
 use App\Http\Controllers\QRCODE\lib\NotFoundException;
-
+use App\Http\Controllers\QRCODE\lib\Common\function_by_me;
 /**
  * @author Sean Owen
  */
@@ -56,8 +56,9 @@ final class DefaultGridSampler extends GridSampler
         if ($dimensionX <= 0 || $dimensionY <= 0) {
             throw NotFoundException::getNotFoundInstance();
         }
+        $function_by_me = new function_by_me;
         $bits   = new BitMatrix($dimensionX, $dimensionY);
-        $points = fill_array(0, 2 * $dimensionX, 0.0);
+        $points = $function_by_me->fill_array(0, 2 * $dimensionX, 0.0);
         for ($y = 0; $y < $dimensionY; $y++) {
             $max    = count($points);
             $iValue = (float)$y + 0.5;

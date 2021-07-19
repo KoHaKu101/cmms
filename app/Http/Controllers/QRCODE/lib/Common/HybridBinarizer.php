@@ -20,6 +20,7 @@ namespace App\Http\Controllers\QRCODE\lib\Common;
 use App\Http\Controllers\QRCODE\lib\Binarizer;
 use App\Http\Controllers\QRCODE\lib\LuminanceSource;
 use App\Http\Controllers\QRCODE\lib\NotFoundException;
+use App\Http\Controllers\QRCODE\lib\Common\function_by_me;
 
 /**
  * This class implements a local thresholding algorithm, which while slower than the
@@ -109,9 +110,10 @@ final class HybridBinarizer extends GlobalHistogramBinarizer
         $width,
         $height
     ) {
-        $blackPoints = fill_array(0, $subHeight, 0);
+        $file_array = new function_by_me;
+        $blackPoints = $file_array->fill_array(0, $subHeight, 0);
         foreach ($blackPoints as $key => $point) {
-            $blackPoints[$key] = fill_array(0, $subWidth, 0);
+            $blackPoints[$key] = $file_array->fill_array(0, $subWidth, 0);
         }
         for ($y = 0; $y < $subHeight; $y++) {
             $yoffset    = ($y << self::$BLOCK_SIZE_POWER);
