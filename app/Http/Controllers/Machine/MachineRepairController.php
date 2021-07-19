@@ -274,7 +274,7 @@ class MachineRepairController extends Controller
 
 
         $qrcode = new QrReader($current_path);
-        // dd($qrcode);
+        dd($qrcode);
         $text = $qrcode->text();
         unlink($current_path);
         if (!$text) {

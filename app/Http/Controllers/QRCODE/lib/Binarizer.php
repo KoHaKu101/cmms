@@ -17,8 +17,8 @@
 
 namespace App\Http\Controllers\QRCODE\lib;
 
-use Zxing\Common\BitArray;
-use Zxing\Common\BitMatrix;
+use App\Http\Controllers\QRCODE\lib\Common\BitArray;
+use App\Http\Controllers\QRCODE\lib\Common\BitMatrix;
 
 /**
  * This class hierarchy provides a set of methods to convert luminance data to 1 bit data.

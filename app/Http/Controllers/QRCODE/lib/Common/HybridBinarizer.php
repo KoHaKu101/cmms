@@ -17,9 +17,9 @@
 
 namespace App\Http\Controllers\QRCODE\lib\Common;
 
-use Zxing\Binarizer;
-use Zxing\LuminanceSource;
-use Zxing\NotFoundException;
+use App\Http\Controllers\QRCODE\lib\Binarizer;
+use App\Http\Controllers\QRCODE\lib\LuminanceSource;
+use App\Http\Controllers\QRCODE\lib\NotFoundException;
 
 /**
  * This class implements a local thresholding algorithm, which while slower than the

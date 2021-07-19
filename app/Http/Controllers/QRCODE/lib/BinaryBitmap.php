@@ -17,7 +17,7 @@
 
 namespace App\Http\Controllers\QRCODE\lib;
 
-use Zxing\Common\BitMatrix;
+use App\Http\Controllers\QRCODE\lib\Common\BitMatrix;
 
 /**
  * This class is the core bitmap class used by ZXing to represent 1 bit data. Reader objects

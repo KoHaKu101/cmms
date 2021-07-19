@@ -1,6 +1,6 @@
 <?php
 
-namespace Zxing;
+namespace App\Http\Controllers\QRCODE\lib;
 
 /**
  * This class is used to help decode images from files which arrive as GD Resource

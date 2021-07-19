@@ -6,11 +6,11 @@
  * Time: 21:23
  */
 
-namespace Zxing\Common\Detector;
+namespace App\Http\Controllers\QRCODE\lib\Common\Detector;
 
-use Zxing\BinaryBitmap;
-use \Zxing\NotFoundException;
-use \Zxing\ResultPoint;
+use App\Http\Controllers\QRCODE\lib\BinaryBitmap;
+use \App\Http\Controllers\QRCODE\lib\NotFoundException;
+use \App\Http\Controllers\QRCODE\lib\ResultPoint;
 
 /*
  *

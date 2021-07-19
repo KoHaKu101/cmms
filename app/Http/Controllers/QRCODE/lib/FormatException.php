@@ -15,7 +15,7 @@
 * limitations under the License.
 */
 
-namespace Zxing;
+namespace App\Http\Controllers\QRCODE\lib;
 
 /**
  * Thrown when a barcode was successfully detected, but some aspect of

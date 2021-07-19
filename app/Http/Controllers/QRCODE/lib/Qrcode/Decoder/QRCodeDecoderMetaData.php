@@ -1,6 +1,6 @@
 <?php
 
-namespace Zxing\Qrcode\Decoder;
+namespace App\Http\Controllers\QRCODE\lib\Qrcode\Decoder;
 
 class QRCodeDecoderMetaData
 {

@@ -15,7 +15,7 @@
 * limitations under the License.
 */
 
-namespace Zxing\Common\Reedsolomon;
+namespace App\Http\Controllers\QRCODE\lib\Common\Reedsolomon;
 
 /**
  * <p>Thrown when an exception occurs during Reed-Solomon decoding, such as when
