@@ -24,8 +24,8 @@ use App\Models\Machine\MachineRepairREQ;
 //************** Package form github ***************
 use App\Exports\MachineExport;
 use Maatwebsite\Excel\Facades\Excel;
-use Zxing\QrReader;
-// use App\Http\Controllers\QRCODE\lib\QrReader;
+// use Zxing\QrReader;
+use App\Http\Controllers\QRCODE\lib\QrReader;
 
 class MachineRepairController extends Controller
 {
@@ -274,7 +274,7 @@ class MachineRepairController extends Controller
 
 
         $qrcode = new QrReader($current_path);
-        dd($qrcode);
+        // dd($qrcode);
         $text = $qrcode->text();
         unlink($current_path);
         if (!$text) {
