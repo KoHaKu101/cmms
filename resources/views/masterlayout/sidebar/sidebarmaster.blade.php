@@ -33,11 +33,11 @@
              ';
 
              if (Gate::allows('isManager_Ma')) {
-                  $MenuSubitem=Menusubitem::where('SUBUNID_REF',$_UNID)->whereIn('SUBMENU_STATUS','=',[9,7])->orderby('SUBMENU_INDEX','ASC')->get();
+                  $MenuSubitem=Menusubitem::where('SUBUNID_REF',$_UNID)->whereIn('SUBMENU_STATUS',[9,7])->orderby('SUBMENU_INDEX','ASC')->get();
               } elseif ((Gate::allows('isAdmin'))) {
                 $MenuSubitem = Menusubitem::where('SUBUNID_REF',$_UNID)->orderby('SUBMENU_INDEX','ASC')->get();
               }elseif (Gate::allows('isManager_Pd')) {
-                $MenuSubitem = Menusubitem::where('SUBUNID_REF',$_UNID)->whereIn('SUBMENU_STATUS','=',[8,7])->orderby('SUBMENU_INDEX','ASC')->get();
+                $MenuSubitem = Menusubitem::where('SUBUNID_REF',$_UNID)->whereIn('SUBMENU_STATUS',[8,7])->orderby('SUBMENU_INDEX','ASC')->get();
               }
 
 

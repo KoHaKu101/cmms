@@ -11,7 +11,6 @@ use App\Services\PayUService\Exception;
 use Auth;
 use Cookie;
 use Gate;
-use Zxing;
 use File;
 //******************** model ***********************
 use App\Models\MachineAddTable\SelectMainRepair;
@@ -21,12 +20,11 @@ use App\Models\Machine\MachineEMP;
 use App\Models\Machine\EMPName;
 use App\Models\Machine\MachineLine;
 
-
-
 use App\Models\Machine\MachineRepairREQ;
 //************** Package form github ***************
 use App\Exports\MachineExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\QRCODE\lib\QrReader;
 
 class MachineRepairController extends Controller
 {
@@ -274,7 +272,7 @@ class MachineRepairController extends Controller
         ImageDestroy($img_create);
 
 
-        $qrcode = new Zxing\QrReader($current_path);
+        $qrcode = new QrReader($current_path);
         dd($qrcode);
         $text = $qrcode->text();
         unlink($current_path);
