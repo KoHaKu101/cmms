@@ -24,7 +24,8 @@ use App\Models\Machine\MachineRepairREQ;
 //************** Package form github ***************
 use App\Exports\MachineExport;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Http\Controllers\QRCODE\lib\QrReader;
+use Zxing\QrReader;
+// use App\Http\Controllers\QRCODE\lib\QrReader;
 
 class MachineRepairController extends Controller
 {
