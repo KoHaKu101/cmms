@@ -1,6 +1,6 @@
 <?php
 
-namespace Zxing\Common;
+namespace App\Http\Controllers\QRCODE\lib\Common;
 
 /**
  * Encapsulates a Character Set ECI, according to "Extended Channel

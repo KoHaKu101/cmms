@@ -1,8 +1,8 @@
 <?php
 
-namespace Zxing\Common;
+namespace App\Http\Controllers\QRCODE\lib\Common;
 
-use \Zxing\NotFoundException;
+use \App\Http\Controllers\QRCODE\lib\NotFoundException;
 use ReflectionClass;
 
 /**
