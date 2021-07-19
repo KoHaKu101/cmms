@@ -75,7 +75,7 @@
 								  {{-- <div class="row justify-content-md-center"> --}}
 										<div class="row justify-content-center">
 											<div class="col-8 col-md-5 col-lg-4 ">
-												<h3 >กรอกรหัสเครื่อง / แสกนQR Code3</h3>
+												<h3 >กรอกรหัสเครื่อง / แสกนQR Code</h3>
 											</div>
 										</div>
 										<div class="row justify-content-center">
