@@ -366,7 +366,20 @@ $(document).ready(function(){
 
 
 //******************************* function ************************
-
+function loaddata_table(){
+	var url = "{{ route('repair.fetchdata') }}";
+	var data = $('#FRM_SEARCH').serialize();
+	$.ajax({
+				 type:'GET',
+				 url: url,
+				 data: data,
+				 datatype: 'json',
+				 success:function(data){
+					 $('#result').html(data.html);
+					 $('#table_style').html(data.html_style);
+				 }
+			 });
+		 }
 //********************** function loop array **********************
 
 function loop_tabel_worker(array_emp_unid){
@@ -468,16 +481,40 @@ function savestep(idform,steppoint){
 	var idform = '#FRM_'+idform;
 
 	var data = $(idform).serialize();
+	$("#overlay").fadeIn(300);
 	$.ajax({
 		type:'POST',
 		url: url,
 		datatype: 'json',
 		data: data ,
 		success:function(res){
+			$("#overlay").fadeOut(300);
 					if (res.name) {
 						$('#IMG_'+unid).attr('src',res.img);
 						$('#WORK_STATUS_'+unid).html(res.name);
 						$('#DATE_DIFF_'+unid).html('แจ้งเมื่อ:'+res.date);
+					}
+					if (res.pass == 'false') {
+						var text = '';
+						let number = 0 ;
+						buysparepart('1');
+						$('#addbuy_sparepart').attr('disabled',true);
+
+						$.each(res.sparepart, function(key, val) {
+							  number++
+								text+= ' '+number+'. '+key+' ';
+				    });
+						Swal.fire({
+						  icon: 'error',
+						  title: 'รายการอะไหล่หมด',
+						  text: text,
+						});
+					}else if (res.pass == 'true') {
+						$('.'+work_step_next).addClass('badge-primary fw-bold');
+						$('.'+work_step_simple).removeClass('badge-primary fw-bold');
+						$('.'+work_step_simple).addClass('badge-success fw-bold');
+						$('#'+work_step_simple).removeClass('active show');
+						$('#'+work_step_next).addClass('active show');
 					}
 				}
 			});
@@ -496,7 +533,7 @@ function savestep(idform,steppoint){
 				 data: {REPAIR_REQ_UNID : repair_unid},
 				 datatype: 'json',
 				 success:function(data){
-					 $("#overlayinpage").fadeOut(300)
+					 $("#overlayinpage").fadeOut(300);
 			 //************************ set html **************************
 					 $('#show_detail').html(data.html_detail);
 					 $('#select_recworker').html(data.html_select);
@@ -537,7 +574,20 @@ function savestep(idform,steppoint){
 
  							 	$('.WORK_STEP_'+i).addClass('badge-success fw-bold');
 						//***************************** step สุดท้าย *********************************
-								if (i == 4) {
+								if (i == 2) {
+									$("#overlay").fadeIn(300);
+									$.each(data.repair_sparepart, function(key, val) {
+										var unid = val.SPAREPART_UNID;
+										var total = val.SPAREPART_TOTAL_OUT;
+										var typeadd = val.SPAREPART_PAY_TYPE;
+										var cost = val.SPAREPART_COST;
+							  			loop_tabel_sparepart(unid,total,typeadd,cost);
+							    });
+									setTimeout(function(){
+										$("#overlay").fadeOut(300);
+									},1200);
+
+								}else if(i == 4) {
 									var url = "{{ route('repair.result') }}";
 									$('#CloseForm').modal({backdrop: 'static', keyboard: false});
 									$('#CloseForm').modal('show');
@@ -584,7 +634,6 @@ function savestep(idform,steppoint){
 						 $('#stepsave').attr('hidden',false);
 						 $('.stepclose').attr('hidden',true);
 					 }
-
 				 }
 			 });
 	}
@@ -602,9 +651,13 @@ function savestep(idform,steppoint){
 		var step_number_down = Number(step_number) - 1;
 		var work_step_next = 'WORK_STEP_'+step_number;
 		var work_step_simple   = 'WORK_STEP_'+step_number_down;
-		if ($('#FRM_'+work_step_simple).valid()) {
-			savestep(work_step_simple,work_step_next);
-			if (work_step_next == 'WORK_STEP_5') {
+
+		if ( $('#FRM_'+work_step_simple).valid() ){
+
+			if (work_step_next == 'WORK_STEP_4') {
+				savestep(work_step_simple,work_step_next);
+			}else if (work_step_next == 'WORK_STEP_5') {
+				savestep(work_step_simple,work_step_next);
 				$("#overlay").fadeIn(300);　
 				var url = "{{ route('repair.result') }}";
 				var unid_repair = 			 $("#UNID_REPAIR_REQ").val();
@@ -624,12 +677,15 @@ function savestep(idform,steppoint){
 								}
 							}
 						});
+			}else {
+				savestep(work_step_simple,work_step_next);
+				$('.'+work_step_next).addClass('badge-primary fw-bold');
+				$('.'+work_step_simple).removeClass('badge-primary fw-bold');
+				$('.'+work_step_simple).addClass('badge-success fw-bold');
+				$('#'+work_step_simple).removeClass('active show');
+				$('#'+work_step_next).addClass('active show');
 			}
-			$('.'+work_step_next).addClass('badge-primary fw-bold');
-			$('.'+work_step_simple).removeClass('badge-primary fw-bold');
-			$('.'+work_step_simple).addClass('badge-success fw-bold');
-			$('#'+work_step_simple).removeClass('active show');
-			$('#'+work_step_next).addClass('active show');
+
 		}else {
 			sweetalertnoinput();
 		}
@@ -745,17 +801,18 @@ function savestep(idform,steppoint){
 				loop_tabel_worker(array_emp_unid);
 			}
 		});
- $('#addbuy_sparepart').on('click',function(){
-	  var check = $('#addbuy_sparepart').val();
-		$('#buy_sparepart .buy_sparepart').attr('disabled',false);
-		$('#addbuy_sparepart').val('2');
-		$('#buy_sparepart').attr('hidden',false);
-		if (check == '2') {
-			$('#buy_sparepart .buy_sparepart').attr('disabled',true);
-			$('#addbuy_sparepart').val('1');
-			$('#buy_sparepart').attr('hidden',true);
+		function buysparepart(check){
+			var check = check;
+			$('#buy_sparepart .buy_sparepart').attr('disabled',false);
+			$('#addbuy_sparepart').attr("onclick","buysparepart('2')");
+			$('#buy_sparepart').attr('hidden',false);
+			if (check == '2') {
+				$('#buy_sparepart .buy_sparepart').attr('disabled',true);
+				$('#addbuy_sparepart').attr("onclick","buysparepart('1')");
+				$('#buy_sparepart').attr('hidden',true);
+			}
 		}
- });
+
  $('#SPAREPART').on('change',function(){
 		var unid = $('#SPAREPART').val();
 		var sparepartcost  = $('#'+unid).data('sparepartcost');
@@ -907,11 +964,13 @@ $('#closeform').on('click',function(){
 	 for (var i = 1; i < max+1; i++) {
 		 $('#tablerow'+i).remove();
 	 }
+	 $('#addbuy_sparepart').attr('disabled',false);
 	 $('table#table_workerout tr#tablerow').remove();
 	 resetIndexes();
 	 loop_tabel_sparepart('','','','');
 	 for (var i = 1; i < 5; i++) {
-		document.getElementById("FRM_WORK_STEP_"+i).reset();
+		// document.getElementById("FRM_WORK_STEP_"+i)['0'].reset();
+		$('#FRM_WORK_STEP_'+i).trigger("reset");
 	 }
  })
 </script>

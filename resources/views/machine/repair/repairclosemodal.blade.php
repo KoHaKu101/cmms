@@ -375,8 +375,8 @@ body.modal-open {
                 </div>
                 <div class="row">
                   <div class="col-md-2">
-                    <button type="button" class="btn btn-primary btn-sm" id="addbuy_sparepart"
-                    value="1"
+                    <button type="button" class="btn btn-primary btn-sm" id="addbuy_sparepart" onclick="buysparepart('1')"
+
                     ><i class="fas fa-dollar-sign mr-1"></i>สั่งอะไหล่</button>
                   </div>
                 </div>
@@ -413,7 +413,7 @@ body.modal-open {
                   </button>
                 </div>
                 <div class="col-3 col-sm-2 col-md-4 col-lg-2  ml-auto " >
-                  <button type="button" class="btn btn-secondary btn-sm  btn-link text-right"
+                  <button type="button" class="btn btn-secondary btn-sm  btn-link text-right" id="NEXT_STEP4"
                   onclick="nextstep(4)">
                     <i class="fas fa-arrow-right fa-2x"></i>
                   </button>

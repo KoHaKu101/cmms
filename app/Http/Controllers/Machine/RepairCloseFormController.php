@@ -11,6 +11,7 @@ use Auth;
 use Cookie;
 use Gate;
 use App\Http\Controllers\Machine\HistoryRepairController;
+use App\Http\Controllers\Machine\SparepartController;
 //******************** model ***********************
 use App\Models\MachineAddTable\SelectMainRepair;
 use App\Models\MachineAddTable\SelectSubRepair;
@@ -71,6 +72,7 @@ class RepairCloseFormController extends Controller
     if ($REPAIR_REQ_UNID != '') {
       $REPAIR = MachineRepairREQ::select('*')->selectraw("dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH")
                                                   ->where('UNID','=',$REPAIR_REQ_UNID)->first();
+      $REPAIR_SPAREPART = RepairSparepart::where('REPAIR_REQ_UNID','=',$REPAIR_REQ_UNID)->orderBy('SPAREPART_NAME')->get();
       $DATA_SELECMAIN = SelectMainRepair::where('STATUS','=','9')->get();
       $DATA_SELECSUB = SelectSubRepair::where('STATUS','=','9')->get();
       $PRIORITY_TEXT = $REPAIR->PRIORITY == '9' ? 'เร่งด่วน' : 'ไม่เร่งด่วน' ;
@@ -114,7 +116,7 @@ class RepairCloseFormController extends Controller
       </table>';
     }
     return Response()->json(['html_detail'=>$html_detail,'html_select' => $html_select,'html_sparepart' => $html_sparepart
-    ,'step' => $REPAIR->WORK_STEP]);
+    ,'step' => $REPAIR->WORK_STEP,'repair_sparepart'=>$REPAIR_SPAREPART]);
   }
   public function SelectRepairDetail(Request $request){
     $UNID = $request->UNID;
@@ -328,11 +330,16 @@ class RepairCloseFormController extends Controller
 
 
         $DATA_SPARPART = SparePart::whereIn('UNID',$SPAREPART_UNID)->get();
+        $SPAREPART_NO_STOCK = array();
         foreach ($DATA_SPARPART as $key => $sub_row) {
           $TOTAL_OUT  = $request->SPAREPART_TOTAL_[$sub_row->UNID];
           $COST       = $request->SPAREPART_COST_[$sub_row->UNID];
           $TOTAL_COST = $COST * $TOTAL_OUT;
-
+          if ($sub_row->LAST_STOCK == 0) {
+            $SPAREPART_NO_STOCK[$sub_row->SPAREPART_NAME] = $sub_row->LAST_STOCK;
+            $SPAREPART_STOCK_TYPE = 'OUT';
+          }
+          $SPAREPART_PAY_TYPE = $request->SPAREPART_UNID_[$sub_row->UNID];
           RepairSparepart::insert([
             'UNID'                    =>  $this->randUNID('PMCS_CMMS_REPAIR_SPAREPART')
             ,'REPAIR_REQ_UNID'        =>  $REPAIR_REQ_UNID
@@ -343,7 +350,7 @@ class RepairCloseFormController extends Controller
             ,'SPAREPART_COST'         =>  $COST
             ,'SPAREPART_TOTAL_COST'   =>  $TOTAL_COST
             ,'SPAREPART_TOTAL_OUT'    =>  $TOTAL_OUT
-            ,'SPAREPART_PAY_TYPE'     =>  $request->SPAREPART_UNID_[$sub_row->UNID]
+            ,'SPAREPART_PAY_TYPE'     =>  $SPAREPART_PAY_TYPE
             ,'SPAREPART_STOCK_TYPE'   =>  $SPAREPART_STOCK_TYPE
             ,'SPAREPART_UNIT'         =>  $sub_row->UNIT
             ,'SPAREPART_MODEL'        =>  $sub_row->SPAREPART_MODEL
@@ -355,10 +362,10 @@ class RepairCloseFormController extends Controller
             ,'MODIFY_TIME'            =>  Carbon::now()
           ]);
         }
+        if (is_array($SPAREPART_NO_STOCK) && $SPAREPART_PAY_TYPE == 'CUT') {
+          return Response()->json(['pass' => 'false','sparepart'=> $SPAREPART_NO_STOCK]);
+        }
       }
-
-
-
       $MACHINEREPAIRREQ->update([
           'SPAREPART_START_DATE'    =>  $DATE_START
           ,'SPAREPART_START_TIME'   =>  $TIME_START
@@ -369,7 +376,8 @@ class RepairCloseFormController extends Controller
           ,'MODIFY_TIME'            =>  Carbon::now()
           ,'MODIFY_BY'              =>  Auth::user()->name
       ]);
-  }elseif ($WORK_STEP == 'WORK_STEP_4') {
+      return Response()->json(['pass' => 'true']);
+   }elseif ($WORK_STEP == 'WORK_STEP_4') {
       $TIME_START         = $request->WORKER_START_TIME;
       $TIME_END           = $request->WORKER_END_TIME;
       $DATE_START         = $request->WORKER_START_DATE;
@@ -577,13 +585,13 @@ class RepairCloseFormController extends Controller
         $EXPLOT            = str_replace('MRP'.Carbon::parse($DOC_DATE)->addyears(543)->format('ym').'-','',$REPORT_NO)+1;
         $MACHINE_REPORT_NO = 'MRP' . Carbon::parse($DOC_DATE)->addyears(543)->format('ym'). sprintf('-%04d', $EXPLOT);
     }
-
+    $INSPECTION_NAME = $DATA_REPAIR_FIRST->INSPECTION_NAME;
     $DATA_REPAIR->update([
       'DOWNTIME'              =>  $DOWNTIME
       ,'TOTAL_COST_SPAREPART' => $TOTAL_COST_SPAREPART
       ,'TOTAL_COST_WORKER'    => $TOTAL_COST_WORKER
       ,'TOTAL_COST_REPAIR'    => $TOTAL_COST_REPAIR
-      ,'CLOSE_BY'             => $DATA_REPAIR_FIRST->INSPECTION_NAME
+      ,'CLOSE_BY'             => $INSPECTION_NAME
       ,'CLOSE_STATUS'         => 1
       ,'MACHINE_REPORT_NO'    => $MACHINE_REPORT_NO
       ,'CLOSE_TIME'           => date('H:i:s')
@@ -593,9 +601,18 @@ class RepairCloseFormController extends Controller
     ]);
     $REPAIR_DATE = $CHECK_WORKER[0]->WORKER_TYPE == 'IN' ? $DATA_REPAIR_FIRST->WORKERIN_END_DATE : $DATA_REPAIR_FIRST->WORKEROUT_END_DATE ;
 
-    $SAVE_HISTORYREPAIR = new HistoryController;
+    $SAVE_HISTORYREPAIR     = new HistoryController;
+    $SAVE_HISTORY_SPAREPART = new SparepartController;
+    $MACHINE_UNID           = $DATA_REPAIR_FIRST->MACHINE_UNID;
+    $DOC_NO                 = $DATA_REPAIR_FIRST->DOC_NO;
+    $TYPE                   = 'REPAIR';
+    $RECODE_BY              = $INSPECTION_NAME;
 
     $SAVE_HISTORYREPAIR->SaveHistory($UNID_REPAIR,$MACHINE_REPORT_NO,$REPAIR_DATE,$TOTAL_COST_REPAIR,$DOWNTIME);
+    $SAVE_HISTORY_SPAREPART->SaveHistory($UNID_REPAIR,$MACHINE_UNID,$DOC_NO,$TYPE,$RECODE_BY);
+
+
+
     return Response()->json(['pass'=>'true']);
   }
   public function ConvertToMinutes($TIME_START=NULL,$TIME_END=NULL,$DATE_START=NULL,$DATE_END=NULL){

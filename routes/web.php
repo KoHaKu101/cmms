@@ -19,7 +19,7 @@ use App\Http\Controllers\Machine\MachineManualController;
 use App\Http\Controllers\Machine\SysCheckController;
 use App\Http\Controllers\Machine\MailConfigController;
 use App\Http\Controllers\Machine\DailyCheckController;
-use App\Http\Controllers\Machine\MachineSparePartController;
+
 use App\Http\Controllers\Machine\CookieController;
 use App\Http\Controllers\Machine\PerMissionController;
 //************************* History ************************************
@@ -36,6 +36,10 @@ use App\Http\Controllers\Plan\Report\PlanMonthMachinePm;
 use App\Http\Controllers\Plan\Report\PlanYearMachinePdm;
 use App\Http\Controllers\Plan\Report\PlanMonthMachinePdm;
 use App\Http\Controllers\Plan\Report\FormPMMachine;
+//************************* sparepart *********************************
+
+use App\Http\Controllers\Machine\SparepartController;
+use App\Http\Controllers\Machine\MachineSparePartController;
 use App\Http\Controllers\Plan\ReportSparePartController;
 
 //************************* add tabel *********************************
@@ -176,6 +180,9 @@ Route::get('machine/daily/list'                     ,[DailyCheckController::clas
   Route::post('machine/daily/uploadimg'               ,[DailyCheckController::class,'CheckSheetUpload']) ->name('daily.upload');
   Route::get('machine/daily/deleteimg/{UNID?}'         ,[DailyCheckController::class,'DeleteImg']) ->name('daily.delete');
   Route::get('machine/daily/view/{UNID}'            ,[DailyCheckController::class,'View']) ->name('daily.view');
+//SparePart
+Route::get('machine/sparepart/stock'            ,[SparepartController::class,'StockList']) ->name('sparepart.stock');
+Route::get('machine/sparepart/history/pdf'            ,[SparepartController::class,'HistoryPDF']) ->name('spareparthistory.pdf');
 //***************************** tabledata ****************************************
 //machinetypetable
 Route::get('machine/machinetypetable/list'      ,[MachineTypeTableController::class,'Index'])  ->name('machinetypetable.list');
