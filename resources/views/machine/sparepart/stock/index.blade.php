@@ -28,31 +28,35 @@
 				<div class="py-12">
 	        <div class="container mt-2">
 						<div class="card">
+							<form action="{{ route('sparepart.stock') }}" method="post" enctype="multipart/form-data">
+								@method('GET')
+								@csrf
 							<div class="row">
-								<div class="col-md-12">
+									<div class="col-md-12">
+										<div class="card-header bg-primary text-white">
+											<div class="row">
+												<div class="col-md-8 form-inline">
+													<h4 class="mt-1 ">รายการอะไหล่ในสต็อก : </h4>
 
-									<div class="card-header bg-primary text-white">
-										<div class="row">
-											<div class="col-md-8 form-inline">
-												<h4 class="mt-1 ">รายการอะไหล่ในสต็อก : </h4>
-
-											</div>
-											<div class="col-md-4 form-inline">
-												<h4 class="mt-1">ค้นหา : </h4>
-												<div class="input-group mx-1">
-					                <input type="search" id="SEARCH" name="SEARCH" class="form-control form-control-sm " placeholder="ค้นหา........." value="">
-					                <div class="input-group-prepend">
-					                  <button type="submit" class="btn btn-search pr-1 btn-xs	" id="BTN_SUBMIT">
-					                    <i class="fa fa-search search-icon"></i>
-					                  </button>
-					                </div>
-					              </div>
+												</div>
+												<div class="col-md-4 form-inline">
+													<h4 class="mt-1">ค้นหา : </h4>
+													<div class="input-group mx-1">
+						                <input type="search" id="SEARCH" name="SEARCH" class="form-control form-control-sm " placeholder="ค้นหา........." value="{{ $SEARCH }}">
+						                <div class="input-group-prepend">
+						                  <button type="submit" class="btn btn-search pr-1 btn-xs	" id="BTN_SUBMIT">
+						                    <i class="fa fa-search search-icon"></i>
+						                  </button>
+						                </div>
+						              </div>
+												</div>
 											</div>
 										</div>
+
 									</div>
 
-								</div>
 							</div>
+							</form>
 							<div class="row">
 								<div class="col-md-12">
 									<divl class="table">
@@ -93,6 +97,7 @@
 
 												</tbody>
 											</table>
+											{{$DATA_SPAREPART->appends(['SEARCH',$SEARCH])->links('pagination.default')}}
 									</divl>
 								</div>
 							</div>

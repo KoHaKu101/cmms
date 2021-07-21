@@ -28,9 +28,11 @@
 				<div class="py-12">
 	        <div class="container mt-2">
 						<div class="card">
+							<form action="{{ route('sparepart.alert') }}" method="post" enctype="multipart/form-data">
+								@method('GET')
+								@csrf
 							<div class="row">
 								<div class="col-md-12">
-
 									<div class="card-header bg-primary text-white">
 										<div class="row">
 											<div class="col-md-8 form-inline">
@@ -39,7 +41,7 @@
 											<div class="col-md-4 form-inline">
 												<h4 class="mt-1">ค้นหา : </h4>
 												<div class="input-group mx-1">
-					                <input type="search" id="SEARCH" name="SEARCH" class="form-control form-control-sm " placeholder="ค้นหา........." value="">
+					                <input type="search" id="SEARCH" name="SEARCH" class="form-control form-control-sm " placeholder="ค้นหา........." value="{{ $SEARCH }}">
 					                <div class="input-group-prepend">
 					                  <button type="submit" class="btn btn-search pr-1 btn-xs	" id="BTN_SUBMIT">
 					                    <i class="fa fa-search search-icon"></i>
@@ -52,6 +54,7 @@
 
 								</div>
 							</div>
+							</form>
 							<div class="row">
 								<div class="col-md-12">
 									<divl class="table">
@@ -66,12 +69,11 @@
 														<th>สต็อกขั้นต่ำ</th>
 														<th>ยอดคงเหลือ</th>
 														<th>หน่วย</th>
-														
+
 													</tr>
 												</thead>
 												<tbody>
 													@foreach ($DATA_SPAREPART as $key => $row)
-															@if ($row->STOCK_MIN >= $row->LAST_STOCK)
 														<tr>
 															<td width="4%" class="text-center">{{$key+1}}</td>
 															<td width="18%">{{$row->SPAREPART_CODE}}</td>
@@ -83,11 +85,11 @@
 															<td width="6%">{{$row->UNIT}}</td>
 
 														</tr>
-														@endif
 													@endforeach
 
 												</tbody>
 											</table>
+											{{$DATA_SPAREPART->appends(['SEARCH',$SEARCH])->links('pagination.default')}}
 									</divl>
 								</div>
 							</div>

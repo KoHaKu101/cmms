@@ -47,12 +47,21 @@ class SparepartController extends Controller
   }
 
 
-    public function StockList(){
-      $DATA_SPAREPART = SparePart::where('STATUS','=',9)->orderBy('SPAREPART_NAME')->paginate(10);
-      return View('machine.sparepart.stock.index',compact('DATA_SPAREPART'));
+    public function StockList(Request $request){
+      $SEARCH = $request->SEARCH;
+      $DATA_SPAREPART = SparePart::where(function($query) use ($SEARCH){
+                                      if (isset($SEARCH)) {
+                                        $query->where('SPAREPART_NAME','like','%'.$SEARCH.'%')
+                                              ->orwhere('SPAREPART_CODE','like','%'.$SEARCH.'%');
+                                      }
+                                    })
+                                  ->where('STATUS','=',9)->orderBy('SPAREPART_NAME')->paginate(10);
+
+      return View('machine.sparepart.stock.index',compact('DATA_SPAREPART','SEARCH'));
     }
 
     public function RecSparepartList(){
+
       $DATA_SPAREPART = SparePart::where('STATUS','=',9)->orderBy('SPAREPART_NAME')->get();
       $DATA_SPAREPART_REC = SparepartRec::orderBy('DOC_DATE')->get();
       $DATA_EMP       = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->where('EMP_STATUS','=',9)->orderBy('EMP_NAME')->get();
@@ -135,8 +144,15 @@ class SparepartController extends Controller
       return Redirect()->back();
     }
     public function AlertSparepartList(Request $request){
-      $DATA_SPAREPART = SparePart::where('STATUS','=',9)->orderBy('SPAREPART_NAME')->get();
-      return View('machine.sparepart.stock.alertindex',compact('DATA_SPAREPART'));
+      $SEARCH = $request->SEARCH;
+      $DATA_SPAREPART = SparePart::where(function($query) use ($SEARCH){
+                                      if (isset($SEARCH)) {
+                                        $query->where('SPAREPART_NAME','like','%'.$SEARCH.'%')
+                                              ->orwhere('SPAREPART_CODE','like','%'.$SEARCH.'%');
+                                      }
+                                    })->whereraw('STOCK_MIN >= LAST_STOCK')->where('STATUS','=',9)
+                                      ->orderBy('SPAREPART_NAME')->paginate(10);
+      return View('machine.sparepart.stock.alertindex',compact('DATA_SPAREPART','SEARCH'));
     }
     public function HistoryPDF(HistorySparepartHEAD $HistorySparepartHEAD,Request $request){
       $this->pdf = $HistorySparepartHEAD;
