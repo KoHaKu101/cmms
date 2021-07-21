@@ -34,8 +34,7 @@
 									<div class="card-header bg-primary text-white">
 										<div class="row">
 											<div class="col-md-8 form-inline">
-												<h4 class="mt-1 ">รายการอะไหล่ในสต็อก : </h4>
-
+												<h4 class="mt-1 ">รายการอะไหล่ ใกล้หมด : </h4>
 											</div>
 											<div class="col-md-4 form-inline">
 												<h4 class="mt-1">ค้นหา : </h4>
@@ -67,11 +66,12 @@
 														<th>สต็อกขั้นต่ำ</th>
 														<th>ยอดคงเหลือ</th>
 														<th>หน่วย</th>
-														<th>ประวัติเบิกจ่าย</th>
+														
 													</tr>
 												</thead>
 												<tbody>
 													@foreach ($DATA_SPAREPART as $key => $row)
+															@if ($row->STOCK_MIN >= $row->LAST_STOCK)
 														<tr>
 															<td width="4%" class="text-center">{{$key+1}}</td>
 															<td width="18%">{{$row->SPAREPART_CODE}}</td>
@@ -81,14 +81,9 @@
 															<td width="8%">{{$row->STOCK_MIN}}</td>
 															<td width="8%">{{$row->LAST_STOCK}}</td>
 															<td width="6%">{{$row->UNIT}}</td>
-															<td>
-																<button class="btn btn-sm btn-secondary btn-block my-1"
-																onclick="positionedPopup('{{ route('spareparthistory.pdf').'?UNID='.$row->UNID}}','myWindow');return false">
-																	<i class="fas fa-print mx-1"></i>
-																	Print
-																</button>
-															</td>
+
 														</tr>
+														@endif
 													@endforeach
 
 												</tbody>

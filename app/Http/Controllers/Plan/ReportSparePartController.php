@@ -21,6 +21,8 @@ use App\Models\SettingMenu\MailSetup;
 //***************** Controller ************************
 use App\Http\Controllers\MachineAddTable\SparPartController;
 use App\Http\Controllers\Machine\HistoryController;
+use App\Http\Controllers\Machine\SparepartController;
+
 use App\Http\Controllers\Plan\headerandfooter\PlanMonthHeaderFooter as planmonthheaderfooter;
 class ReportSparePartController extends Controller
 {
@@ -384,18 +386,20 @@ class ReportSparePartController extends Controller
     $START_TIME = $request->START_TIME;
     $END_TIME = $request->END_TIME;
     $DOWNTIME = Carbon::parse($START_TIME)->diffInRealMinutes($END_TIME);
+    $USER_CHECK = $request->USER_CHECK;
     SparePartPlan::where('UNID','=',$PLAN_UNID)->update([
-      'STATUS'         => 'COMPLETE'
-      ,'REMARK'        => $request->REMARK
-      ,'ACT_QTY'       => $ACT_QTY
-      ,'COMPLETE_DATE' => $ACT_DATE
-      ,'COST_ACT'      => $COST_ACT
-      ,'START_TIME'    => $START_TIME
-      ,'END_TIME'      => $END_TIME
-      ,'DOWNTIME'      => $DOWNTIME
-      ,'USER_CHECK'    => $request->USER_CHECK
-      ,'MODIFY_BY'     => Auth::user()->name
-      ,'MODIFY_TIME'   => Carbon::now()
+      'STATUS'              => 'COMPLETE'
+      ,'REMARK'             => $request->REMARK
+      ,'ACT_QTY'            => $ACT_QTY
+      ,'SPAREPART_PAY_TYPE' => 'CUT'
+      ,'COMPLETE_DATE'      => $ACT_DATE
+      ,'COST_ACT'           => $COST_ACT
+      ,'START_TIME'         => $START_TIME
+      ,'END_TIME'           => $END_TIME
+      ,'DOWNTIME'           => $DOWNTIME
+      ,'USER_CHECK'         => $USER_CHECK
+      ,'MODIFY_BY'          => Auth::user()->name
+      ,'MODIFY_TIME'        => Carbon::now()
     ]);
     $MACHINE_UNID = $PLAN->MACHINE_UNID;
     $SPAREPART_UNID = $PLAN->SPAREPART_UNID ;
@@ -422,6 +426,11 @@ class ReportSparePartController extends Controller
                                           ]);
     $SAVE_HISTORY = New HistoryController;
     $SAVE_HISTORY->SaveHistoryPDM($PLAN_UNID,$DOWNTIME);
+    $SAVE_HISTORY_SPAREPART = New SparepartController;
+    $DOC_NO = '';
+    $TYPE   = 'PLAN_PDM';
+
+    $SAVE_HISTORY_SPAREPART->SaveHistory($PLAN_UNID,$MACHINE_UNID,$DOC_NO,$TYPE,$USER_CHECK);
       return Response()->json(['res' => true]);
 
   }

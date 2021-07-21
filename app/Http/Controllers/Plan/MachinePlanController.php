@@ -29,6 +29,7 @@ use App\Models\SettingMenu\MailSetup;
 //***************** Controller ************************
 use App\Http\Controllers\Machine\UploadImgController;
 use App\Http\Controllers\Machine\HistoryController;
+use App\Http\Controllers\Machine\SparepartController;
 class MachinePlanController extends Controller
 {
   protected  $paging = 10;
@@ -310,6 +311,10 @@ class MachinePlanController extends Controller
                   $TOTAL_COST_SPAREPART = $this->SaveSparePart($PM_PLAN_UNID,$CHECK_DATE,$SPAREPART_TOTAL,$ARRAY_COST,$PM_USER_CHECK);
                   $SAVEHISTORYPM = new HistoryController;
                   $SAVEHISTORYPM->SaveHistoryPM($PM_PLAN_UNID,$DOWNTIME,$REMARK,$CHECK_DATE,$PM_USER_CHECK,$TOTAL_COST_SPAREPART );
+                  $SAVE_HISTORY_SPAREPART = new SparepartController;
+                  $DOC_NO = '' ;
+                  $TYPE = 'PLAN_PM';
+                  $SAVE_HISTORY_SPAREPART->SaveHistory($PM_PLAN_UNID,$MACHINE_UNID,$DOC_NO,$TYPE,$PM_USER_CHECK);
 
                   DB::commit();
                 }
@@ -388,9 +393,15 @@ class MachinePlanController extends Controller
             $this->IMPSandPlanUpdate($PM_PLAN_UNID,$CHECK_DATE,$MACHINE_UNID,$PM_MASTER_UNID,$START_TIME,$END_TIME,$DOWNTIME);
             $this->LoopUpdatePlan($PLAN_PERIOD,$CHECK_DATE,$MACHINE_UNID,$PM_MASTER_UNID);
             $TOTAL_COST_SPAREPART = $this->SaveSparePart($PM_PLAN_UNID,$CHECK_DATE,$SPAREPART_TOTAL,$ARRAY_COST,$PM_USER_CHECK);
-            
+
             $SAVEHISTORYPM = new HistoryController;
             $SAVEHISTORYPM->SaveHistoryPM($PM_PLAN_UNID,$DOWNTIME,$REMARK,$CHECK_DATE,$PM_USER_CHECK,$TOTAL_COST_SPAREPART);
+
+            $SAVE_HISTORY_SPAREPART = new SparepartController;
+            $DOC_NO = '' ;
+            $TYPE = 'PLAN_PM';
+            $SAVE_HISTORY_SPAREPART->SaveHistory($PM_PLAN_UNID,$MACHINE_UNID,$DOC_NO,$TYPE,$PM_USER_CHECK);
+
             DB::commit();
           }
            catch (Exception $e) {
@@ -719,6 +730,7 @@ class MachinePlanController extends Controller
           ,'TOTAL_COST'         =>$TOTAL_COST
           ,'TOTAL_PIC'          =>$TOTAL_PIC
           ,'INSPECTION_BY'      =>Auth::user()->name
+          ,'SPAREPART_PAY_TYPE' => 'CUT'
           ,'CREATE_BY'          =>Auth::user()->name
           ,'CREATE_TIME'        =>Carbon::now()
           ,'MODIFY_BY'          =>Auth::user()->name

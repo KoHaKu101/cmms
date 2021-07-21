@@ -39,6 +39,7 @@ class SparePartPlan extends Model
 ,'COST_STD'
 ,'TOTAL_COST'
 ,'COST_ACT'
+,'SPAREPART_PAY_TYPE'
 ,'CREATE_BY'
 ,'CREATE_TIME'
 ,'MODIFY_BY'

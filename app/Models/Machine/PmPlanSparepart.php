@@ -35,6 +35,7 @@ class PmPlanSparepart extends Model
       ,'TOTAL_COST'
       ,'TOTAL_PIC'
       ,'INSPECTION_BY'
+      ,'SPAREPART_PAY_TYPE'
       ,'CREATE_BY'
       ,'CREATE_TIME'
       ,'MODIFY_BY'

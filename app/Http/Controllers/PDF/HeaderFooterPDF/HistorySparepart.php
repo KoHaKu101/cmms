@@ -34,11 +34,11 @@ class HistorySparepart extends Fpdf
       $this->Cell(20,11,$this->PageNo().'/{nb}','LBR',1,'R');
       $this->SetFont('THSarabunNew','',14 );
       $this->Cell(22,11,iconv('UTF-8', 'cp874', 'รหัสสินค้า :'),'LTB',0,'C');
-      $this->Cell(40,11,iconv('UTF-8', 'cp874', $SPAREPART->SPAREPART_CODE),'TB',0,'L');
+      $this->Cell(40,11,$SPAREPART->SPAREPART_CODE,'TB',0,'L');
       $this->Cell(12,11,iconv('UTF-8', 'cp874', 'รหัสรุ่น :'),'TB',0,'C');
-      $this->Cell(52,11,iconv('UTF-8', 'cp874', $SPAREPART->SPAREPART_MODEL),'TB',0,'L');
-      $this->Cell(26,11,iconv('UTF-8', 'cp874', 'SAFETY STOCK : '),'TB',0,'C');
-      $this->Cell(34,11,iconv('UTF-8', 'cp874', $SPAREPART->STOCK_MIN),'TBR',1,'L');
+      $this->Cell(52,11,$SPAREPART->SPAREPART_MODEL,'TB',0,'L');
+      $this->Cell(26,11,'SAFETY STOCK : ','TB',0,'C');
+      $this->Cell(34,11,$SPAREPART->STOCK_MIN,'TBR',1,'L');
       $this->Cell(21,6,'','TRL',0,'C');
       $this->Cell(36,6,iconv('UTF-8', 'cp874', 'รับเข้า'),'TBRL',0,'C');
       $this->Cell(36,6,iconv('UTF-8', 'cp874', 'เบิกจ่าย'),'TBRL',0,'C');
@@ -46,14 +46,14 @@ class HistorySparepart extends Fpdf
       $this->Cell(31,6,'','TRL',0,'C');
       $this->Cell(47,6,'','TRL',1,'C');
 
-      $this->Cell(21,6,iconv('UTF-8', 'cp874', ''),'BRL',0,'C');
+      $this->Cell(21,6,'','BRL',0,'C');
       $this->Cell(20,6,iconv('UTF-8', 'cp874', 'จำนวน'),'TBRL',0,'C');
       $this->Cell(16,6,iconv('UTF-8', 'cp874', 'หน่วย'),'TBRL',0,'C');
       $this->Cell(20,6,iconv('UTF-8', 'cp874', 'จำนวน'),'TBRL',0,'C');
       $this->Cell(16,6,iconv('UTF-8', 'cp874', 'หน่วย'),'TBRL',0,'C');
       $this->Cell(15,6,iconv('UTF-8', 'cp874', 'คงเหลือ'),'BRL',0,'C');
-      $this->Cell(31,6,iconv('UTF-8', 'cp874', ''),'BRL',0,'C');
-      $this->Cell(47,6,iconv('UTF-8', 'cp874', ''),'BRL',1,'C');
+      $this->Cell(31,6,'','BRL',0,'C');
+      $this->Cell(47,6,'','BRL',1,'C');
 
 
 
@@ -75,8 +75,8 @@ function Footer()
   {
     $this->AddFont('THSarabunNew','','THSarabunNew.php');
     $this->AddFont('THSarabunNew','B','THSarabunNew_b.php');
-    $this->SetY(-20);
-    // footer
+    $this->SetY(-12);
+    $this->Cell(186,6,'PQM-F-MA-23 REV.01:01/08/48',0,1,'R');
     $this->SetX(15);
 
 

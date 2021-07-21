@@ -70,12 +70,13 @@ class RepairCloseFormController extends Controller
     //*********************************** table ของรายละเอียด ****************************************/
     $html_detail = "";
     if ($REPAIR_REQ_UNID != '') {
-      $REPAIR = MachineRepairREQ::select('*')->selectraw("dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH")
-                                                  ->where('UNID','=',$REPAIR_REQ_UNID)->first();
-      $REPAIR_SPAREPART = RepairSparepart::where('REPAIR_REQ_UNID','=',$REPAIR_REQ_UNID)->orderBy('SPAREPART_NAME')->get();
-      $DATA_SELECMAIN = SelectMainRepair::where('STATUS','=','9')->get();
-      $DATA_SELECSUB = SelectSubRepair::where('STATUS','=','9')->get();
-      $PRIORITY_TEXT = $REPAIR->PRIORITY == '9' ? 'เร่งด่วน' : 'ไม่เร่งด่วน' ;
+      $REPAIR                 = MachineRepairREQ::select('*')->selectraw("dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH")
+                                                             ->where('UNID','=',$REPAIR_REQ_UNID)->first();
+      $REPAIR_SPAREPART       = RepairSparepart::where('REPAIR_REQ_UNID','=',$REPAIR_REQ_UNID)->orderBy('SPAREPART_NAME')->get();
+      $REPAIR_SPAREPART_COUNT = RepairSparepart::where('REPAIR_REQ_UNID','=',$REPAIR_REQ_UNID)->where('SPAREPART_STOCK_TYPE','=','OUT')->count();
+      $DATA_SELECMAIN         = SelectMainRepair::where('STATUS','=','9')->get();
+      $DATA_SELECSUB          = SelectSubRepair::where('STATUS','=','9')->get();
+      $PRIORITY_TEXT          = $REPAIR->PRIORITY == '9' ? 'เร่งด่วน' : 'ไม่เร่งด่วน' ;
       $html_detail.= '<input type="hidden" id="UNID_REPAIR_REQ" name="UNID_REPAIR_REQ" value="'.$REPAIR->UNID.'">
       <table class="table table-bordered table-bordered-bd-info">
         <tbody>
@@ -116,7 +117,7 @@ class RepairCloseFormController extends Controller
       </table>';
     }
     return Response()->json(['html_detail'=>$html_detail,'html_select' => $html_select,'html_sparepart' => $html_sparepart
-    ,'step' => $REPAIR->WORK_STEP,'repair_sparepart'=>$REPAIR_SPAREPART]);
+    ,'step' => $REPAIR->WORK_STEP,'repair_sparepart'=>$REPAIR_SPAREPART,'repair_count' => $REPAIR_SPAREPART_COUNT]);
   }
   public function SelectRepairDetail(Request $request){
     $UNID = $request->UNID;
@@ -335,6 +336,7 @@ class RepairCloseFormController extends Controller
           $TOTAL_OUT  = $request->SPAREPART_TOTAL_[$sub_row->UNID];
           $COST       = $request->SPAREPART_COST_[$sub_row->UNID];
           $TOTAL_COST = $COST * $TOTAL_OUT;
+
           if ($sub_row->LAST_STOCK == 0) {
             $SPAREPART_NO_STOCK[$sub_row->SPAREPART_NAME] = $sub_row->LAST_STOCK;
             $SPAREPART_STOCK_TYPE = 'OUT';
@@ -362,7 +364,8 @@ class RepairCloseFormController extends Controller
             ,'MODIFY_TIME'            =>  Carbon::now()
           ]);
         }
-        if (is_array($SPAREPART_NO_STOCK) && $SPAREPART_PAY_TYPE == 'CUT') {
+
+        if (!empty($SPAREPART_NO_STOCK) && $SPAREPART_PAY_TYPE == 'CUT') {
           return Response()->json(['pass' => 'false','sparepart'=> $SPAREPART_NO_STOCK]);
         }
       }

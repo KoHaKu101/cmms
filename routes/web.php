@@ -181,8 +181,12 @@ Route::get('machine/daily/list'                     ,[DailyCheckController::clas
   Route::get('machine/daily/deleteimg/{UNID?}'         ,[DailyCheckController::class,'DeleteImg']) ->name('daily.delete');
   Route::get('machine/daily/view/{UNID}'            ,[DailyCheckController::class,'View']) ->name('daily.view');
 //SparePart
-Route::get('machine/sparepart/stock'            ,[SparepartController::class,'StockList']) ->name('sparepart.stock');
-Route::get('machine/sparepart/history/pdf'            ,[SparepartController::class,'HistoryPDF']) ->name('spareparthistory.pdf');
+Route::get('machine/sparepart/stock'              ,[SparepartController::class,'StockList']) ->name('sparepart.stock');
+  Route::get('machine/sparepart/rec'              ,[SparepartController::class,'RecSparepartList']) ->name('sparepart.rec');
+  Route::get('machine/sparepart/alert'            ,[SparepartController::class,'AlertSparepartList']) ->name('sparepart.alert');
+  Route::post('machine/sparepart/recsave'         ,[SparepartController::class,'RecSparepartSave']) ->name('sparepart.recsave');
+  Route::get('machine/sparepart/recdelete'        ,[SparepartController::class,'RecSparepartDelete']) ->name('sparepart.recdelete');
+  Route::get('machine/sparepart/history/pdf'      ,[SparepartController::class,'HistoryPDF']) ->name('spareparthistory.pdf');
 //***************************** tabledata ****************************************
 //machinetypetable
 Route::get('machine/machinetypetable/list'      ,[MachineTypeTableController::class,'Index'])  ->name('machinetypetable.list');

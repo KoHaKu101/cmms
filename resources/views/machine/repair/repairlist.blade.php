@@ -475,10 +475,12 @@ function modalstep0(docno,detail){
 
 //********************** function save ****************************
 function savestep(idform,steppoint){
-	var unid = $("#UNID_REPAIR_REQ").val();
-	var steppoint = steppoint;
-	var url = "{{ route('repair.savestep') }}?UNID_REPAIR_REQ="+unid+"&WORK_STEP="+idform+'&WORK_STEP_NEXT='+steppoint;
-	var idform = '#FRM_'+idform;
+	var unid 							= $("#UNID_REPAIR_REQ").val();
+	var work_step_simple 	= idform;
+	var work_step_next 		= steppoint;
+	var steppoint 				= steppoint;
+	var url 							= "{{ route('repair.savestep') }}?UNID_REPAIR_REQ="+unid+"&WORK_STEP="+idform+'&WORK_STEP_NEXT='+steppoint;
+	var idform 						= '#FRM_'+idform;
 
 	var data = $(idform).serialize();
 	$("#overlay").fadeIn(300);
@@ -509,6 +511,7 @@ function savestep(idform,steppoint){
 						  title: 'รายการอะไหล่หมด',
 						  text: text,
 						});
+
 					}else if (res.pass == 'true') {
 						$('.'+work_step_next).addClass('badge-primary fw-bold');
 						$('.'+work_step_simple).removeClass('badge-primary fw-bold');
@@ -583,6 +586,14 @@ function savestep(idform,steppoint){
 										var cost = val.SPAREPART_COST;
 							  			loop_tabel_sparepart(unid,total,typeadd,cost);
 							    });
+
+									if (data.repair_count > 0) {
+										$('#addbuy_sparepart').attr('disabled',true);
+										buysparepart('1');
+									}else {
+										$('#addbuy_sparepart').attr('disabled',false);
+										buysparepart('2');
+									}
 									setTimeout(function(){
 										$("#overlay").fadeOut(300);
 									},1200);
@@ -657,7 +668,7 @@ function savestep(idform,steppoint){
 			if (work_step_next == 'WORK_STEP_4') {
 				savestep(work_step_simple,work_step_next);
 			}else if (work_step_next == 'WORK_STEP_5') {
-				savestep(work_step_simple,work_step_next);
+
 				$("#overlay").fadeIn(300);　
 				var url = "{{ route('repair.result') }}";
 				var unid_repair = 			 $("#UNID_REPAIR_REQ").val();
@@ -672,6 +683,11 @@ function savestep(idform,steppoint){
 								$('#closeform').attr('data-total_worker',res.total_worker);
 								$('#closeform').attr('data-total_all',res.total_all);
 								$('#WORK_STEP_RESULT').html(res.html);
+								$('.'+work_step_next).addClass('badge-primary fw-bold');
+								$('.'+work_step_simple).removeClass('badge-primary fw-bold');
+								$('.'+work_step_simple).addClass('badge-success fw-bold');
+								$('#'+work_step_simple).removeClass('active show');
+								$('#'+work_step_next).addClass('active show');
 								if (res.html) {
 									$('#WORK_STEP_5').addClass('active');
 								}
