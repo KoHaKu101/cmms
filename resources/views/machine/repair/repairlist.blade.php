@@ -145,7 +145,7 @@
 								                  </button>
 								                </div>
 								              </div>
-														<div class="col-md-7 col-lg-1 text-right">
+														<div class="col-md text-right">
 															<a href="{{ route('repair.repairsearch') }}"class="btn btn-warning  btn-xs mt-1 ">
 																<span style="font-size: 13px;margin-bottom: 7px;">	แจ้งซ่อม</span>
 															</a>
@@ -176,62 +176,72 @@
 											</div>
 										</div>
 
-		                <div class="row" id="table_style" {{ Cookie::get('table_style') == '1' ? '' : 'hidden'}} >
-											@php
-												$array_EMP = array();
-												foreach ($DATA_EMP as $index => $row_emp) {
-													$array_EMP[$row_emp->EMP_CODE] = $row_emp->EMP_NAME_TH;
-													$array_IMG[$row_emp->EMP_CODE] = $row_emp->EMP_ICON;
-												}
-											@endphp
+		               <div class="row" id="table_style" {{ Cookie::get('table_style') == '1' ? '' : 'hidden'}} >
 		                  @foreach ($dataset as $key => $row)
 												@php
-													$BG_COLOR    				 = 'bg-danger text-white';
-													$IMG_PRIORITY				 =  $row->PRIORITY == '9' ? '<img src="'.asset('assets/css/flame.png').'" class="mt--2" width="20px" height="20px">' : '';
-										      if ($row->CLOSE_STATUS == '1') {
-										        $BG_COLOR  				 = 'bg-success text-white';
-														$IMG_PRIORITY			 = '';
+													$BG_COLOR    		=  $row->INSPECTION_CODE ? 'bg-warning text-white' : 'bg-danger text-white';
+													$IMG_PRIORITY		=  $row->PRIORITY == '9' ? '<img src="'.asset('assets/css/flame.png').'" class="mt--2" width="20px" height="20px">' : '';
+													$WORK_STATUS 		=  isset($row->INSPECTION_CODE) ? $array_EMP[$row->INSPECTION_CODE] : 'รอรับงาน';
+													$TEXT_STATUS    =  $row->PD_CHECK_STATUS == '1' ? 'จัดเก็บเอกสารเรียบร้อย' : ($row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ' : (isset($row->INSPECTION_CODE) ? 'กำลังดำเนินการ' : 'รอรับงาน' ));
+													$IMG         	  = isset($array_IMG[$row->INSPECTION_CODE]) ? asset('image/emp/'.$array_IMG[$row->INSPECTION_CODE]) : asset('../assets/img/noemp.png');
+													$DATE_DIFF   	  = $row->REC_WORK_DATE != '1900-01-01 00:00:00.000'? 'รับเมื่อ:'.Carbon\Carbon::parse($row->REC_WORK_DATE)->diffForHumans() : 'แจ้งเมื่อ:'.Carbon\Carbon::parse($row->CREATE_TIME)->diffForHumans();
+													$HTML_STATUS  = '<div class="status" id="DATE_DIFF_'.$row->UNID.'">'.$DATE_DIFF.'</div>';
+													$HTML_BTN       = '<button class="btn  btn-primary  btn-sm"
+																						onclick="rec_work(this)"
+																						data-unid="'.$row->UNID.'"
+																						data-docno="'.$row->DOC_NO.'"
+																						data-detail="'.$row->REPAIR_SUBSELECT_NAME.'">
+																							SELECT
+																						</button>';
+													$HTML_AVATAR    = '<img src="'.$IMG.'"id="IMG_'.$row->UNID.'"alt="..." class="avatar-img rounded-circle">';
+													if ($row->PD_CHECK_STATUS == '1') {
+										      	$BG_COLOR  		= 'bg-success text-white';
+														$HTML_STATUS  = '<div class="status" id="DATE_DIFF_'.$row->UNID.'" >ปิดเอกสารเรียบร้อย</div>';
+														$HTML_BTN     =	'<button class="btn btn-primary  btn-sm"
+																						onclick=pdfsaverepair("'.$row->UNID.'")>
+																							<i class="fas fa-print mx-1"></i>
+																								PRINT
+																						</button>';
+														 $HTML_AVATAR = '<div class="timeline-badge success rounded-circle text-center text-white" style="width: 100%;height: 100%;">
+	 																					 <i class="fas fa-check my-2" style="font-size: 35px;"></i></div>' ;
+										      }elseif ($row->CLOSE_STATUS == '1') {
+										        $BG_COLOR  		= 'bg-primary text-white';
+														$HTML_STATUS  = '<div class="status" id="DATE_DIFF_'.$row->UNID.'" >ดำเนินงานสำเร็จ</div>';
 										      }
-													$WORK_STATUS = isset($array_EMP[$row->INSPECTION_CODE]) ? $array_EMP[$row->INSPECTION_CODE] : 'รอรับงาน';
-													$IMG         = isset($array_IMG[$row->INSPECTION_CODE]) ? asset('image/emp/'.$array_IMG[$row->INSPECTION_CODE]) : asset('../assets/img/noemp.png');
-													$DATE_DIFF   = $row->REC_WORK_DATE != '1900-01-01 00:00:00.000'? 'รับเมื่อ:'.Carbon\Carbon::parse($row->REC_WORK_DATE)->diffForHumans() : 'แจ้งเมื่อ:'.Carbon\Carbon::parse($row->CREATE_TIME)->diffForHumans();
 												@endphp
 												<div class="col-lg-3">
 													<div class="card card-round">
 														<div class="card-body">
-															<div class="card-title text-center fw-mediumbold {{ $BG_COLOR }}"id="BG_{{ $row->UNID }}">
-																{!! $IMG_PRIORITY !!}
-																{{$row->MACHINE_CODE}}
+															<div class="card-title  fw-mediumbold {{ $BG_COLOR }}"id="BG_{{ $row->UNID }}">
+																<div class="row text-center">
+																	<div class="col-lg-12">
+																		{!! $IMG_PRIORITY !!}
+																		{{$row->MACHINE_CODE}}
+																	</div>
+																</div>
+																<div class="row text-center ">
+																	<div class="col-lg-12">
+																		<h5>{{$TEXT_STATUS}}</h5>
+																		</div>
+																</div>
 															</div>
 															<div class="card-list">
 																<div class="item-list">
 																	<div class="avatar">
-																		<img src="{{$IMG}}"
-																		id="IMG_{{ $row->UNID }}"alt="..." class="avatar-img rounded-circle">
+																		{!! $HTML_AVATAR !!}
 																	</div>
 																	<div class="info-user ml-3">
 																		<div class="username" style=""id="WORK_STATUS_{{$row->UNID}}">{{ $WORK_STATUS }}</div>
 																		<div class="status" >{{$row->REPAIR_SUBSELECT_NAME}}</div>
-																		@if ($row->CLOSE_STATUS == '1')
-																		<div class="status" id="DATE_DIFF_{{$row->UNID}}" > ดำเนินงานสำเร็จ</div>
-																		@else
-																		<div class="status" id="DATE_DIFF_{{$row->UNID}}">{{$DATE_DIFF}}</div>
-																		@endif
+																		{!! $HTML_STATUS !!}
 																	</div>
 
 																</div>
 															</div>
 															<div class="row ">
 																<div class="col-md-12 text-center">
-																	<button class="btn  btn-primary  btn-sm"
-																	onclick="rec_work(this)"
-																	data-unid="{{ $row->UNID }}"
-																	data-docno="{{ $row->DOC_NO }}"
-																	data-detail="{{ $row->REPAIR_SUBSELECT_NAME }}">
-																		SELECT
-																	</button>
+																	{!! $HTML_BTN !!}
 																</div>
-
 															</div>
 														</div>
 													</div>
@@ -263,10 +273,10 @@
 								        <tbody id="result">
 								          @foreach ($dataset as $key => $sub_row)
 														@php
-															$REC_WORK_STATUS  = isset($array_EMP[$sub_row->INSPECTION_CODE]) ? $array_EMP[$sub_row->INSPECTION_CODE] : 'รอรับงาน';
-															$BTN_COLOR_STATUS = $sub_row->INSPECTION_CODE == '' ? 'btn-mute' : ($sub_row->CLOSE_STATUS == '1' ? 'btn-success' : 'btn-info') ;
-															$BTN_COLOR 			  = $sub_row->INSPECTION_CODE == '' ? 'btn-danger' : 'btn-secondary' ;
-															$BTN_TEXT  			  = $sub_row->INSPECTION_CODE == '' ? 'รอรับงาน' : ($sub_row->CLOSE_STATUS == '1' ? 'เรียบร้อย' : 'กำลังดำเนินการ') ;
+															$REC_WORK_STATUS  = isset($sub_row->INSPECTION_CODE) ? '<i class="fas fa-clipboard-check mx-1"></i>'.$array_EMP[$sub_row->INSPECTION_CODE] : 'กรุณารับงาน';
+															$BTN_COLOR_STATUS = $sub_row->PD_CHECK_STATUS == '1' ? 'btn-success' : ($sub_row->CLOSE_STATUS == '1' ? 'btn-primary': (isset($sub_row->INSPECTION_CODE) ? 'btn-warning' : 'btn-danger'));
+															$BTN_COLOR_WORKER = $sub_row->INSPECTION_CODE == '' ? 'btn-mute' : 'btn-secondary' ;
+															$BTN_TEXT  			  = $sub_row->PD_CHECK_STATUS == '1' ? 'จัดเก็บเอกสารเรียบร้อย' : ($sub_row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ': (isset($sub_row->INSPECTION_CODE) ? 'กำลังดำเนินการ' : 'รอรับงาน'));
 														@endphp
 								            <tr >
 															<td>{{ $key+1 }}</td>
@@ -277,29 +287,27 @@
 								              <td >  				{{ $sub_row->MACHINE_CODE }}		     </td>
 								              <td >  				{{ $sub_row->MACHINE_NAME }}		    </td>
 															<td >  				{{ $sub_row->REPAIR_SUBSELECT_NAME }}		    </td>
-								                  <td >
-								                    <button type="button"class="btn {{$BTN_COLOR_STATUS}} btn-block btn-sm my-1 text-left"style="color:black;font-size:13px"
-																		{{ $sub_row->CLOSE_STATUS == '1' ? 'onclick=pdfsaverepair("'.$sub_row->UNID.'")' : ''}}>
-																			<i class="{{ $sub_row->CLOSE_STATUS == '1' ? 'fas fa-print' : '' }}"></i>
-								                      <span class="btn-label " >
+								                  <td class="">
+								                    <button type="button"class="btn {{$BTN_COLOR_STATUS}} btn-block btn-sm my-1 text-left" style="cursor:context-menu">
+
+								                      <span class="btn-label " style="color:white;font-size:13px">
 																				{{ $BTN_TEXT }}
 								                      </span>
 								                    </button>
 								                  </td>
-								                  <td >
+								                  <td>
 																		@can('isAdminandManager')
 																			<button onclick="rec_work(this)" type="button"
 																			data-unid="{{ $sub_row->UNID }}"
 																			data-docno="{{ $sub_row->DOC_NO }}"
 																			data-detail="{{ $sub_row->REPAIR_SUBSELECT_NAME }}"
-																			class="btn {{$BTN_COLOR}} btn-block btn-sm my-1 text-left">
+																			class="btn {{$BTN_COLOR_WORKER}} btn-block btn-sm my-1 text-left">
 																			 <span class="btn-label">
-																				 <i class="fas fa-clipboard-check mx-1"></i>{{$REC_WORK_STATUS}}
+																				 {!!$REC_WORK_STATUS!!}
 																			 </span>
 																		 </button>
 																		@else
 																		@endcan
-
 																<td >{{ date('d-m-Y') }}</td>
 								              </tr>
 								            @endforeach
@@ -341,21 +349,21 @@ $(document).ready(function(){
 		if (cookie_tablestyle == '') {
 				styletable('1');
 		}
-		var loaddata_table_all = function loaddata_table(){
-			var url = "{{ route('repair.fetchdata') }}";
-			var data = $('#FRM_SEARCH').serialize();
-			$.ajax({
-						 type:'GET',
-						 url: url,
-						 data: data,
-						 datatype: 'json',
-						 success:function(data){
-							 $('#result').html(data.html);
-							 $('#table_style').html(data.html_style);
-						 }
-					 });
-				 }
-	setInterval(loaddata_table_all,10000);
+	// 	var loaddata_table_all = function loaddata_table(){
+	// 		var url = "{{ route('repair.fetchdata') }}";
+	// 		var data = $('#FRM_SEARCH').serialize();
+	// 		$.ajax({
+	// 					 type:'GET',
+	// 					 url: url,
+	// 					 data: data,
+	// 					 datatype: 'json',
+	// 					 success:function(data){
+	// 						 $('#result').html(data.html);
+	// 						 $('#table_style').html(data.html_style);
+	// 					 }
+	// 				 });
+	// 			 }
+	// setInterval(loaddata_table_all,10000);
 
 });
 //************************* array *********************************
@@ -371,20 +379,20 @@ $(document).ready(function(){
 
 
 //******************************* function ************************
-function loaddata_table(){
-	var url = "{{ route('repair.fetchdata') }}";
-	var data = $('#FRM_SEARCH').serialize();
-	$.ajax({
-				 type:'GET',
-				 url: url,
-				 data: data,
-				 datatype: 'json',
-				 success:function(data){
-					 $('#result').html(data.html);
-					 $('#table_style').html(data.html_style);
-				 }
-			 });
-		 }
+// function loaddata_table(){
+// 	var url = "{{ route('repair.fetchdata') }}";
+// 	var data = $('#FRM_SEARCH').serialize();
+// 	$.ajax({
+// 				 type:'GET',
+// 				 url: url,
+// 				 data: data,
+// 				 datatype: 'json',
+// 				 success:function(data){
+// 					 $('#result').html(data.html);
+// 					 $('#table_style').html(data.html_style);
+// 				 }
+// 			 });
+// 		 }
 //********************** function loop array **********************
 
 function loop_tabel_worker(array_emp_unid){

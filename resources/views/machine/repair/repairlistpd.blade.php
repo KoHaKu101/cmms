@@ -397,6 +397,18 @@ function styletable(table_style){
 		 setcookie('table_style_pd','2');
 	}
 }
+function loopdata_table(){
+	$.ajax({
+				 type:'GET',
+				 url: url,
+				 data: data,
+				 datatype: 'json',
+				 success:function(data){
+					 $('#result').html(data.html);
+					 $('#table_style').html(data.html_style);
+				 }
+			 });
+		 }
 
 //******************************* End function ********************
 	function rec_work(thisdata){
@@ -434,7 +446,7 @@ function styletable(table_style){
 				 					 success:function(result){
 				 						 $("#overlay").fadeOut(300);
 										 if (result.pass) {
-											 loopdata_table();	
+											 loopdata_table();
 											 Swal.fire({
 				 				 				  icon: 'success',
 				 				 				  title: 'บันทึกสำเร็จ',

@@ -65,7 +65,7 @@ class MachineRepairController extends Controller
     $YEAR         = isset($request->YEAR) ? $request->YEAR : date('Y') ;
     $DATA_EMP     = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->where('EMP_STATUS','=',9)->get();
     $dataset      = MachineRepairREQ::select('INSPECTION_CODE','CLOSE_STATUS','DOC_DATE','DOC_NO','MACHINE_LINE','MACHINE_CODE'
-                                                ,'MACHINE_NAME','REPAIR_SUBSELECT_NAME','UNID','PRIORITY','REC_WORK_DATE')
+                                                ,'MACHINE_NAME','REPAIR_SUBSELECT_NAME','UNID','PRIORITY','REC_WORK_DATE','PD_CHECK_STATUS')
                                                 ->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH
                                                   ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH')
                                             ->where(function ($query) use ($MACHINE_LINE) {
@@ -99,9 +99,15 @@ class MachineRepairController extends Controller
                                             ->orderBy('DOC_MONTH','DESC')
                                             ->orderBy('DOC_NO','DESC')
                                             ->paginate(10);
+    $array_EMP = array();
+    $array_IMG = array();
+    foreach ($DATA_EMP as $index => $row_emp) {
+      $array_EMP[$row_emp->EMP_CODE] = $row_emp->EMP_NAME_TH;
+      $array_IMG[$row_emp->EMP_CODE] = $row_emp->EMP_ICON;
+    }
     $SEARCH = $SERACH_TEXT;
     return View('machine/repair/repairlist',compact('dataset','SEARCH','LINE','DATA_EMP',
-    'MACHINE_LINE','MONTH','YEAR','DOC_STATUS'));
+    'MACHINE_LINE','MONTH','YEAR','DOC_STATUS','array_EMP','array_IMG'));
   }
   public function FetchData(Request $request){
     $SEARCH         = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
@@ -111,7 +117,7 @@ class MachineRepairController extends Controller
     $DOC_STATUS     = isset($request->DOC_STATUS) ? $request->DOC_STATUS : 0 ;
     $YEAR           = isset($request->YEAR) ? $request->YEAR : date('Y') ;
     $dataset        = MachineRepairREQ::select('INSPECTION_CODE','CLOSE_STATUS','DOC_DATE','DOC_NO','MACHINE_LINE','MACHINE_CODE'
-                                                ,'MACHINE_NAME','REPAIR_SUBSELECT_NAME','UNID','PRIORITY','REC_WORK_DATE')
+                                                ,'MACHINE_NAME','REPAIR_SUBSELECT_NAME','UNID','PRIORITY','REC_WORK_DATE','PD_CHECK_STATUS')
                                             ->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH
                                                         ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH')
                                             ->where(function ($query) use ($MACHINE_LINE) {
