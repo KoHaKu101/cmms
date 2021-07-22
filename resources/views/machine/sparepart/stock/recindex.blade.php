@@ -49,7 +49,7 @@
 											<select class="form-control form-control-sm my-2" id="SPAREPART_UNID" name="SPAREPART_UNID" >
 													<option value>กรุณาเลือก</option>
 												@foreach ($DATA_SPAREPART as $index => $row_select)
-													<option value="{{ $row_select->UNID }}">{{ $row_select->SPAREPART_NAME.' : '.$row_select->SPAREPART_MODEL }}</option>
+													<option value="{{ $row_select->UNID }}">{{ $row_select->SPAREPART_CODE.' : '.$row_select->SPAREPART_NAME }}</option>
 												@endforeach
 											</select>
 										</div>
