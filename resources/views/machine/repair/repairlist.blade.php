@@ -186,9 +186,11 @@
 											@endphp
 		                  @foreach ($dataset as $key => $row)
 												@php
-													$BG_COLOR    = $row->PRIORITY == '9' ? 'bg-danger text-white' :  'bg-warning text-white';
+													$BG_COLOR    				 = 'bg-danger text-white';
+													$IMG_PRIORITY				 =  $row->PRIORITY == '9' ? '<img src="'.asset('assets/css/flame.png').'" class="mt--2" width="20px" height="20px">' : '';
 										      if ($row->CLOSE_STATUS == '1') {
-										        $BG_COLOR = 'bg-success text-white';
+										        $BG_COLOR  				 = 'bg-success text-white';
+														$IMG_PRIORITY			 = '';
 										      }
 													$WORK_STATUS = isset($array_EMP[$row->INSPECTION_CODE]) ? $array_EMP[$row->INSPECTION_CODE] : 'รอรับงาน';
 													$IMG         = isset($array_IMG[$row->INSPECTION_CODE]) ? asset('image/emp/'.$array_IMG[$row->INSPECTION_CODE]) : asset('../assets/img/noemp.png');
@@ -197,7 +199,10 @@
 												<div class="col-lg-3">
 													<div class="card card-round">
 														<div class="card-body">
-															<div class="card-title text-center fw-mediumbold {{ $BG_COLOR }}"id="BG_{{ $row->UNID }}">{{$row->MACHINE_CODE}}</div>
+															<div class="card-title text-center fw-mediumbold {{ $BG_COLOR }}"id="BG_{{ $row->UNID }}">
+																{!! $IMG_PRIORITY !!}
+																{{$row->MACHINE_CODE}}
+															</div>
 															<div class="card-list">
 																<div class="item-list">
 																	<div class="avatar">

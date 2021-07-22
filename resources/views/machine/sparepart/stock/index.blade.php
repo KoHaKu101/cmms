@@ -76,6 +76,9 @@
 												</thead>
 												<tbody>
 													@foreach ($DATA_SPAREPART as $key => $row)
+														@php
+															$BG_COLOR = $row->STOCK_MIN >= $row->LAST_STOCK ? 'bg-danger text-white': 'bg-success text-white';
+														@endphp
 														<tr>
 															<td width="4%" class="text-center">{{$key+1}}</td>
 															<td width="18%">{{$row->SPAREPART_CODE}}</td>
@@ -83,7 +86,7 @@
 															<td width="12%">{{$row->SPAREPART_MODEL}}</td>
 															<td width="14%">{{$row->SPAREPART_SIZE}}</td>
 															<td width="8%">{{$row->STOCK_MIN}}</td>
-															<td width="8%">{{$row->LAST_STOCK}}</td>
+															<td width="8%" class="{{$BG_COLOR}}">{{$row->LAST_STOCK}}</td>
 															<td width="6%">{{$row->UNIT}}</td>
 															<td>
 																<button class="btn btn-sm btn-secondary btn-block my-1"

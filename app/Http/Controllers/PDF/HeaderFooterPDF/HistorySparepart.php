@@ -26,7 +26,7 @@ class HistorySparepart extends Fpdf
       $this->Cell(26,11,$this->Image($logo,12,6,22),'LTR',0,'C');
       $this->SetFont('THSarabunNew','B',20 );
       // $this->Cell(140,11,iconv('UTF-8', 'cp874', 'ประวัติการรับเข้า / เบิกจ่าย'),'LTR',0,'C');
-      $this->Cell(140,11,iconv('UTF-8', 'cp874', 'STOCK CARD วัสดุสิ้นเปลือง'),'LTR',0,'C');
+      $this->Cell(140,11,iconv('UTF-8', 'cp874', 'STOCK CARD SPAREPART'),'LTR',0,'C');
       $this->Cell(20,11,iconv('UTF-8', 'cp874', 'หน้า'),'LTR',1,'C');
       $this->Cell(26,11,'','LBR',0,'C');
       $this->SetFont('THSarabunNew','',18 );

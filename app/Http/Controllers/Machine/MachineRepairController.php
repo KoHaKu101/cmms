@@ -195,9 +195,11 @@ class MachineRepairController extends Controller
     foreach ($dataset as $index => $sub_row) {
       $SUBROW_UNID = $sub_row->UNID;
       $DATA_EMP    = EMPName::where('EMP_CODE',$sub_row->INSPECTION_CODE)->first();
-      $BG_COLOR    = $sub_row->PRIORITY == '9' ? 'bg-danger text-white' :  'bg-warning text-white';
+      $BG_COLOR    				 = 'bg-danger text-white';
+      $IMG_PRIORITY				 =  $sub_row->PRIORITY == '9' ? '<img src="'.asset('assets/css/flame.png').'" class="mt--2" width="20px" height="20px">' : '';
       if ($sub_row->CLOSE_STATUS == '1') {
-        $BG_COLOR = 'bg-success text-white';
+        $BG_COLOR  				 = 'bg-success text-white';
+        $IMG_PRIORITY			 = '';
       }
       $IMG         = isset($DATA_EMP->EMP_ICON) ? asset('image/emp/'.$DATA_EMP->EMP_ICON) : asset('../assets/img/noemp.png');
       $WORK_STATUS = isset($sub_row->INSPECTION_NAME) ? $sub_row->INSPECTION_NAME_TH :'รอรับงาน';
@@ -205,7 +207,9 @@ class MachineRepairController extends Controller
       $html_style .=  '<div class="col-lg-3">
           <div class="card card-round">
             <div class="card-body">
-              <div class="card-title text-center fw-mediumbold '.$BG_COLOR.' ">'.$sub_row->MACHINE_CODE.'</div>
+              <div class="card-title text-center fw-mediumbold '.$BG_COLOR.' ">'.
+              $IMG_PRIORITY.
+              $sub_row->MACHINE_CODE.'</div>
               <div class="card-list">
                 <div class="item-list">
                   <div class="avatar">
