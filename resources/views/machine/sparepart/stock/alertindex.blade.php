@@ -28,7 +28,7 @@
 				<div class="py-12">
 	        <div class="container mt-2">
 						<div class="card">
-							<form action="{{ route('sparepart.alert	') }}" method="post" enctype="multipart/form-data">
+							<form action="{{ route('sparepart.alert') }}" method="post" enctype="multipart/form-data">
 								@method('GET')
 								@csrf
 							<div class="row">
