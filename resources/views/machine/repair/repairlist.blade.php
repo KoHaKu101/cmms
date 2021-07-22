@@ -290,7 +290,6 @@
 															<td >  				{{ $sub_row->REPAIR_SUBSELECT_NAME }}		    </td>
 								                  <td class="">
 								                    <button type="button"class="btn {{$BTN_COLOR_STATUS}} btn-block btn-sm my-1 text-left" style="cursor:context-menu">
-
 								                      <span class="btn-label " style="color:white;font-size:13px">
 																				{{ $BTN_TEXT }}
 								                      </span>

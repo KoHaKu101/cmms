@@ -155,16 +155,15 @@ class MachineRepairController extends Controller
                                             ->orderBy('DOC_MONTH','DESC')
                                             ->orderBy('DOC_NO','DESC')
                                             ->paginate(10);
-    $SEARCH         = $SERACH_TEXT;
     $html = '';
     $html_style = '';
     foreach ($dataset as $key => $row) {
       $INSPECTION_CODE  = $row->INSPECTION_CODE;
       $CLOSE_STATUS     = $row->CLOSE_STATUS;
-      $REC_WORK_STATUS  = !isset($INSPECTION_CODE) ? 'รอรับงาน'     : $row->INSPECTION_NAME_TH;
-      $BTN_COLOR_STATUS = !isset($INSPECTION_CODE) ? 'btn-mute'    : ($CLOSE_STATUS == '1' ? 'btn-success' : 'btn-info') ;
-      $BTN_COLOR 			  = !isset($INSPECTION_CODE) ? 'btn-danger'  : 'btn-secondary' ;
-      $BTN_TEXT  			  = !isset($INSPECTION_CODE) ? 'รอรับงาน'     : ($CLOSE_STATUS == '1' ? 'ปิดเอกสาร' : 'การดำเนินงาน') ;
+      $REC_WORK_STATUS  = isset($INSPECTION_CODE) ? '<i class="fas fa-clipboard-check mx-1"></i>'.$row->INSPECTION_NAME_TH : 'กรุณารับงาน';
+      $BTN_COLOR_WORKER = $INSPECTION_CODE      == '' ? 'btn-mute' : 'btn-secondary' ;
+      $BTN_COLOR_STATUS = $row->PD_CHECK_STATUS == '1' ? 'btn-success' : ($row->CLOSE_STATUS == '1' ? 'btn-primary': (isset($INSPECTION_CODE) ? 'btn-warning' : 'btn-danger'));
+      $BTN_TEXT  			  = $row->PD_CHECK_STATUS == '1' ? 'จัดเก็บเอกสารเรียบร้อย' : ($row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ': (isset($INSPECTION_CODE) ? 'กำลังดำเนินการ' : 'รอรับงาน'));
       $html.= '<tr>
                 <td>'.$key+1 .'</td>
                 <td >'.date('d-m-Y',strtotime($row->DOC_DATE)).'</td>
@@ -173,13 +172,9 @@ class MachineRepairController extends Controller
                 <td >'.$row->MACHINE_CODE.'</td>
                 <td >'.$row->MACHINE_NAME.'</td>
                 <td >'.$row->REPAIR_SUBSELECT_NAME.'</td>d
-
                 <td >
-                  <button type="button"class="btn '.$BTN_COLOR_STATUS.' btn-block btn-sm my-1 text-left"style="color:black;font-size:13px"
-                  '.($CLOSE_STATUS == '1' ? 'onclick=pdfsaverepair("'.$row->UNID.'")' : '').'>
-                    <i class="'.($CLOSE_STATUS == '1' ? 'fas fa-print' : '').'"></i>
-
-                    <span class="btn-label " >
+                  <button type="button"class="btn '.$BTN_COLOR_STATUS.' btn-block btn-sm my-1 text-left"style="color:black;font-size:13px">
+                    <span class="btn-label"style="color:white;font-size:13px" >
                       '.$BTN_TEXT.'
                     </span>
                   </button>
@@ -190,7 +185,7 @@ class MachineRepairController extends Controller
                       data-unid="'.$row->UNID.'"
                       data-docno="'.$row->DOC_NO.'"
                       data-detail="'.$row->REPAIR_SUBSELECT_NAME.'"
-                      class="btn '.$BTN_COLOR.' btn-block btn-sm my-1 text-left"
+                      class="btn '.$BTN_COLOR_WORKER.' btn-block btn-sm my-1 text-left"
                      >
                        <span class="btn-label">
                        <i class="fas fa-clipboard-check mx-1"></i>'.$REC_WORK_STATUS.'
