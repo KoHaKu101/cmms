@@ -91,7 +91,9 @@ class MachineRepairController extends Controller
                                                    }
                                                   })
                                             ->where(function ($query) use ($DOC_STATUS) {
-                                                  if ($DOC_STATUS > 0) {
+                                                  if ($DOC_STATUS == 'PD_CLOSE') {
+                                                      $query->where('PD_CHECK_STATUS', '=', '1');
+                                                   }elseif ($DOC_STATUS > 0) {
                                                       $query->where('CLOSE_STATUS', '=', $DOC_STATUS);
                                                    }
                                                  })
@@ -143,7 +145,9 @@ class MachineRepairController extends Controller
                                                    }
                                                   })
                                             ->where(function ($query) use ($DOC_STATUS) {
-                                                  if ($DOC_STATUS > 0) {
+                                                  if ($DOC_STATUS == 'PD_CLOSE') {
+                                                      $query->where('PD_CHECK_STATUS', '=', '1');
+                                                   }elseif ($DOC_STATUS > 0) {
                                                       $query->where('CLOSE_STATUS', '=', $DOC_STATUS);
                                                    }
                                                  })
@@ -199,54 +203,75 @@ class MachineRepairController extends Controller
         </tr>';
       }
     foreach ($dataset as $index => $sub_row) {
-      $SUBROW_UNID = $sub_row->UNID;
-      $DATA_EMP    = EMPName::where('EMP_CODE',$sub_row->INSPECTION_CODE)->first();
-      $BG_COLOR    				 = 'bg-danger text-white';
-      $IMG_PRIORITY				 =  $sub_row->PRIORITY == '9' ? '<img src="'.asset('assets/css/flame.png').'" class="mt--2" width="20px" height="20px">' : '';
-      if ($sub_row->CLOSE_STATUS == '1') {
-        $BG_COLOR  				 = 'bg-success text-white';
-        $IMG_PRIORITY			 = '';
+      $EMP_NAME       = EMPName::select('EMP_ICON')->where('EMP_CODE','=',$sub_row->INSPECTION_CODE)->first();
+      $SUBROW_UNID    = $sub_row->UNID;
+      $BG_COLOR    		=  $sub_row->INSPECTION_CODE ? 'bg-warning text-white' : 'bg-danger text-white';
+      $IMG_PRIORITY		=  $sub_row->PRIORITY == '9' ? '<img src="'.asset('assets/css/flame.png').'" class="mt--2" width="20px" height="20px">' : '';
+      $WORK_STATUS 		=  isset($sub_row->INSPECTION_CODE) ? $sub_row->INSPECTION_NAME_TH : 'รอรับงาน';
+      $TEXT_STATUS    =  $sub_row->PD_CHECK_STATUS == '1' ? 'จัดเก็บเอกสารเรียบร้อย' : ($sub_row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ' : (isset($sub_row->INSPECTION_CODE) ? 'กำลังดำเนินการ' : 'รอรับงาน' ));
+      $IMG         	  =  isset($EMP_NAME->EMP_ICON) ? asset('image/emp/'.$EMP_NAME->EMP_ICON) : asset('../assets/img/noemp.png');
+      $DATE_DIFF   	  = $sub_row->REC_WORK_DATE != '1900-01-01 00:00:00.000'? 'รับเมื่อ:'.Carbon::parse($sub_row->REC_WORK_DATE)->diffForHumans() : 'แจ้งเมื่อ:'.Carbon::parse($sub_row->CREATE_TIME)->diffForHumans();
+      $HTML_STATUS    = '<div class="status" id="DATE_DIFF_'.$sub_row->UNID.'">'.$DATE_DIFF.'</div>';
+      $HTML_BTN       = '<button class="btn  btn-primary  btn-sm"
+                        onclick="rec_work(this)"
+                        data-unid="'.$sub_row->UNID.'"
+                        data-docno="'.$sub_row->DOC_NO.'"
+                        data-detail="'.$sub_row->REPAIR_SUBSELECT_NAME.'">
+                          SELECT
+                        </button>';
+      $HTML_AVATAR    = '<img src="'.$IMG.'"id="IMG_'.$SUBROW_UNID.'"alt="..." class="avatar-img rounded-circle">';
+      if ($sub_row->PD_CHECK_STATUS == '1') {
+        $BG_COLOR  		= 'bg-success text-white';
+        $HTML_STATUS  = '<div class="status" id="DATE_DIFF_'.$SUBROW_UNID.'" >ปิดเอกสารเรียบร้อย</div>';
+        $HTML_BTN     =	'<button class="btn btn-primary  btn-sm"
+                        onclick=pdfsaverepair("'.$SUBROW_UNID.'")>
+                          <i class="fas fa-print mx-1"></i>
+                            PRINT
+                        </button>';
+         $HTML_AVATAR = '<div class="timeline-badge success rounded-circle text-center text-white" style="width: 100%;height: 100%;">
+                         <i class="fas fa-check my-2" style="font-size: 35px;"></i></div>' ;
+      }elseif ($sub_row->CLOSE_STATUS == '1') {
+        $BG_COLOR  		= 'bg-primary text-white';
+        $HTML_STATUS  = '<div class="status" id="DATE_DIFF_'.$SUBROW_UNID.'" >ดำเนินงานสำเร็จ</div>';
       }
-      $IMG         = isset($DATA_EMP->EMP_ICON) ? asset('image/emp/'.$DATA_EMP->EMP_ICON) : asset('../assets/img/noemp.png');
-      $WORK_STATUS = isset($sub_row->INSPECTION_NAME) ? $sub_row->INSPECTION_NAME_TH :'รอรับงาน';
-      $DATE_DIFF   = $sub_row->REC_WORK_DATE != '1900-01-01 00:00:00.000'? 'รับเมื่อ:'.Carbon::parse($sub_row->REC_WORK_DATE)->diffForHumans() : 'แจ้งเมื่อ:'.Carbon::parse($sub_row->CREATE_TIME)->diffForHumans();
+
       $html_style .=  '<div class="col-lg-3">
-          <div class="card card-round">
-            <div class="card-body">
-              <div class="card-title text-center fw-mediumbold '.$BG_COLOR.' ">'.
-              $IMG_PRIORITY.
-              $sub_row->MACHINE_CODE.'</div>
-              <div class="card-list">
-                <div class="item-list">
-                  <div class="avatar">
-                    <img src="'.$IMG.'" alt="..." class="avatar-img rounded-circle"
-                    id="IMG_'.$SUBROW_UNID.'">
-                  </div>
-                  <div class="info-user ml-3">
-                    <div class="username" id="WORK_STATUS_'.$SUBROW_UNID.'">'.$WORK_STATUS.'</div>
-                    <div class="status" >'.$sub_row->REPAIR_SUBSELECT_NAME.'</div>';
-                    if ($sub_row->CLOSE_STATUS == '1'){
-                    $html_style .='<div class="status" id="DATE_DIFF_'.$SUBROW_UNID.'" > ดำเนินงานสำเร็จ</div>';
-                      }else {
-                    $html_style .='<div class="status" id="DATE_DIFF_'.$SUBROW_UNID.'">'.$DATE_DIFF.'</div>';
-                      }
-                    $html_style .='</div>
+        <div class="card card-round">
+          <div class="card-body">
+            <div class="card-title  fw-mediumbold '.$BG_COLOR.'"id="BG_'.$SUBROW_UNID.'">
+              <div class="row text-center">
+                <div class="col-lg-12">
+                  '.$IMG_PRIORITY.'
+                  '.$row->MACHINE_CODE.'
                 </div>
               </div>
-              <div class="row ">
-                <div class="col-md-12 text-center">
-                  <button class="btn  btn-primary  btn-sm"
-                  onclick="rec_work(this)"
-                  data-unid="'.$SUBROW_UNID.'"
-                  data-docno="'.$sub_row->DOC_NO.'"
-                  data-detail="'.$sub_row->REPAIR_SUBSELECT_NAME.'">
-                    SELECT
-                  </button>
+              <div class="row text-center ">
+                <div class="col-lg-12">
+                  <h5>'.$TEXT_STATUS.'</h5>
+                  </div>
+              </div>
+            </div>
+            <div class="card-list">
+              <div class="item-list">
+                <div class="avatar">
+                  '.$HTML_AVATAR.'
                 </div>
+                <div class="info-user ml-3">
+                  <div class="username" style=""id="WORK_STATUS_'.$SUBROW_UNID.'">'.$WORK_STATUS.'</div>
+                  <div class="status" >'.$row->REPAIR_SUBSELECT_NAME.'</div>
+                   '.$HTML_STATUS.'
+                </div>
+
+              </div>
+            </div>
+            <div class="row ">
+              <div class="col-md-12 text-center">
+                 '.$HTML_BTN.'
               </div>
             </div>
           </div>
-        </div>';
+        </div>
+      </div>';
       }
     return Response()->json(['html'=>$html,'html_style' => $html_style]);
   }

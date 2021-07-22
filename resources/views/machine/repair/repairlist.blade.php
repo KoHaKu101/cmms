@@ -133,7 +133,8 @@
 															<select class="form-control form-control-sm mt-1 mx-1 col-3 col-md" id="DOC_STATUS" name="DOC_STATUS"onchange="changesubmit()">
 																<option value="0">ทั้งหมด</option>
 																<option value="9" {{ $DOC_STATUS == "9" ? 'selected' : "" }}>กำลังดำเนินการ</option>
-																<option value="1" {{ $DOC_STATUS == "1" ? 'selected' : "" }}>ปิดเอกสาร</option>
+																<option value="1" {{ $DOC_STATUS == "1" ? 'selected' : "" }}>ดำเนินการสำเร็จ</option>
+																<option value="PD_CLOSE" {{ $DOC_STATUS == "PD_CLOSE" ? 'selected' : "" }}>จัดเก็บเรียบร้อย</option>
 															</select>
 														<label class="text-white mx-1">ค้นหา : </label>
 								              <div class="col-6 col-md-3 input-group mx-1">
@@ -185,7 +186,7 @@
 													$TEXT_STATUS    =  $row->PD_CHECK_STATUS == '1' ? 'จัดเก็บเอกสารเรียบร้อย' : ($row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ' : (isset($row->INSPECTION_CODE) ? 'กำลังดำเนินการ' : 'รอรับงาน' ));
 													$IMG         	  = isset($array_IMG[$row->INSPECTION_CODE]) ? asset('image/emp/'.$array_IMG[$row->INSPECTION_CODE]) : asset('../assets/img/noemp.png');
 													$DATE_DIFF   	  = $row->REC_WORK_DATE != '1900-01-01 00:00:00.000'? 'รับเมื่อ:'.Carbon\Carbon::parse($row->REC_WORK_DATE)->diffForHumans() : 'แจ้งเมื่อ:'.Carbon\Carbon::parse($row->CREATE_TIME)->diffForHumans();
-													$HTML_STATUS  = '<div class="status" id="DATE_DIFF_'.$row->UNID.'">'.$DATE_DIFF.'</div>';
+													$HTML_STATUS    = '<div class="status" id="DATE_DIFF_'.$row->UNID.'">'.$DATE_DIFF.'</div>';
 													$HTML_BTN       = '<button class="btn  btn-primary  btn-sm"
 																						onclick="rec_work(this)"
 																						data-unid="'.$row->UNID.'"
@@ -349,21 +350,21 @@ $(document).ready(function(){
 		if (cookie_tablestyle == '') {
 				styletable('1');
 		}
-	// 	var loaddata_table_all = function loaddata_table(){
-	// 		var url = "{{ route('repair.fetchdata') }}";
-	// 		var data = $('#FRM_SEARCH').serialize();
-	// 		$.ajax({
-	// 					 type:'GET',
-	// 					 url: url,
-	// 					 data: data,
-	// 					 datatype: 'json',
-	// 					 success:function(data){
-	// 						 $('#result').html(data.html);
-	// 						 $('#table_style').html(data.html_style);
-	// 					 }
-	// 				 });
-	// 			 }
-	// setInterval(loaddata_table_all,10000);
+		var loaddata_table_all = function loaddata_table(){
+			var url = "{{ route('repair.fetchdata') }}";
+			var data = $('#FRM_SEARCH').serialize();
+			$.ajax({
+						 type:'GET',
+						 url: url,
+						 data: data,
+						 datatype: 'json',
+						 success:function(data){
+							 $('#result').html(data.html);
+							 $('#table_style').html(data.html_style);
+						 }
+					 });
+				 }
+	setInterval(loaddata_table_all,10000);
 
 });
 //************************* array *********************************
@@ -379,20 +380,20 @@ $(document).ready(function(){
 
 
 //******************************* function ************************
-// function loaddata_table(){
-// 	var url = "{{ route('repair.fetchdata') }}";
-// 	var data = $('#FRM_SEARCH').serialize();
-// 	$.ajax({
-// 				 type:'GET',
-// 				 url: url,
-// 				 data: data,
-// 				 datatype: 'json',
-// 				 success:function(data){
-// 					 $('#result').html(data.html);
-// 					 $('#table_style').html(data.html_style);
-// 				 }
-// 			 });
-// 		 }
+function loaddata_table(){
+	var url = "{{ route('repair.fetchdata') }}";
+	var data = $('#FRM_SEARCH').serialize();
+	$.ajax({
+				 type:'GET',
+				 url: url,
+				 data: data,
+				 datatype: 'json',
+				 success:function(data){
+					 $('#result').html(data.html);
+					 $('#table_style').html(data.html_style);
+				 }
+			 });
+		 }
 //********************** function loop array **********************
 
 function loop_tabel_worker(array_emp_unid){
