@@ -188,7 +188,7 @@ class MachineRepairController extends Controller
                       class="btn '.$BTN_COLOR_WORKER.' btn-block btn-sm my-1 text-left"
                      >
                        <span class="btn-label">
-                       <i class="fas fa-clipboard-check mx-1"></i>'.$REC_WORK_STATUS.'
+                       '.$REC_WORK_STATUS.'
                      </span>
                      </button></td>';
                    }else {

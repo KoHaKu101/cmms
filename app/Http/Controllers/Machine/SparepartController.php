@@ -62,9 +62,9 @@ class SparepartController extends Controller
 
     public function RecSparepartList(){
 
-      $DATA_SPAREPART = SparePart::where('STATUS','=',9)->orderBy('SPAREPART_NAME')->get();
-      $DATA_SPAREPART_REC = SparepartRec::orderBy('DOC_DATE')->get();
-      $DATA_EMP       = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->where('EMP_STATUS','=',9)->orderBy('EMP_NAME')->get();
+      $DATA_SPAREPART     = SparePart::where('STATUS','=',9)->orderBy('SPAREPART_NAME')->get();
+      $DATA_SPAREPART_REC = SparepartRec::orderBy('DOC_DATE','DESC')->get();
+      $DATA_EMP           = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->where('EMP_STATUS','=',9)->orderBy('EMP_NAME')->get();
       return View('machine.sparepart.stock.recindex',compact('DATA_SPAREPART','DATA_SPAREPART_REC','DATA_EMP'));
     }
 
