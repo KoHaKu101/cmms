@@ -366,7 +366,11 @@ class PDRepairController extends Controller
     $DATA_PD            = DB::select("select dbo.decode_utf8(EMP_TH_NAME_FIRST) as EMP_TH_NAME_FIRST_TH
                                             ,dbo.decode_utf8(EMP_TH_NAME_LAST) as EMP_TH_NAME_LAST_TH
                                             ,EMP_CODE
-                                      from EMCS_EMPLOYEE  where LINE_CODE = 'PD' and EMP_STATUS = '9'");
+                                      from EMCS_EMPLOYEE
+                                      where  POSITION_CODE IN ('LD','ASSTMGR','CF')
+                                      and EMP_STATUS = '9'
+                                      and LINE_CODE NOT IN ('QA','QC','PC','FNL','EG','MK','HR','AC','QS') ");
+
 
     $PLANING_CHECK_BY   = isset($REPAIR_REQ->PD_CODE) ? $REPAIR_REQ->PD_CODE : '';
     $DOC_DATE           =  Carbon::create($REPAIR_REQ->DOC_DATE.$REPAIR_REQ->REPAIR_REQ_TIME) ;

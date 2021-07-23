@@ -408,7 +408,7 @@ function loopdata_table(){
 	var page = $('#PAGE').val();
 	var url = "{{ route('pd.fetchdata') }}?page="+page;
 	var data = $('#FRM_SEARCH').serialize();
-	
+
 	$.ajax({
 				 type:'GET',
 				 url: url,
@@ -438,6 +438,11 @@ function loopdata_table(){
 					 $("#WORK_STEP_RESULT").html(result.html);
 					 $('#stepsave').html(result.footer);
 					 $('#TITLE_DOCNO_SUB').html(docno);
+
+					 $('#EMP_CODE').select2({
+						 width: '30%',
+					 });
+					 $.fn.modal.Constructor.prototype._enforceFocus = function() {};
 					 $('#show-detail').html('อาการเสีย : '+detail);
 					 $("#Result").modal('show');
 					 $('#ConFirm').on('click',function(event){
