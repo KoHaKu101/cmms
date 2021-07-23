@@ -178,71 +178,80 @@
 											</div>
 										</div>
 
-		                <div class="row" id="table_style" {{ Cookie::get('table_style_pd') == '1' ? '' : 'hidden'}} >
-											@php
-												$array_EMP = array();
-												foreach ($DATA_EMP as $index => $row_emp) {
-													$array_EMP[$row_emp->EMP_CODE] = $row_emp->EMP_NAME_TH;
-													$array_IMG[$row_emp->EMP_CODE] = $row_emp->EMP_ICON;
-												}
-											@endphp
-		                  @foreach ($dataset as $key => $row)
-												@php
-													$BG_COLOR    = $row->PRIORITY == '9' ? 'bg-danger text-white' :  'bg-warning text-white';
-										      if ($row->PD_CHECK_STATUS == '1') {
-										        $BG_COLOR = 'bg-success text-white';
-										      }elseif ($row->CLOSE_STATUS == '1') {
-														$BG_COLOR = 'bg-info text-white';
-										      }
-													$WORK_STATUS = isset($array_EMP[$row->INSPECTION_CODE]) ? $array_EMP[$row->INSPECTION_CODE] : 'รอรับงาน';
-													$IMG         = isset($array_IMG[$row->INSPECTION_CODE]) ? asset('image/emp/'.$array_IMG[$row->INSPECTION_CODE]) : asset('../assets/img/noemp.png');
-													$DATE_DIFF   = $row->REC_WORK_DATE != '1900-01-01 00:00:00.000'? 'รับเมื่อ:'.Carbon\Carbon::parse($row->REC_WORK_DATE)->diffForHumans() : 'แจ้งเมื่อ:'.Carbon\Carbon::parse($row->CREATE_TIME)->diffForHumans();
-												@endphp
-												<div class="col-lg-3">
-													<div class="card card-round">
-														<div class="card-body">
-															<div class="card-title text-center fw-mediumbold {{ $BG_COLOR }}"id="BG_{{ $row->UNID }}">{{$row->MACHINE_CODE}}</div>
-															<div class="card-list">
-																<div class="item-list">
-																	<div class="avatar">
-																		<img src="{{$IMG}}"
-																		id="IMG_{{ $row->UNID }}"alt="..." class="avatar-img rounded-circle">
-																	</div>
-																	<div class="info-user ml-3">
-																		<div class="username" style=""id="WORK_STATUS_{{$row->UNID}}">{{ $WORK_STATUS }}</div>
-																		<div class="status" >{{$row->REPAIR_SUBSELECT_NAME}}</div>
-																		@if ($row->PD_CHECK_STATUS == '1')
-																			<div class="status" id="DATE_DIFF_{{$row->UNID}}" > ปิดเอกสารสำเร็จ</div>
-																		@elseif ($row->CLOSE_STATUS == '1')
-																			<div class="status" id="DATE_DIFF_{{$row->UNID}}" > ดำเนินงานสำเร็จ</div>
-																		@else
-																		<div class="status" id="DATE_DIFF_{{$row->UNID}}">{{$DATE_DIFF}}</div>
-																		@endif
-																	</div>
+										<div class="row" id="table_style" {{ Cookie::get('table_style_pd') == '1' ? '' : 'hidden'}} >
+ 		                  @foreach ($dataset as $key => $row)
+ 												@php
+ 													$BG_COLOR    		= $row->INSPECTION_CODE ? 'bg-warning text-white' : 'bg-danger text-white';
+ 													$IMG_PRIORITY		= $row->PRIORITY == '9' ? '<img src="'.asset('assets/css/flame.png').'" class="mt--2" width="20px" height="20px">' : '';
+ 													$WORK_STATUS 		= isset($row->INSPECTION_CODE) ? $array_EMP[$row->INSPECTION_CODE] : 'รอรับงาน';
+ 													$TEXT_STATUS    = $row->PD_CHECK_STATUS == '1' ? 'จัดเก็บเอกสารเรียบร้อย' : ($row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ' : (isset($row->INSPECTION_CODE) ? 'กำลังดำเนินการ' : 'รอรับงาน' ));
+ 													$IMG         	  = isset($array_IMG[$row->INSPECTION_CODE]) ? asset('image/emp/'.$array_IMG[$row->INSPECTION_CODE]) : asset('../assets/img/noemp.png');
+ 													$DATE_DIFF   	  = $row->REC_WORK_DATE != '1900-01-01 00:00:00.000'? 'รับเมื่อ:'.Carbon\Carbon::parse($row->REC_WORK_DATE)->diffForHumans() : 'แจ้งเมื่อ:'.Carbon\Carbon::parse($row->CREATE_TIME)->diffForHumans();
+ 													$HTML_STATUS    = '<div class="status" id="DATE_DIFF_'.$row->UNID.'">'.$DATE_DIFF.'</div>';
+ 													$HTML_BTN       = '';
+ 													$HTML_AVATAR    = '<img src="'.$IMG.'"id="IMG_'.$row->UNID.'"alt="..." class="avatar-img rounded-circle">';
+ 													if ($row->PD_CHECK_STATUS == '1') {
+ 										      	$BG_COLOR  		= 'bg-success text-white';
+ 														$HTML_STATUS  = '<div class="status" id="DATE_DIFF_'.$row->UNID.'" >ปิดเอกสารเรียบร้อย</div>';
+ 														$HTML_BTN     =	'<button class="btn btn-primary  btn-sm"
+ 																						onclick=pdfsaverepair("'.$row->UNID.'")>
+ 																							<i class="fas fa-print mx-1"></i>
+ 																								PRINT
+ 																						</button>';
+ 														 $HTML_AVATAR = '<div class="timeline-badge success rounded-circle text-center text-white" style="width: 100%;height: 100%;">
+ 	 																					 <i class="fas fa-check my-2" style="font-size: 35px;"></i></div>' ;
+ 										      }elseif ($row->CLOSE_STATUS == '1') {
+ 										        $BG_COLOR  		= 'bg-primary text-white';
+ 														$HTML_STATUS  = '<div class="status" id="DATE_DIFF_'.$row->UNID.'" >ดำเนินงานสำเร็จ</div>';
+														$HTML_BTN     = '<button class="btn  btn-primary  btn-sm"
+	 																						onclick="rec_work(this)"
+	 																						data-unid="'.$row->UNID.'"
+	 																						data-docno="'.$row->DOC_NO.'"
+	 																						data-detail="'.$row->REPAIR_SUBSELECT_NAME.'">
+	 																							CLOSE FORM
+	 																						</button>';
+ 										      }
+ 												@endphp
+ 												<div class="col-lg-3">
+ 													<div class="card card-round">
+ 														<div class="card-body">
+ 															<div class="card-title  fw-mediumbold {{ $BG_COLOR }}"id="BG_{{ $row->UNID }}">
+ 																<div class="row text-center">
+ 																	<div class="col-lg-12">
+ 																		{!! $IMG_PRIORITY !!}
+ 																		{{$row->MACHINE_CODE}}
+ 																	</div>
+ 																</div>
+ 																<div class="row text-center ">
+ 																	<div class="col-lg-12">
+ 																		<h5>{{$TEXT_STATUS}}</h5>
+ 																		</div>
+ 																</div>
+ 															</div>
+ 															<div class="card-list">
+ 																<div class="item-list">
+ 																	<div class="avatar">
+ 																		{!! $HTML_AVATAR !!}
+ 																	</div>
+ 																	<div class="info-user ml-3">
+ 																		<div class="username" style=""id="WORK_STATUS_{{$row->UNID}}">{{ $WORK_STATUS }}</div>
+ 																		<div class="status" >{{$row->REPAIR_SUBSELECT_NAME}}</div>
+ 																		{!! $HTML_STATUS !!}
+ 																	</div>
 
-																</div>
-															</div>
-															@if ($row->CLOSE_STATUS == '1')
-																<div class="row ">
-																	<div class="col-md-12 text-center">
-																		<button class="btn  btn-primary  btn-sm"
-																		onclick="rec_work(this)"
-																		data-unid="{{ $row->UNID }}"
-																		data-docno="{{ $row->DOC_NO }}"
-																		data-detail="{{ $row->REPAIR_SUBSELECT_NAME }}">
-																			ปิดเอกสาร
-																		</button>
-																	</div>
-
-																</div>
-															@endif
-
-														</div>
-													</div>
-												</div>
-		                    @endforeach
-		                </div>
-								    <div class="table-responsive" id="list_table" {{ Cookie::get('table_style_pd') == '2' ? '' : 'hidden'}} >
+ 																</div>
+ 															</div>
+ 															<div class="row ">
+ 																<div class="col-md-12 text-center">
+ 																	{!! $HTML_BTN !!}
+ 																</div>
+ 															</div>
+ 														</div>
+ 													</div>
+ 												</div>
+ 		                    @endforeach
+ 		                </div>
+										<div class="table-responsive" id="list_table" {{ Cookie::get('table_style_pd') == '2' ? '' : 'hidden'}} >
 								      <table class="display table table-striped table-hover">
 								        <thead class="thead-light">
 								          <tr>
@@ -254,7 +263,7 @@
 								            <th>ชื่อเครื่องจักร</th>
 														<th>อาการ</th>
 								            <th>สถานะงาน</th>
-														<th >ผู้รับงาน</th>
+
 														<th >วันที่รับงาน</th>
 								          </tr>
 								        </thead>
@@ -263,66 +272,62 @@
 														background: #9e9e9e;
 														color: white;
 													}
+													.btn-pink{
+														background: #FFA5B5;
+														color: white;
+													}
 												</style>
 								        <tbody id="result">
 								          @foreach ($dataset as $key => $sub_row)
 														@php
-															$REC_WORK_STATUS  = isset($array_EMP[$sub_row->INSPECTION_CODE]) ? $sub_row->INSPECTION_NAME_TH : 'รอรับงาน';
-															$BTN_COLOR_STATUS = $sub_row->INSPECTION_CODE == '' ? 'btn-mute' : ($sub_row->CLOSE_STATUS == '1' ? 'btn-success' : 'btn-warning') ;
-
-															$BTN_COLOR 			  = $sub_row->INSPECTION_CODE == '' ? 'btn-danger' : 'btn-danger' ;
-															$BTN_TEXT  			  = $sub_row->INSPECTION_CODE == '' ? 'รอรับงาน' : ($sub_row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ' : 'กำลังดำเนินการ') ;
-															$BTN_TEXT_SUB     = $sub_row->CLOSE_STATUS == 1 ? 'fas fa-clipboard-check mx-1' : '';
-												      // $BTN
-												      if ($sub_row->PD_CHECK_STATUS == 1) {
-												        $BTN_TEXT = 'ปิดเอกสารแล้ว';
-												        $BTN_COLOR_STATUS =  'btn-success';
-												        $BTN_TEXT_SUB = 'flaticon-success mx-1';
-												        $REC_WORK_STATUS = $BTN_TEXT;
-												      }
-															if ($sub_row->CLOSE_STATUS == 1) {
-																$BTN_COLOR = 'btn-secondary';
+															$BTN_CONFIRM			= $sub_row->CLOSE_STATUS		== '1' ? "onclick=rec_work(this)" : '';
+															$BTN              = '<button class="btn btn-danger btn-sm btn-block my-1"
+																										style="cursor:default">รอรับงาน</button>';
+															if ($sub_row->PD_CHECK_STATUS == '1') {
+																$BTN_COLOR_WORKER = 'btn-secondary';
+																$BTN				= '<button onclick=pdfsaverepair("'.$sub_row->UNID.'") type="button"
+																	 							class="btn btn-primary btn-block btn-sm my-1 text-left">
+																	 		 					<span class="btn-label">
+																								<i class="fas fa-clipboard-check mx-1"></i>
+																	 			 					จัดเก็บเอกสารสำเร็จ
+																	 		 					</span>
+																	 	 					</button>';
+															}elseif ($sub_row->CLOSE_STATUS == '1') {
+																$BTN_COLOR_WORKER = 'btn-pink';
+																$BTN				= '<button onclick=rec_work(this) type="button"
+																	 							data-unid="'.$sub_row->UNID.'"
+																	 							data-docno="'.$sub_row->DOC_NO.'"
+																	 							data-detail="'.$sub_row->REPAIR_SUBSELECT_NAME.'"
+																	 							class="btn btn-primary btn-block btn-sm my-1 text-left">
+																	 		 					<span class="btn-label">
+																								<i class="fas fa-clipboard mx-1"></i>
+																	 			 					ดำเนินการสำเร็จ
+																	 		 					</span>
+																	 	 					</button>';
+															}elseif ($sub_row->INSPECTION_CODE != '') {
+																$BTN				= '<button class="btn btn-warning btn-sm btn-block my-1 text-left"
+																								 style="cursor:default">
+																								 <i class="fas fa-wrench fa-lg mx-1"></i>
+																								 '.$sub_row->INSPECTION_NAME_TH.'
+																							 </button>';
 															}
-
 														@endphp
-								            <tr >
-															<td>{{ $key+1 }}</td>
-															<td >{{ date('d-m-Y',strtotime($sub_row->DOC_DATE)) }}</td>
-								              <td >{{ $sub_row->DOC_NO }}
-								              </td>
-															<td >  				{{ $sub_row->MACHINE_LINE }}	    </td>
-								              <td >  				{{ $sub_row->MACHINE_CODE }}		     </td>
-								              <td >  				{{ $sub_row->MACHINE_NAME }}		    </td>
-															<td >  				{{ $sub_row->REPAIR_SUBSELECT_NAME }}		    </td>
-								                  <td >
-								                    <button type="button"class="btn {{$BTN_COLOR_STATUS}} btn-block btn-sm my-1 text-left"
-																		{{ $sub_row->CLOSE_STATUS == '1' ? 'onclick=pdfsaverepair("'.$sub_row->UNID.'")' : ''}}>
-																			<i class="{{ $sub_row->CLOSE_STATUS == '1' ? 'fas fa-print' : '' }}"style="color:black;font-size:13px"></i>
-								                      <span class="btn-label " style="color:black;font-size:13px">
-																				{{ $BTN_TEXT }}
-								                      </span>
-								                    </button>
-								                  </td>
-								                  <td >
-																		@can('isAdminandManager')
-																			<button  {{ $sub_row->CLOSE_STATUS == '1' ? 'onclick=rec_work(this)' : '' }} type="button"
-																			data-unid="{{ $sub_row->UNID }}"
-																			data-docno="{{ $sub_row->DOC_NO }}"
-																			data-detail="{{ $sub_row->REPAIR_SUBSELECT_NAME }}"
-																			class="btn {{$BTN_COLOR}} btn-block btn-sm my-1 text-left">
-																			 <span class="btn-label">
-																				 <i class="{{ $BTN_TEXT_SUB }}"></i>{{$REC_WORK_STATUS}}
-																			 </span>
-																		 </button>
-																		@else
-																		@endcan
-
-																<td >{{ date('d-m-Y') }}</td>
-								              </tr>
+								             <tr>
+															<td>{{ $dataset->firstItem() + $key }}</td>
+															<td width="9%">{{ date('d-m-Y',strtotime($sub_row->DOC_DATE)) }}</td>
+								              <td width="11%">{{ $sub_row->DOC_NO }}</td>
+															<td width="4%">{{ $sub_row->MACHINE_LINE }}</td>
+								              <td width="8%">{{ $sub_row->MACHINE_CODE }}</td>
+								              <td>{{ $sub_row->MACHINE_NAME_TH }}</td>
+															<td>{{ $sub_row->REPAIR_SUBSELECT_NAME }}</td>
+						                  <td width='15%'>{!! $BTN !!}</td>
+															<td width="9%">{{ date('d-m-Y') }}</td>
+								             </tr>
 								            @endforeach
 								        </tbody>
 								    </table>
 								  	</div>
+										<input type="hidden" id="PAGE" name="PAGE" value="{{$dataset->currentPage()}}">
 									{{$dataset->appends(['MACHINE_LINE'=>$MACHINE_LINE,'MONTH' => $MONTH,'YEAR' => $YEAR,'DOC_STATUS' => $DOC_STATUS,'SEARCH',$SEARCH])
 														->links('pagination.default')}}
 								    </div>
@@ -352,13 +357,15 @@
 <script type="module" src="{{ asset('assets/js/js.cookie.min.js') }}"></script>
 <script>
 $(document).ready(function(){
-		var url = "{{ route('pd.fetchdata') }}";
-		var data = $('#FRM_SEARCH').serialize();
-		var cookie_tablestyle = "{{Cookie::get('table_style_pd')}}";
-		if (cookie_tablestyle == '') {
-				styletable('1');
-		}
+
+	var cookie_tablestyle = "{{Cookie::get('table_style_pd')}}";
+	if (cookie_tablestyle == '') {
+			styletable('1');
+	}
 		var loaddata_table_all = function loopdata_table(){
+			var page = $('#PAGE').val();
+			var url = "{{ route('pd.fetchdata') }}?page="+page;
+			var data = $('#FRM_SEARCH').serialize();
 			$.ajax({
 						 type:'GET',
 						 url: url,
@@ -398,6 +405,10 @@ function styletable(table_style){
 	}
 }
 function loopdata_table(){
+	var page = $('#PAGE').val();
+	var url = "{{ route('pd.fetchdata') }}?page="+page;
+	var data = $('#FRM_SEARCH').serialize();
+	
 	$.ajax({
 				 type:'GET',
 				 url: url,
@@ -409,7 +420,6 @@ function loopdata_table(){
 				 }
 			 });
 		 }
-
 //******************************* End function ********************
 	function rec_work(thisdata){
 		$("#overlayinpage").fadeIn(300);　
@@ -493,10 +503,10 @@ function loopdata_table(){
 	function changesubmit(){
 		$('#BTN_SUBMIT').click();
 	}
-	function pdfrepair(m){
-		var unid = (m);
-		window.open('/machine/repair/pdf/'+unid,'Repairprint','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');
-	}
+	// function pdfrepair(m){
+	// 	var unid = (m);
+	// 	window.open('/machine/repair/pdf/'+unid,'Repairprint','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');
+	// }
 	function pdfsaverepair(unid){
 		var unid = unid;
 		window.open('/machine/repair/savepdf/'+unid,'RepairSaveprint','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');

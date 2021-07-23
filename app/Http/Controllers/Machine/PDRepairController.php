@@ -28,8 +28,9 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class PDRepairController extends Controller
 {
-  public function __construct(){
+  public function __construct(Request $request){
     $this->middleware('auth');
+
   }
   public function randUNID($table){
     $number = date("ymdhis", time());
@@ -46,24 +47,35 @@ class PDRepairController extends Controller
    }
 
   public function Index(Request $request){
-    $cookie_array = array('0' => 'empcode','1' => 'selectmainrepair','2' => 'selectsubrepair','3' => 'priority' );
-    foreach ($cookie_array as $index => $row) {
-      Cookie::queue(Cookie::forget($row));
+    $COOKIE_PAGE_TYPE = $request->cookie('PAGE_TYPE');
+    if ($COOKIE_PAGE_TYPE != 'PD_REPAIR') {
+      $COOKIE_PAGE_TYPE = $request->cookie();
+      foreach ($COOKIE_PAGE_TYPE as $index => $row) {
+        if ($index == 'XSRF-TOKEN' || $index == 'computerized_maintenance_management_system_session' || $index == 'table_style' || $index == 'table_style_pd') {
+        }else {
+          Cookie::queue(Cookie::forget($index));
+        }
+      }
     }
 
-    if ($request->cookie('table_style_pd') == NUll) {
-      Cookie::queue('table_style_pd','2');
-    }
-    $SEARCH      = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
-    $SERACH_TEXT =  $request->SEARCH;
-    $LINE = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
-    $MACHINE_LINE = isset($request->LINE) ? $request->LINE : '';
-    $MONTH = isset($request->MONTH) ? $request->MONTH : date('m') ;
-    $DOC_STATUS = isset($request->DOC_STATUS) ? $request->DOC_STATUS : 9 ;
-    $YEAR = isset($request->YEAR) ? $request->YEAR : date('Y') ;
-    $DATA_EMP = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->where('EMP_STATUS','=',9)->get();
-    $dataset = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH
-                                                        ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH')
+    $SEARCH       = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
+    $SERACH_TEXT  =  $request->SEARCH;
+    $LINE         = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
+    $MACHINE_LINE = isset($request->LINE) ? $request->LINE : $request->cookie('LINE');
+    $MONTH        = isset($request->MONTH) ? $request->MONTH : ($request->cookie('MONTH') != '' ? $request->cookie('MONTH') : date('m') ) ;
+    $DOC_STATUS   = isset($request->DOC_STATUS) ? $request->DOC_STATUS : ($request->cookie('DOC_STATUS') != '' ? $request->cookie('DOC_STATUS') : 9 );
+    $YEAR         = isset($request->YEAR) ? $request->YEAR : ($request->cookie('YEAR') != '' ? $request->cookie('YEAR') : date('Y') ) ;
+    $MINUTES = 30;
+    Cookie::queue('PAGE_TYPE','PD_REPAIR',$MINUTES);
+    Cookie::queue('LINE',$MACHINE_LINE,$MINUTES);
+    Cookie::queue('MONTH',$MONTH,$MINUTES);
+    Cookie::queue('DOC_STATUS',$DOC_STATUS,$MINUTES);
+    Cookie::queue('YEAR',$YEAR,$MINUTES);
+
+    $DATA_EMP     = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->where('EMP_STATUS','=',9)->get();
+    $dataset      = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH
+                                                        ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH
+                                                        ,dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
                                             ->where(function ($query) use ($MACHINE_LINE) {
                                                   if ($MACHINE_LINE != '') {
                                                      $query->where('MACHINE_LINE', '=', $MACHINE_LINE);
@@ -96,9 +108,16 @@ class PDRepairController extends Controller
                                             ->orderBy('DOC_MONTH','DESC')
                                             ->orderBy('DOC_NO','DESC')
                                             ->paginate(10);
+
+    $array_EMP = array();
+    $array_IMG = array();
+    foreach ($DATA_EMP as $index => $row_emp) {
+      $array_EMP[$row_emp->EMP_CODE] = $row_emp->EMP_NAME_TH;
+      $array_IMG[$row_emp->EMP_CODE] = $row_emp->EMP_ICON;
+    }
     $SEARCH = $SERACH_TEXT;
     return View('machine/repair/repairlistpd',compact('dataset','SEARCH','LINE','DATA_EMP',
-    'MACHINE_LINE','MONTH','YEAR','DOC_STATUS'));
+    'MACHINE_LINE','MONTH','YEAR','DOC_STATUS','array_EMP','array_IMG'));
   }
   public function FetchData(Request $request){
     $SEARCH         = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
@@ -107,9 +126,10 @@ class PDRepairController extends Controller
     $MONTH          = isset($request->MONTH) ? $request->MONTH : 0 ;
     $DOC_STATUS     = isset($request->DOC_STATUS) ? $request->DOC_STATUS : 0 ;
     $YEAR           = isset($request->YEAR) ? $request->YEAR : date('Y') ;
-
+    $page           = $request->page;
     $dataset        = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH
-                                                               ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH')
+                                                               ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH
+                                                               ,dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
                                             ->where(function ($query) use ($MACHINE_LINE) {
                                                   if ($MACHINE_LINE != '') {
                                                      $query->where('MACHINE_LINE', '=', $MACHINE_LINE);
@@ -146,118 +166,129 @@ class PDRepairController extends Controller
     $SEARCH         = $SERACH_TEXT;
     $html = '';
     $html_style = '';
-    foreach ($dataset as $key => $row) {
-      $REC_WORK_STATUS  = isset($row->INSPECTION_CODE) ? $row->INSPECTION_NAME_TH : 'รอรับงาน';
-      $BTN_COLOR_STATUS = $row->INSPECTION_CODE == '' ? 'btn-mute' : ($row->CLOSE_STATUS == '1' ? 'btn-success' : 'btn-warning') ;
-      $BTN_COLOR 			  = $row->INSPECTION_CODE == '' ? 'btn-danger' : ($row->CLOSE_STATUS == '1' ? 'btn-secondary' :'btn-danger') ;
-      $BTN_TEXT  			  = $row->INSPECTION_CODE == '' ? 'รอรับงาน' : ($row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ' : 'กำลังดำเนินการ') ;
-      $BTN_TEXT_SUB     = $row->CLOSE_STATUS == 1 ? 'fas fa-clipboard-check mx-1' : '';
-      // $BTN
-      if ($row->PD_CHECK_STATUS == 1) {
-        $BTN_TEXT = 'ปิดเอกสารแล้ว';
-        $BTN_COLOR_STATUS =  'btn-success';
-        $BTN_COLOR = 'btn-secondary';
-        $BTN_TEXT_SUB = 'flaticon-success mx-1';
-        $REC_WORK_STATUS = $BTN_TEXT;
+    foreach ($dataset->items($page) as $key => $row) {
+      $BTN_CONFIRM			= $row->CLOSE_STATUS		== '1' ? "onclick=rec_work(this)" : '';
+      $BTN              = '<button class="btn btn-danger btn-sm btn-block my-1"
+                            style="cursor:default">รอรับงาน</button>';
+      if ($row->PD_CHECK_STATUS == '1') {
+        $BTN_COLOR_WORKER = 'btn-secondary';
+        $BTN				= '<button onclick=pdfsaverepair("'.$row->UNID.'") type="button"
+                        class="btn btn-primary btn-block btn-sm my-1 text-left">
+                        <span class="btn-label">
+                        <i class="fas fa-clipboard-check mx-1"></i>
+                          จัดเก็บเอกสารสำเร็จ
+                        </span>
+                      </button>';
+      }elseif ($row->CLOSE_STATUS == '1') {
+        $BTN_COLOR_WORKER = 'btn-pink';
+        $BTN				= '<button onclick=rec_work(this) type="button"
+                        data-unid="'.$row->UNID.'"
+                        data-docno="'.$row->DOC_NO.'"
+                        data-detail="'.$row->REPAIR_SUBSELECT_NAME.'"
+                        class="btn btn-primary btn-block btn-sm my-1 text-left">
+                        <span class="btn-label">
+                        <i class="fas fa-clipboard mx-1"></i>
+                          ดำเนินการสำเร็จ
+                        </span>
+                      </button>';
+      }elseif ($row->INSPECTION_CODE != '') {
+        $BTN				= '<button class="btn btn-warning btn-sm btn-block my-1 text-left"
+                         style="cursor:default">
+                         <i class="fas fa-wrench fa-lg mx-1"></i>
+                         '.$row->INSPECTION_NAME_TH.'
+                       </button>';
       }
 
       $html.= '<tr>
-                <td>'.$key+1 .'</td>
-                <td >'.date('d-m-Y',strtotime($row->DOC_DATE)).'</td>
-                <td >'.$row->DOC_NO.'</td>
-                <td >'.$row->MACHINE_LINE.'</td>
-                <td >'.$row->MACHINE_CODE.'</td>
-                <td >'.$row->MACHINE_NAME.'</td>
-                <td >'.$row->REPAIR_SUBSELECT_NAME.'</td>d
-
-                <td >
-                  <button type="button"class="btn '.$BTN_COLOR_STATUS.' btn-block btn-sm my-1 text-left"
-                  '.($row->CLOSE_STATUS == '1' ? 'onclick=pdfsaverepair("'.$row->UNID.'")' : '').'>
-                    <i class="'.($row->CLOSE_STATUS == '1' ? 'fas fa-print' : '').'"style="color:black;font-size:13px"></i>
-
-                    <span class="btn-label " style="color:black;font-size:13px">
-                      '.$BTN_TEXT.'
-                    </span>
-                  </button>
-                </td>';
-                if (Gate::allows("isAdminandManager")) {
-                  if ($row->CLOSE_STATUS == 1) {
-                    $BTN_CONFIRM = "onclick=rec_work(this)";
-                  }else {
-                    $BTN_CONFIRM = '';
-                  }
-                  $html.='<td >
-                      <button '.$BTN_CONFIRM.'
-                      type="button"
-                      data-unid="'.$row->UNID.'"
-                      data-docno="'.$row->DOC_NO.'"
-                      data-detail="'.$row->REPAIR_SUBSELECT_NAME.'"
-                      class="btn '.$BTN_COLOR.' btn-block btn-sm my-1 text-left"
-                     >
-                       <span class="btn-label">
-                       <i class="'.$BTN_TEXT_SUB.'"></i>'.$REC_WORK_STATUS.'
-                     </span>
-                     </button></td>';
-                   }else {
-                  $html.='<td ></td>';
-                  }
-      $html.= '<td >'.date('d-m-Y').'</td>
-        </tr>';
+                 <td>'.$dataset->firstItem() + $key.'</td>
+                 <td width="9%">'.date('d-m-Y',strtotime($row->DOC_DATE)).'</td>
+                 <td width="11%">'.$row->DOC_NO.'</td>
+                 <td width="4%">'.$row->MACHINE_LINE.'</td>
+                 <td width="8%">'.$row->MACHINE_CODE.'</td>
+                 <td>'.$row->MACHINE_NAME_TH.'</td>
+                 <td>'.$row->REPAIR_SUBSELECT_NAME.'</td>
+                 <td width="15%">'.$BTN.'</td>
+                 <td width="9%">'.date('d-m-Y').'</td>
+              </tr>';
       }
-    foreach ($dataset as $index => $sub_row) {
-      $DATA_EMP    = EMPName::where('EMP_CODE',$sub_row->INSPECTION_CODE)->first();
-      $BG_COLOR    = $sub_row->PRIORITY == '9' ? 'bg-danger text-white' :  'bg-warning text-white';
 
-      if ($sub_row->PD_CHECK_STATUS == '1') {
-        $BG_COLOR = 'bg-success text-white';
-      }elseif ($sub_row->CLOSE_STATUS == '1') {
-        $BG_COLOR = 'bg-info text-white';
-      }
-      $IMG         = isset($DATA_EMP->EMP_ICON) ? asset('image/emp/'.$DATA_EMP->EMP_ICON) : asset('../assets/img/noemp.png');
-      $WORK_STATUS = isset($sub_row->INSPECTION_NAME) ? $sub_row->INSPECTION_NAME_TH :'รอรับงาน';
-      $DATE_DIFF   = $sub_row->REC_WORK_DATE != '1900-01-01 00:00:00.000'? 'รับเมื่อ:'.Carbon::parse($sub_row->REC_WORK_DATE)->diffForHumans() : 'แจ้งเมื่อ:'.Carbon::parse($sub_row->CREATE_TIME)->diffForHumans();
-      $html_style .=  '<div class="col-lg-3">
+      foreach ($dataset->items($page) as $index => $sub_row) {
+        $INSPECTION_CODE= $sub_row->INSPECTION_CODE;
+        $EMP_NAME       = EMPName::select('EMP_ICON')->where('EMP_CODE','=',$INSPECTION_CODE)->first();
+        $SPAREPART_UNID = $sub_row->UNID;
+
+        $IMG         	  = isset($EMP_NAME->EMP_ICON) ? asset('image/emp/'.$EMP_NAME->EMP_ICON) : asset('../assets/img/noemp.png');
+        $BG_COLOR    		= isset($INSPECTION_CODE) ? 'bg-warning' : 'bg-danger';
+        $TEXT_STATUS    = isset($INSPECTION_CODE) ? 'กำลังดำเนินการ' : 'รอรับงาน';
+        $WORK_STATUS 		= isset($INSPECTION_CODE) ? $sub_row->INSPECTION_NAME_TH : 'รอรับงาน';
+
+        $IMG_PRIORITY		= $sub_row->PRIORITY == '9' ? '<img src="'.asset('assets/css/flame.png').'" class="mt--2" width="20px" height="20px">' : '';
+        $DATE_DIFF   	  = $sub_row->REC_WORK_DATE != '1900-01-01 00:00:00.000'? 'รับเมื่อ:'.Carbon::parse($sub_row->REC_WORK_DATE)->diffForHumans() : 'แจ้งเมื่อ:'.Carbon::parse($sub_row->CREATE_TIME)->diffForHumans();
+        $HTML_STATUS    = '<div class="status" id="DATE_DIFF_'.$SPAREPART_UNID.'">'.$DATE_DIFF.'</div>';
+        $HTML_BTN       = '';
+        $HTML_AVATAR    = '<img src="'.$IMG.'"id="IMG_'.$SPAREPART_UNID.'"alt="..." class="avatar-img rounded-circle">';
+        if ($sub_row->PD_CHECK_STATUS == '1') {
+          $TEXT_STATUS  = 'จัดเก็บเอกสารเรียบร้อย';
+          $BG_COLOR  		= 'bg-success';
+          $HTML_STATUS  = '<div class="status" id="DATE_DIFF_'.$SPAREPART_UNID.'" >ปิดเอกสารเรียบร้อย</div>';
+          $HTML_BTN     =	'<button class="btn btn-primary  btn-sm"
+                          onclick=pdfsaverepair("'.$SPAREPART_UNID.'")>
+                            <i class="fas fa-print mx-1"></i>
+                              PRINT
+                          </button>';
+           $HTML_AVATAR = '<div class="timeline-badge success rounded-circle text-center text-white" style="width: 100%;height: 100%;">
+                           <i class="fas fa-check my-2" style="font-size: 35px;"></i></div>' ;
+        }elseif ($sub_row->CLOSE_STATUS == '1') {
+          $TEXT_STATUS  = 'ดำเนินการสำเร็จ';
+          $BG_COLOR  		= 'bg-primary';
+          $HTML_STATUS  = '<div class="status" id="DATE_DIFF_'.$SPAREPART_UNID.'" >ดำเนินงานสำเร็จ</div>';
+          $HTML_BTN     = '<button class="btn  btn-primary  btn-sm"
+                            onclick="rec_work(this)"
+                            data-unid="'.$SPAREPART_UNID.'"
+                            data-docno="'.$sub_row->DOC_NO.'"
+                            data-detail="'.$sub_row->REPAIR_SUBSELECT_NAME.'">
+                              SELECT
+                            </button>';
+        }
+
+        $html_style .=  '<div class="col-lg-3">
           <div class="card card-round">
             <div class="card-body">
-              <div class="card-title text-center fw-mediumbold '.$BG_COLOR.' ">'.$sub_row->MACHINE_CODE.'</div>
+              <div class="card-title fw-mediumbold '.$BG_COLOR.' text-white "id="BG_'.$SPAREPART_UNID.'">
+                <div class="row text-center">
+                  <div class="col-lg-12">
+                    '.$IMG_PRIORITY.'
+                    '.$sub_row->MACHINE_CODE.'
+                  </div>
+                </div>
+                <div class="row text-center ">
+                  <div class="col-lg-12">
+                    <h5>'.$TEXT_STATUS.'</h5>
+                    </div>
+                </div>
+              </div>
               <div class="card-list">
                 <div class="item-list">
                   <div class="avatar">
-                    <img src="'.$IMG.'" alt="..." class="avatar-img rounded-circle"
-                    id="IMG_'.$sub_row->UNID.'">
+                    '.$HTML_AVATAR.'
                   </div>
                   <div class="info-user ml-3">
-                    <div class="username" id="WORK_STATUS_'.$sub_row->UNID.'">'.$WORK_STATUS.'</div>
-                    <div class="status" >'.$sub_row->REPAIR_SUBSELECT_NAME.'</div>';
-                    if ($sub_row->PD_CHECK_STATUS == '1'){
-                      $html_style .='<div class="status" id="DATE_DIFF_'.$sub_row->UNID.'" > ปิดเอกสารสำเร็จ</div>';
-                    }
-                    elseif ($sub_row->CLOSE_STATUS == '1'){
-                      $html_style .='<div class="status" id="DATE_DIFF_'.$sub_row->UNID.'" > ดำเนินงานสำเร็จ</div>';
-                    }
-                    else{
-                      $html_style .='<div class="status" id="DATE_DIFF_'.$sub_row->UNID.'">'.$DATE_DIFF.'</div>';
-                    }
-                    $html_style .='</div>
-                </div>
-              </div>';
-              if ($sub_row->CLOSE_STATUS == 1) {
-                $html_style.='<div class="row ">
-                  <div class="col-md-12 text-center">
-                    <button class="btn  btn-primary  btn-sm"
-                    onclick="rec_work(this)"
-                    data-unid="'.$sub_row->UNID.'"
-                    data-docno="'.$sub_row->DOC_NO.'"
-                    data-detail="'.$sub_row->REPAIR_SUBSELECT_NAME.'">
-                      ปิดเอกสาร
-                    </button>
+                    <div class="username" style=""id="WORK_STATUS_'.$SPAREPART_UNID.'">'.$WORK_STATUS.'</div>
+                    <div class="status" >'.$sub_row->REPAIR_SUBSELECT_NAME.'</div>
+                     '.$HTML_STATUS.'
                   </div>
-                </div>';
-              }
-            $html_style.='</div>
-                        </div>
-                      </div>';
-      }
+
+                </div>
+              </div>
+              <div class="row ">
+                <div class="col-md-12 text-center">
+                   '.$HTML_BTN.'
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>';
+        }
     return Response()->json(['html'=>$html,'html_style' => $html_style]);
   }
 

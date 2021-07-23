@@ -58,13 +58,23 @@ class MachineController extends Controller
   }
 
   public function All(Request $request) {
-
+    $COOKIE_PAGE_TYPE = $request->cookie('PAGE_TYPE');
+    if ($COOKIE_PAGE_TYPE != 'MACHINE_LIST') {
+      $COOKIE_PAGE_TYPE = $request->cookie();
+      foreach ($COOKIE_PAGE_TYPE as $index => $row) {
+        if ($index == 'XSRF-TOKEN' || $index == 'computerized_maintenance_management_system_session') {
+        }else {
+          Cookie::queue(Cookie::forget($index));
+        }
+      }
+    }
     $COOKIE_MACHINE_CHECK     = $request->MACHINE_CHECK     != '' ? $request->MACHINE_CHECK     : $request->cookie('MACHINE_CHECK');
     $COOKIE_LINE              = $request->LINE              != '' ? $request->LINE              : $request->cookie('LINE');
     $COOKIE_MACHINE_RANK_CODE = $request->MACHINE_RANK_CODE != '' ? $request->MACHINE_RANK_CODE : $request->cookie('MACHINE_RANK_CODE');
     $COOKIE_MACHINE_STATUS    = $request->MACHINE_STATUS    != '' ? $request->MACHINE_STATUS    : $request->cookie('MACHINE_STATUS');
 
     $MINUTES = 30;
+    Cookie::queue('PAGE_TYPE','MACHINE_LIST',$MINUTES);
     Cookie::queue('MACHINE_CHECK',$COOKIE_MACHINE_CHECK,$MINUTES);
     Cookie::queue('LINE',$COOKIE_LINE,$MINUTES);
     Cookie::queue('MACHINE_RANK_CODE',$COOKIE_MACHINE_RANK_CODE,$MINUTES);

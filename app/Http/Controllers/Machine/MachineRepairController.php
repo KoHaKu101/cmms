@@ -47,27 +47,40 @@ class MachineRepairController extends Controller
    }
 
   public function Index(Request $request){
-    $cookie_array = array('0' => 'empcode','1' => 'selectmainrepair','2' => 'selectsubrepair','3' => 'priority' );
-    foreach ($cookie_array as $index => $row) {
-      Cookie::queue(Cookie::forget($row));
+
+    $COOKIE_PAGE_TYPE = $request->cookie('PAGE_TYPE');
+    if ($COOKIE_PAGE_TYPE != 'MA_REPAIR') {
+      $COOKIE_PAGE_TYPE = $request->cookie();
+      foreach ($COOKIE_PAGE_TYPE as $index => $row) {
+        if ($index == 'XSRF-TOKEN' || $index == 'computerized_maintenance_management_system_session' || $index == 'table_style' || $index == 'table_style_pd') {
+        }else {
+          Cookie::queue(Cookie::forget($index));
+        }
+      }
     }
 
-    if ($request->cookie('table_style') == NUll) {
-      Cookie::queue('table_style','2');
-    }
 
     $SEARCH       = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
     $SERACH_TEXT  =  $request->SEARCH;
     $LINE         = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
-    $MACHINE_LINE = isset($request->LINE) ? $request->LINE : '';
-    $MONTH        = isset($request->MONTH) ? $request->MONTH : date('m') ;
-    $DOC_STATUS   = isset($request->DOC_STATUS) ? $request->DOC_STATUS : 0 ;
-    $YEAR         = isset($request->YEAR) ? $request->YEAR : date('Y') ;
+    $MACHINE_LINE = isset($request->LINE) ? $request->LINE : $request->cookie('LINE');
+    $MONTH        = isset($request->MONTH) ? $request->MONTH : ($request->cookie('MONTH') != '' ? $request->cookie('MONTH') : date('m') ) ;
+    $DOC_STATUS   = isset($request->DOC_STATUS) ? $request->DOC_STATUS : ($request->cookie('DOC_STATUS') != '' ? $request->cookie('DOC_STATUS') : 9 );
+    $YEAR         = isset($request->YEAR) ? $request->YEAR : ($request->cookie('YEAR') != '' ? $request->cookie('YEAR') : date('Y') ) ;
+
+    $MINUTES = 30;
+    Cookie::queue('PAGE_TYPE','MA_REPAIR',$MINUTES);
+    Cookie::queue('LINE',$MACHINE_LINE,$MINUTES);
+    Cookie::queue('MONTH',$MONTH,$MINUTES);
+    Cookie::queue('DOC_STATUS',$DOC_STATUS,$MINUTES);
+    Cookie::queue('YEAR',$YEAR,$MINUTES);
+
     $DATA_EMP     = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->where('EMP_STATUS','=',9)->get();
     $dataset      = MachineRepairREQ::select('INSPECTION_CODE','CLOSE_STATUS','DOC_DATE','DOC_NO','MACHINE_LINE','MACHINE_CODE'
                                                 ,'MACHINE_NAME','REPAIR_SUBSELECT_NAME','UNID','PRIORITY','REC_WORK_DATE','PD_CHECK_STATUS')
                                                 ->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH
-                                                  ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH')
+                                                  ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH
+                                                  ,dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
                                             ->where(function ($query) use ($MACHINE_LINE) {
                                                   if ($MACHINE_LINE != '') {
                                                      $query->where('MACHINE_LINE', '=', $MACHINE_LINE);
@@ -118,10 +131,13 @@ class MachineRepairController extends Controller
     $MONTH          = isset($request->MONTH) ? $request->MONTH : 0 ;
     $DOC_STATUS     = isset($request->DOC_STATUS) ? $request->DOC_STATUS : 0 ;
     $YEAR           = isset($request->YEAR) ? $request->YEAR : date('Y') ;
+    $page           = $request->page;
+
     $dataset        = MachineRepairREQ::select('INSPECTION_CODE','CLOSE_STATUS','DOC_DATE','DOC_NO','MACHINE_LINE','MACHINE_CODE'
                                                 ,'MACHINE_NAME','REPAIR_SUBSELECT_NAME','UNID','PRIORITY','REC_WORK_DATE','PD_CHECK_STATUS')
                                             ->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH
-                                                        ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH')
+                                                        ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH
+                                                        ,dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
                                             ->where(function ($query) use ($MACHINE_LINE) {
                                                   if ($MACHINE_LINE != '') {
                                                      $query->where('MACHINE_LINE', '=', $MACHINE_LINE);
@@ -157,47 +173,41 @@ class MachineRepairController extends Controller
                                             ->paginate(10);
     $html = '';
     $html_style = '';
-    foreach ($dataset as $key => $row) {
+    foreach ($dataset->items($page) as $key => $row) {
       $INSPECTION_CODE  = $row->INSPECTION_CODE;
       $CLOSE_STATUS     = $row->CLOSE_STATUS;
-      $REC_WORK_STATUS  = isset($INSPECTION_CODE) ? '<i class="fas fa-clipboard-check mx-1"></i>'.$row->INSPECTION_NAME_TH : 'กรุณารับงาน';
-      $BTN_COLOR_WORKER = $INSPECTION_CODE      == '' ? 'btn-mute' : 'btn-secondary' ;
-      $BTN_COLOR_STATUS = $row->PD_CHECK_STATUS == '1' ? 'btn-success' : ($row->CLOSE_STATUS == '1' ? 'btn-primary': (isset($INSPECTION_CODE) ? 'btn-warning' : 'btn-danger'));
-      $BTN_TEXT  			  = $row->PD_CHECK_STATUS == '1' ? 'จัดเก็บเอกสารเรียบร้อย' : ($row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ': (isset($INSPECTION_CODE) ? 'กำลังดำเนินการ' : 'รอรับงาน'));
+      $PD_CHECK_STATUS  = $row->PD_CHECK_STATUS;
+
+      $REC_WORK_STATUS  = isset($INSPECTION_CODE) ? '<i class="fas fa-wrench fa-lg mx-1"></i>'.$row->INSPECTION_NAME_TH : 'รอรับงาน';
+      $BTN_COLOR_STATUS = $PD_CHECK_STATUS == '1' ? 'btn-success' : ($CLOSE_STATUS == '1' ? 'btn-primary': (isset($INSPECTION_CODE) ? 'btn-warning' : 'btn-danger text-center'));
+      if ($PD_CHECK_STATUS == '1') {
+        $REC_WORK_STATUS = '<i class="fas fa-clipboard-check fa-lg mx-1"></i> จัดเก็บเอกสารเรียบร้อย';
+      }elseif ($CLOSE_STATUS == '1') {
+        $REC_WORK_STATUS = '<i class="fas fa-clipboard fa-lg mx-1"></i> ดำเนินการสำเร็จ';
+      }
       $html.= '<tr>
                 <td>'.$key+1 .'</td>
-                <td >'.date('d-m-Y',strtotime($row->DOC_DATE)).'</td>
-                <td >'.$row->DOC_NO.'</td>
-                <td >'.$row->MACHINE_LINE.'</td>
-                <td >'.$row->MACHINE_CODE.'</td>
-                <td >'.$row->MACHINE_NAME.'</td>
-                <td >'.$row->REPAIR_SUBSELECT_NAME.'</td>d
-                <td >
-                  <button type="button"class="btn '.$BTN_COLOR_STATUS.' btn-block btn-sm my-1 text-left"style="color:black;font-size:13px">
-                    <span class="btn-label"style="color:white;font-size:13px" >
-                      '.$BTN_TEXT.'
-                    </span>
-                  </button>
-                </td>';
-                if (Gate::allows("isAdminandManager")) {
-                  $html.='<td >
-                      <button onclick="rec_work(this)" type="button"
-                      data-unid="'.$row->UNID.'"
-                      data-docno="'.$row->DOC_NO.'"
-                      data-detail="'.$row->REPAIR_SUBSELECT_NAME.'"
-                      class="btn '.$BTN_COLOR_WORKER.' btn-block btn-sm my-1 text-left"
-                     >
-                       <span class="btn-label">
+                <td width="8%">'.date('d-m-Y',strtotime($row->DOC_DATE)).'</td>
+                <td width="10%">'.$row->DOC_NO.'</td>
+                <td width="4%">'.$row->MACHINE_LINE.'</td>
+                <td width="8%">'.$row->MACHINE_CODE.'</td>
+                <td>'.$row->MACHINE_NAME_TH.'</td>
+                <td>'.$row->REPAIR_SUBSELECT_NAME.'</td>
+                <td width="15%">
+                    <button onclick="rec_work(this)" type="button"
+                    data-unid="'.$row->UNID.'"
+                    data-docno="'.$row->DOC_NO.'"
+                    data-detail="'.$row->REPAIR_SUBSELECT_NAME.'"
+                    class="btn '.$BTN_COLOR_STATUS.' btn-block btn-sm my-1 text-left">
+                     <span class="btn-label">
                        '.$REC_WORK_STATUS.'
                      </span>
-                     </button></td>';
-                   }else {
-                  $html.='<td ></td>';
-                  }
-      $html.= '<td >'.date('d-m-Y').'</td>
-        </tr>';
+                   </button>
+                 </td>
+                 <td width="8%">'.date('d-m-Y').'</td>
+                </tr>';
       }
-    foreach ($dataset as $index => $sub_row) {
+    foreach ($dataset->items($page) as $index => $sub_row) {
       $EMP_NAME       = EMPName::select('EMP_ICON')->where('EMP_CODE','=',$sub_row->INSPECTION_CODE)->first();
       $SUBROW_UNID    = $sub_row->UNID;
       $BG_COLOR    		=  $sub_row->INSPECTION_CODE ? 'bg-warning text-white' : 'bg-danger text-white';
@@ -237,7 +247,7 @@ class MachineRepairController extends Controller
               <div class="row text-center">
                 <div class="col-lg-12">
                   '.$IMG_PRIORITY.'
-                  '.$row->MACHINE_CODE.'
+                  '.$sub_row->MACHINE_CODE.'
                 </div>
               </div>
               <div class="row text-center ">
@@ -253,7 +263,7 @@ class MachineRepairController extends Controller
                 </div>
                 <div class="info-user ml-3">
                   <div class="username" style=""id="WORK_STATUS_'.$SUBROW_UNID.'">'.$WORK_STATUS.'</div>
-                  <div class="status" >'.$row->REPAIR_SUBSELECT_NAME.'</div>
+                  <div class="status" >'.$sub_row->REPAIR_SUBSELECT_NAME.'</div>
                    '.$HTML_STATUS.'
                 </div>
 

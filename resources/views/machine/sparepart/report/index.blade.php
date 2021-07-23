@@ -195,7 +195,7 @@ button.mfp-close{
 															<tbody>
 																@foreach ($DATA_SPAREPLAN as $index => $row)
 																	<tr>
-																		<td>{{ $index+1 }}</td>
+																		<td>{{ $DATA_SPAREPLAN->firstItem() + $index }}</td>
 																		<td>{{ date("d-m-Y", strtotime($row->PLAN_DATE))}}</td>
 																		<td>{{ $row->MACHINE_LINE}}</td>
 																		<td>{{ $row->MACHINE_CODE}}</td>

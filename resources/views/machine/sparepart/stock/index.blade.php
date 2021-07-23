@@ -80,7 +80,7 @@
 															$BG_COLOR = $row->STOCK_MIN >= $row->LAST_STOCK ? 'bg-danger text-white': 'bg-success text-white';
 														@endphp
 														<tr>
-															<td width="4%" class="text-center">{{$key+1}}</td>
+															<td width="4%" class="text-center">{{$DATA_SPAREPART->firstItem() + $key}}</td>
 															<td width="18%">{{$row->SPAREPART_CODE}}</td>
 															<td width="20%">{{$row->SPAREPART_NAME}}</td>
 															<td width="12%">{{$row->SPAREPART_MODEL}}</td>

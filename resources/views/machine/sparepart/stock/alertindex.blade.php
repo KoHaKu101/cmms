@@ -75,7 +75,7 @@
 												<tbody>
 													@foreach ($DATA_SPAREPART as $key => $row)
 														<tr>
-															<td width="4%" class="text-center">{{$key+1}}</td>
+															<td width="4%" class="text-center">{{$DATA_SPAREPART->firstItem() + $key}}</td>
 															<td width="18%">{{$row->SPAREPART_CODE}}</td>
 															<td width="20%">{{$row->SPAREPART_NAME}}</td>
 															<td width="12%">{{$row->SPAREPART_MODEL}}</td>

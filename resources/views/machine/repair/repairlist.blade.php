@@ -261,7 +261,6 @@
 								            <th>ชื่อเครื่องจักร</th>
 														<th>อาการ</th>
 								            <th>สถานะงาน</th>
-														<th >ผู้รับงาน</th>
 														<th >วันที่รับงาน</th>
 								          </tr>
 								        </thead>
@@ -274,46 +273,40 @@
 								        <tbody id="result">
 								          @foreach ($dataset as $key => $sub_row)
 														@php
-															$REC_WORK_STATUS  = isset($sub_row->INSPECTION_CODE) ? '<i class="fas fa-clipboard-check mx-1"></i>'.$array_EMP[$sub_row->INSPECTION_CODE] : 'กรุณารับงาน';
-															$BTN_COLOR_STATUS = $sub_row->PD_CHECK_STATUS == '1' ? 'btn-success' : ($sub_row->CLOSE_STATUS == '1' ? 'btn-primary': (isset($sub_row->INSPECTION_CODE) ? 'btn-warning' : 'btn-danger'));
-															$BTN_COLOR_WORKER = $sub_row->INSPECTION_CODE == '' ? 'btn-mute' : 'btn-secondary' ;
-															$BTN_TEXT  			  = $sub_row->PD_CHECK_STATUS == '1' ? 'จัดเก็บเอกสารเรียบร้อย' : ($sub_row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ': (isset($sub_row->INSPECTION_CODE) ? 'กำลังดำเนินการ' : 'รอรับงาน'));
+															$REC_WORK_STATUS  = isset($sub_row->INSPECTION_CODE) ? '<i class="fas fa-wrench fa-lg mx-1"></i>'.$array_EMP[$sub_row->INSPECTION_CODE] : 'รอรับงาน';
+															$BTN_COLOR_STATUS = $sub_row->PD_CHECK_STATUS == '1' ? 'btn-success' : ($sub_row->CLOSE_STATUS == '1' ? 'btn-primary': (isset($sub_row->INSPECTION_CODE) ? 'btn-warning' : 'btn-danger text-center'));
+															if ($sub_row->PD_CHECK_STATUS == '1') {
+																$REC_WORK_STATUS = '<i class="fas fa-clipboard-check fa-lg mx-1"></i> จัดเก็บเอกสารเรียบร้อย';
+															}elseif ($sub_row->CLOSE_STATUS == '1') {
+																$REC_WORK_STATUS = '<i class="fas fa-clipboard fa-lg mx-1"></i> ดำเนินการสำเร็จ';
+															}
 														@endphp
 								            <tr >
-															<td>{{ $key+1 }}</td>
-															<td >{{ date('d-m-Y',strtotime($sub_row->DOC_DATE)) }}</td>
-								              <td >{{ $sub_row->DOC_NO }}
-								              </td>
-															<td >  				{{ $sub_row->MACHINE_LINE }}	    </td>
-								              <td >  				{{ $sub_row->MACHINE_CODE }}		     </td>
-								              <td >  				{{ $sub_row->MACHINE_NAME }}		    </td>
-															<td >  				{{ $sub_row->REPAIR_SUBSELECT_NAME }}		    </td>
-								                  <td class="">
-								                    <button type="button"class="btn {{$BTN_COLOR_STATUS}} btn-block btn-sm my-1 text-left" style="cursor:context-menu">
-								                      <span class="btn-label " style="color:white;font-size:13px">
-																				{{ $BTN_TEXT }}
-								                      </span>
-								                    </button>
-								                  </td>
-								                  <td>
-																		@can('isAdminandManager')
-																			<button onclick="rec_work(this)" type="button"
-																			data-unid="{{ $sub_row->UNID }}"
-																			data-docno="{{ $sub_row->DOC_NO }}"
-																			data-detail="{{ $sub_row->REPAIR_SUBSELECT_NAME }}"
-																			class="btn {{$BTN_COLOR_WORKER}} btn-block btn-sm my-1 text-left">
-																			 <span class="btn-label">
-																				 {!!$REC_WORK_STATUS!!}
-																			 </span>
-																		 </button>
-																		@else
-																		@endcan
-																<td >{{ date('d-m-Y') }}</td>
+															<td>{{ $dataset->firstItem() + $key }}</td>
+															<td width="9%">{{ date('d-m-Y',strtotime($sub_row->DOC_DATE)) }}</td>
+								              <td width="11%">{{ $sub_row->DOC_NO }}</td>
+															<td width="4%">{{ $sub_row->MACHINE_LINE }}</td>
+								              <td width="8%">{{ $sub_row->MACHINE_CODE }}</td>
+								              <td>{{ $sub_row->MACHINE_NAME_TH }}</td>
+															<td>{{ $sub_row->REPAIR_SUBSELECT_NAME }}</td>
+							                  <td width="15%">
+																		<button onclick="rec_work(this)" type="button"
+																		data-unid="{{ $sub_row->UNID }}"
+																		data-docno="{{ $sub_row->DOC_NO }}"
+																		data-detail="{{ $sub_row->REPAIR_SUBSELECT_NAME }}"
+																		class="btn {{$BTN_COLOR_STATUS}} btn-block btn-sm my-1 text-left">
+																		 <span class="btn-label">
+																			 {!!$REC_WORK_STATUS!!}
+																		 </span>
+																	 </button>
+																 </td>
+																<td width="9%">{{ date('d-m-Y') }}</td>
 								              </tr>
 								            @endforeach
 								        </tbody>
 								    </table>
 								  	</div>
+										<input type="hidden" id="PAGE" name="PAGE" value="{{$dataset->currentPage()}}">
 									{{$dataset->appends(['MACHINE_LINE'=>$MACHINE_LINE,'MONTH' => $MONTH,'YEAR' => $YEAR,'DOC_STATUS' => $DOC_STATUS,'SEARCH',$SEARCH])
 														->links('pagination.default')}}
 								    </div>
@@ -341,16 +334,17 @@
 <script src="{{ asset('assets/js/select2.min.js') }}"></script>
 <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('assets/js/js.cookie.min.js') }}"></script>
-{{-- <script src="{{ asset('assets/js/useinproject/jquery-1.11.0.min.js') }}"></script> --}}
 <script>
 
 $(document).ready(function(){
-		var cookie_tablestyle = "{{Cookie::get('table_style')}}";
-		if (cookie_tablestyle == '') {
-				styletable('1');
-		}
+
 		var loaddata_table_all = function loaddata_table(){
-			var url = "{{ route('repair.fetchdata') }}";
+			var cookie_tablestyle = "{{Cookie::get('table_style')}}";
+			if (cookie_tablestyle == '') {
+					styletable('1');
+			}
+			var page = $('#PAGE').val();
+			var url = "{{ route('repair.fetchdata') }}?page="+page;
 			var data = $('#FRM_SEARCH').serialize();
 			$.ajax({
 						 type:'GET',
@@ -380,7 +374,12 @@ $(document).ready(function(){
 
 //******************************* function ************************
 function loaddata_table(){
-	var url = "{{ route('repair.fetchdata') }}";
+	var cookie_tablestyle = "{{Cookie::get('table_style')}}";
+	if (cookie_tablestyle == '') {
+			styletable('1');
+	}
+	var page = $('#PAGE').val();
+	var url = "{{ route('repair.fetchdata') }}?page="+page;
 	var data = $('#FRM_SEARCH').serialize();
 	$.ajax({
 				 type:'GET',
