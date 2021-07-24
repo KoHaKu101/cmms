@@ -123,7 +123,8 @@ Route::get('machine/repair/fetchdata'                     ,[MachineRepairControl
   Route::post('machine/repair/update/{UNID}'              ,[MachineRepairController::class,'Update'])            ->name('repair.update');
   Route::get('machine/repair/delete/{UNID}'               ,[MachineRepairController::class,'Delete'])            ->name('repair.delete');
 
-  Route::get('machine/repair/readnotify'                   ,[MachineRepairController::class,'ReadNotify'])        ->name('repair.readnotify');
+  Route::get('machine/repair/readnotify/ma'                   ,[MachineRepairController::class,'ReadNotify'])        ->name('repair.readnotify');
+  Route::get('machine/repair/readnotify/pd'                   ,[PDRepairController::class,'ReadNotify'])        ->name('repair.readnotify.pd');
 
   Route::post('machine/repair/select/selectrepairdetail'  ,[RepairCloseFormController::class,'SelectRepairDetail'])->name('repair.selectrepairdetail');
   Route::get('machine/repair/empcallajax'                 ,[RepairCloseFormController::class,'EMPCallAjax'])       ->name('repair.empcallajax');

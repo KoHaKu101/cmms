@@ -380,6 +380,7 @@ $(document).ready(function(){
 					 });
 				 }
 	setInterval(loaddata_table_all,10000);
+	loaddata_table();
 
 });
 //************************* array *********************************

@@ -597,6 +597,7 @@ class RepairCloseFormController extends Controller
       ,'MODIFY_BY'            => Auth::user()->name
       ,'MODIFY_TIME'          => Carbon::now()
       ,'STATUS_NOTIFY'        => 1
+      ,'STATUS'               => 9
     ]);
     $REPAIR_DATE = $CHECK_WORKER[0]->WORKER_TYPE == 'IN' ? $DATA_REPAIR_FIRST->WORKERIN_END_DATE : $DATA_REPAIR_FIRST->WORKEROUT_END_DATE ;
 

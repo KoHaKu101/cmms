@@ -161,8 +161,6 @@ class PDRepairController extends Controller
                                             ->orderBy('DOC_MONTH','DESC')
                                             ->orderBy('DOC_NO','DESC')
                                             ->paginate(10);
-
-
     $html = '';
     $html_style = '';
     foreach ($dataset->items($page) as $key => $row) {
@@ -249,7 +247,6 @@ class PDRepairController extends Controller
                               SELECT
                             </button>';
         }
-
         $html_style .=  '<div class="col-lg-3">
           <div class="card card-round">
             <div class="card-body">
@@ -288,7 +285,11 @@ class PDRepairController extends Controller
           </div>
         </div>';
         }
-    return Response()->json(['html'=>$html,'html_style' => $html_style]);
+        $last_data = MachineRepairREQ::selectraw('UNID,STATUS')->where('STATUS','=',9)->first();
+
+        $newrepair = isset($last_data->STATUS) ? true : false;
+        $UNID      = isset($last_data->STATUS) ? $last_data->UNID : '';
+    return Response()->json(['html'=>$html,'html_style' => $html_style,'newrepair' => $newrepair,'UNID' => $UNID]);
   }
 
   public function Store(Request $request,$MACHINE_UNID){
@@ -550,5 +551,11 @@ class PDRepairController extends Controller
    ]);
    return Response()->json(['pass'=>'true']);
  }
-
+ public function ReadNotify(Request $request){
+   $STATUS = $request->STATUS;
+   $UNID   = $request->UNID;
+   MachineRepairREQ::where('UNID','=',$UNID)->update([
+     'STATUS' => $STATUS,
+   ]);
+ }
 }

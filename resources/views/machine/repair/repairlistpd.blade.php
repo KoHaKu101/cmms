@@ -374,12 +374,32 @@ $(document).ready(function(){
 						 success:function(data){
 							 $('#result').html(data.html);
 							 $('#table_style').html(data.html_style);
-
+							 if (data.newrepair) {
+								var url = "{{ route('repair.readnotify.pd')}}";
+									  Swal.fire({
+											icon : 'error',
+									    title: '!! มีรายการแจ้งซ่อมรอยืนยัน !!',
+											showCloseButton: false,
+            					showCancelButton: false,
+											showconfirmButton: true,
+										  confirmButtonText: 'ตกลง',
+									  }).then((result) => {
+										  if (result.isConfirmed) {
+										    $.ajax({
+													type:'GET',
+							 						 url: url,
+							 						 data: {STATUS:'1'
+												 					,UNID:data.UNID},
+							 						 datatype: 'json',
+												});
+										  }
+										})
+							 }
 						 }
 					 });
 				 }
 	setInterval(loaddata_table_all,10000);
-
+	loopdata_table();
 });
 //********************** function common **********************
 function setcookie(name,value){

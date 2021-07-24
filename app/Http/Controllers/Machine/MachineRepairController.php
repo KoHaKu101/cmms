@@ -484,10 +484,8 @@ class MachineRepairController extends Controller
               return Redirect()->back();
           }
   public function ReadNotify(Request $request){
-
     $STATUS = $request->STATUS;
     $UNID   = $request->UNID;
-
     MachineRepairREQ::where('UNID','=',$UNID)->update([
       'STATUS_NOTIFY' => $STATUS,
     ]);
