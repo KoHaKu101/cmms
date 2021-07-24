@@ -51,7 +51,8 @@ class PDRepairController extends Controller
     if ($COOKIE_PAGE_TYPE != 'PD_REPAIR') {
       $DATA_COOKIE = $request->cookie();
       foreach ($DATA_COOKIE as $index => $row) {
-        if ($index == 'XSRF-TOKEN' || $index == 'computerized_maintenance_management_system_session' || $index == 'table_style' || $index == 'table_style_pd') {
+
+        if ($index == 'XSRF-TOKEN' || str_contains($index,'session') == true || $index == 'table_style' || $index == 'table_style_pd') {
         }else {
           Cookie::queue(Cookie::forget($index));
         }
