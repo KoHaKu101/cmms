@@ -43,9 +43,9 @@ class RepairCloseFormController extends Controller
 
   public function EMPCallAjax(Request $request){
     $REPAIR_REQ_UNID = isset($request->REPAIR_REQ_UNID) ? $request->REPAIR_REQ_UNID : '';
-    $DATA_EMPNAME = EMPName::select('*')->selectraw("dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH")
+    $DATA_EMPNAME    = EMPName::select('UNID','EMP_CODE')->selectraw("dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH")
                                         ->where('EMP_STATUS','=','9')->orderBy('EMP_CODE')->get();
-    $DATA_SPAREPART = SparePart::where('STATUS','=','9')->orderBy('SPAREPART_NAME')->get();
+    $DATA_SPAREPART  = SparePart::where('STATUS','=','9')->orderBy('SPAREPART_NAME')->get();
     //*************************** select worker *******************************************//
     $html_select = '<select class="form-control form-control-sm col-9 REC_WORKER" id="REC_WORKER" name="REC_WORKER">
                       <option value> กรุณาเลือก </option>';
@@ -73,8 +73,9 @@ class RepairCloseFormController extends Controller
                                                              ->where('UNID','=',$REPAIR_REQ_UNID)->first();
       $REPAIR_SPAREPART       = RepairSparepart::where('REPAIR_REQ_UNID','=',$REPAIR_REQ_UNID)->orderBy('SPAREPART_NAME')->get();
       $REPAIR_SPAREPART_COUNT = RepairSparepart::where('REPAIR_REQ_UNID','=',$REPAIR_REQ_UNID)->where('SPAREPART_STOCK_TYPE','=','OUT')->count();
-      $DATA_SELECMAIN         = SelectMainRepair::where('STATUS','=','9')->get();
-      $DATA_SELECSUB          = SelectSubRepair::where('STATUS','=','9')->get();
+      $DATA_SELECMAIN         = SelectMainRepair::select('REPAIR_MAINSELECT_NAME','UNID')->where('STATUS','=','9')->get();
+      $DATA_SELECSUB          = SelectSubRepair::select('REPAIR_MAINSELECT_UNID','UNID','REPAIR_SUBSELECT_NAME','REPAIR_SUBSELECT_NAME')
+                                               ->where('STATUS','=','9')->get();
       $PRIORITY_TEXT          = $REPAIR->PRIORITY == '9' ? 'เร่งด่วน' : 'ไม่เร่งด่วน' ;
       $html_detail.= '<input type="hidden" id="UNID_REPAIR_REQ" name="UNID_REPAIR_REQ" value="'.$REPAIR->UNID.'">
       <table class="table table-bordered table-bordered-bd-info">
@@ -96,12 +97,12 @@ class RepairCloseFormController extends Controller
                 <select class="select-repairdetail" id="DETAIL_REPAIR" name="DETAIL_REPAIR" >';
                 foreach ($DATA_SELECMAIN as $index => $row_main){
                 $html_detail.='<optgroup label="'.$row_main->REPAIR_MAINSELECT_NAME.'">';
-                      foreach ($DATA_SELECSUB->where('REPAIR_MAINSELECT_UNID','=',$row_main->UNID) as $index => $row_sub){
-                        $SELECTED = $row_sub->UNID == $REPAIR->REPAIR_SUBSELECT_UNID ? 'selected' : '' ;
-                        $html_detail.= '<option value="'.$row_sub->UNID.'" '.$SELECTED.'
-                        data-name="'.$row_sub->REPAIR_SUBSELECT_NAME.'"
-                        >'.$row_sub->REPAIR_SUBSELECT_NAME.'</option>';
-                      }
+                              foreach ($DATA_SELECSUB->where('REPAIR_MAINSELECT_UNID','=',$row_main->UNID) as $index => $row_sub){
+                                $SELECTED    = $row_sub->UNID == $REPAIR->REPAIR_SUBSELECT_UNID ? 'selected' : '' ;
+                                $html_detail.= '<option value="'.$row_sub->UNID.'" '.$SELECTED.'
+                                data-name="'.$row_sub->REPAIR_SUBSELECT_NAME.'"
+                                >'.$row_sub->REPAIR_SUBSELECT_NAME.'</option>';
+                              }
                 $html_detail.='</optgroup>';
                     }
                 $html_detail.='</select>
@@ -120,15 +121,15 @@ class RepairCloseFormController extends Controller
   }
   public function SelectRepairDetail(Request $request){
     $UNID = $request->UNID;
-    $data_selectsubrepair = SelectSubRepair::where('REPAIR_MAINSELECT_UNID','=',$UNID)->get();
-    $html = '<div class="row">';
+    $data_selectsubrepair = SelectSubRepair::select('UNID','REPAIR_SUBSELECT_NAME')->where('REPAIR_MAINSELECT_UNID','=',$UNID)->get();
+    $html = '<div class="row">
+              <style>
+              .card-stats .card-body-new {
+                padding: 0px!important;
+                }
+              </style>';
     foreach ($data_selectsubrepair as $index => $data_row) {
       $html.='
-      <style>
-      .card-stats .card-body-new {
-        padding: 0px!important;
-        }
-      </style>
       <div class="col-sm-6 col-md-3">
         <a  onclick="selectrepairdetail(this)"  data-unid="'.$data_row->UNID.'" data-name="'.$data_row->REPAIR_SUBSELECT_NAME.'"style="cursor:pointer">
         <div class="card card-stats card-primary card-round">
@@ -167,14 +168,15 @@ class RepairCloseFormController extends Controller
       if (is_array($UNID)) {
         $DATA_EMP_NAME = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->whereIn('UNID',$UNID)->get();
         foreach ($DATA_EMP_NAME as $index => $row) {
+            $EMP_NAME_UNID = $row->UNID;
             $html.= '	<tr>
                 <td>'.$index+1 .'</td>
                 <td>'.$row->EMP_CODE.' '.$row->EMP_NAME_TH.'<input type="hidden"
-                  id="WORKER_UNID['.$row->UNID.']" name="WORKER_UNID['.$row->UNID.']"  value="'.$row->UNID.'"></td>
+                  id="WORKER_UNID['.$EMP_NAME_UNID.']" name="WORKER_UNID['.$EMP_NAME_UNID.']"  value="'.$EMP_NAME_UNID.'"></td>
                 <td><button type="button" class="btn btn-danger btn-sm btn-block my-1" onclick="deleteworker(this)"
                 data-empcode="'.$row->EMP_CODE.'"
                 data-empname="'.$row->EMP_NAME_TH.'"
-                data-empunid="'.$row->UNID.'">
+                data-empunid="'.$EMP_NAME_UNID.'">
                 <i class="fas fa-trash"></i>ลบ</button></td>
               </tr>';
         }
@@ -184,9 +186,9 @@ class RepairCloseFormController extends Controller
   public function AddSparePart(Request $request){
     // dd($request);
       $arr_TOTAL_SPAREPART = $request->TOTAL_SPAREPART;
-      $UNID = array();
-      $TOTAL = array();
-      $html = '';
+      $UNID   = array();
+      $TOTAL  = array();
+      $html   = '';
       if (isset($arr_TOTAL_SPAREPART)) {
         foreach ($arr_TOTAL_SPAREPART as $key => $row_arr) {
           $arr_UNID = array_push($UNID,$key);
@@ -195,38 +197,33 @@ class RepairCloseFormController extends Controller
         if (is_array($UNID)) {
           $DATA_SPARPART = SparePart::select('*')->whereIn('UNID',$UNID)->get();
           foreach ($DATA_SPARPART as $index => $row) {
-
+              $SPAREPART_UNID = $row->UNID;
               $html.= '<tr>
                   <td>
                     <button type="button" class="btn btn-warning btn-sm mx-1 my-1"
                     onclick="edittotal(this)"
-                    data-unid="'.$row->UNID.'"><i class="fas fa-edit"></i></button>
+                    data-unid="'.$SPAREPART_UNID.'"><i class="fas fa-edit"></i></button>
                     <button type="button" class="btn btn-danger btn-sm mx-1 my-1"
                     onclick="removesparepart(this)"
-                    data-unid="'.$row->UNID.'"><i class="fas fa-trash"></i></button>
-                    <input type="hidden" id="SPAREPART_UNID_['.$row->UNID.']" name="SPAREPART_UNID_['.$row->UNID.']"
-                    value="'.$request->TYPE_SPAREPART[$row->UNID].'">
-                    <input type="hidden" id="SPAREPART_COST_['.$row->UNID.']" name="SPAREPART_COST_['.$row->UNID.']"
-                    value="'.$request->SPAREPART_COST[$row->UNID].'">
-                    <input type="hidden" id="SPAREPART_TOTAL_['.$row->UNID.']" name="SPAREPART_TOTAL_['.$row->UNID.']"
-                    value="'.$TOTAL[$row->UNID].'">
+                    data-unid="'.$SPAREPART_UNID.'"><i class="fas fa-trash"></i></button>
+                    <input type="hidden" id="SPAREPART_UNID_['.$SPAREPART_UNID.']" name="SPAREPART_UNID_['.$SPAREPART_UNID.']"
+                    value="'.$request->TYPE_SPAREPART[$SPAREPART_UNID].'">
+                    <input type="hidden" id="SPAREPART_COST_['.$SPAREPART_UNID.']" name="SPAREPART_COST_['.$SPAREPART_UNID.']"
+                    value="'.$request->SPAREPART_COST[$SPAREPART_UNID].'">
+                    <input type="hidden" id="SPAREPART_TOTAL_['.$SPAREPART_UNID.']" name="SPAREPART_TOTAL_['.$SPAREPART_UNID.']"
+                    value="'.$TOTAL[$SPAREPART_UNID].'">
                   </td>
                   <td>'.$row->SPAREPART_CODE.'</td>
                   <td>'.$row->SPAREPART_NAME.'</td>
                   <td>'.$row->SPAREPART_MODEL.'</td>
                   <td>'.$row->SPAREPART_SIZE.'</td>
-                  <td>'.number_format($request->SPAREPART_COST[$row->UNID]).'</td>
+                  <td>'.number_format($request->SPAREPART_COST[$SPAREPART_UNID]).'</td>
                   <td>'.$row->UNIT.'</td>
-                  <td>'. intval($TOTAL[$row->UNID]).'</td>
-
+                  <td>'. intval($TOTAL[$SPAREPART_UNID]).'</td>
                 </tr>';
           }
         }
       }
-
-
-
-
       return Response()->json(['html' => $html]);
   }
 
