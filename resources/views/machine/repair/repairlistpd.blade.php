@@ -374,6 +374,7 @@ $(document).ready(function(){
 						 success:function(data){
 							 $('#result').html(data.html);
 							 $('#table_style').html(data.html_style);
+
 						 }
 					 });
 				 }

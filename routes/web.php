@@ -123,6 +123,8 @@ Route::get('machine/repair/fetchdata'                     ,[MachineRepairControl
   Route::post('machine/repair/update/{UNID}'              ,[MachineRepairController::class,'Update'])            ->name('repair.update');
   Route::get('machine/repair/delete/{UNID}'               ,[MachineRepairController::class,'Delete'])            ->name('repair.delete');
 
+  Route::get('machine/repair/readnotify'                   ,[MachineRepairController::class,'ReadNotify'])        ->name('repair.readnotify');
+
   Route::post('machine/repair/select/selectrepairdetail'  ,[RepairCloseFormController::class,'SelectRepairDetail'])->name('repair.selectrepairdetail');
   Route::get('machine/repair/empcallajax'                 ,[RepairCloseFormController::class,'EMPCallAjax'])       ->name('repair.empcallajax');
   Route::post('machine/repair/addtableworker'             ,[RepairCloseFormController::class,'AddTableWorker'])    ->name('repair.addtableworker');
@@ -160,6 +162,7 @@ Route::get('machine/assets/machinelist'     ,[MachineController::class,'All'])  
   Route::get('machine/assets/edit/{UNID}'     ,[MachineController::class,'Edit'])   ->name('machine.edit');
   Route::post('machine/assets/update/{UNID}'  ,[MachineController::class,'Update']);
   Route::get('machine/assets/delete/{UNID}'   ,[MachineController::class,'Delete']) ->name('machine.delete');
+
 //manual
 Route::get('machine/manual/manuallist'        ,[MachineManualController::class,'Index'])  ->name('manual.list');
   Route::get('machine/manual/show/{UNID}'     ,[MachineManualController::class,'Show'])   ->name('manual.Show');

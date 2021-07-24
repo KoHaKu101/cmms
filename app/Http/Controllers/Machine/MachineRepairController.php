@@ -278,7 +278,11 @@ class MachineRepairController extends Controller
         </div>
       </div>';
       }
-    return Response()->json(['html'=>$html,'html_style' => $html_style]);
+
+    $last_data = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->whereRaw(' DOC_NO = (SELECT MAX(DOC_NO)FROM [PMCS_CMMS_REPAIR_REQ])')->first();
+    $newrepair = $last_data->STATUS_NOTIFY == '9'? true : false;
+    $UNID      = $last_data->STATUS_NOTIFY == '9'? $last_data->UNID : '';
+    return Response()->json(['html'=>$html,'html_style' => $html_style,'newrepair' => $newrepair,'UNID' => $UNID]);
   }
   public function PrepareSearch(Request $request){
     $text = '';
@@ -487,6 +491,14 @@ class MachineRepairController extends Controller
                 alert()->success('ปิดเอกสารเสำเร็จ')->autoclose('1500');
               return Redirect()->back();
           }
+  public function ReadNotify(Request $request){
 
+    $STATUS = $request->STATUS;
+    $UNID   = $request->UNID;
+
+    MachineRepairREQ::where('UNID','=',$UNID)->update([
+      'STATUS_NOTIFY' => $STATUS,
+    ]);
+  }
 
 }

@@ -84,6 +84,7 @@ class MachineRepairREQ extends Model
       ,'PD_CHECK_DATE'
       ,'PD_CHECK_TIME'
       ,'PD_CHECK_STATUS'
+      ,'STATUS_NOTIFY'
     ];
 
 }
