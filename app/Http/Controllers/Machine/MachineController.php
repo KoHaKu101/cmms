@@ -62,7 +62,7 @@ class MachineController extends Controller
     if ($COOKIE_PAGE_TYPE != 'MACHINE_LIST') {
       $COOKIE_PAGE_TYPE = $request->cookie();
       foreach ($COOKIE_PAGE_TYPE as $index => $row) {
-        if ($index == 'XSRF-TOKEN' || $index == 'computerized_maintenance_management_system_session') {
+        if ($index == 'XSRF-TOKEN' || str_contains($index,'session') == true) {
         }else {
           Cookie::queue(Cookie::forget($index));
         }
