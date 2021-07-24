@@ -96,7 +96,6 @@ class SysCheckController extends Controller
                 );
               MasterIMPSGroup::insert($datamasterimpsgroup);
           }
-
           if ($saveresult) {
             $totalloop          = 0;
             $totalmonth         = MailSetup::select('AUTOPLAN')->first();

@@ -47,11 +47,10 @@ class MachineRepairController extends Controller
    }
 
   public function Index(Request $request){
-
     $COOKIE_PAGE_TYPE = $request->cookie('PAGE_TYPE');
     if ($COOKIE_PAGE_TYPE != 'MA_REPAIR') {
-      $COOKIE_PAGE_TYPE = $request->cookie();
-      foreach ($COOKIE_PAGE_TYPE as $index => $row) {
+      $DATA_COOKIE = $request->cookie();
+      foreach ($DATA_COOKIE as $index => $row) {
         if ($index == 'XSRF-TOKEN' || $index == 'computerized_maintenance_management_system_session' || $index == 'table_style' || $index == 'table_style_pd') {
         }else {
           Cookie::queue(Cookie::forget($index));
@@ -61,8 +60,7 @@ class MachineRepairController extends Controller
 
 
     $SEARCH       = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
-    $SERACH_TEXT  =  $request->SEARCH;
-    $LINE         = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
+    $LINE         = MachineLine::select('LINE_CODE','LINE_NAME')->where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
     $MACHINE_LINE = isset($request->LINE) ? $request->LINE : $request->cookie('LINE');
     $MONTH        = isset($request->MONTH) ? $request->MONTH : ($request->cookie('MONTH') != '' ? $request->cookie('MONTH') : date('m') ) ;
     $DOC_STATUS   = isset($request->DOC_STATUS) ? $request->DOC_STATUS : ($request->cookie('DOC_STATUS') != '' ? $request->cookie('DOC_STATUS') : 9 );
@@ -75,10 +73,10 @@ class MachineRepairController extends Controller
     Cookie::queue('DOC_STATUS',$DOC_STATUS,$MINUTES);
     Cookie::queue('YEAR',$YEAR,$MINUTES);
 
-    $DATA_EMP     = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->where('EMP_STATUS','=',9)->get();
+    $DATA_EMP     = EMPName::select('EMP_CODE','EMP_ICON')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->where('EMP_STATUS','=',9)->get();
     $dataset      = MachineRepairREQ::select('INSPECTION_CODE','CLOSE_STATUS','DOC_DATE','DOC_NO','MACHINE_LINE','MACHINE_CODE'
                                                 ,'MACHINE_NAME','REPAIR_SUBSELECT_NAME','UNID','PRIORITY','REC_WORK_DATE','PD_CHECK_STATUS')
-                                                ->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH
+                                            ->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH
                                                   ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH
                                                   ,dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
                                             ->where(function ($query) use ($MACHINE_LINE) {
@@ -120,19 +118,18 @@ class MachineRepairController extends Controller
       $array_EMP[$row_emp->EMP_CODE] = $row_emp->EMP_NAME_TH;
       $array_IMG[$row_emp->EMP_CODE] = $row_emp->EMP_ICON;
     }
-    $SEARCH = $SERACH_TEXT;
-    return View('machine/repair/repairlist',compact('dataset','SEARCH','LINE','DATA_EMP',
+
+    return View('machine/repair/repairlist',compact('dataset','SEARCH','LINE',
     'MACHINE_LINE','MONTH','YEAR','DOC_STATUS','array_EMP','array_IMG'));
   }
   public function FetchData(Request $request){
     $SEARCH         = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
-    $SERACH_TEXT    = $request->SEARCH;
-    $MACHINE_LINE   = isset($request->LINE) ? $request->LINE : '';
+
+    $MACHINE_LINE   = isset($request->LINE)  ? $request->LINE : '';
     $MONTH          = isset($request->MONTH) ? $request->MONTH : 0 ;
     $DOC_STATUS     = isset($request->DOC_STATUS) ? $request->DOC_STATUS : 0 ;
     $YEAR           = isset($request->YEAR) ? $request->YEAR : date('Y') ;
     $page           = $request->page;
-
     $dataset        = MachineRepairREQ::select('INSPECTION_CODE','CLOSE_STATUS','DOC_DATE','DOC_NO','MACHINE_LINE','MACHINE_CODE'
                                                 ,'MACHINE_NAME','REPAIR_SUBSELECT_NAME','UNID','PRIORITY','REC_WORK_DATE','PD_CHECK_STATUS')
                                             ->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH
@@ -208,18 +205,20 @@ class MachineRepairController extends Controller
                 </tr>';
       }
     foreach ($dataset->items($page) as $index => $sub_row) {
-      $EMP_NAME       = EMPName::select('EMP_ICON')->where('EMP_CODE','=',$sub_row->INSPECTION_CODE)->first();
+      $INSPECTION_CODE= $sub_row->INSPECTION_CODE;
       $SUBROW_UNID    = $sub_row->UNID;
-      $BG_COLOR    		=  $sub_row->INSPECTION_CODE ? 'bg-warning text-white' : 'bg-danger text-white';
-      $IMG_PRIORITY		=  $sub_row->PRIORITY == '9' ? '<img src="'.asset('assets/css/flame.png').'" class="mt--2" width="20px" height="20px">' : '';
-      $WORK_STATUS 		=  isset($sub_row->INSPECTION_CODE) ? $sub_row->INSPECTION_NAME_TH : 'รอรับงาน';
-      $TEXT_STATUS    =  $sub_row->PD_CHECK_STATUS == '1' ? 'จัดเก็บเอกสารเรียบร้อย' : ($sub_row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ' : (isset($sub_row->INSPECTION_CODE) ? 'กำลังดำเนินการ' : 'รอรับงาน' ));
-      $IMG         	  =  isset($EMP_NAME->EMP_ICON) ? asset('image/emp/'.$EMP_NAME->EMP_ICON) : asset('../assets/img/noemp.png');
+
+      $EMP_NAME       = EMPName::select('EMP_ICON')->where('EMP_CODE','=',$INSPECTION_CODE)->first();
+      $BG_COLOR    		= $INSPECTION_CODE ? 'bg-warning text-white' : 'bg-danger text-white';
+      $IMG_PRIORITY		= $sub_row->PRIORITY == '9' ? '<img src="'.asset('assets/css/flame.png').'" class="mt--2" width="20px" height="20px">' : '';
+      $WORK_STATUS 		= isset($INSPECTION_CODE) ? $sub_row->INSPECTION_NAME_TH : 'รอรับงาน';
+      $TEXT_STATUS    = $sub_row->PD_CHECK_STATUS == '1' ? 'จัดเก็บเอกสารเรียบร้อย' : ($sub_row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ' : (isset($sub_row->INSPECTION_CODE) ? 'กำลังดำเนินการ' : 'รอรับงาน' ));
+      $IMG         	  = isset($EMP_NAME->EMP_ICON) ? asset('image/emp/'.$EMP_NAME->EMP_ICON) : asset('../assets/img/noemp.png');
       $DATE_DIFF   	  = $sub_row->REC_WORK_DATE != '1900-01-01 00:00:00.000'? 'รับเมื่อ:'.Carbon::parse($sub_row->REC_WORK_DATE)->diffForHumans() : 'แจ้งเมื่อ:'.Carbon::parse($sub_row->CREATE_TIME)->diffForHumans();
-      $HTML_STATUS    = '<div class="status" id="DATE_DIFF_'.$sub_row->UNID.'">'.$DATE_DIFF.'</div>';
+      $HTML_STATUS    = '<div class="status" id="DATE_DIFF_'.$SUBROW_UNID.'">'.$DATE_DIFF.'</div>';
       $HTML_BTN       = '<button class="btn  btn-primary  btn-sm"
                         onclick="rec_work(this)"
-                        data-unid="'.$sub_row->UNID.'"
+                        data-unid="'.$SUBROW_UNID.'"
                         data-docno="'.$sub_row->DOC_NO.'"
                         data-detail="'.$sub_row->REPAIR_SUBSELECT_NAME.'">
                           SELECT
@@ -279,14 +278,13 @@ class MachineRepairController extends Controller
       </div>';
       }
 
-    $last_data = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->whereRaw(' DOC_NO = (SELECT MAX(DOC_NO)FROM [PMCS_CMMS_REPAIR_REQ])')->first();
+    $last_data = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->whereRaw('DOC_NO = (SELECT MAX(DOC_NO)FROM [PMCS_CMMS_REPAIR_REQ])')->first();
     $newrepair = $last_data->STATUS_NOTIFY == '9'? true : false;
     $UNID      = $last_data->STATUS_NOTIFY == '9'? $last_data->UNID : '';
     return Response()->json(['html'=>$html,'html_style' => $html_style,'newrepair' => $newrepair,'UNID' => $UNID]);
   }
   public function PrepareSearch(Request $request){
-    $text = '';
-
+    $qrcode_text = '';
     if (file_exists($request->QRCODE_FILE)) {
         $FILE        = $request->file('QRCODE_FILE');
         $new_name    = rand() . '.' . $FILE->getClientOriginalExtension();
@@ -298,10 +296,10 @@ class MachineRepairController extends Controller
         $img_height  = ImagesY($img_master);
         $width       = 689;
         $height      = 689;
-        $img_create  = $img_master;
         if ($FILE_SIZE > 100) {
           $img_create  = ImageCreateTrueColor($width, $height);
           ImageCopyResampled($img_create, $img_master, 0, 0, 0, 0, $width+1, $height+1, $img_widht, $img_height);
+          $img_master = $img_create;
         }
         $path = public_path('image/qrcode');
           if(!File::isDirectory($path)){
@@ -309,42 +307,36 @@ class MachineRepairController extends Controller
           }
         $current_path = $path.'/'.$new_name;
         if (strtoupper($img_ext) == 'JPEG' || strtoupper($img_ext) == 'JPG') {
-          $checkimg_saved = imagejpeg($img_create,$current_path);
+          $checkimg_saved = imagejpeg($img_master,$current_path);
         }elseif (strtoupper($img_ext) == 'PNG') {
-          $checkimg_saved = imagepng($img_create,$current_path);
+          $checkimg_saved = imagepng($img_master,$current_path);
         }
         ImageDestroy($img_master);
         ImageDestroy($img_create);
-
-
-        $qrcode = new QrReader($current_path);
-        // dd($qrcode);
-        $text = $qrcode->text();
-
+        $qrcode     = new QrReader($current_path);
+        $qrcode_text       = $qrcode->text();
         $count_file = count(scandir($path));
-
         if ($count_file > 3) {
           File::deleteDirectory($path);
         }else {
           File::delete($current_path);
         }
 
-        if (!$text) {
+        if (!$qrcode_text) {
           alert()->error('ภาพไม่ชัด กรุณาลองใหม่')->autoClose(1500);
           return redirect()->back();
         }
 
     }
 
-    // dd($text);
-    $SEARCH = $text != '' ? $text : $request->search;
-    $machine = NULL;
+    $SEARCH       = $qrcode_text != '' ? $qrcode_text : $request->search;
+    $DATA_MACHINE = NULL;
     if (isset($SEARCH)) {
-      $MACHINE_CODE = '%'.$SEARCH.'%';
-      $machine = Machine::select('*')->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
-                                     ->where('MACHINE_CODE','like',$MACHINE_CODE)->get();
+      $DATA_MACHINE = Machine::select('MACHINE_CODE','MACHINE_LINE','UNID')
+                              ->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
+                              ->where('MACHINE_CODE','like','%'.$SEARCH.'%')->get();
     }
-    return View('machine/repair/search',compact('machine','SEARCH'));
+    return View('machine/repair/search',compact('DATA_MACHINE','SEARCH'));
   }
   public function Create($UNID){
 

@@ -56,12 +56,10 @@ class SparepartController extends Controller
                                       }
                                     })
                                   ->where('STATUS','=',9)->orderBy('SPAREPART_NAME')->paginate(10);
-
       return View('machine.sparepart.stock.index',compact('DATA_SPAREPART','SEARCH'));
     }
 
     public function RecSparepartList(){
-
       $DATA_SPAREPART     = SparePart::where('STATUS','=',9)->orderBy('SPAREPART_NAME')->get();
       $DATA_SPAREPART_REC = SparepartRec::orderBy('DOC_DATE','DESC')->get();
       $DATA_EMP           = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->where('EMP_STATUS','=',9)->orderBy('EMP_NAME')->get();
@@ -69,18 +67,18 @@ class SparepartController extends Controller
     }
 
     public function RecSparepartSave(Request $request){
-      $SPAREPART_UNID    = $request->SPAREPART_UNID;
-      $SparePartRec      = $this->randUNID('PMCS_CMMS_SPAREPART_REC');
-      $HistorySparepart  = $this->randUNID('PMCS_CMMS_HISTORY_SPAREPART');
-      $SPAREPART         = Sparepart::where('UNID',$SPAREPART_UNID)->first();
-      $IN_TOTAL          = $request->IN_TOTAL;
-      $TOTAL             = $SPAREPART->LAST_STOCK + $IN_TOTAL;
-      $DOC_DATE          = $request->DOC_DATE;
-      $DOC_NO            = isset($request->DOC_NO) ? $request->DOC_NO : '';
-      $EMP_NAME          = EMPName::where('EMP_CODE','=',$request->RECODE_BY)->first();
-      $RECODE_BY         = $EMP_NAME->EMP_NAME;
+      $SPAREPART_UNID         = $request->SPAREPART_UNID;
+      $UNID_SPAREPARTREC      = $this->randUNID('PMCS_CMMS_SPAREPART_REC');
+      $UNID_HISTORYSPAREPART  = $this->randUNID('PMCS_CMMS_HISTORY_SPAREPART');
+      $SPAREPART              = Sparepart::where('UNID',$SPAREPART_UNID)->first();
+      $IN_TOTAL               = $request->IN_TOTAL;
+      $TOTAL                  = $SPAREPART->LAST_STOCK + $IN_TOTAL;
+      $DOC_DATE               = $request->DOC_DATE;
+      $DOC_NO                 = isset($request->DOC_NO) ? $request->DOC_NO : '';
+      $EMP_NAME               = EMPName::where('EMP_CODE','=',$request->RECODE_BY)->first();
+      $RECODE_BY              = $EMP_NAME->EMP_NAME;
       SparePartRec::insert([
-        'UNID'              => $SparePartRec
+        'UNID'              => $UNID_SPAREPARTREC
         ,'SPAREPART_UNID'   => $SPAREPART_UNID
         ,'SPAREPART_CODE'   => $SPAREPART->SPAREPART_CODE
         ,'SPAREPART_NAME'   => $SPAREPART->SPAREPART_NAME
@@ -100,7 +98,7 @@ class SparepartController extends Controller
       ]);
 
       HistorySparepart::Insert([
-        'UNID'           => $HistorySparepart
+        'UNID'           => $UNID_HISTORYSPAREPART
         ,'SPAREPART_UNID'=> $SPAREPART_UNID
         ,'MACHINE_UNID'  => ''
         ,'MACHINE_CODE'  => ''
@@ -111,7 +109,7 @@ class SparepartController extends Controller
         ,'TOTAL'         => $TOTAL
         ,'IN_TOTAL'      => $IN_TOTAL
         ,'OUT_TOTAL'     => 0
-        ,'UNID_REF'      => $SparePartRec
+        ,'UNID_REF'      => $UNID_SPAREPARTREC
         ,'TYPE'          => 'ADD_SPAREPART'
         ,'RECODE_BY'     => $RECODE_BY
         ,'REMARK'        => ''
@@ -130,12 +128,11 @@ class SparepartController extends Controller
     }
     public function RecSparepartDelete(Request $request){
 
-      $UNID = $request->UNID;
-      $SPAREPARTREC = SparePartRec::where('UNID',$UNID);
+      $UNID               = $request->UNID;
+      $SPAREPARTREC       = SparePartRec::where('UNID',$UNID);
       $SPAREPARTREC_FIRST = $SPAREPARTREC->first();
-      $SPAREPART = SparePart::where('UNID','=',$SPAREPARTREC_FIRST->SPAREPART_UNID)->first();
-
-      $TOTAL = $SPAREPART->LAST_STOCK - $SPAREPARTREC_FIRST->IN_TOTAL;
+      $SPAREPART          = SparePart::select('LAST_STOCK')->where('UNID','=',$SPAREPARTREC_FIRST->SPAREPART_UNID)->first();
+      $TOTAL              = $SPAREPART->LAST_STOCK - $SPAREPARTREC_FIRST->IN_TOTAL;
       SparePart::where('UNID','=',$SPAREPARTREC_FIRST->SPAREPART_UNID)->update([
         'LAST_STOCK' => $TOTAL
       ]);
@@ -144,7 +141,7 @@ class SparepartController extends Controller
       return Redirect()->back();
     }
     public function AlertSparepartList(Request $request){
-      $SEARCH = $request->SEARCH;
+      $SEARCH         = $request->SEARCH;
       $DATA_SPAREPART = SparePart::where(function($query) use ($SEARCH){
                                       if (isset($SEARCH)) {
                                         $query->where('SPAREPART_NAME','like','%'.$SEARCH.'%')
@@ -199,7 +196,7 @@ class SparepartController extends Controller
       exit;
     }
     public function SaveHistory( $UNID_REF = NULL,$MACHINE_UNID = NULL,$DOC_NO = NULL
-                                 ,$TYPE         = NULL,$RECODE_BY = NULL){
+                                 ,$TYPE    = NULL,$RECODE_BY    = NULL){
 
       if ($TYPE == 'REPAIR') {
         $DATA_SPAREPART = RepairSparepart::Where('REPAIR_REQ_UNID','=',$UNID_REF)->get();
@@ -209,10 +206,10 @@ class SparepartController extends Controller
         $DATA_SPAREPART = SparePartPlan::where('UNID','=',$UNID_REF)->get();
       }
       $DOC_NO         = $DOC_NO != NULL ? $DOC_NO : '';
-      $MACHINE        = Machine::where('UNID','=',$MACHINE_UNID)->first();
+      $MACHINE        = Machine::select('UNID','MACHINE_CODE')->where('UNID','=',$MACHINE_UNID)->first();
       $ARRAY_REMARK   = array('REPAIR'=>'ซ่อมเครื่อง','PLAN_PM'=>'ตรวจเช็คเครื่อง','PLAN_PDM'=>'เปลี่ยนอะไหล่เครื่อง');
       foreach ($DATA_SPAREPART as $index => $row) {
-        $SPAREPART      = Sparepart::where('UNID','=',$row->SPAREPART_UNID)->first();
+        $SPAREPART      = Sparepart::select('LAST_STOCK')->where('UNID','=',$row->SPAREPART_UNID)->first();
         $UNID           = $this->randUNID('PMCS_CMMS_HISTORY_SPAREPART');
         $OUT_TOTAL      = $TYPE == 'REPAIR' ? $row->SPAREPART_TOTAL_OUT : ($TYPE == 'PLAN_PM' ? $row->TOTAL_PIC: ($TYPE == 'PLAN_PDM' ? $row->ACT_QTY : 0) );
         $DATE           = $TYPE == 'REPAIR' ? $row->CHANGE_DATE : ($TYPE == 'PLAN_PM' ? $row->CHANGE_DATE: ($TYPE == 'PLAN_PDM' ? $row->COMPLETE_DATE : 0) );

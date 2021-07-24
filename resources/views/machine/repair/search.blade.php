@@ -35,13 +35,13 @@
 						<div class="row">
 							<div class="col-md-1">
               @can('isAdmin')
-								<a href="{{ url('machine/repair/repairlist') }}">
+								<a href="{{ route('repair.list') }}">
 									<button class="btn btn-warning  btn-xs ">
 										<span class="fas fa-arrow-left fa-lg">Back </span>
 									</button>
 								</a>
               @elsecan('isManager_Ma')
-								<a href="{{ url('machine/repair/repairlist') }}">
+								<a href="{{ route('repair.list') }}">
 									<button class="btn btn-warning  btn-xs ">
 										<span class="fas fa-arrow-left fa-lg">Back </span>
 									</button>
@@ -53,7 +53,7 @@
 									</button>
 								</a>
               @else
-								<a href="{{ url('/machine/user/homepage') }}">
+								<a href="{{ route('user.homepage') }}">
 									<button class="btn btn-warning  btn-xs ">
 										<span class="fas fa-arrow-left fa-lg">Back </span>
 									</button>
@@ -72,7 +72,6 @@
 								<form action="{{ route('repair.repairsearch') }}" method="POST" id="FRM_SEARCH" enctype="multipart/form-data">
 									@method('GET')
 									@csrf
-								  {{-- <div class="row justify-content-md-center"> --}}
 										<div class="row justify-content-center">
 											<div class="col-8 col-md-5 col-lg-4 ">
 												<h3 >กรอกรหัสเครื่อง / แสกนQR Code</h3>
@@ -98,22 +97,18 @@
 													}
 											}
 											</style>
-
 											<div class="col-5 col-md-2 col-lg-1 ">
 												<button type="button" class="btn btn-warning show-btn"
 												id="SCANQRCODE"
 												>QR CODE</button>
 											</div>
 										</div>
-
-
-								  {{-- </div> --}}
 								</form>
 						  </div>
 						  <div class="card-body">
 						    <div class="row">
-						      @if ($machine != NULL)
-						        @foreach ($machine as $key => $dataset)
+						      @if ($DATA_MACHINE != NULL)
+						        @foreach ($DATA_MACHINE as $key => $dataset)
 						        <div class="col-md-6 col-lg-3 ml-auto mr-auto">
 						        <div class="card card-post card-round">
 						        <div class="card-header bg-primary text-white">
@@ -158,7 +153,6 @@
  });
  $('#QRCODE_FILE').on('change',function(){
 	 var file_qr =  $('#QRCODE_FILE').length ;
-
 	 if (file_qr) {
 		 $('#FRM_SEARCH').submit();
 	 }

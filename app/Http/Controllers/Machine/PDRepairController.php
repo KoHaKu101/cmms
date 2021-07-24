@@ -49,8 +49,8 @@ class PDRepairController extends Controller
   public function Index(Request $request){
     $COOKIE_PAGE_TYPE = $request->cookie('PAGE_TYPE');
     if ($COOKIE_PAGE_TYPE != 'PD_REPAIR') {
-      $COOKIE_PAGE_TYPE = $request->cookie();
-      foreach ($COOKIE_PAGE_TYPE as $index => $row) {
+      $DATA_COOKIE = $request->cookie();
+      foreach ($DATA_COOKIE as $index => $row) {
         if ($index == 'XSRF-TOKEN' || $index == 'computerized_maintenance_management_system_session' || $index == 'table_style' || $index == 'table_style_pd') {
         }else {
           Cookie::queue(Cookie::forget($index));
@@ -58,24 +58,24 @@ class PDRepairController extends Controller
       }
     }
 
-    $SEARCH       = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
-    $SERACH_TEXT  =  $request->SEARCH;
-    $LINE         = MachineLine::where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
-    $MACHINE_LINE = isset($request->LINE) ? $request->LINE : $request->cookie('LINE');
+    $SEARCH       = isset($request->SEARCH) ? $request->SEARCH : '';
+
+    $LINE         = MachineLine::select('LINE_CODE','LINE_NAME')->where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
+    $MACHINE_LINE = isset($request->LINE)  ? $request->LINE  : $request->cookie('LINE');
     $MONTH        = isset($request->MONTH) ? $request->MONTH : ($request->cookie('MONTH') != '' ? $request->cookie('MONTH') : date('m') ) ;
     $DOC_STATUS   = isset($request->DOC_STATUS) ? $request->DOC_STATUS : ($request->cookie('DOC_STATUS') != '' ? $request->cookie('DOC_STATUS') : 9 );
-    $YEAR         = isset($request->YEAR) ? $request->YEAR : ($request->cookie('YEAR') != '' ? $request->cookie('YEAR') : date('Y') ) ;
-    $MINUTES = 30;
+    $YEAR         = isset($request->YEAR)  ? $request->YEAR  : ($request->cookie('YEAR') != '' ? $request->cookie('YEAR') : date('Y') ) ;
+    $MINUTES      = 30;
     Cookie::queue('PAGE_TYPE','PD_REPAIR',$MINUTES);
     Cookie::queue('LINE',$MACHINE_LINE,$MINUTES);
     Cookie::queue('MONTH',$MONTH,$MINUTES);
     Cookie::queue('DOC_STATUS',$DOC_STATUS,$MINUTES);
     Cookie::queue('YEAR',$YEAR,$MINUTES);
 
-    $DATA_EMP     = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->where('EMP_STATUS','=',9)->get();
+    $DATA_EMP     = EMPName::select('EMP_CODE','EMP_ICON')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->where('EMP_STATUS','=',9)->get();
     $dataset      = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH
-                                                        ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH
-                                                        ,dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
+                                                             ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH
+                                                             ,dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
                                             ->where(function ($query) use ($MACHINE_LINE) {
                                                   if ($MACHINE_LINE != '') {
                                                      $query->where('MACHINE_LINE', '=', $MACHINE_LINE);
@@ -115,17 +115,16 @@ class PDRepairController extends Controller
       $array_EMP[$row_emp->EMP_CODE] = $row_emp->EMP_NAME_TH;
       $array_IMG[$row_emp->EMP_CODE] = $row_emp->EMP_ICON;
     }
-    $SEARCH = $SERACH_TEXT;
-    return View('machine/repair/repairlistpd',compact('dataset','SEARCH','LINE','DATA_EMP',
+
+    return View('machine/repair/repairlistpd',compact('dataset','SEARCH','LINE',
     'MACHINE_LINE','MONTH','YEAR','DOC_STATUS','array_EMP','array_IMG'));
   }
   public function FetchData(Request $request){
-    $SEARCH         = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
-    $SERACH_TEXT    = $request->SEARCH;
-    $MACHINE_LINE   = isset($request->LINE) ? $request->LINE : '';
-    $MONTH          = isset($request->MONTH) ? $request->MONTH : 0 ;
+    $SEARCH         = isset($request->SEARCH) ? $request->SEARCH : '';
+    $MACHINE_LINE   = isset($request->LINE)   ? $request->LINE   : '';
+    $MONTH          = isset($request->MONTH)  ? $request->MONTH  : 0 ;
     $DOC_STATUS     = isset($request->DOC_STATUS) ? $request->DOC_STATUS : 0 ;
-    $YEAR           = isset($request->YEAR) ? $request->YEAR : date('Y') ;
+    $YEAR           = isset($request->YEAR)   ? $request->YEAR   : date('Y') ;
     $page           = $request->page;
     $dataset        = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH
                                                                ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH
@@ -163,7 +162,7 @@ class PDRepairController extends Controller
                                             ->orderBy('DOC_NO','DESC')
                                             ->paginate(10);
 
-    $SEARCH         = $SERACH_TEXT;
+
     $html = '';
     $html_style = '';
     foreach ($dataset->items($page) as $key => $row) {
@@ -172,13 +171,13 @@ class PDRepairController extends Controller
                             style="cursor:default">รอรับงาน</button>';
       if ($row->PD_CHECK_STATUS == '1') {
         $BTN_COLOR_WORKER = 'btn-secondary';
-        $BTN				= '<button onclick=pdfsaverepair("'.$row->UNID.'") type="button"
-                        class="btn btn-primary btn-block btn-sm my-1 text-left">
-                        <span class="btn-label">
-                        <i class="fas fa-clipboard-check mx-1"></i>
-                          จัดเก็บเอกสารสำเร็จ
-                        </span>
-                      </button>';
+        $BTN				      = '<button onclick=pdfsaverepair("'.$row->UNID.'") type="button"
+                              class="btn btn-primary btn-block btn-sm my-1 text-left">
+                              <span class="btn-label">
+                              <i class="fas fa-clipboard-check mx-1"></i>
+                                จัดเก็บเอกสารสำเร็จ
+                              </span>
+                            </button>';
       }elseif ($row->CLOSE_STATUS == '1') {
         $BTN_COLOR_WORKER = 'btn-pink';
         $BTN				= '<button onclick=rec_work(this) type="button"
