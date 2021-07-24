@@ -77,7 +77,7 @@ class PDRepairController extends Controller
                                                              ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH
                                                              ,dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
                                             ->where(function ($query) use ($MACHINE_LINE) {
-                                                  if ($MACHINE_LINE != '') {
+                                                  if ($MACHINE_LINE > 0) {
                                                      $query->where('MACHINE_LINE', '=', $MACHINE_LINE);
                                                    }
                                                   })
@@ -130,7 +130,7 @@ class PDRepairController extends Controller
                                                                ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH
                                                                ,dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
                                             ->where(function ($query) use ($MACHINE_LINE) {
-                                                  if ($MACHINE_LINE != '') {
+                                                  if ($MACHINE_LINE > 0) {
                                                      $query->where('MACHINE_LINE', '=', $MACHINE_LINE);
                                                    }
                                                   })

@@ -123,7 +123,7 @@
 															</select>
 															<label class="text-white mx-2">Line : </label>
 															<select class="form-control form-control-sm mt-1 mx-1 col-3 col-md-1" id="LINE"name='LINE' onchange="changesubmit()">
-																 <option value="">ทั้งหมด</option>
+																 <option value="0">ทั้งหมด</option>
 																@foreach ($LINE as $index => $row_line)
 																	<option value="{{ $row_line->LINE_CODE }}"
 																		{{ $MACHINE_LINE == $row_line->LINE_CODE ? 'selected' : '' }}>{{ $row_line->LINE_NAME }}</option>
