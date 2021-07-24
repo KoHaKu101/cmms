@@ -401,7 +401,10 @@ class MachineRepairController extends Controller
         ,'CREATE_TIME'           =>Carbon::now()
         ,'MODIFY_BY'             => Auth::user()->name
         ,'MODIFY_TIME'           => Carbon::now()
-        ]);
+      ]);
+      Machine::where('UNID','=',$MACHINE_UNID)->update([
+        'MACHINE_CHECK' => '1'
+      ]);
       //******************* Remove cookie *******************//
       $cookie_array = array('0' => 'empcode','1' => 'selectmainrepair','2' => 'selectsubrepair','3' => 'priority' );
       foreach ($cookie_array as $index => $row) {

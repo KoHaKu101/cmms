@@ -599,6 +599,9 @@ class RepairCloseFormController extends Controller
       ,'STATUS_NOTIFY'        => 1
       ,'STATUS'               => 9
     ]);
+    Machine::where('UNID','=',$DATA_REPAIR_FIRST->MACHINE_UNID)->update([
+      'MACHINE_CHECK' => '2'
+    ]);
     $REPAIR_DATE = $CHECK_WORKER[0]->WORKER_TYPE == 'IN' ? $DATA_REPAIR_FIRST->WORKERIN_END_DATE : $DATA_REPAIR_FIRST->WORKEROUT_END_DATE ;
 
     $SAVE_HISTORYREPAIR     = new HistoryController;

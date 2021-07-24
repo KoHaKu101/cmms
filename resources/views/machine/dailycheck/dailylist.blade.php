@@ -42,7 +42,7 @@
 											@method('GET')
 											@csrf
 											<div class="row">
-												<div class="col-md-12 col-lg-8 form-inline">
+												<div class="col-md-12 col-lg-9 form-inline">
 													<h4 class="card-title text-white">Daily CheckSheet ปี :</h4>
 													<select class="form-control form-control-sm input-group filled text-info my-1 mx-3 col-4 col-md" id="YEAR" name="YEAR">
 														@for ($m=date('Y')-2; $m < date('Y')+2; $m++)
@@ -63,7 +63,7 @@
 														@endfor
 													</select>
 												</div>
-												<div class="col-md-6 my-3">
+												<div class="col-md-6 col-lg-3 my-3">
 													<div class="card-title text-white">
 														<div class="input-group">
 															<input type="text" id="SEARCH_MACHINE" name="SEARCH_MACHINE" class="ml-3 col-9 form-control form-control-sm"
