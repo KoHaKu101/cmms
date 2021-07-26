@@ -36,7 +36,7 @@
 									<div class="card-header bg-primary text-white">
 										<div class="row">
 											<div class="col-md-8 form-inline">
-												<h4 class="mt-1 ">รายการอะไหล่ ใกล้หมด : </h4>
+												<h4 class="mt-1 ">รายการอะไหล่ ที่ต้องสั่งซื้อ : </h4>
 											</div>
 											<div class="col-md-4 form-inline">
 												<h4 class="mt-1">ค้นหา : </h4>

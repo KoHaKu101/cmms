@@ -245,7 +245,7 @@ class PDRepairController extends Controller
                             data-unid="'.$SPAREPART_UNID.'"
                             data-docno="'.$sub_row->DOC_NO.'"
                             data-detail="'.$sub_row->REPAIR_SUBSELECT_NAME.'">
-                              SELECT
+                              CLOSE FORM
                             </button>';
         }
         $html_style .=  '<div class="col-lg-3">
