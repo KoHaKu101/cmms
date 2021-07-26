@@ -55,23 +55,23 @@
 											 	<div class="col-md-6 col-lg-3 has-error">
 												 	<label> Inspection Item</label>
 													<input type="hidden" class="form-control" name="PM_TEMPLATE_UNID_REF" value="{{ $datapmtemplate->UNID }}"  >
-												 	<input type="text" class="form-control" name="PM_TEMPLATELIST_NAME" >
+												 	<input type="text" class="form-control" name="PM_TEMPLATELIST_NAME" required >
 											 	</div>
 										 	</div>
-											<div class="row">
+											<div class="row save_btn">
 												<div class="col-md-6 col-lg-9">
+												</div>
+												<div class="col-md-6 col-lg-1">
+													<button class="btn btn-primary btn-sm" id="BTN_SUBMIT">
+														<i class="fas fa-save" style="color:white;font-size:15px" name="save" value="save"> Save</i>
+													</button>
+												</div>
+												<div class="col-md-6 col-lg-1">
+													<button class="btn btn-primary btn-sm " name="save" value="new" id="BTN_SUBMIT_NEW">
+														<i class="fas fa-save" style="color:white;font-size:15px"> Save and New</i>
+													</button>
+												</div>
 											</div>
-											<div class="col-md-6 col-lg-1">
-												<button class="btn btn-primary btn-sm" id="BTN_SUBMIT">
-													<i class="fas fa-save" style="color:white;font-size:15px" name="save" value="save"> Save</i>
-												</button>
-											</div>
-											<div class="col-md-6 col-lg-1">
-												<button class="btn btn-primary btn-sm " name="save" value="new" id="BTN_SUBMIT_NEW">
-													<i class="fas fa-save" style="color:white;font-size:15px"> Save and New</i>
-												</button>
-											</div>
-										</div>
 										</div>
 									</div>
 								</div>
@@ -90,12 +90,7 @@
 @section('javascript')
 	<script>
 	$('#FRM_SAVE_PM').submit(function(){
-		$("#BTN_SUBMIT", this)
-			.html("Please Wait...")
-			.attr('disabled', 'disabled');
-			$("#BTN_SUBMIT_NEW", this)
-				.html("Please Wait...")
-				.attr('disabled', 'disabled');
+		$('.save_btn').html("<div class='col-md-12 col-lg-12 text-right'>Please Wait...</div>").attr('disabled', 'disabled');
 		return true;
 	});
 	</script>

@@ -44,8 +44,12 @@
 												<ul class="nav nav-tab flex-column col-md-6 col-lg-12" id="tabActive" >
 													@foreach ($datapmtemplate as $key => $dataset)
 														<li>
-															<a href="{{ url('machine/pm/template/list/'.$dataset->UNID) }}"  class="btn btn-primary text-left btn-sm my-2" style="width:190px" > {{ $dataset->PM_TEMPLATE_NAME }} </a>
-															<button class="btn btn-primary btn-link btn-sm" type="button" data-toggle="modal" data-target="#Edittemplate" onclick="datapmachine('{{ $dataset->UNID}}','{{$dataset->PM_TEMPLATE_NAME }}')">
+															<a href="{{ url('machine/pm/template/list/'.$dataset->UNID) }}"
+																class="btn btn-primary text-left btn-sm my-2" style="width:190px" >
+																{{ $dataset->PM_TEMPLATE_NAME }}
+															</a>
+															<button class="btn btn-primary btn-link btn-sm" type="button" data-toggle="modal"
+																data-target="#Edittemplate" onclick="datapmachine('{{ $dataset->UNID}}','{{$dataset->PM_TEMPLATE_NAME }}')">
 															<i class="fas fa-edit fa-2x"></i> </button>
 															<button class="btn btn-danger btn-link btn-sm" type="button	" onclick="deletecheckboxpm('{{ $dataset->UNID }}')">
 															<i class="fas fa-trash" style="font-size:20px"></i> </button>
@@ -128,11 +132,11 @@
 																		</tr>
 																	</thead>
 																	<tbody>
-																		@if ($datamachine)
+																		@if ($countdetail > 0)
 																			@php
 																				$machine_name = array();
 																				foreach ($arraymachine as $index => $array_row) {
-																						$machine_name[$array_row->UNID] = $array_row->MACHINE_NAME;
+																						$machine_name[$array_row->UNID] = $array_row->MACHINE_NAME_TH;
 																						$machine_line[$array_row->UNID] = $array_row->MACHINE_LINE;
 																				}
 																			@endphp

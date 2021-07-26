@@ -14,8 +14,6 @@ use App\Models\Machine\Machine;
 use App\Models\Machine\Protected;
 //************** Package form github ***************
 use RealRashid\SweetAlert\Facades\Alert;
-use App\Exports\MachineExport;
-use Maatwebsite\Excel\Facades\Excel;
 
 
 
@@ -39,16 +37,20 @@ class MachineTypeTableController extends Controller
   }
 
   public function Index(Request $request){
-    $SEARCH = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '%';
+    $SEARCH = isset($request->SEARCH) ? $request->SEARCH : '';
 
-    $dataset = MachineTypeTable::where('TYPE_NAME','like',$SEARCH)->orderBy('TYPE_NAME')->orderBy('TYPE_CODE')->paginate(8);
-    $SEARCH = str_replace('%','',$SEARCH);
+    $dataset = MachineTypeTable::where(function($query) use ($SEARCH){
+                                  if ($SEARCH != '') {
+                                    $query->where('TYPE_NAME','like','%'.$SEARCH.'%');
+                                  }
+                                })
+                               ->orderBy('TYPE_NAME')
+                               ->orderBy('TYPE_CODE')->paginate(8);
     return View('machine/add/typemachine/typemachinelist',compact('dataset','SEARCH'));
   }
   public function Create(){
     return View('machine/add/typemachine/form');
   }
-
   public function Store(Request $request){
     $UNID = $this->randUNID('PMCS_MACHINE_TYPE');
 
@@ -109,7 +111,7 @@ public function Update(Request $request,$UNID) {
       $this->saveimg($image,$new_name);
 
       $last_img = $new_name;
-}
+    }
   MachineTypeTable::where('UNID',$UNID)->update([
     'TYPE_CODE'       => $request->TYPE_CODE,
     'TYPE_NAME'       => $request->TYPE_NAME,
@@ -127,14 +129,12 @@ public function Update(Request $request,$UNID) {
   alert()->success('อัพเดทรายการสำเร็จ')->autoclose('1500');
   return Redirect()->back();
 }
-  public function Delete($UNID) {
+public function Delete($UNID) {
     $dataset = MachineTypeTable::where('UNID','=',$UNID)->delete();
     alert()->success('ลบสำเร็จ สำเร็จ')->autoclose('1500');
     return Redirect()->back();
-}
-  function saveimg($image = NUll,$new_name = NULL){
-
-
+  }
+function saveimg($image = NUll,$new_name = NULL){
     $img_ext = $image->getClientOriginalExtension();
     $width = 450;
     $height = 300;
@@ -165,8 +165,8 @@ public function Update(Request $request,$UNID) {
       }
       ImageDestroy($img_master);
       ImageDestroy($img_create);
-  }
-  function ChangeStatusButton(Request $request,$UNID){
+}
+function ChangeStatusButton(Request $request,$UNID){
   $TYPE_STATUS = isset($request->TYPE_STATUS) ? 9 : 1;
 
     MachineTypeTable::where('UNID','=',$UNID)->update([

@@ -40,28 +40,26 @@ class PersonalController extends Controller
   }
 
   public function Index(Request $request){
-    $SEARCH = isset($request->SEARCH) ?  '%'.$request->SEARCH.'%' : '';
-
-    $encode = EMPName::selectRaw("dbo.encode_utf8('$SEARCH') as SEARCH")->first();
+    $SEARCH = isset($request->SEARCH) ?  $request->SEARCH : '';
     $dataset = EMPName::select('PMCS_EMP_NAME.*','EMP_TYPE','POSITION_CODE')
                       ->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
                       ->leftjoin('EMCS_EMPLOYEE','EMCS_EMPLOYEE.EMP_CODE','=','PMCS_EMP_NAME.EMP_CODE')
-                      ->where(function($query) use ($SEARCH,$encode){
+                      ->where(function($query) use ($SEARCH){
                          if ($SEARCH != '') {
-                            $query->where('PMCS_EMP_NAME.EMP_CODE', 'like', $SEARCH)
-                                  ->orwhere('PMCS_EMP_NAME.EMP_NAME', 'like', $SEARCH)
-                                  ->orwhere('PMCS_EMP_NAME.EMP_NAME','like' ,$encode->SEARCH) ;
+                            $encode = EMPName::selectRaw("dbo.encode_utf8('$SEARCH') as SEARCH")->first();
+                            $query->where('PMCS_EMP_NAME.EMP_CODE', 'like', '%'.$SEARCH.'%')
+                                  ->orwhere('PMCS_EMP_NAME.EMP_NAME', 'like', '%'.$SEARCH.'%')
+                                  ->orwhere('PMCS_EMP_NAME.EMP_NAME','like' ,'%'.$encode->SEARCH.'%') ;
                           }
                       })
                       ->orderBy('PMCS_EMP_NAME.EMP_CODE')->paginate(8);
+    $data_emppaytype = EMPPAYTYPE::select('TYPE_CODE','TYPE_NAME')->selectraw('dbo.decode_utf8(TYPE_NAME) as TYPE_NAME')->where('TYPE_STATUS','=',9)->get();
+    $data_emppostion = EMPPOSTION::select('POSITION_CODE','POSITION_NAME')->selectraw('dbo.decode_utf8(POSITION_NAME) as POSITION_NAME')->where('POSITION_STATUS','=',9)->get();
 
-    $data_emppaytype = EMPPAYTYPE::select('*')->selectraw('dbo.decode_utf8(TYPE_NAME) as TYPE_NAME')->where('TYPE_STATUS','=',9)->get();
-    $data_emppostion = EMPPOSTION::select('*')->selectraw('dbo.decode_utf8(POSITION_NAME) as POSITION_NAME')->where('POSITION_STATUS','=',9)->get();
-    $SEARCH = str_replace('%','',$SEARCH);
     return View('machine/personal/personallist',compact('dataset','SEARCH','data_emppaytype','data_emppostion'));
   }
   public function Create(){
-    $datalineselect = MachineLine::all();
+    $datalineselect = MachineLine::select('LINE_CODE','LINE_NAME')->get();
     return View('machine/personal/form',compact('datalineselect'));
   }
 
@@ -69,7 +67,7 @@ class PersonalController extends Controller
     $validated = $request->validate([
       'EMP_CODE'           => 'required|max:50',
       'EMP_NAME'           => 'required|max:200',
-      'EMP_ICON' => 'mimes:jpeg,png,jpg',
+      'EMP_ICON'           => 'mimes:jpeg,png,jpg',
       ],
       [
       'EMP_CODE.required'  => 'กรุณราใส่รหัสพนักงาน',
@@ -117,12 +115,13 @@ class PersonalController extends Controller
                         ->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME')
                         ->leftJoin($EMCS_EMPLOYEE, $EMCS_EMPLOYEE.'.EMP_CODE' , '=',$PMCS_EMP_NAME.'.EMP_CODE' )
                         ->where($PMCS_EMP_NAME.'.UNID','=',$UNID)->first();
-    $data_emppaytype = EMPPAYTYPE::select('*')->selectraw('dbo.decode_utf8(TYPE_NAME) as TYPE_NAME')
+    $data_emppaytype = EMPPAYTYPE::select('TYPE_NAME')->selectraw('dbo.decode_utf8(TYPE_NAME) as TYPE_NAME')
                                   ->where('TYPE_CODE','=',$dataset->EMP_TYPE)->where('TYPE_STATUS','=',9)->first();
-    $data_emppostion = EMPPOSTION::select('*')->selectraw('dbo.decode_utf8(POSITION_NAME) as POSITION_NAME')
+    $data_emppostion = EMPPOSTION::select('POSITION_NAME')->selectraw('dbo.decode_utf8(POSITION_NAME) as POSITION_NAME')
                                   ->where('POSITION_CODE','=',$dataset->POSITION_CODE)->where('POSITION_STATUS','=',9)->first();
     $datalineselect = MachineLine::where('LINE_NAME','like','%'.'Line'.'%')->get();
     return view('machine/personal/edit',compact('dataset','datalineselect','data_emppaytype','data_emppostion'));
+
 
   }
   public function Update(Request $request,$UNID){

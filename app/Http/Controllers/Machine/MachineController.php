@@ -53,14 +53,13 @@ class MachineController extends Controller
   }
 
   public function Index(){
-    $dataset = MachineLine::where('LINE_NAME','like','%'.'Line'.'%')->get();
+    $dataset = MachineLine::select('LINE_CODE','LINE_NAME')->where('LINE_NAME','like','%'.'Line'.'%')->get();
     return View('machine/assets/machinemenu',compact(['dataset']),['dataset' => $dataset]);
   }
-
   public function All(Request $request) {
-    $COOKIE_PAGE_TYPE = $request->cookie('PAGE_TYPE');
+    $COOKIE_PAGE_TYPE     = $request->cookie('PAGE_TYPE');
     if ($COOKIE_PAGE_TYPE != 'MACHINE_LIST') {
-      $COOKIE_PAGE_TYPE = $request->cookie();
+      $COOKIE_PAGE_TYPE   = $request->cookie();
       foreach ($COOKIE_PAGE_TYPE as $index => $row) {
         if ($index == 'XSRF-TOKEN' || str_contains($index,'session') == true) {
         }else {
@@ -72,7 +71,6 @@ class MachineController extends Controller
     $COOKIE_LINE              = $request->LINE              != '' ? $request->LINE              : $request->cookie('LINE');
     $COOKIE_MACHINE_RANK_CODE = $request->MACHINE_RANK_CODE != '' ? $request->MACHINE_RANK_CODE : $request->cookie('MACHINE_RANK_CODE');
     $COOKIE_MACHINE_STATUS    = $request->MACHINE_STATUS    != '' ? $request->MACHINE_STATUS    : $request->cookie('MACHINE_STATUS');
-
     $MINUTES = 30;
     Cookie::queue('PAGE_TYPE','MACHINE_LIST',$MINUTES);
     Cookie::queue('MACHINE_CHECK',$COOKIE_MACHINE_CHECK,$MINUTES);
@@ -88,7 +86,6 @@ class MachineController extends Controller
     $MACHINE_RANK_CODE  = $COOKIE_MACHINE_RANK_CODE;
     $MACHINE_STATUS     = $COOKIE_MACHINE_STATUS;
     $SEARCH             = $request->SEARCH ;
-
       $machine = Machine::select('PLAN_LAST_DATE','REPAIR_LAST_DATE','MACHINE_LINE','UNID','MACHINE_CODE','MACHINE_RANK_CODE')
                         ->selectRaw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH,dbo.decode_utf8(MACHINE_TYPE) as MACHINE_TYPE_TH')
                         ->where(function ($query) use ($MACHINE_LINE) {
@@ -98,10 +95,10 @@ class MachineController extends Controller
                                })
                         ->where(function ($query) use ($SEARCH) {
                               if ($SEARCH != "") {
-                                 $query->where('MACHINE_CODE', 'like', '%'.$SEARCH.'%')
-                                       ->orwhere('MACHINE_TYPE','like','%'.$SEARCH.'%')
-                                       ->orwhere('MACHINE_NAME','like','%'.$SEARCH.'%')
-                                       ->orwhere('MACHINE_MODEL','like','%'.$SEARCH.'%');
+                                 $query->where(  'MACHINE_CODE' ,'like', '%'.$SEARCH.'%')
+                                       ->orwhere('MACHINE_TYPE' ,'like', '%'.$SEARCH.'%')
+                                       ->orwhere('MACHINE_NAME' ,'like', '%'.$SEARCH.'%')
+                                       ->orwhere('MACHINE_MODEL','like', '%'.$SEARCH.'%');
                                }
                               })
                         ->where(function ($query) use ($MACHINE_RANK_CODE) {
@@ -130,7 +127,6 @@ class MachineController extends Controller
     return View('machine/assets/form',compact('machineline','machinetype','machinestatus','machinerank'));
   }
   public function Store(Request $request){
-
     $validated = $request->validate([
       'MACHINE_CODE'    => 'required|unique:PMCS_MACHINE|max:50',
       'MACHINE_ICON'    => 'mimes:jpeg,png,jpg',
@@ -165,7 +161,7 @@ class MachineController extends Controller
           'MACHINE_ICON'         => $last_img,
           'MACHINE_PRICE'        => $request->MACHINE_PRICE,
           'MACHINE_LINE'         => $request->MACHINE_LINE,
-          'MACHINE_MA_COST'      => $request->MACHINE_MA_COST,
+          'MACHINE_MA_COST'      => $request->MACHINE_MA_COST,//
           'MACHINE_SPEED_UNIT'   => $request->MACHINE_SPEED_UNIT,
           'MACHINE_PARTNO'       => $request->MACHINE_PARTNO,
           'MACHINE_MODEL'        => $request->MACHINE_MODEL,
@@ -185,6 +181,24 @@ class MachineController extends Controller
           'SUPPLIER_CODE'        => $request->SUPPLIER_CODE,
           'SUPPLIER_NAME'        => $request->SUPPLIER_NAME,
           'PURCHASE_FORM'        => $request->PURCHASE_FORM,
+          'GROUP_NAME'           => '',
+          'MACHINE_TOTAL_FEED'   => '',
+          'MACHINE_TOTAL_STOP'   => '',
+          'MACHINE_LOCATION'     => '',
+          'MACHINE_GROUP'        => '',
+          'MACHINE_FACTORY'      => '',
+          'COMPANY_PAY'          => '',
+          'COMPANY_SETUP'        => '',
+          'MACHINE_CAPACITY'     => '',
+          'MACHINE_MTTF'         => '',
+          'MACHINE_MTTR'         => '',
+          'MACHINE_EFFICIENCY'   => '',
+          'MACHINE_NOTE'         => '',
+          'POS_REF_UNID'         => '',
+          'POS_X'                => '',
+          'POS_Y'                => '',
+          'POS_W'                => '',
+          'POS_H'                => '',
           'PLAN_LAST_DATE'       => '',
           'REPAIR_LAST_DATE'     => '',
           'SPAR_PART_DATE'       => '',
@@ -200,7 +214,6 @@ class MachineController extends Controller
       return Redirect()->route('machine.edit',$UNID);
   }
   public function Edit($UNID) {
-    //ใช้
     $dataset                     = Machine::select('*')->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME
                                                                     ,dbo.decode_utf8(PURCHASE_FORM) as PURCHASE_FORM
                                                                     ,dbo.decode_utf8(CREATE_BY) as CREATE_BY
@@ -208,7 +221,6 @@ class MachineController extends Controller
                                                        ->where('UNID',$UNID)->first();
     $MACHINE_CODE                = $dataset->MACHINE_CODE;
     $MasterIMPS_SELECT           = MasterIMPS::select('PM_TEMPLATE_UNID_REF')->where('MACHINE_UNID',$UNID)->get();
-
     $machineupload               = MachineUpload::where('UPLOAD_UNID_REF',$UNID)->get();
     $machinetype                 = MachineTypeTable::where('TYPE_STATUS','=','9')->orderBy('TYPE_NAME')->orderBy('TYPE_CODE')->get();
     $machinestatus               = MachineStatusTable::where('STATUS','=','9')->get();
@@ -259,10 +271,9 @@ class MachineController extends Controller
     ,'dataset','machineupload','machinetype','machineline','machinestatus','machineemp','machinerepair','machinesparepart'));
   }
   public function Update(Request $request,$UNID){
-    $update = $request->MACHINE_UPDATE;
-    $MACHINE_CODE = strtoupper($request->MACHINE_CODE);
-    $CHECK_MACHINE_CODE = Machine::where('UNID',$UNID)->first();
-    $validated = $request->validate([
+    $MACHINE_CODE       = strtoupper($request->MACHINE_CODE);
+    $CHECK_MACHINE_CODE = Machine::select('MACHINE_CODE')->where('UNID',$UNID)->first();
+    $validated          = $request->validate([
       'MACHINE_ICON' => 'mimes:jpeg,png,jpg',
       ],
       [
@@ -270,24 +281,20 @@ class MachineController extends Controller
       ]);
 
      if ($MACHINE_CODE != $CHECK_MACHINE_CODE->MACHINE_CODE) {
-       $CHECK_MACHINE_CODE = Machine::where('MACHINE_CODE',$MACHINE_CODE)->first();
-       if ($MACHINE_CODE == $CHECK_MACHINE_CODE->MACHINE_CODE) {
+       $CHECK_MACHINE_CODE = Machine::select('MACHINE_CODE')->where('MACHINE_CODE',$MACHINE_CODE)->first();
+       if (isset($CHECK_MACHINE_CODE)) {
          alert()->error('มีรหัสเครื่องนี้แล้ว')->autoclose('1500');
          return Redirect()->back();
        }
      }
+    $last_img = $request->MACHINE_UPDATE;
     if ($request->hasFile('MACHINE_ICON')) {
-      if ($request->file('MACHINE_ICON')->isValid()) {
-        $image = $request->file('MACHINE_ICON');
-        $new_name = rand() . '.' . $image->getClientOriginalExtension();
-        $this->SaveImg($image,$new_name,$request->MACHINE_LINE);
-        $last_img = $new_name;
-      }
-    } else {
-      $last_img = $update;
+      $image = $request->file('MACHINE_ICON');
+      $new_name = rand() . '.' . $image->getClientOriginalExtension();
+      $this->SaveImg($image,$new_name,$request->MACHINE_LINE);
+      $last_img = $new_name;
     }
     $rankcode = MachineRankTable::select('MACHINE_RANK_CODE')->where('MACHINE_RANK_MONTH',$request->MACHINE_RANK_MONTH)->first();
-
      Machine::where('UNID',$UNID)->update([
       'MACHINE_CODE'         => $MACHINE_CODE,
       'MACHINE_NAME'         => $request->MACHINE_NAME,
@@ -320,22 +327,36 @@ class MachineController extends Controller
       'SUPPLIER_CODE'        => $request->SUPPLIER_CODE,
       'SUPPLIER_NAME'        => $request->SUPPLIER_NAME,
       'PURCHASE_FORM'        => $request->PURCHASE_FORM,
+      'GROUP_NAME'           => '',
+      'MACHINE_TOTAL_FEED'   => '',
+      'MACHINE_TOTAL_STOP'   => '',
+      'MACHINE_LOCATION'     => '',
+      'MACHINE_GROUP'        => '',
+      'MACHINE_FACTORY'      => '',
+      'COMPANY_PAY'          => '',
+      'COMPANY_SETUP'        => '',
+      'MACHINE_CAPACITY'     => '',
+      'MACHINE_MTTF'         => '',
+      'MACHINE_MTTR'         => '',
+      'MACHINE_EFFICIENCY'   => '',
+      'MACHINE_NOTE'         => '',
+      'POS_REF_UNID'         => '',
+      'POS_X'                => '',
+      'POS_Y'                => '',
+      'POS_W'                => '',
+      'POS_H'                => '',
       'MACHINE_RANK_MONTH'   => $request->MACHINE_RANK_MONTH,
       'MACHINE_RANK_CODE'    => $rankcode->MACHINE_RANK_CODE,
       'MODIFY_BY'            => Auth::user()->name,
       'MODIFY_TIME'          => Carbon::now(),
-
-
     ]);
     alert()->success('อัพเดทรายการสำเร็จ')->autoclose('1500');
     return Redirect()->back();
   }
 
   public function Delete($UNID){
-
-    $MACHINE_CHECK = '4';
+    $MACHINE_CHECK  = '4';
     $MACHINE_STATUS = '1';
-
       $data_set = Machine::where('UNID',$UNID)->update([
         'MACHINE_CHECK'        => $MACHINE_CHECK,
         'MACHINE_STATUS'       => $MACHINE_STATUS,
@@ -349,9 +370,9 @@ class MachineController extends Controller
   }
 
   public function UserHomePage($role = NULL){
-    if (Gate::allows('isManager_Ma')) {
+    if (Gate::allows('isManager_Ma') && $role == 'ma') {
       return View('machine.userpage.userhomepageforma');
-    }elseif(Gate::allows('isManager_Pd')) {
+    }elseif(Gate::allows('isManager_Pd' && $role == 'pd')) {
       return View('machine.userpage.userhomepageforpd');
     }elseif (Gate::allows('isAdmin')) {
       if ($role == 'pd') {
@@ -362,7 +383,6 @@ class MachineController extends Controller
         return Redirect(route('dashboard'));
       }
     }
-
   }
 
   public function SaveImg($image = NULL,$new_name = NULL,$MACHINE_LINE = NULL){

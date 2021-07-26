@@ -45,24 +45,21 @@
 									<form action="{{ url('machine/pm/template/update/'.$datapmtemplatelist->UNID) }}" method="post" enctype="multipart/form-data">
 										@csrf
 										<div class="card-header bg-primary">
-
 											<h4 class="ml-3 mt-2" style="color:white;" >ประเภทรายการ : {{$datapmtemplate->PM_TEMPLATE_NAME}}, รายการ PM : {{$datapmtemplatelist->PM_TEMPLATELIST_NAME}}
 												<a href="{{ url('/machine/pm/template/add/'.$datapmtemplate->UNID) }}">
-												<button type="button" class="btn btn-warning btn-sm float-right " name="save" >
+												<button type="submit" class="btn btn-warning btn-sm float-right" name="save" value="new">
 													<i class="fas fa-save" style="color:white;font-size:15px"> New</i>
 												</button>
 												</a>
 										</h4>
-
 										 </div>
 										<div class="card-body">
 										 	<div class="row">
 											 	<div class="col-md-6 col-lg-3 has-error">
 												 	<label> Inspection Item</label>
-													<input type="hidden" class="form-control" name="PM_TEMPLATELIST_CHECK" value="{{ $datapmtemplatelist->PM_TEMPLATELIST_CHECK }}">
 												 	<input type="text" class="form-control" name="PM_TEMPLATELIST_NAME" value="{{ $datapmtemplatelist->PM_TEMPLATELIST_NAME }}">
 											 	</div>
-												
+
 
 												<div class="col-md-6 col-lg-2 has-error">
 													<label> สถานะ</label>

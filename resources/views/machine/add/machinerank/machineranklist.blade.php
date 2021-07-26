@@ -74,7 +74,6 @@
 														<div class="tab-pane active" >
 															<div class="card-header bg-primary">
 																<h4 class="ml-3 mt-2" style="color:white;" ><i class="fas fa-cubes fa-lg mr-1"></i>Rank	: {{ $datafirst->MACHINE_RANK_CODE}}
-
 																</h4>
 															</div>
 														</div>
@@ -97,14 +96,11 @@
 																				if (!fmod($i,3)) {
 																					echo '<tr>';
 																				}
-
 																				echo '<td>'. $key+1 .'</td>';
   																			echo '<td>',$datasub->MACHINE_CODE,'</td>';
-
   																			$i++;
   																		}
 																			 ?>
-
 																	</tbody>
 																</table>
 																{{$datamachine->links('pagination.default')}}

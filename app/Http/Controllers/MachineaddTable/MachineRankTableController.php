@@ -13,8 +13,6 @@ use App\Models\Machine\Machine;
 use App\Models\Machine\Protected;
 //************** Package form github ***************
 use RealRashid\SweetAlert\Facades\Alert;
-use App\Exports\MachineExport;
-use Maatwebsite\Excel\Facades\Excel;
 
 
 
@@ -38,19 +36,18 @@ class MachineRankTableController extends Controller
   }
 
   public function Index($UNID = NULL){
+    $open = '0';
+    $datafirst = NULL;
+    $datamachine = NULL;
 
     if ($UNID != NULL) {
-      $datafirst   = MachineRankTable::where('UNID',$UNID)->first();
-      $datamachine = Machine::where('MACHINE_RANK_CODE',$datafirst->MACHINE_RANK_CODE )
-                            ->where('MACHINE_CODE','like','MC'.'%')->paginate(36);
+      $datafirst   = MachineRankTable::select('MACHINE_RANK_CODE')->where('UNID',$UNID)->first();
+      $datamachine = Machine::select('MACHINE_CODE')->where('MACHINE_RANK_CODE',$datafirst->MACHINE_RANK_CODE )
+                             ->where('MACHINE_CODE','like','MC'.'%')->paginate(36);
       $open = '1';
-    }else {
-      $open = '0';
-      $datafirst = NULL;
-      $datamachine = NULL;
     }
     $datarank = MachineRankTable::all();
-    // dd($datamachine);
+
     return View('machine/add/machinerank/machineranklist',compact('datarank','open','datamachine','datafirst'));
   }
 
@@ -58,15 +55,14 @@ class MachineRankTableController extends Controller
     $validated = $request->validate([
       'MACHINE_RANK_CODE'           => 'required|unique:PMCS_CMMS_MACHINE_RANK|max:50',
       'MACHINE_RANK_MONTH'          => 'required|integer|min:1|max:12',
-
       ],
       [
-      'MACHINE_RANK_CODE.required'  => 'กรุณาใส่ชื่อกลุ่ม',
-      'MACHINE_RANK_CODE.unique'    => 'มีชื่อกลุ่มนี้แล้ว',
-      'MACHINE_RANK_MONTH.requireed' => 'กรุณาใส่จำนวนเดือน',
-      'MACHINE_RANK_MONTH.integer'   => 'กรุณาใส่จำนวนเดือนเป็นตัวเลข',
-      'MACHINE_RANK_MONTH.min'  => 'ใส่จำนวนเดือนต่ำสุดได้ 1',
-      'MACHINE_RANK_MONTH.max'  => 'ใส่จำนวนเดือนมากสุดได้ 12',
+      'MACHINE_RANK_CODE.required'    => 'กรุณาใส่ชื่อกลุ่ม',
+      'MACHINE_RANK_CODE.unique'      => 'มีชื่อกลุ่มนี้แล้ว',
+      'MACHINE_RANK_MONTH.requireed'  => 'กรุณาใส่จำนวนเดือน',
+      'MACHINE_RANK_MONTH.integer'    => 'กรุณาใส่จำนวนเดือนเป็นตัวเลข',
+      'MACHINE_RANK_MONTH.min'        => 'ใส่จำนวนเดือนต่ำสุดได้ 1',
+      'MACHINE_RANK_MONTH.max'        => 'ใส่จำนวนเดือนมากสุดได้ 12',
       ]);
       MachineRankTable::insert([
         'UNID'                 => $this->randUNID('PMCS_CMMS_MACHINE_RANK'),
@@ -75,9 +71,10 @@ class MachineRankTableController extends Controller
         'MACHINE_RANK_STATUS'  => '9',
         'CREATE_BY'            => Auth::user()->name,
         'CREATE_TIME'          => Carbon::now(),
+        'MODIFY_BY'            => Auth::user()->name,
+        'MODIFY_TIME'          => Carbon::now(),
       ]);
       alert()->success('ลงทะเบียน สำเร็จ')->autoclose('1500');
-
     return Redirect()->back();
   }
 
@@ -91,22 +88,23 @@ class MachineRankTableController extends Controller
       'MACHINE_RANK_MONTH.min'  => 'ใส่จำนวนเดือนต่ำสุดได้ 1',
       'MACHINE_RANK_MONTH.max'  => 'ใส่จำนวนเดือนมากสุดได้ 12',
       ]);
+      $MACHINE_RANK_CODE = $request->MACHINE_RANK_CODE;
+      $MACHINE_RANK_MONTH = $request->MACHINE_RANK_MONTH;
       MachineRankTable::where('UNID',$request->UNID)->update([
-        'MACHINE_RANK_CODE'    => $request->MACHINE_RANK_CODE,
-        'MACHINE_RANK_MONTH'   => $request->MACHINE_RANK_MONTH,
+        'MACHINE_RANK_CODE'    => $MACHINE_RANK_CODE,
+        'MACHINE_RANK_MONTH'   => $MACHINE_RANK_MONTH,
         'MACHINE_RANK_STATUS'  => '9',
         'MODIFY_BY'            => Auth::user()->name,
         'MODIFY_TIME'          => Carbon::now(),
       ]);
-      Machine::where('MACHINE_RANK_CODE',$request->MACHINE_RANK_CODE)->update([
-        'MACHINE_RANK_CODE'    => $request->MACHINE_RANK_CODE,
-        'MACHINE_RANK_MONTH'   => $request->MACHINE_RANK_MONTH,
+      Machine::where('MACHINE_RANK_CODE',$MACHINE_RANK_CODE)->update([
+        'MACHINE_RANK_CODE'    => $MACHINE_RANK_CODE,
+        'MACHINE_RANK_MONTH'   => $MACHINE_RANK_MONTH,
         'MODIFY_BY'            => Auth::user()->name,
         'MODIFY_TIME'          => Carbon::now(),
       ]);
       alert()->success('อัพเดทรายการสำเร็จ')->autoclose('1500');
-
-  return Redirect()->back();
+   return Redirect()->back();
   }
   public function Delete($UNID) {
       $data = MachineRankTable::where('UNID',$UNID)->first();

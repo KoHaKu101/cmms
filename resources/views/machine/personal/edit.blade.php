@@ -110,11 +110,11 @@
 												<div class="row">
 													<div class="col-md-6">
 														<lebel>ตำแหน่ง</lebel>
-														<input type="text" class="form-control" value="{{$data_emppaytype->TYPE_NAME}}" readonly>
+														<input type="text" class="form-control" value="{{isset($data_emppaytype->TYPE_NAME) ? $data_emppaytype->TYPE_NAME : '-'}}" readonly>
 													</div>
 													<div class="col-md-6">
 														<lebel>ประเภท</lebel>
-														<input type="text" class="form-control" value="{{$data_emppostion->POSITION_NAME}}" readonly>
+														<input type="text" class="form-control" value="{{isset($data_emppostion->POSITION_NAME) ? $data_emppostion->POSITION_NAME : '-'}}" readonly>
 													</div>
 												</div>
 											</div>

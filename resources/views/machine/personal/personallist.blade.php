@@ -96,9 +96,6 @@
 												 	$POSITION = "";
 													$PAY_TYPE = "";
 												 }
-												 // dd($dataitem->POSITION_CODE);
-
-
 												@endphp
 												<div class="col-md-6 col-lg-3">
 													<div class="card card-post card-round">

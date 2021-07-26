@@ -265,9 +265,10 @@
 	function changestatus(thisdata){
 		var unid =  $(thisdata).data('unid');
 		var changestatus = $('#STATUS_'+unid+':checked').val();
+		var url = '/machine/machinetypetable/changestatus/'+unid;
 		$.ajax({
 				type:'POST',
-				url: '/machine/machinetypetable/changestatus/'+unid,
+				url: url,
 				datatype: 'json',
 				data: {
 					"_token": "{{ csrf_token() }}",

@@ -120,7 +120,6 @@
 																<select class="form-control form-control-sm" id="PAGE_PAGINATE" name="PAGE_PAGINATE" onchange="submitbtn()">
 																	<option value="10" {{$PAGE_PAGINATE == '10' ? 'selected' :''}}>10</option>
 																	<option value="25" {{$PAGE_PAGINATE == '25' ? 'selected' :''}}>25</option>
-
 																	<option value="50" {{$PAGE_PAGINATE == '50' ? 'selected' :''}}>50</option>
 																</select>
 															</div>
@@ -144,15 +143,15 @@
 														<table class="table  table-bordered table-head-bg-info table-bordered-bd-info" id="table_main">
 															<thead>
 																<tr>
-																	<th >#</th>
-																	<th >Code</th>
-																	<th >Name</th>
-																	<th >Model</th>
-																	<th >Size</th>
-																	<th >Safety Stock</th>
-																	<th >Price</th>
-																	<th >Action</th>
-																	<th >Machine</th>
+																	<th>#</th>
+																	<th>Code</th>
+																	<th>Name</th>
+																	<th>Model</th>
+																	<th>Size</th>
+																	<th>Safety Stock</th>
+																	<th>Price</th>
+																	<th>Action</th>
+																	<th>Machine</th>
 																</tr>
 															</thead>
 															<tbody>
@@ -184,6 +183,7 @@
 																			data-spremark="{{ $row->SPAREPART_REMARK }}"
 																			data-spcost="{{ $row->SPAREPART_COST }}"
 																			data-spunit="{{ $row->UNIT }}"
+																			data-spunid="{{ $row->UNID }}"
 																			>
 																			<i class="fas fa-edit fa-lg"></i></button>
 																			<button type="button" class="btn btn-danger btn-sm mx-1 my-1 btn-delete-spare"
@@ -203,63 +203,65 @@
 																		</td>
 																	</tr>
 																@endforeach
-
 															</tbody>
-
 														</table>
-														{{ $DATA_SPAREPART->appends(['machinepage' => $DATA_MACHINESPAREPART->currentPage()])->links('pagination.default',['paginator' => $DATA_SPAREPART,
-																			 'link_limit' => $DATA_SPAREPART->perPage(),'PAGE_PAGINATE' => $PAGE_PAGINATE,'SEARCH' => $SEARCH]) }}
+														@if ($OPEN == 1)
+															{{ $DATA_SPAREPART->appends(['machinepage' => $DATA_MACHINESPAREPART->currentPage()])->links('pagination.default',['paginator' => $DATA_SPAREPART,
+																				 'link_limit' => $DATA_SPAREPART->perPage(),'PAGE_PAGINATE' => $PAGE_PAGINATE,'SEARCH' => $SEARCH]) }}
+														@else
+															{{ $DATA_SPAREPART->links('pagination.default',['paginator' => $DATA_SPAREPART,
+																				 'link_limit' => $DATA_SPAREPART->perPage(),'PAGE_PAGINATE' => $PAGE_PAGINATE,'SEARCH' => $SEARCH]) }}
+														@endif
+
 													</div>
 											</div>
 										</div>
 									</div>
-									<div class="col-md-6 col-lg-3">
-										<div class="card">
-											<div class="card-header bg-primary">
-												<h4 class="ml-3 mt-2" style="color:white;" ><i class="fas fa-cubes fa-lg mr-1"></i>	Machine
-
-												</h4>
-											</div>
-
-											<div class="card-body">
-												<div class="row">
-													<div class="col-md-12">
-														<table class="table table-bordered table-head-bg-info table-bordered-bd-info">
-															<thead>
-																<tr>
-																	<th scope="col">#</th>
-																	<th colspan="1" width="130px">{{ isset($DATA_MACHINESPAREPART_FIRST->SPAREPART_CODE) ? $DATA_MACHINESPAREPART_FIRST->SPAREPART_CODE : ''}}</th>
-																	<th ></th>
-															</thead>
-															<tbody>
-
-																@foreach ($DATA_MACHINESPAREPART as $index => $subrow)
-
-																<tr>
-																	<td>{{ $DATA_MACHINESPAREPART->firstItem()+$index }}</td>
-																	<td>{{$subrow->MACHINE_CODE}}</td>
-																	<td>
-																		<button
-																			type="button" class="btn btn-danger btn-sm btn-block my-1"
-																		  onclick="deletemachine(this)"
-																			data-machine_unid="{{ $subrow->MACHINE_UNID}}"
-																			data-machine_code="{{ $subrow->MACHINE_CODE}}"
-																			data-sparepart_unid = "{{ $subrow->SPAREPART_UNID}}">
-																			<i class="fas fa-trash fa-lg" ></i>
-																		</button>
-																	</td>
-																</tr>
-																@endforeach
-															</tbody>
-
-														</table>
-														{{ $DATA_MACHINESPAREPART->appends( ['sparepartpage' => $DATA_SPAREPART->currentPage(),'PAGE_PAGINATE' => $PAGE_PAGINATE,'SEARCH' => $SEARCH])
-																										 ->links() }}
+									@if ($OPEN == 1)
+										<div class="col-md-6 col-lg-3">
+											<div class="card">
+												<div class="card-header bg-primary">
+													<h4 class="ml-3 mt-2" style="color:white;" ><i class="fas fa-cubes fa-lg mr-1"></i>	Machine
+													</h4>
+												</div>
+												<div class="card-body">
+													<div class="row">
+														<div class="col-md-12">
+															<table class="table table-bordered table-head-bg-info table-bordered-bd-info">
+																<thead>
+																	<tr>
+																		<th scope="col">#</th>
+																		<th colspan="1" width="130px">{{ isset($DATA_MACHINESPAREPART_FIRST->SPAREPART_CODE) ? $DATA_MACHINESPAREPART_FIRST->SPAREPART_CODE : ''}}</th>
+																		<th ></th>
+																</thead>
+																<tbody>
+																	@foreach ($DATA_MACHINESPAREPART as $index => $subrow)
+																	<tr>
+																		<td>{{ $DATA_MACHINESPAREPART->firstItem()+$index }}</td>
+																		<td>{{$subrow->MACHINE_CODE}}</td>
+																		<td>
+																			<button
+																				type="button" class="btn btn-danger btn-sm btn-block my-1"
+																			  onclick="deletemachine(this)"
+																				data-machine_unid="{{ $subrow->MACHINE_UNID}}"
+																				data-machine_code="{{ $subrow->MACHINE_CODE}}"
+																				data-sparepart_unid = "{{ $subrow->SPAREPART_UNID}}">
+																				<i class="fas fa-trash fa-lg" ></i>
+																			</button>
+																		</td>
+																	</tr>
+																	@endforeach
+																</tbody>
+															</table>
+															{{ $DATA_MACHINESPAREPART->appends( ['sparepartpage' => $DATA_SPAREPART->currentPage(),'PAGE_PAGINATE' => $PAGE_PAGINATE,'SEARCH' => $SEARCH])
+																											 ->links() }}
+														</div>
 													</div>
 												</div>
 											</div>
 										</div>
-									</div>
+									@endif
+
 								</div>
 							</div>
 						</div>
@@ -330,10 +332,11 @@ $(document).ready(function() {
 		var spmodel		= $(this).data('spmodel');
 		var spsize		= $(this).data('spsize');
 		var spstock		= $(this).data('spstock');
-		var spremark		= $(this).data('spremark');
-		var spstatus		= $(this).data('spstatus');
+		var spremark	= $(this).data('spremark');
+		var spstatus	= $(this).data('spstatus');
 		var spcost		= $(this).data('spcost');
 		var spunit		= $(this).data('spunit');
+		var spunid    = $(this).data('spunid');
 		var checkstatus =  spstatus == '9' ? true : false ;
 		$('#SPAREPART_CODE').val(spcode);
 		$('#STOCK_MIN').val(spstock);
@@ -344,11 +347,11 @@ $(document).ready(function() {
 		$('#SPAREPART_COST').val(spcost);
 		$('#UNIT').val(spunit);
 		$('#STATUS').prop('checked',checkstatus);
+		$('#SPAREPART_UNID').val(spunid);
 		$("#FRM_SPAREPART").attr("action", "/machine/spart/update");
 		if (spcode != '') {
 			$('#modal-sparepart').modal('show');
 		}
-
 	});
 	$('.btn-delete-spare').on('click',function(){
 			var	spcode		= $(this).data('spcode');
@@ -396,12 +399,12 @@ $(document).ready(function() {
 	});
 	$('#modal-sparepart').on('hidden.bs.modal', function(){
 		$('#FRM_SPAREPART')[0].reset();
+		$('#SPAREPART_UNID').val('');
 	});
 	$('#modal-machine').on('hidden.bs.modal', function(){
 		$('.frm-reset').trigger('reset');
 		location.reload();
 	});
-
  });
 
  $('.btn-machine').on('click',function(){

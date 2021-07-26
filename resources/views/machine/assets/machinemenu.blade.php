@@ -57,21 +57,23 @@
                       </div>
                   </div>
                   @foreach ($dataset as $key => $dataitem)
-
+                    @php
+                      $URL = url('machine/assets/machinelist/?LINE='.$dataitem->LINE_CODE);
+                    @endphp
                     <!--portfolio 1-->
                     <div class="cbp-item movie">
                         <div class="cbp-item-wrap" style="background-color: #aedee8b8;">
                             <div class="cbp-caption">
                                 <div class="cbp-caption-defaultWrap">
-                                  <a href="{{url('machine/assets/machinelist/?LINE='.$dataitem->LINE_CODE)}}">
+                                  <a href="{{ $URL }}">
                                     <img src="{{asset('assets/img/bg-404.jpg')}}" alt="img3">
                                   </a>
                                   </div>
                                   <div class="cbp-caption-activeWrap">
-                                      <a href="{{url('machine/assets/machinelist/?LINE='.$dataitem->LINE_CODE)}}" style="width:254px" class=" btn" rel="nofollow" data-cbp-singlePage="projects">ทะเบียนเครื่องจักร</a>
+                                      <a href="{{ $URL }}" style="width:254px" class=" btn" rel="nofollow" data-cbp-singlePage="projects">ทะเบียนเครื่องจักร</a>
                                   </div>
                             </div>
-                            <a href="{{url('machine/assets/machinelist/?LINE='.$dataitem->LINE_CODE)}}" style="color:black">
+                            <a href="{{ $URL }}" style="color:black">
                             <div class="cbp-l-grid-projects-title uppercase text-center uppercase text-center">
                               เครื่องจักร {{ $dataitem->LINE_NAME }}</div>
                             <div class="cbp-l-grid-projects-desc uppercase text-center uppercase text-center"></div>

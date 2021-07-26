@@ -25,10 +25,10 @@ class MachinePDFController extends Controller
   public function MachinePDF(Request $request)
     {
       $LINE = $request->LINE;
-      $group_LINE = Machine::select('MACHINE_LINE')->groupBy('MACHINE_LINE')->orderBy('MACHINE_LINE')->get();
+      $group_LINE = Machine::select('MACHINE_LINE')->where('MACHINE_STATUS','=',9)->groupBy('MACHINE_LINE')->orderBy('MACHINE_LINE')->get();
 
       if ($LINE != NULL) {
-        $group_LINE = Machine::select('MACHINE_LINE')->where('MACHINE_LINE',$LINE)->groupBy('MACHINE_LINE')->orderBy('MACHINE_LINE')->get();
+        $group_LINE = Machine::select('MACHINE_LINE')->where('MACHINE_STATUS','=',9)->where('MACHINE_LINE',$LINE)->groupBy('MACHINE_LINE')->orderBy('MACHINE_LINE')->get();
       }
       // font
       $this->pdf->AddFont('THSarabunNew','','THSarabunNew.php');

@@ -53,7 +53,8 @@ class MachineStatusTableController extends Controller
       ]);
     $STATUS = isset($request->STATUS) ? '9' : '1' ;
     $datacount = MachineStatusTable::selectraw('max(STATUS_CODE)count')->first();
-    $STATUS_CODE = ($datacount->count)+1;
+    // $STATUS_CODE = ($datacount->count)+1;
+    $STATUS_CODE = $request->STATUS_CODE;
     MachineStatusTable::insert([
       'STATUS_CODE'     => $STATUS_CODE,
       'STATUS_NAME'     => $request->STATUS_NAME,

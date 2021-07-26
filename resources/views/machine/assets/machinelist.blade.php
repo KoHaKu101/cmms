@@ -64,7 +64,6 @@
 											@method('GET')
 											@csrf
 								    <div class="row ">
-
 											<div class="col-md-8 form-inline ">
 												<label class="text-white">Line : </label>
 												 <select class="form-control form-control-sm mt-1 mx-1" id="LINE" name="LINE" onchange="changeline()">

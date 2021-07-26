@@ -7,6 +7,7 @@
       <div class="modal-content">
         <form action="{{ route('SparPart.Save') }}" method="POST" id="FRM_SPAREPART" name="FRM_SPAREPART">
           @csrf
+          <input type="hidden" id="SPAREPART_UNID" name="SPAREPART_UNID" >
         <div class="modal-header bg-primary">
           <h5 class="modal-title" id="exampleModalLabel">ข้อมูล Sparepart</h5>
         </div>

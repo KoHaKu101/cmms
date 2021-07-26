@@ -125,17 +125,18 @@
 											}
 											</style>
 											@foreach ($dataset as $key => $dataitem)
-
+												@php
+													$HTML_ONCLICK = 'onclick=editstatus(this)
+																						data-unid='.$dataitem->UNID.'
+																						data-name='.$dataitem->STATUS_NAME.'
+																						data-code='.$dataitem->STATUS_CODE.'
+																						data-status='.$dataitem->STATUS.''
+												@endphp
 											<tr>
 												<td>{{$dataitem->STATUS_CODE}}</td>
 												<td style="width:200px">
-
 														<button class="btn btn-primary btn-block btn-sm my-1 mx--2 "
-														onclick="editstatus(this)"
-														data-unid="{{ $dataitem->UNID}}"
-														data-name="{{ $dataitem->STATUS_NAME}}"
-														data-code="{{ $dataitem->STATUS_CODE}}"
-														data-status="{{ $dataitem->STATUS}}">
+														{{ $HTML_ONCLICK }}>
 															<span class="btn-label float-left">
 																<i class="fa fa-eye mx-1 "></i>
 																{{ $dataitem->STATUS_NAME }}
@@ -144,11 +145,7 @@
 													</td>
 												<td><button type="button" class="btn {{ $dataitem->STATUS == "9" ? 'btn-success' : 'btn-mute' }}
 													btn-block btn-sm my-1"
-													onclick="editstatus(this)"
-													data-unid="{{ $dataitem->UNID}}"
-													data-name="{{ $dataitem->STATUS_NAME}}"
-													data-code="{{ $dataitem->STATUS_CODE}}"
-													data-status="{{ $dataitem->STATUS}}">{{ $dataitem->STATUS == "9" ? 'เปิด' : 'ปิด' }}</button></td>
+													{{ $HTML_ONCLICK }}>{{ $dataitem->STATUS == "9" ? 'เปิด' : 'ปิด' }}</button></td>
 												<td>
 													<button type="button" class="btn btn-danger btn-block btn-sm my-1" style="width:40px"
 													onclick="deletestatus(this)"

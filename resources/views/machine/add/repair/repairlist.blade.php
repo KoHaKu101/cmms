@@ -359,11 +359,11 @@
 			});
 			function BTN_EDIT(thisdata){
 				var repair_name = $(thisdata).data('repair_name');
-				var remark = $(thisdata).data('remark');
-				var unid = $(thisdata).data('unid');
-				var status = $(thisdata).data('status');
+				var remark 			= $(thisdata).data('remark');
+				var unid 				= $(thisdata).data('unid');
+				var status		  = $(thisdata).data('status');
 				var checkstatus = status == '9' ? true : false ;
-				var url = "{{ route('repairtemplate.update') }}";
+				var url 			  = "{{ route('repairtemplate.update') }}";
 				$('#REPAIR_MAINSELECT_NAME').val(repair_name);
 				$('#REMARK').val(remark);
 				$('#REPAIR_MAINSELECT_UNID').val(unid);
@@ -411,7 +411,7 @@
 			}
 
 			function BTN_SUBEDIT(thisdata){
-				var repair_subname 				= $(thisdata).data('repair_subname');
+				var repair_subname 			= $(thisdata).data('repair_subname');
 				var unid 								= $(thisdata).data('unid');
 				var status 							= $(thisdata).data('status');
 				var machinestatus 			= $(thisdata).data('machinestatus');

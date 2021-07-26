@@ -2,9 +2,6 @@
 .modal-sm {
     max-width: 30% !important;
 }
-.modal-ms {
-    max-width: 50% !important;
-}
 </style>
 {{-- เพิ่ม Template --}}
 <div class="modal fade" id="NewRank" tabindex="-1" role="dialog" aria-labelledby="exampleModalLalavel" aria-hidden="true">
