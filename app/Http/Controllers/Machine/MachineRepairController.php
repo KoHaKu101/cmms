@@ -75,7 +75,7 @@ class MachineRepairController extends Controller
 
     $DATA_EMP     = EMPName::select('EMP_CODE','EMP_ICON')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->where('EMP_STATUS','=',9)->get();
     $dataset      = MachineRepairREQ::select('INSPECTION_CODE','CLOSE_STATUS','DOC_DATE','DOC_NO','MACHINE_LINE','MACHINE_CODE'
-                                                ,'MACHINE_NAME','REPAIR_SUBSELECT_NAME','UNID','PRIORITY','REC_WORK_DATE','PD_CHECK_STATUS')
+                                                ,'MACHINE_NAME','REPAIR_SUBSELECT_NAME','UNID','PRIORITY','REC_WORK_DATE','PD_CHECK_STATUS','CREATE_TIME')
                                             ->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH
                                                   ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH
                                                   ,dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
@@ -131,7 +131,7 @@ class MachineRepairController extends Controller
     $YEAR           = isset($request->YEAR) ? $request->YEAR : date('Y') ;
     $page           = $request->page;
     $dataset        = MachineRepairREQ::select('INSPECTION_CODE','CLOSE_STATUS','DOC_DATE','DOC_NO','MACHINE_LINE','MACHINE_CODE'
-                                                ,'MACHINE_NAME','REPAIR_SUBSELECT_NAME','UNID','PRIORITY','REC_WORK_DATE','PD_CHECK_STATUS')
+                                                ,'MACHINE_NAME','REPAIR_SUBSELECT_NAME','UNID','PRIORITY','REC_WORK_DATE','PD_CHECK_STATUS','CREATE_TIME')
                                             ->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH
                                                         ,dbo.decode_utf8(INSPECTION_NAME) as INSPECTION_NAME_TH
                                                         ,dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
