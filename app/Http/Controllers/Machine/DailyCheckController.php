@@ -42,16 +42,23 @@ class DailyCheckController extends Controller
   }
 
   public function DailyList(Request $request){
-    $COOKIE_MACHINE_LINE = $request->cookie('MACHINE_LINE');
-    $COOKIE_MACHINE_CODE = $request->cookie('MACHINE_CODE');
-    $COOKIE_YEAR         = $request->cookie('YEAR');
-    $COOKIE_MONTH        = $request->cookie('MONTH');
 
-     $MACHINE_LINE = $request->MACHINE_LINE    != '' ? $request->MACHINE_LINE           : (isset($COOKIE_MACHINE_LINE) ? $COOKIE_MACHINE_LINE : 0) ;
-     $MACHINE_CODE = $request->SEARCH_MACHINE  == '' ? ''                               : ($COOKIE_MACHINE_CODE != "" ? $COOKIE_MACHINE_CODE : $request->SEARCH_MACHINE);
-     $YEAR         = $request->YEAR            != '' ? $request->YEAR                   : (isset($COOKIE_YEAR)         ? $COOKIE_YEAR         : date('Y')) ;
-     $MONTH        = $request->MONTH           != '' ? $request->MONTH                  : (isset($COOKIE_MONTH)        ? $COOKIE_MONTH        : date('n')) ;
+    $COOKIE_PAGE_TYPE     = $request->cookie('PAGE_TYPE');
+    if ($COOKIE_PAGE_TYPE != 'DAILYCHECK') {
+      $COOKIE_PAGE_TYPE   = $request->cookie();
+      foreach ($COOKIE_PAGE_TYPE as $index => $row) {
+        if ($index == 'XSRF-TOKEN' || str_contains($index,'session') == true) {
+        }else {
+          Cookie::queue(Cookie::forget($index));
+        }
+      }
+    }
+     $MACHINE_LINE = $request->MACHINE_LINE    != '' ? $request->MACHINE_LINE: ($request->cookie('MACHINE_LINE') != '' ? $request->cookie('MACHINE_LINE') : 0) ;
+     $MACHINE_CODE = $request->SEARCH_MACHINE  == '' ? ''                    : ($request->cookie('MACHINE_CODE') != '' ? $request->cookie('MACHINE_CODE') : $request->SEARCH_MACHINE);
+     $YEAR         = $request->YEAR            != '' ? $request->YEAR        : ($request->cookie('YEAR') != ''         ? $request->cookie('YEAR')         : date('Y')) ;
+     $MONTH        = $request->MONTH           != '' ? $request->MONTH       : ($request->cookie('MONTH') != ''        ? $request->cookie('MONTH')        : date('n')) ;
      $MINUTES = 30;
+     Cookie::queue('PAGE_TYPE','DAILYCHECK',$MINUTES);
      Cookie::queue('MACHINE_LINE' ,$MACHINE_LINE  ,$MINUTES);
      Cookie::queue('MACHINE_CODE' ,$MACHINE_CODE  ,$MINUTES);
      Cookie::queue('YEAR'         ,$YEAR          ,$MINUTES);
