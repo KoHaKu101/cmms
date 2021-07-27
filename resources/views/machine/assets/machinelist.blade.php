@@ -114,16 +114,16 @@
 									      <table class=" table table-bordered table-head-bg-info table-bordered-bd-info  table-hover ">
 								        <thead class="thead-light">
 								          <tr>
-								            <th width="25px">ลำดับ</th>
-														<th width="25px">LINE</th>
-								            <th width="130px">MC-CODE</th>
-								            <th width="300px">Machine Name</th>
-														<th width="200px">MC-TYPE</th>
-														<th width="30px">Rank</th>
-														<th >เช็คเมื่อ</th>
-														<th >ซ่อมเมื่อ</th>
-								            <th >ประวัติ</th>
-								            <th>แจ้งซ่อม</th>
+								            <th width="2%">ลำดับ</th>
+														<th width="2%">LINE</th>
+								            <th width="10%">MC-CODE</th>
+								            <th width="20%">Machine Name</th>
+														<th width="15%">MC-TYPE</th>
+														<th width="2%">Rank</th>
+														<th width="9%">เช็คเมื่อ</th>
+														<th width="9%">ซ่อมเมื่อ</th>
+								            <th width="5%">ประวัติ</th>
+								            <th width="5%">แจ้งซ่อม</th>
 								          </tr>
 								        </thead>
 								        <tbody >
@@ -148,9 +148,9 @@
 								              </td>
 								              <td> {{ $row->MACHINE_NAME_TH }}  </td>
 															<td> {{ $row->MACHINE_TYPE_TH }}  </td>
-															<td> {{ $row->MACHINE_RANK_CODE }}  </td>
-															<td> {{ $PLAN_LAST_DATE }}  </td>
-															<td> {{ $REPAIR_LAST_DATE }}  </td>
+															<td class="text-center"> {{ $row->MACHINE_RANK_CODE }}  </td>
+															<td class="text-center"> {{ $PLAN_LAST_DATE != '' ? date('d-m-Y',strtotime($PLAN_LAST_DATE))  : '-'}}  </td>
+															<td class="text-center"> {{ $REPAIR_LAST_DATE != '' ? date('d-m-Y',strtotime($REPAIR_LAST_DATE))  : '-'}}  </td>
 								              <td>
 								                  <button type="button" class="btn btn-secondary btn-sm btn-block my-1"
 								                  onclick="window.open('/machine/history/repairpdf/{{$row->UNID}}','RepairSaveprint','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes')" id="button" style="width:80px">

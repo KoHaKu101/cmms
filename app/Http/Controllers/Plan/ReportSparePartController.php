@@ -45,6 +45,7 @@ class ReportSparePartController extends Controller
     return $number;
   }
   public function Index(Request $request){
+    
     $DOC_YEAR  = $request->DOC_YEAR > 0 ? $request->DOC_YEAR : date('Y');
 
     $SEARCH = $request->SEARCH != '' ? '%'.$request->SEARCH.'%' : '%';
@@ -69,8 +70,9 @@ class ReportSparePartController extends Controller
                                       }
                                     })
                                     ->where(function ($query) use ($SEARCH) {
-                                        $query->where('MACHINE_CODE', 'like', $SEARCH)
-                                              ->orWhere('SPAREPART_NAME', 'like', $SEARCH);})
+                                        $query->where('MACHINE_CODE', 'like' , $SEARCH)
+                                              ->orWhere('SPAREPART_NAME', 'like' , $SEARCH)
+                                              ->orwhere('SPAREPART_CODE', 'like' , $SEARCH);})
                                        ->where('MACHINE_LINE','like',$MACHINE_LINE)
                                        ->where('STATUS','!=','COMPLETE')
                                        ->where('STATUS_OPEN','=','9')
@@ -85,10 +87,16 @@ class ReportSparePartController extends Controller
         WHEN DOC_MONTH > MONTH(getdate()) and DOC_YEAR > YEAR(getdate()) THEN 'FALSE'
         WHEN DOC_MONTH > MONTH(getdate()) THEN 'FALSE'
      　 else 'TRUE'
-      　    END AS classtext")->where('DOC_YEAR','=',$DOC_YEAR)->where('DOC_MONTH','=',$DOC_MONTH)
+      　    END AS classtext")->where('DOC_YEAR','=',$DOC_YEAR)
+                                    ->where(function($query) use ($DOC_MONTH){
+                                      if ($DOC_MONTH > 0) {
+                                        $query->where('DOC_MONTH','=',$DOC_MONTH);
+                                      }
+                                    })
                                     ->where(function ($query) use ($SEARCH) {
                                         $query->where('MACHINE_CODE', 'like', $SEARCH)
-                                              ->orWhere('SPAREPART_NAME', 'like', $SEARCH);})
+                                              ->orWhere('SPAREPART_NAME', 'like', $SEARCH)
+                                              ->orwhere('SPAREPART_CODE','like',$SEARCH);})
                                       ->where('MACHINE_LINE','like',$MACHINE_LINE)
                                        ->where('STATUS','=','COMPLETE')
                                        ->where('STATUS_OPEN','=','9')
@@ -102,7 +110,12 @@ class ReportSparePartController extends Controller
         WHEN DOC_MONTH > MONTH(getdate()) and DOC_YEAR > YEAR(getdate()) THEN 'FALSE'
         WHEN DOC_MONTH > MONTH(getdate()) THEN 'FALSE'
      　 else 'TRUE'
-      　    END AS classtext")->where('DOC_YEAR','=',$DOC_YEAR)->where('DOC_MONTH','=',$DOC_MONTH)
+      　    END AS classtext")->where('DOC_YEAR','=',$DOC_YEAR)
+                                    ->where(function($query) use ($DOC_MONTH){
+                                      if ($DOC_MONTH > 0) {
+                                        $query->where('DOC_MONTH','=',$DOC_MONTH);
+                                      }
+                                    })
                                     ->where(function ($query) use ($SEARCH) {
                                         $query->where('MACHINE_CODE', 'like', $SEARCH)
                                               ->orWhere('SPAREPART_NAME', 'like', $SEARCH)
@@ -113,7 +126,9 @@ class ReportSparePartController extends Controller
                                        ->orderBy('MACHINE_LINE')
                                        ->orderBy('MACHINE_CODE')
                                        ->paginate(10);
+
       }
+
       $SEARCH = str_replace('%','',$SEARCH);
       $STATUS = str_replace('%','',$STATUS);
     return view('machine.sparepart.report.index',compact('DATA_SPAREPLAN','DOC_YEAR','DOC_MONTH','SEARCH','STATUS','MACHINE_LINE'));

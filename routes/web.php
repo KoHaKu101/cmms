@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-// use Illuminate\Support\Facades\Http;
 //exprotcontroller
 use App\Http\Controllers\Export\MachineExportController;
 //ImprotController
@@ -37,10 +36,9 @@ use App\Http\Controllers\Plan\Report\PlanYearMachinePdm;
 use App\Http\Controllers\Plan\Report\PlanMonthMachinePdm;
 use App\Http\Controllers\Plan\Report\FormPMMachine;
 //************************* sparepart *********************************
-
+use App\Http\Controllers\Plan\ReportSparePartController;
 use App\Http\Controllers\Machine\SparepartController;
 use App\Http\Controllers\Machine\MachineSparePartController;
-use App\Http\Controllers\Plan\ReportSparePartController;
 
 //************************* add tabel *********************************
 use App\Http\Controllers\MachineaddTable\MachineRankTableController;
@@ -49,20 +47,16 @@ use App\Http\Controllers\MachineaddTable\MachineRepairTableController;
 use App\Http\Controllers\MachineaddTable\MachineStatusTableController;
 use App\Http\Controllers\MachineaddTable\MachineSysTemTableController;
 use App\Http\Controllers\MachineaddTable\SparPartController;
-//************************* Search *********************************
-use App\Http\Controllers\Search\RepairSearchController;
-
 //****************************** PDF **********************************
 use App\Http\Controllers\PDF\MachinePDFController;
 use App\Http\Controllers\PDF\MachineRepairPDFController;
-use App\Http\Controllers\PDF\UploadPdfController;
 use App\Http\Controllers\PDF\MachineSystemCheckPDFController;
 use App\Http\Controllers\PDF\MachineHistoryRepairPDFController;
 
 //Model
-use App\Models\Machine\Machine;
-use App\Models\SettingMenu\Mainmenu;
-use App\Models\SettingMenu\Menusubitem;
+// use App\Models\Machine\Machine;
+// use App\Models\SettingMenu\Mainmenu;
+// use App\Models\SettingMenu\Menusubitem;
 
 
 
@@ -148,7 +142,8 @@ Route::get('/machine/systemcheck/pdf/{UNID}',   'App\Http\Controllers\PDF\Machin
 Route::get('/machine/dashboard/sumaryline',[DashboardController::class,'Sumaryline'])->name('dashboard.sumaryline');
 
 // calendar
- Route::get('/machine/calendar',[CalendarController::class,'Index']);
+ Route::get('/machine/calendar'           ,[CalendarController::class,'Index']);
+ Route::get('/machine/calendar/modal'     ,[CalendarController::class,'ShowModal']);
 //Notification
 Route::get('machine/repair/notificaiton' ,[DashboardController::class,'Notification']);
   Route::get('machine/repair/notificaitoncount' ,[DashboardController::class,'NotificationCount'])  ->name('repair.notificaitoncount');

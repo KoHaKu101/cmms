@@ -150,7 +150,7 @@ class MachinePlanController extends Controller
     if ($PLAN_DATE_DIFF > $PLAN_NEXT_INTEVAL) {
 
       alert()->warning('แผนงานยังไม่ถึงกำหนด')->autoclose('1500');
-      return redirect(route('pm.planlist'));
+      return redirect()->back();
     }
 
     $PM_LIST = MasterIMPSGroup::where('MACHINE_UNID','=',$PM_PLAN[0]->MACHINE_UNID)
