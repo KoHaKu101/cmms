@@ -33,7 +33,8 @@ class MachineStatusTableController extends Controller
   }
 
   public function Index(){
-
+    $test = DB::select('select Max(DOCNO)DONO from APCS_MA_MASTER');
+      dd($test);
     $dataset = MachineStatusTable::orderBy('STATUS_CODE')->paginate(10);
     $datacount = MachineStatusTable::selectraw('max(STATUS_CODE)count')->first();
     return View('machine/add/machinestatus/machinestatuslist',compact('dataset','datacount'));
