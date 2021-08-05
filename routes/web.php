@@ -47,11 +47,15 @@ use App\Http\Controllers\MachineaddTable\MachineRepairTableController;
 use App\Http\Controllers\MachineaddTable\MachineStatusTableController;
 use App\Http\Controllers\MachineaddTable\MachineSysTemTableController;
 use App\Http\Controllers\MachineaddTable\SparPartController;
+use App\Http\Controllers\MachineaddTable\CompanyController;
 //****************************** PDF **********************************
 use App\Http\Controllers\PDF\MachinePDFController;
 use App\Http\Controllers\PDF\MachineRepairPDFController;
 use App\Http\Controllers\PDF\MachineSystemCheckPDFController;
 use App\Http\Controllers\PDF\MachineHistoryRepairPDFController;
+//******************************* PR ***********************************
+use App\Http\Controllers\Machine\PRController;
+use App\Http\Controllers\Machine\ReportPRController;
 
 //Model
 // use App\Models\Machine\Machine;
@@ -142,8 +146,25 @@ Route::get('/machine/systemcheck/pdf/{UNID}',   'App\Http\Controllers\PDF\Machin
 Route::get('/machine/dashboard/sumaryline',[DashboardController::class,'Sumaryline'])->name('dashboard.sumaryline');
 
 // calendar
- Route::get('/machine/calendar'           ,[CalendarController::class,'Index']);
- Route::get('/machine/calendar/modal'     ,[CalendarController::class,'ShowModal']);
+ Route::get('/machine/calendar'         ,[CalendarController::class,'Index']);
+ Route::get('/machine/calendar/modal'   ,[CalendarController::class,'ShowModal']);
+//Document Out item
+Route::get('/machine/pr/itemout'        ,[PRController::class,'ItemoutList'])->name('pr.itemout');
+
+  Route::get('/machine/pr/openmodal'    ,[PRController::class,'OpenModal'])->name('pr.openmodal');
+  Route::get('/machine/pr/typeselect'   ,[PRController::class,'TypeSelect'])->name('pr.typeselect');
+  Route::get('/machine/pr/detail'       ,[PRController::class,'Detail'])->name('pr.detail');
+
+  Route::get('/machine/pr/savestep1'    ,[PRController::class,'SaveStep1'])->name('pr.savestep1');
+  Route::get('/machine/pr/savestep2'    ,[PRController::class,'SaveStep2'])->name('pr.savestep2');
+  Route::get('/machine/pr/showresult'   ,[PRController::class,'ShowResult'])->name('pr.showresult');
+  Route::get('/machine/pr/saveresult'   ,[PRController::class,'SaveResult'])->name('pr.saveresult');
+
+  Route::get('/machine/pr/saverec'     ,[PRController::class,'SaveRec'])->name('pr.saverec');
+
+  Route::get('/machine/pr/deletedetail' ,[PRController::class,'DeleteDetail'])->name('pr.deletedetail');
+  Route::get('/machine/pr/canceldoc'    ,[PRController::class,'CancelDoc'])->name('pr.canceldoc');
+  Route::get('/machine/pr/printdoc'     ,[ReportPRController::class,'PrintDoc'])->name('pr.printdoc');
 //Notification
 Route::get('machine/repair/notificaiton' ,[DashboardController::class,'Notification']);
   Route::get('machine/repair/notificaitoncount' ,[DashboardController::class,'NotificationCount'])  ->name('repair.notificaitoncount');
@@ -187,6 +208,13 @@ Route::get('machine/sparepart/stock'              ,[SparepartController::class,'
   Route::get('machine/sparepart/recdelete'        ,[SparepartController::class,'RecSparepartDelete']) ->name('sparepart.recdelete');
   Route::get('machine/sparepart/history/pdf'      ,[SparepartController::class,'HistoryPDF']) ->name('spareparthistory.pdf');
 //***************************** tabledata ****************************************
+//company
+Route::get('machine/company/list',      [CompanyController::class,'list'])->name('company.list');
+  Route::post('machine/company/save',   [CompanyController::class,'Save'])->name('company.save');
+  Route::post('machine/company/update', [CompanyController::class,'Update'])->name('company.update');
+  Route::get('machine/company/delete',  [CompanyController::class,'Delete'])->name('company.delete');
+  Route::post('machin/company/switch',  [CompanyController::class,'SwitchStatus'])->name('company.switch');
+
 //machinetypetable
 Route::get('machine/machinetypetable/list'      ,[MachineTypeTableController::class,'Index'])  ->name('machinetypetable.list');
   Route::post('machine/machinetypetable/store'            ,[MachineTypeTableController::class,'Store']) ->name('machinetypetable.store');

@@ -38,7 +38,6 @@
     </div>
   </div>
 </div>
-</div>
 {{-- แก้ไข Template --}}
 <div class="modal fade" id="Edittemplate" tabindex="-1" role="dialog" aria-labelledby="exampleModalLalavel" aria-hidden="true">
 

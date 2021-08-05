@@ -163,9 +163,24 @@
 				});
 			// });
 		function deleterecsparepart(thisdate){
-			var unid = $(thisdate).data('unid');
-			var url  = "{{ route('sparepart.recdelete') }}?UNID="+unid;
-			window.location.href = url;
+
+			Swal.fire({
+				  title: 'คุณต้องการลบรายการรับนี้นี้ใช่มั้ย?',
+				  text: "หากรับแล้วอาจจะเกิดข้อผิดพลาดต่างๆได้!",
+				  icon: 'warning',
+				  showCancelButton: true,
+				  confirmButtonColor: '#3085d6',
+				  cancelButtonColor: '#d33',
+					CancelButtonText:'ไม่',
+				  confirmButtonText: 'ใช่!'
+				}).then((result) => {
+				  if (result.isConfirmed) {
+						var unid = $(thisdate).data('unid');
+						var url  = "{{ route('sparepart.recdelete') }}?UNID="+unid;
+						window.location.href = url;
+				  }
+				})
+
 		}
 	</script>
 

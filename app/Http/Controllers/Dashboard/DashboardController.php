@@ -42,7 +42,7 @@ class DashboardController extends Controller
     $data_line5 = Machine::select('MACHINE_LINE')->where('MACHINE_LINE','=','L5')->count();
     $data_line6 = Machine::select('MACHINE_LINE')->where('MACHINE_LINE','=','L6')->count();
 
-    $datarepairlist = MachineRepairREQ::where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE','DESC')->take(9)->get();
+    $datarepairlist = MachineRepairREQ::where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(9)->get();
     $datarepairline1 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L1')->count();
     $datarepairline2 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L2')->count();
     $datarepairline3 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L3')->count();

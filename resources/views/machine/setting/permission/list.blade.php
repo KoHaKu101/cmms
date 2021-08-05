@@ -50,7 +50,7 @@
     												<th>#</th>
     												<th>ชื่อผู้ใช้งาน</th>
                             <th width="120px">สิทธ์การใช้งาน</th>
-    												<th width="150px">ใช้งานล่าสุด</th>
+    												<th width="150px">สร้างล่าสุด</th>
     												<th width="190px">action</th>
     											</tr>
     										</thead>
@@ -63,7 +63,7 @@
     												<td>{{$index+1}}</td>
     												<td>{{$row->name}}</td>
     												<td>{{$role[$row->role_v2]}}</td>
-    												<td>12/06/2021 08:07</td>
+    												<td>{{ date('d-m-Y',strtotime($row->created_at)) }}</td>
                             <td>
                               <button type="button" class="btn btn-warning btn-sm mx-1 my-1"
                               onclick="EditUser(this)"
