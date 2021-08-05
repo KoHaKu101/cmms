@@ -36,7 +36,14 @@
 									<div class="card-header bg-primary text-white">
 										<div class="row">
 											<div class="col-md-8 form-inline">
-												<h4 class="mt-1 ">รายการอะไหล่ ที่ต้องสั่งซื้อ : </h4>
+												<h4 class="mt-1 ">รายการอะไหล่ ที่ต้องสั่งซื้อ </h4>
+												<h4 class="mt-1 ml-auto mx-1">Size </h4>
+												<select class="from-control form-control-sm" id="SORT_LIMIT" name="SORT_LIMIT" >
+													<option value="10" {{ $SORT_LIMIT 	== '10' 	? 'selected' :''}}>10</option>
+													<option value="25" {{ $SORT_LIMIT 	== '25' 	? 'selected' :''}}>25</option>
+													<option value="50" {{ $SORT_LIMIT 	== '50' 	? 'selected' :''}}>50</option>
+													<option value="100" {{ $SORT_LIMIT 	== '100' 	? 'selected' :''}}>100</option>
+												</select>
 											</div>
 											<div class="col-md-4 form-inline">
 												<h4 class="mt-1">ค้นหา : </h4>
@@ -51,7 +58,6 @@
 											</div>
 										</div>
 									</div>
-
 								</div>
 							</div>
 							</form>
@@ -69,7 +75,6 @@
 														<th>สต็อกขั้นต่ำ</th>
 														<th>ยอดคงเหลือ</th>
 														<th>หน่วย</th>
-
 													</tr>
 												</thead>
 												<tbody>
@@ -89,7 +94,7 @@
 
 												</tbody>
 											</table>
-											{{$DATA_SPAREPART->appends(['SEARCH',$SEARCH])->links('pagination.default')}}
+											{{$DATA_SPAREPART->appends(['SEARCH'=>$SEARCH,'SORT_LIMIT' => $SORT_LIMIT])->links('pagination.default')}}
 									</divl>
 								</div>
 							</div>

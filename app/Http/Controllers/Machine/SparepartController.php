@@ -142,14 +142,16 @@ class SparepartController extends Controller
     }
     public function AlertSparepartList(Request $request){
       $SEARCH         = $request->SEARCH;
+      $SORT_LIMIT = $request->SORT_LIMIT != '' ? $request->SORT_LIMIT : 10;
+
       $DATA_SPAREPART = SparePart::where(function($query) use ($SEARCH){
                                       if (isset($SEARCH)) {
                                         $query->where('SPAREPART_NAME','like','%'.$SEARCH.'%')
                                               ->orwhere('SPAREPART_CODE','like','%'.$SEARCH.'%');
                                       }
                                     })->whereraw('STOCK_MIN >= LAST_STOCK')->where('STATUS','=',9)
-                                      ->orderBy('SPAREPART_NAME')->paginate(10);
-      return View('machine.sparepart.stock.alertindex',compact('DATA_SPAREPART','SEARCH'));
+                                      ->orderBy('SPAREPART_NAME')->paginate($SORT_LIMIT);
+      return View('machine.sparepart.stock.alertindex',compact('DATA_SPAREPART','SEARCH','SORT_LIMIT'));
     }
     public function HistoryPDF(HistorySparepartHEAD $HistorySparepartHEAD,Request $request){
       $this->pdf = $HistorySparepartHEAD;
