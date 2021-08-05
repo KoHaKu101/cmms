@@ -33,7 +33,7 @@ class MachineStatusTableController extends Controller
   }
 
   public function Index(){
-
+   
     $dataset = MachineStatusTable::orderBy('STATUS_CODE')->paginate(10);
     $datacount = MachineStatusTable::selectraw('max(STATUS_CODE)count')->first();
     return View('machine/add/machinestatus/machinestatuslist',compact('dataset','datacount'));
