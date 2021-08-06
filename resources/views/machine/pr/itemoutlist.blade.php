@@ -77,7 +77,7 @@
 								<div class="col-md-12">
 									<div class="card-header bg-primary text-white">
 										<div class="row">
-											<div class="col-12 col-md-6 form-inline">
+											<div class="col-12 col-md-12 col-lg-6 form-inline">
 												<h4 class="mt-1 ml-auto"> ปี :	</h4>
 												<select class="form-control form-control-sm col-11 col-md-2 ml-auto"
 												 onchange="submitform()" id="DOC_YEAR" name="DOC_YEAR" required>
@@ -105,7 +105,7 @@
 													<option value="1" {{$STATUS == '1' ? 'selected' : ''}}>ดำเนินการสำเร็จ</option>
 												</select>
 											</div>
-											<div class="col-12 col-md-5 ml-auto">
+											<div class="col-12 col-md-12 col-lg-5 ml-auto">
 												<div class="row">
 													<div class="col-12 col-md-9 form-inline ">
 														<h4 class="mt-1">ค้นหา : </h4>
@@ -125,10 +125,8 @@
 													</div>
 												</div>
 											</div>
-
 										</div>
 									</div>
-
 								</div>
 							</div>
 							</form>
