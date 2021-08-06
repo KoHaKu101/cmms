@@ -77,17 +77,16 @@
 								<div class="col-md-12">
 									<div class="card-header bg-primary text-white">
 										<div class="row">
-											<div class="col-md-7 form-inline">
-												<h4 class="mt-1 ">ของออกข้างนอก </h4>
-												<h4 class="mt-1 mx-2"> ปี :	</h4>
-												<select class="form-control form-control-sm "
+											<div class="col-12 col-md-6 form-inline">
+												<h4 class="mt-1 ml-auto"> ปี :	</h4>
+												<select class="form-control form-control-sm col-11 col-md-2 ml-auto"
 												 onchange="submitform()" id="DOC_YEAR" name="DOC_YEAR" required>
 													@for ($i=2021; $i < date('Y')+3 ; $i++)
 														<option value="{{ $i }}" {{ $DOC_YEAR == $i ? 'selected' : '' }} >{{$i}}</option>
 													@endfor
 												</select>
-												<h4 class="mt-1 mx-2"> เดือน :	</h4>
-												<select class="form-control form-control-sm "
+												<h4 class="mt-1 ml-auto"> เดือน :	</h4>
+												<select class="form-control form-control-sm col-10 col-md-3 ml-auto "
 												onchange="submitform()" id="DOC_MONTH" name="DOC_MONTH" required>
 												<?php
 												$months=array(0 =>'ทั้งหมด',1 => "มกราคม",2 => "กุมภาพันธ์",3 =>"มีนาคม",4 => "เมษายน",5 =>"พฤษภาคม",6 =>"มิถุนายน",
@@ -98,18 +97,19 @@
 													<option value="{{$month}}" {{$DOC_MONTH == $month ? 'selected' : '' }}>{{$name}}</option>
 												@endforeach
 												</select>
-												<h4 class="mt-1 mx-2"> สถานะ :	</h4>
-												<select type="select" class="form-control form-control-sm" id="STATUS" name="STATUS" onchange="submitform()">
+												<h4 class="mt-1 ml-auto "> สถานะ :	</h4>
+												<select type="select" class="form-control form-control-sm col-10 col-md-3 ml-auto"
+													id="STATUS" name="STATUS" onchange="submitform()">
 													<option value="0">ทั้งหมด</option>
 													<option value="9" {{$STATUS == '9' ? 'selected' : ''}}>กำลังดำเนินการ</option>
 													<option value="1" {{$STATUS == '1' ? 'selected' : ''}}>ดำเนินการสำเร็จ</option>
 												</select>
 											</div>
-											<div class="col-md-5 ">
+											<div class="col-12 col-md-5 ml-auto">
 												<div class="row">
-													<div class="col-md-8 form-inline">
+													<div class="col-12 col-md-9 form-inline ">
 														<h4 class="mt-1">ค้นหา : </h4>
-														<div class="input-group mx-1">
+														<div class="input-group mx-1 col-10 col-md-9 ml-auto">
 							                <input type="search" id="SEARCH" name="SEARCH" class="form-control form-control-sm " placeholder="ค้นหา........." value="">
 							                <div class="input-group-prepend">
 							                  <button type="submit" class="btn btn-search pr-1 btn-xs	" id="BTN_SUBMIT">
@@ -118,9 +118,9 @@
 							                </div>
 							              </div>
 													</div>
-													<div class="col-md-4 form-inline">
+													<div class="col-3 col-md-3 form-inline ml-auto">
 														<button type="button" class="btn btn-sm btn-warning " id="BTN_NEW_DOCUMENT">
-															<i class="fas fa-plus mx-1"></i>สร้างเอกสาร
+															<i class="fas fa-plus mx-1"></i>สร้าง
 														</button>
 													</div>
 												</div>
@@ -143,7 +143,7 @@
 														<th width="9%">เลขที่เอกสาร</th>
 														<th width="10%">ประเภทเอกสาร</th>
 														<th width="24%">บริษัทที่นำส่ง</th>
-														<th width="13%">ผู้นำของออก</th>
+														<th width="12%">ผู้นำของออก</th>
 
 														<th>สถานะ</th>
 														<th>action</th>
