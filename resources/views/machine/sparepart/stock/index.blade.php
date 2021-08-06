@@ -76,14 +76,14 @@
 											<table class="table table-bordered table-head-bg-info table-bordered-bd-info ">
 												<thead>
 													<tr>
-														<th class="text-center">#</th>
-														<th>รหัส</th>
-														<th>ชื่อ</th>
-														<th>รุ่น</th>
-														<th>ขนาด</th>
-														<th>สต็อกขั้นต่ำ</th>
-														<th>ยอดคงเหลือ</th>
-														<th>หน่วย</th>
+														<th width="4%" class="text-center">#</th>
+														<th width="12%">รหัส</th>
+														<th width="23%">ชื่อ</th>
+														<th width="14%">รุ่น</th>
+														<th width="14%">ขนาด</th>
+														<th width="8%">สต็อกขั้นต่ำ</th>
+														<th width="8%">ยอดคงเหลือ</th>
+														<th width="6%">หน่วย</th>
 														<th>ประวัติเบิกจ่าย</th>
 													</tr>
 												</thead>
@@ -93,14 +93,14 @@
 															$BG_COLOR = $row->STOCK_MIN >= $row->LAST_STOCK ? 'bg-danger text-white': 'bg-success text-white';
 														@endphp
 														<tr>
-															<td width="4%" class="text-center">{{$DATA_SPAREPART->firstItem() + $key}}</td>
-															<td width="18%">{{$row->SPAREPART_CODE}}</td>
-															<td width="20%">{{$row->SPAREPART_NAME}}</td>
-															<td width="12%">{{$row->SPAREPART_MODEL}}</td>
-															<td width="14%">{{$row->SPAREPART_SIZE}}</td>
-															<td width="8%">{{$row->STOCK_MIN}}</td>
-															<td width="8%" class="{{$BG_COLOR}}">{{$row->LAST_STOCK}}</td>
-															<td width="6%">{{$row->UNIT}}</td>
+															<td  class="text-center">{{$DATA_SPAREPART->firstItem() + $key}}</td>
+															<td ">{{$row->SPAREPART_CODE}}</td>
+															<td ">{{$row->SPAREPART_NAME}}</td>
+															<td ">{{$row->SPAREPART_MODEL}}</td>
+															<td ">{{$row->SPAREPART_SIZE}}</td>
+															<td >{{$row->STOCK_MIN}}</td>
+															<td  class="{{$BG_COLOR}}">{{$row->LAST_STOCK}}</td>
+															<td >{{$row->UNIT}}</td>
 															<td>
 																<button class="btn btn-sm btn-secondary btn-block my-1"
 																onclick="positionedPopup('{{ route('spareparthistory.pdf').'?UNID='.$row->UNID}}','myWindow');return false">
