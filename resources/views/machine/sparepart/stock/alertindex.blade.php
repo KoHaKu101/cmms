@@ -38,7 +38,7 @@
 											<div class="col-md-8 form-inline">
 												<h4 class="mt-1 ">รายการอะไหล่ ที่ต้องสั่งซื้อ </h4>
 												<h4 class="mt-1 ml-auto mx-1">Size </h4>
-												<select class="from-control form-control-sm" id="SORT_LIMIT" name="SORT_LIMIT" >
+												<select class="from-control form-control-sm" id="SORT_LIMIT" name="SORT_LIMIT" onchange="submit_btn()">
 													<option value="10" {{ $SORT_LIMIT 	== '10' 	? 'selected' :''}}>10</option>
 													<option value="25" {{ $SORT_LIMIT 	== '25' 	? 'selected' :''}}>25</option>
 													<option value="50" {{ $SORT_LIMIT 	== '50' 	? 'selected' :''}}>50</option>
@@ -117,7 +117,11 @@
 @section('javascript')
 	<script src={{ asset('assets/js/ajax/ajax-csrf.js') }}></script>
 	<script src="{{ asset('assets/js/ajax/appcommon.js') }}"></script>
-
+	<script>
+		function submit_btn(){
+			$('#BTN_SUBMIT').click();
+		}
+	</script>
 
 
 @stop
