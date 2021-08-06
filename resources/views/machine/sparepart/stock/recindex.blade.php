@@ -44,7 +44,7 @@
 											<label>วันที่รับเข้า</label>
 											<input  type="date" class="form-control form-control-sm my-2 " id="DOC_DATE" name="DOC_DATE" value="{{ date('Y-m-d') }}" required>
 										</div>
-										<div class="col-md-3">
+										<div class="col-md-4">
 											<label>รายการอะไหล่</label>
 											<select class="form-control form-control-sm my-2" id="SPAREPART_UNID" name="SPAREPART_UNID" >
 													<option value>กรุณาเลือก</option>
@@ -70,8 +70,7 @@
 												@endforeach
 											</select>
 										</div>
-										<div class="col-md-2">
-											<label class="text-white">ปุ่มกด .................</label>
+										<div class="col-md-1 mt-auto my-1 text-right">
 											<button type="submit" class="btn btn-sm btn-primary my-2"><i class="fas fa-plus mr-2"></i>เพิ่ม</button>
 										</div>
 									</div>
@@ -151,17 +150,15 @@
 		 });
 		 $('.select2').addClass('mt-2');
 		 $('.select2').attr('required');
-		 // $(document).ready(function(){
-			 $('#datatable').DataTable({
-					"pageLength": 10,
-					"bLengthChange": false,
-					"bFilter": true,
-					"bInfo": false,
-					"bAutoWidth": false,
-					'bSort': false,
+		 $('#datatable').DataTable({
+			  "lengthMenu": [[10, 25, 50,100], [10, 25, 50,100 ,"All"]],
+				"bLengthChange": true,
+				"bFilter": true,
+				"bInfo": false,
+				"bAutoWidth": false,
+				'bSort': false,
 
-				});
-			// });
+			});
 		function deleterecsparepart(thisdate){
 
 			Swal.fire({
