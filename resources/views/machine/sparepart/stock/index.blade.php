@@ -113,7 +113,7 @@
 
 												</tbody>
 											</table>
-											{{$DATA_SPAREPART->appends(['SEARCH_SPAREPART',$SEARCH,'STATUS' => $STATUS,'SORT_LIMIT' => $SORT_LIMIT])->links('pagination.default')}}
+											{{$DATA_SPAREPART->appends(['SEARCH_SPAREPART'=>$SEARCH,'STATUS' => $STATUS,'SORT_LIMIT' => $SORT_LIMIT])->links('pagination.default')}}
 									</divl>
 								</div>
 							</div>
