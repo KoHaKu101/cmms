@@ -141,9 +141,10 @@ class SparepartController extends Controller
       return Redirect()->back();
     }
     public function AlertSparepartList(Request $request){
-      $SEARCH         = $request->SEARCH;
-      $SORT_LIMIT = $request->SORT_LIMIT != '' ? $request->SORT_LIMIT : 10;
-
+      // dd($request);
+      $SEARCH         = $request->SEARCH_SPAREPART;
+      $SORT_LIMIT     = $request->SORT_LIMIT != '' ? $request->SORT_LIMIT : 10;
+      // dd($SORT_LIMIT);
       $DATA_SPAREPART = SparePart::where(function($query) use ($SEARCH){
                                       if (isset($SEARCH)) {
                                         $query->where('SPAREPART_NAME','like','%'.$SEARCH.'%')

@@ -137,14 +137,14 @@
 												<thead>
 													<tr>
 														<th width="3%" class="text-center">#</th>
-														<th>วันที่นำออก</th>
+														<th width="9%">วันที่นำออก</th>
 														<th width="9%">เลขที่เอกสาร</th>
-														<th width="10%">ประเภทเอกสาร</th>
+														<th width="6%">ประเภท</th>
 														<th width="24%">บริษัทที่นำส่ง</th>
-														<th width="12%">ผู้นำของออก</th>
+														<th width="10%">ผู้นำของออก</th>
 
-														<th>สถานะ</th>
-														<th>action</th>
+														<th width="9%">สถานะ</th>
+														<th width="26%">action</th>
 
 													</tr>
 												</thead>
