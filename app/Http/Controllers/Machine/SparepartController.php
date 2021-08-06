@@ -48,15 +48,25 @@ class SparepartController extends Controller
 
 
     public function StockList(Request $request){
-      $SEARCH = $request->SEARCH;
+      $SEARCH     = $request->SEARCH_SPAREPART;
+      $STATUS     = $request->STATUS;
+      $SORT_LIMIT = $request->SORT_LIMIT;
+
       $DATA_SPAREPART = SparePart::where(function($query) use ($SEARCH){
                                       if (isset($SEARCH)) {
                                         $query->where('SPAREPART_NAME','like','%'.$SEARCH.'%')
                                               ->orwhere('SPAREPART_CODE','like','%'.$SEARCH.'%');
                                       }
                                     })
-                                  ->where('STATUS','=',9)->orderBy('SPAREPART_NAME')->paginate(10);
-      return View('machine.sparepart.stock.index',compact('DATA_SPAREPART','SEARCH'));
+                                  ->where(function($query) use ($STATUS){
+                                      if ($STATUS == '1') {
+                                        $query->whereRaw('LAST_STOCK > STOCK_MIN');
+                                      }elseif ($STATUS == '2') {
+                                        $query->whereRaw('LAST_STOCK <= STOCK_MIN');
+                                      }
+                                    })
+                                  ->where('STATUS','=',9)->orderBy('SPAREPART_NAME')->paginate($SORT_LIMIT);
+      return View('machine.sparepart.stock.index',compact('DATA_SPAREPART','SEARCH','STATUS','SORT_LIMIT'));
     }
 
     public function RecSparepartList(){

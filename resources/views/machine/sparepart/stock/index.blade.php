@@ -35,14 +35,27 @@
 									<div class="col-md-12">
 										<div class="card-header bg-primary text-white">
 											<div class="row">
-												<div class="col-md-8 form-inline">
-													<h4 class="mt-1 ">รายการอะไหล่ในสต็อก : </h4>
+												<div class="col-md-4 form-inline">
+													<h4 class="mt-1 ">รายการอะไหล่ในสต็อก</h4>
 
 												</div>
-												<div class="col-md-4 form-inline">
-													<h4 class="mt-1">ค้นหา : </h4>
-													<div class="input-group mx-1">
-						                <input type="search" id="SEARCH" name="SEARCH" class="form-control form-control-sm " placeholder="ค้นหา........." value="{{ $SEARCH }}">
+												<div class="col-md-8 form-inline">
+													<h4 class="mt-1 ml-auto ">สถานะ : </h4>
+													<select class="form-control form-control-sm mx-2" id="STATUS" name="STATUS" onchange="SUBMIT_BTN()">
+														<option value="0"	{{ $STATUS == '0' ? 'selected' : ''}}>ทั้งหมด</option>
+														<option value="1"	{{ $STATUS == '1' ? 'selected' : ''}}>มีสต็อก</option>
+														<option value="2"	{{ $STATUS == '2' ? 'selected' : ''}}>หมด/ใกล้หมด</option>
+													</select>
+													<h4 class="mt-1 mx-2">แสดง : </h4>
+													<select class="form-control form-control-sm mx-2" id="SORT_LIMIT" name="SORT_LIMIT" onchange="SUBMIT_BTN()">
+														<option value="10" 	{{ $SORT_LIMIT 	== '10' 	? 'selected' :''}}>10</option>
+														<option value="25" 	{{ $SORT_LIMIT 	== '25' 	? 'selected' :''}}>25</option>
+														<option value="50" 	{{ $SORT_LIMIT 	== '50' 	? 'selected' :''}}>50</option>
+														<option value="100" {{ $SORT_LIMIT 	== '100' 	? 'selected' :''}}>100</option>
+													</select>
+													<h4 class="mt-1 ml-auto ">ค้นหา : </h4>
+													<div class="input-group mx-1 ">
+						                <input type="search" id="SEARCH_SPAREPART" name="SEARCH_SPAREPART" class="form-control form-control-sm col-md-10" placeholder="ค้นหา........." value="{{ $SEARCH }}">
 						                <div class="input-group-prepend">
 						                  <button type="submit" class="btn btn-search pr-1 btn-xs	" id="BTN_SUBMIT">
 						                    <i class="fa fa-search search-icon"></i>
@@ -100,7 +113,7 @@
 
 												</tbody>
 											</table>
-											{{$DATA_SPAREPART->appends(['SEARCH',$SEARCH])->links('pagination.default')}}
+											{{$DATA_SPAREPART->appends(['SEARCH_SPAREPART',$SEARCH,'STATUS' => $STATUS,'SORT_LIMIT' => $SORT_LIMIT])->links('pagination.default')}}
 									</divl>
 								</div>
 							</div>
@@ -123,7 +136,11 @@
 @section('javascript')
 	<script src={{ asset('assets/js/ajax/ajax-csrf.js') }}></script>
 	<script src="{{ asset('assets/js/ajax/appcommon.js') }}"></script>
-
+	<script>
+		function SUBMIT_BTN(){
+			$("#BTN_SUBMIT").click();
+		}
+	</script>
 
 
 @stop
