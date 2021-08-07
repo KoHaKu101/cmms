@@ -193,7 +193,7 @@ class PRController extends Controller
   }
   public function OpenModal(Request $request){
     $DATA_EMP      = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->where('EMP_STATUS','=',9)->get();
-    $DATA_COMPANY  = Company::where('STATUS','=',9)->get();
+    $DATA_COMPANY  = Company::where('STATUS','=',9)->orderBy('COMPANY_NAME')->get();
     $html_emp      = '<select class="form-control form-control-sm" id="EMP_UNID" name="EMP_UNID">';
     $html_company  = '<select class="form-control form-control-sm" id="COMPANY_UNID" name="COMPANY_UNID">';
 

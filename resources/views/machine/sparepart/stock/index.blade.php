@@ -94,10 +94,10 @@
 														@endphp
 														<tr>
 															<td  class="text-center">{{$DATA_SPAREPART->firstItem() + $key}}</td>
-															<td ">{{$row->SPAREPART_CODE}}</td>
-															<td ">{{$row->SPAREPART_NAME}}</td>
-															<td ">{{$row->SPAREPART_MODEL}}</td>
-															<td ">{{$row->SPAREPART_SIZE}}</td>
+															<td >{{$row->SPAREPART_CODE}}</td>
+															<td >{{$row->SPAREPART_NAME}}</td>
+															<td >{{$row->SPAREPART_MODEL}}</td>
+															<td >{{$row->SPAREPART_SIZE}}</td>
 															<td >{{$row->STOCK_MIN}}</td>
 															<td  class="{{$BG_COLOR}}">{{$row->LAST_STOCK}}</td>
 															<td >{{$row->UNIT}}</td>
