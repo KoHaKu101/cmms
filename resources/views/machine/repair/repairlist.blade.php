@@ -3,11 +3,6 @@
 @section('meta')
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<link href="{{asset('assets/css/select2.min.css')}}" rel="stylesheet" />
-	<link href="{{asset('assets\css\cubeportfolio.css')}}" rel="stylesheet" type="text/css">
-
-  	  <link href="{{asset('assets\css\portfolio.min.css')}}" rel="stylesheet" type="text/css">
-
- 	 <link href="{{asset('assets\css\customize.css')}}" rel="stylesheet" type="text/css">
 
 @endsection
 @section('css')
@@ -334,56 +329,8 @@
 <script src="{{ asset('assets/js/select2.min.js') }}"></script>
 <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
 <script src="{{ asset('assets/js/js.cookie.min.js') }}"></script>
+{{-- script parameter --}}
 <script>
-
-$(document).ready(function(){
-
-		var loaddata_table_all = function loaddata_table(){
-			var cookie_tablestyle = "{{Cookie::get('table_style')}}";
-			if (cookie_tablestyle == '') {
-					styletable('1');
-			}
-			var page = $('#PAGE').val();
-			var url = "{{ route('repair.fetchdata') }}?page="+page;
-			var data = $('#FRM_SEARCH').serialize();
-			$.ajax({
-						 type:'GET',
-						 url: url,
-						 data: data,
-						 datatype: 'json',
-						 success:function(data){
-							 $('#result').html(data.html);
-							 $('#table_style').html(data.html_style);
-							 if (data.newrepair) {
-								var url = "{{ route('repair.readnotify')}}";
-									  Swal.fire({
-											icon : 'error',
-									    title: '!! มีรายการแจ้งซ่อมใหม่ !!',
-											showCloseButton: false,
-            					showCancelButton: false,
-											showconfirmButton: true,
-										  confirmButtonText: 'ตกลง',
-
-									  }).then((result) => {
-										  if (result.isConfirmed) {
-										    $.ajax({
-													type:'GET',
-							 						 url: url,
-							 						 data: {STATUS:'1'
-												 					,UNID:data.UNID},
-							 						 datatype: 'json',
-												});
-										  }
-										})
-							 }
-						 }
-					 });
-				 }
-	setInterval(loaddata_table_all,10000);
-	loaddata_table();
-
-});
-//************************* array *********************************
 	var array_emp_unid = [];
 	var sparepart_total = {};
 	var sparepart_type = {};
@@ -393,87 +340,145 @@ $(document).ready(function(){
 	var arr_spare_type = [];
 	var arr_spare_cost = [];
 	let number_count = 0;
-
-
-//******************************* function ************************
-function loaddata_table(){
+</script>
+{{-- Loop function --}}
+<script>
+	var page = $('#PAGE').val();
+	var url = "{{ route('repair.fetchdata') }}?page="+page;
+	var data = $('#FRM_SEARCH').serialize();
+	// 1 Loop page and alert new repair
+	$(document).ready(function(){
+			var loaddata_table_all = function loaddata_table(){
+				$.ajax({
+							 type:'GET',
+							 url: url,
+							 data: data,
+							 datatype: 'json',
+							 success:function(data){
+								 $('#result').html(data.html);
+								 $('#table_style').html(data.html_style);
+								 if (data.newrepair) {
+									var url = "{{ route('repair.readnotify')}}";
+											Swal.fire({
+												icon : 'error',
+												title: '!! มีรายการแจ้งซ่อมใหม่ !!',
+												showCloseButton: false,
+												showCancelButton: false,
+												showconfirmButton: true,
+												confirmButtonText: 'ตกลง',
+											}).then((result) => {
+												if (result.isConfirmed) {
+													$.ajax({
+														type:'GET',
+														 url: url,
+														 data: {STATUS:'1'
+																		,UNID:data.UNID},
+														 datatype: 'json',
+													});
+												}
+											})
+								 }
+							 }
+						 });
+					 }
+			setInterval(loaddata_table_all,10000);
+		loaddata_table();
+	});
+	// 2 Loop page
+	function loaddata_table(){
+		$.ajax({
+					 type:'GET',
+					 url: url,
+					 data: data,
+					 datatype: 'json',
+					 success:function(data){
+						 $('#result').html(data.html);
+						 $('#table_style').html(data.html_style);
+					 }
+				 });
+			 }
+	// 3 loop table worker in step close repair
+	function loop_tabel_worker(array_emp_unid){
+	 var url = "{{ route('repair.addtableworker') }}";
+	 	$.ajax({
+	 			 type:'POST',
+	 			 url: url,
+	 			 datatype: 'json',
+	 			 data: {
+	 				 "_token": "{{ csrf_token() }}",
+	 				 "UNID" : array_emp_unid,
+	 			 } ,
+	 			 success:function(data){
+	 				 $('#table_worker').html(data.html);
+	 			 }
+	 		 });
+	 };
+	// 4 Loop table sparepart in step close repair
+	function loop_tabel_sparepart(unid,total,type,cost){
+	 	//********************* input array ***********************
+	 	arr_spare_total.push({unid:unid,total:total});
+	 	arr_spare_type.push({unid:unid,type:type});
+	 	arr_spare_cost.push({unid:unid,cost:cost});
+	 	//********************** loop add array *************************
+	 	$.each(arr_spare_total,function(key, value){
+	 		sparepart_total[value.unid] = value.total;
+	 	});
+	 	$.each(arr_spare_type,function(key, value){
+	 		sparepart_type[value.unid]  = value.type;
+	 	});
+	 	$.each(arr_spare_cost,function(key, value){
+	 		sparepart_cost[value.unid]  = value.cost;
+	 	});
+	 	var url = "{{ route('repair.addsparepart') }}";
+	 	$.ajax({
+	 			 type:'POST',
+	 			 url: url,
+	 			 datatype: 'json',
+	 			 data: {TOTAL_SPAREPART : sparepart_total,
+	 			 				TYPE_SPAREPART : sparepart_type	,
+	 							SPAREPART_COST : sparepart_cost},
+	 			 success:function(data){
+	 				 $('#table_sparepart').html(data.html);
+	 			 }
+	 		 });
+	 	 };
+	// 5 Loop removeclass active
+	function loop_removeclass(){
+		for (var i = 1; i < 6; i++) {
+			$('.WORK_STEP_'+i).removeClass('badge-primary badge-success fw-bold');
+			$('#WORK_STEP_'+i).removeClass('active show');
+		}
+	}
+	// 6 Loop add class step active
+	function loop_addclass(step_number){
+		for (var i = 1; i < step_number ; i++) {
+			$('.WORK_STEP_'+i).addClass('badge-success fw-bold');
+		 }
+	}
+</script>
+{{-- Cookie --}}
+<script>
+	// Cookie Style List
 	var cookie_tablestyle = "{{Cookie::get('table_style')}}";
 	if (cookie_tablestyle == '') {
 			styletable('1');
 	}
-	var page = $('#PAGE').val();
-	var url = "{{ route('repair.fetchdata') }}?page="+page;
-	var data = $('#FRM_SEARCH').serialize();
-	$.ajax({
-				 type:'GET',
-				 url: url,
-				 data: data,
-				 datatype: 'json',
-				 success:function(data){
-					 $('#result').html(data.html);
-					 $('#table_style').html(data.html_style);
-				 }
-			 });
-		 }
-//********************** function loop array **********************
-
-function loop_tabel_worker(array_emp_unid){
-	var url = "{{ route('repair.addtableworker') }}";
-	$.ajax({
-			 type:'POST',
-			 url: url,
-			 datatype: 'json',
-			 data: {
-				 "_token": "{{ csrf_token() }}",
-				 "UNID" : array_emp_unid,
-			 } ,
-			 success:function(data){
-				 $('#table_worker').html(data.html);
-			 }
-		 });
-};
-function loop_tabel_sparepart(unid,total,type,cost){
-	//********************* input array ***********************
-	arr_spare_total.push({unid:unid,total:total});
-	arr_spare_type.push({unid:unid,type:type});
-	arr_spare_cost.push({unid:unid,cost:cost});
-	//********************** loop arry *************************
-	$.each(arr_spare_total,function(key, value){
-		sparepart_total[value.unid] = value.total;
-	});
-	$.each(arr_spare_type,function(key, value){
-		sparepart_type[value.unid]  = value.type;
-	});
-	$.each(arr_spare_cost,function(key, value){
-		sparepart_cost[value.unid]  = value.cost;
-	});
-
-	var url = "{{ route('repair.addsparepart') }}";
-	$.ajax({
-			 type:'POST',
-			 url: url,
-			 datatype: 'json',
-			 data: {TOTAL_SPAREPART : sparepart_total,
-			 				TYPE_SPAREPART : sparepart_type	,
-							SPAREPART_COST : sparepart_cost},
-			 success:function(data){
-				 $('#table_sparepart').html(data.html);
-			 }
-		 });
-	 };
-//********************** function common **********************
-function setcookie(name,value){
-	var urlcookie = "{{ route('cookie.set') }}";
-	var data = {"_token": "{{ csrf_token() }}",NAME : name,VALUE : value}
-	$.ajax({
-		type:'GET',
-		url: urlcookie,
-		datatype: 'json',
-		data: data ,
-		success:function(res){
-				}
-			});
-}
+	// create Cookie
+	function setcookie(name,value){
+		var urlcookie = "{{ route('cookie.set') }}";
+		var data = {"_token": "{{ csrf_token() }}",NAME : name,VALUE : value}
+		$.ajax({
+			type:'GET',
+			url: urlcookie,
+			datatype: 'json',
+			data: data ,
+			success:function(res){
+					}
+				});
+	}
+</script>
+{{-- Common Function --}}
+<script>
 function styletable(table_style){
 	if (table_style == '1') {
 		$('#table_style').attr('hidden',false);
@@ -493,31 +498,135 @@ function sweetalertnoinput(){
 		timer: 1500
 	});
 }
-//********************** function class tab ***********************
-function loop_removeclass(){
-	for (var i = 1; i < 6; i++) {
-		$('.WORK_STEP_'+i).removeClass('badge-primary badge-success fw-bold');
-		$('#WORK_STEP_'+i).removeClass('active show');
+//********************** function open step ที่ ค้างเอาไว้ ***********************
+
+function modalstep3(repair_sparepart,repair_count){
+	$("#overlay").fadeIn(300);
+	$.each(repair_sparepart, function(key, val) {
+		var unid 		= val.SPAREPART_UNID;
+		var total 	= val.SPAREPART_TOTAL_OUT;
+		var typeadd = val.SPAREPART_PAY_TYPE;
+		var cost 		= val.SPAREPART_COST;
+			loop_tabel_sparepart(unid,total,typeadd,cost);
+	});
+	if (repair_count > 0) {
+		$('#addbuy_sparepart').attr('disabled',true);
+		buysparepart('1');
+	}else {
+		$('#addbuy_sparepart').attr('disabled',false);
+		buysparepart('2');
 	}
-}
-function modalstep0(docno,detail){
-	$('.WORK_STEP_1').addClass('badge-primary fw-bold');
-	$('#WORK_STEP_1').addClass('active show');
-	$('#RepairForm').modal('hide');
+	$("#overlay").fadeOut(300);
+	}
+function modalstep5(repair_unid){
+	var url = "{{ route('repair.result') }}";
 	$('#CloseForm').modal({backdrop: 'static', keyboard: false});
 	$('#CloseForm').modal('show');
+	$("#overlay").fadeIn(300);　
+	$.ajax({
+	 type:'POST',
+	 url: url,
+	 datatype: 'json',
+	 data: {UNID_REPAIR:repair_unid} ,
+	 success:function(res){
+				 $('#closeform').attr('data-total_sparepart',res.total_sparepart);
+				 $('#closeform').attr('data-total_worker',res.total_worker);
+				 $('#closeform').attr('data-total_all',res.total_all);
+				 $('#stepsave').attr('hidden',false);
+			 }
+		 }).done(function(res) {
+					setTimeout(function(){
+						$("#overlay").fadeOut(300);
+						$('#WORK_STEP_RESULT').html(res.html);
+						$('#stepsave').attr('hidden',false);
+						$('.stepclose').attr('hidden',true);
+						if (res.status == '1') {
+						 $('#stepsave').attr('hidden',true);
+						 $('.stepclose').attr('hidden',false);
+						}
+					},500);
+
+				});
+			}
+function rec_work(thisdata){
+	$("#overlayinpage").fadeIn(300);　
+	var repair_unid = $(thisdata).data('unid');
+	var docno = $(thisdata).data('docno');
+	var url = "{{ route('repair.empcallajax') }}";
+	$.ajax({
+			 type:'GET',
+			 url: url,
+			 data: {REPAIR_REQ_UNID : repair_unid},
+			 datatype: 'json',
+			 success:function(data){
+				 $("#overlayinpage").fadeOut(300);
+				 $('#TITLE_DOCNO').html('เลขที่เอกสาร : '+docno);
+		 //************************ set select 2 **************************
+				 $('#show_detail')											.html(data.html_detail);
+				 $('#SPAREPART')												.html(data.html_sparepart);
+				 $('#select_recworker,#WORKER_SELECT')	.html(data.html_select);
+				 $('#SPAREPART').select2({
+					 placeholder: "กรุณาเลือก",
+					 width:'116%',
+				 });
+				 $('#WORKER_SELECT').select2({
+					 placeholder: "กรุณาเลือก",
+					 width:'100%',
+				 });
+				 $('.select-repairdetail').select2({
+					   placeholder: "กรุณาเลือก",
+				 	   width:'100%',
+				  	 selectionCssClass:'my-1 ',
+				  });
+				 $('.REC_WORKER').select2({
+					 placeholder: "กรุณาเลือก",
+					 width:'100%',
+					 selectionCssClass:'required',
+					});
+
+		//***************************** step ที่ค้างไว้ *********************************
+				 if (data.step) {
+					 var step_number = data.step.replace("WORK_STEP_", "");
+					 var detail 		 = $('#DETAIL_REPAIR option:selected').attr('data-name');
+					 $('#TITLE_DOCNO_SUB').html(docno);
+					 $("#show-detail").html('อาการเสีย : '+detail);
+					 	 loop_removeclass();
+						 loop_addclass(step_number);
+
+						if (step_number == '3') {
+							//***************************** step 3 *********************************
+							modalstep3(data.repair_sparepart,data.repair_count);
+						}else if (step_number == '5') {
+							//***************************** step 5 *********************************
+							modalstep5(repair_unid)
+						}else if (step_number == '1' || step_number == '2' || step_number == '4') {
+							//***************************** step 1 & 2 & 4 *********************************
+							$('#stepsave').attr('hidden',false);
+							$('.stepclose').attr('hidden',true);
+						}
+						//***************************** open modal CloseForm *********************************
+						$('.WORK_STEP_'+step_number).addClass('badge-primary fw-bold');
+						$('#WORK_STEP_'+step_number).addClass('active show');
+						$('#CloseForm').modal({backdrop: 'static', keyboard: false});
+						$('#CloseForm').modal('show');
+				 }else {
+					 //***************************** open modal Recform *********************************
+					 $('#Recform').modal({backdrop: 'static', keyboard: false,focus:false});
+					 $("#Recform").modal("show");
+					 $('#stepsave').attr('hidden',false);
+					 $('.stepclose').attr('hidden',true);
+				 }
+			 }
+		 });
 }
 
 //********************** function save ****************************
-function savestep(idform,steppoint){
+function savestep(work_step_current,work_step_next){
+	var work_step_current = work_step_current;
+	var work_step_next 		= work_step_next;
 	var unid 							= $("#UNID_REPAIR_REQ").val();
-	var work_step_simple 	= idform;
-	var work_step_next 		= steppoint;
-	var steppoint 				= steppoint;
-	var url 							= "{{ route('repair.savestep') }}?UNID_REPAIR_REQ="+unid+"&WORK_STEP="+idform+'&WORK_STEP_NEXT='+steppoint;
-	var idform 						= '#FRM_'+idform;
-
-	var data = $(idform).serialize();
+	var url 							= "{{ route('repair.savestep') }}?UNID_REPAIR_REQ="+unid+"&WORK_STEP="+work_step_current+'&WORK_STEP_NEXT='+work_step_next;
+	var data 							= $('#FRM_'+work_step_current).serialize();
 	$("#overlay").fadeIn(300);
 	$.ajax({
 		type:'POST',
@@ -526,17 +635,18 @@ function savestep(idform,steppoint){
 		data: data ,
 		success:function(res){
 			$("#overlay").fadeOut(300);
-					if (res.name) {
-						$('#IMG_'+unid).attr('src',res.img);
-						$('#WORK_STATUS_'+unid).html(res.name);
-						$('#DATE_DIFF_'+unid).html('แจ้งเมื่อ:'+res.date);
+				 //page EMP_NAME
+					if (res.EMP_NAME) {
+						$('#IMG_'+unid).attr('src',res.IMG);
+						$('#WORK_STATUS_'+unid).html(res.EMP_NAME);
+						$('#DATE_DIFF_'+unid).html('แจ้งเมื่อ:'+res.DATE);
 					}
+					// Sparepart
 					if (res.pass == 'false') {
-						var text = '';
-						let number = 0 ;
+						var text 		= '';
+						let number 	= 0 ;
 						buysparepart('1');
 						$('#addbuy_sparepart').attr('disabled',true);
-
 						$.each(res.sparepart, function(key, val) {
 							  number++
 								text+= ' '+number+'. '+key+' ';
@@ -546,289 +656,158 @@ function savestep(idform,steppoint){
 						  title: 'รายการอะไหล่หมด',
 						  text: text,
 						});
-
 					}else if (res.pass == 'true') {
 						$('.'+work_step_next).addClass('badge-primary fw-bold');
-						$('.'+work_step_simple).removeClass('badge-primary fw-bold');
-						$('.'+work_step_simple).addClass('badge-success fw-bold');
-						$('#'+work_step_simple).removeClass('active show');
+						$('.'+work_step_current).removeClass('badge-primary fw-bold');
+						$('.'+work_step_current).addClass('badge-success fw-bold');
+						$('#'+work_step_current).removeClass('active show');
 						$('#'+work_step_next).addClass('active show');
 					}
 				}
 			});
 }
+function result(work_step_next,work_step_current){
+	$("#overlay").fadeIn(300);　
+	var url 				= "{{ route('repair.result') }}";
+	var unid_repair = $("#UNID_REPAIR_REQ").val();
+	$.ajax({
+		type:'POST',
+		url: url,
+		datatype: 'json',
+		data: {UNID_REPAIR:unid_repair} ,
+		success:function(res){
+					$("#overlay").fadeOut(300);
+					$('#closeform').attr('data-total_sparepart',res.total_sparepart);
+					$('#closeform').attr('data-total_worker',res.total_worker);
+					$('#closeform').attr('data-total_all',res.total_all);
+					$('#WORK_STEP_RESULT').html(res.html);
+					$('.'+work_step_next).addClass('badge-primary fw-bold');
+					$('.'+work_step_current).removeClass('badge-primary fw-bold');
+					$('.'+work_step_current).addClass('badge-success fw-bold');
+					$('#'+work_step_current).removeClass('active show');
+					$('#'+work_step_next).addClass('active show');
+					if (res.html) {
+						$('#WORK_STEP_5').addClass('active');
+					}
+				}
+			});
+}
 //******************************* End function ********************
-	function rec_work(thisdata){
-		$("#overlayinpage").fadeIn(300);　
-		var repair_unid = $(thisdata).data('unid');
-		var docno = $(thisdata).data('docno');
-		var detail = $(thisdata).data('detail');
-		var url = "{{ route('repair.empcallajax') }}";
-
-		$.ajax({
-				 type:'GET',
-				 url: url,
-				 data: {REPAIR_REQ_UNID : repair_unid},
-				 datatype: 'json',
-				 success:function(data){
-					 $("#overlayinpage").fadeOut(300);
-			 //************************ set html **************************
-					 $('#show_detail').html(data.html_detail);
-					 $('#select_recworker').html(data.html_select);
-					 $('#WORKER_SELECT').html(data.html_select);
-					 $('#SPAREPART').html(data.html_sparepart);
-					 $('#SPAREPART').select2({
-						 placeholder: "กรุณาเลือก",
-						 width:'116%',
-					 });
-					 $('#WORKER_SELECT').select2({
-						 placeholder: "กรุณาเลือก",
-						 width:'100%',
-					 });
-					 $('.select-repairdetail').select2({
-						   placeholder: "กรุณาเลือก",
-					 	   width:'100%',
-					  	 selectionCssClass:'my-1 ',
-					  });
-					 $('.REC_WORKER').select2({
-						 placeholder: "กรุณาเลือก",
-						 width:'100%',
-						 selectionCssClass:'required',
-						});
-					 $('#TITLE_DOCNO').html('เลขที่เอกสาร : '+docno);
-					 $.fn.modal.Constructor.prototype._enforceFocus = function() {};
-			//***************************** step ที่ค้างไว้ *********************************
-					 if (data.step) {
-						 var step_number = data.step.replace("WORK_STEP_", "");
-						 var detail = $('#DETAIL_REPAIR option:selected').attr('data-name');
-						 $('#TITLE_DOCNO_SUB').html(docno);
-						 $("#show-detail").html('อาการเสีย : '+detail);
-						 	 loop_removeclass();
-						 if (step_number == '1') {
-						//***************************** step แรกสุด *********************************
-							 modalstep0(docno,detail);
-						 }else {
-								for (var i = 1; i < step_number ; i++) {
-
- 							 	$('.WORK_STEP_'+i).addClass('badge-success fw-bold');
-						//***************************** step สุดท้าย *********************************
-								if (i == 2) {
-									$("#overlay").fadeIn(300);
-									$.each(data.repair_sparepart, function(key, val) {
-										var unid = val.SPAREPART_UNID;
-										var total = val.SPAREPART_TOTAL_OUT;
-										var typeadd = val.SPAREPART_PAY_TYPE;
-										var cost = val.SPAREPART_COST;
-							  			loop_tabel_sparepart(unid,total,typeadd,cost);
-							    });
-
-									if (data.repair_count > 0) {
-										$('#addbuy_sparepart').attr('disabled',true);
-										buysparepart('1');
-									}else {
-										$('#addbuy_sparepart').attr('disabled',false);
-										buysparepart('2');
-									}
-									setTimeout(function(){
-										$("#overlay").fadeOut(300);
-									},1200);
-
-								}else if(i == 4) {
-									var url = "{{ route('repair.result') }}";
-									$('#CloseForm').modal({backdrop: 'static', keyboard: false});
-									$('#CloseForm').modal('show');
-									$('#WORK_STEP_5').addClass('active');
-									$("#overlay").fadeIn(300);　
-									$.ajax({
-									 type:'POST',
-									 url: url,
-									 datatype: 'json',
-									 data: {UNID_REPAIR:repair_unid} ,
-									 success:function(res){
-												 $('#closeform').attr('data-total_sparepart',res.total_sparepart);
-												 $('#closeform').attr('data-total_worker',res.total_worker);
-												 $('#closeform').attr('data-total_all',res.total_all);+
-												 $('#stepsave').attr('hidden',false);
-											 }
-										 }).done(function(res) {
-										      setTimeout(function(){
-										        $("#overlay").fadeOut(300);
-														$('#WORK_STEP_RESULT').html(res.html);
-														$('#stepsave').attr('hidden',false);
-														$('.stepclose').attr('hidden',true);
-	 												 	if (res.status == '1') {
-	 													 $('#stepsave').attr('hidden',true);
-	 													 $('.stepclose').attr('hidden',false);
-	 												 	}
-										      },500);
-
-										    });
-								}else {
-									$('#CloseForm').modal({backdrop: 'static', keyboard: false});
-									$('#CloseForm').modal('show');
-									$('.WORK_STEP_'+step_number).addClass('badge-primary fw-bold');
-									$('#WORK_STEP_'+step_number).addClass('active show');
-									$('#stepsave').attr('hidden',false);
-									$('.stepclose').attr('hidden',true);
-								}
-							}
-					//***************************** step ต่างๆ *********************************
-						 }
-					 }else {
-						 $('#RepairForm').modal({backdrop: 'static', keyboard: false,focus:false});
-						 $("#RepairForm").modal("show");
-						 $('#stepsave').attr('hidden',false);
-						 $('.stepclose').attr('hidden',true);
-					 }
-				 }
-			 });
-	}
-	function previous_step(step_number){
-			var step_number_up = Number(step_number) + 1;
-			var work_step_previous = 'WORK_STEP_'+step_number;
-			var work_step_simple   = 'WORK_STEP_'+step_number_up;
-			$('.'+work_step_previous).removeClass('badge-success fw-bold');
-			$('.'+work_step_previous).addClass('badge-primary fw-bold');
-			$('.'+work_step_simple).removeClass('badge-primary fw-bold');
-			$('#'+work_step_simple).removeClass('active show');
-			$('#'+work_step_previous).addClass('active show');
-		};
-	function nextstep(step_number){
-		var step_number_down = Number(step_number) - 1;
-		var work_step_next = 'WORK_STEP_'+step_number;
-		var work_step_simple   = 'WORK_STEP_'+step_number_down;
-
-		if ( $('#FRM_'+work_step_simple).valid() ){
-
-			if (work_step_next == 'WORK_STEP_4') {
-				savestep(work_step_simple,work_step_next);
-			}else if (work_step_next == 'WORK_STEP_5') {
-
-				$("#overlay").fadeIn(300);　
-				var url = "{{ route('repair.result') }}";
-				var unid_repair = 			 $("#UNID_REPAIR_REQ").val();
-				$.ajax({
-					type:'POST',
-					url: url,
-					datatype: 'json',
-					data: {UNID_REPAIR:unid_repair} ,
-					success:function(res){
-								$("#overlay").fadeOut(300);
-								$('#closeform').attr('data-total_sparepart',res.total_sparepart);
-								$('#closeform').attr('data-total_worker',res.total_worker);
-								$('#closeform').attr('data-total_all',res.total_all);
-								$('#WORK_STEP_RESULT').html(res.html);
-								$('.'+work_step_next).addClass('badge-primary fw-bold');
-								$('.'+work_step_simple).removeClass('badge-primary fw-bold');
-								$('.'+work_step_simple).addClass('badge-success fw-bold');
-								$('#'+work_step_simple).removeClass('active show');
-								$('#'+work_step_next).addClass('active show');
-								if (res.html) {
-									$('#WORK_STEP_5').addClass('active');
-								}
-							}
-						});
-			}else {
-				savestep(work_step_simple,work_step_next);
-				$('.'+work_step_next).addClass('badge-primary fw-bold');
-				$('.'+work_step_simple).removeClass('badge-primary fw-bold');
-				$('.'+work_step_simple).addClass('badge-success fw-bold');
-				$('#'+work_step_simple).removeClass('active show');
-				$('#'+work_step_next).addClass('active show');
-			}
-
-		}else {
-			sweetalertnoinput();
-		}
-
+//******************************* function Next and previous********************
+function previous_step(step_number){
+		var step_number_up 			= Number(step_number) + 1;
+		var work_step_previous 	= 'WORK_STEP_'+step_number;
+		var work_step_current   = 'WORK_STEP_'+step_number_up;
+		$('.'+work_step_previous).removeClass('badge-success fw-bold');
+		$('.'+work_step_previous).addClass('badge-primary fw-bold');
+		$('.'+work_step_current).removeClass('badge-primary fw-bold');
+		$('#'+work_step_current).removeClass('active show');
+		$('#'+work_step_previous).addClass('active show');
 	};
-	function previous_worker(){
-		$('#WORK_IN').attr('hidden',true);
-		$('#WORK_OUT').attr('hidden',true);
-		$('.form_work_in').attr('id','');
-	 	$('.form_work_out').attr('id','');
-		$('#nextstep_3').attr('hidden',true);
-		$('#select_typeworker').attr('hidden',false);
-		$("#previous_worker").attr('onclick','previous_step(1)');
-		$('#nextstep_3').data('type','');
-	}
-	function type_worker(type_worker){
-		var check_type = type_worker;
-		var url = "{{ route('repair.empcallajax') }}";
-		if (check_type == '1') {
-			 $('#WORK_IN').attr('hidden',false);
-			 $('.form_work_in').attr('id','FRM_WORK_STEP_2');
-			 $("#previous_worker").attr('onclick','previous_worker()');
-			 $('#nextstep_3').data('type','IN');
-			 $('#nextstep_3').attr('hidden',false);
-
+function nextstep(step_number){
+	var step_number_down 		= Number(step_number) - 1;
+	var work_step_next 			= 'WORK_STEP_'+step_number;
+	var work_step_current  	= 'WORK_STEP_'+step_number_down;
+	if ( $('#FRM_'+work_step_current).valid() ){
+		 if (work_step_next == 'WORK_STEP_5') {
+			result(work_step_next,work_step_current);
 		}else {
-			$('#WORK_OUT').attr('hidden',false);
-			$('.form_work_out').attr('id','FRM_WORK_STEP_2');
-			$("#previous_worker").attr('onclick','previous_worker()');
-			$('#nextstep_3').data('type','OUT');
-			$('#nextstep_3').attr('hidden',false);
+			savestep(work_step_current,work_step_next);
 		}
-		 $('#select_typeworker').attr('hidden',true);
+	}else {
+		sweetalertnoinput();
 	}
- function deleteworker(thisdata){
-	 	var unid = $(thisdata).data('empunid');
-		var empcode = $(thisdata).data('empcode');
-		var empname = $(thisdata).data('empname');
-		var data = {
-			id: unid,
-			text: empcode+' '+empname
-	 };
-		 for( var i = 0; i < array_emp_unid.length; i++){
-				 if ( array_emp_unid[i] == unid) {
-						 array_emp_unid.splice(i, 1);
-				 }
-		 }
-		var newOption = new Option(data.text, data.id, false, false);
-		$('#WORKER_SELECT').append(newOption).trigger('change');
-		loop_tabel_worker(array_emp_unid);
-	 }
- function add_sparepart(typeadd){
-	 //1 ตัดสต็อก  2ไม่ตัดสต็อก
-	 $(document).off('focusin.modal');
-	 var unid = $('#SPAREPART').val();
-	 var total = $('#TOTAL_SPAREPART').val();
-	 var cost = $('#SPAREPART_COST').val();
-   loop_tabel_sparepart(unid,total,typeadd,cost);
+
+};
+//******************************* End function Next and previous********************
+
+//******************************* function worker********************
+function previous_worker(){
+	$('#WORK_IN,#WORK_OUT,#nextstep_3').attr('hidden',true);
+	$('.form_work_in,.form_work_out').attr('id','');
+	$('#select_typeworker').attr('hidden',false);
+	$("#previous_worker").attr('onclick','previous_step(1)');
+	$('#nextstep_3').data('type','');
+}
+function type_worker(type_worker){
+	var check_type = type_worker;
+	if (check_type == '1') {
+		 $('#WORK_IN').attr('hidden',false);
+		 $('.form_work_in').attr('id','FRM_WORK_STEP_2');
+		 $('#nextstep_3').data('type','IN');
+	}else {
+		$('#WORK_OUT').attr('hidden',false);
+		$('.form_work_out').attr('id','FRM_WORK_STEP_2');
+		$('#nextstep_3').data('type','OUT');
+	}
+	$("#previous_worker").attr('onclick','previous_worker()');
+	$('#nextstep_3').attr('hidden',false);
+	$('#select_typeworker').attr('hidden',true);
+}
+function deleteworker(thisdata){
+ 	var unid 		= $(thisdata).data('empunid');
+	var empcode = $(thisdata).data('empcode');
+	var empname = $(thisdata).data('empname');
+	var data = {
+		id: unid,
+		text: empcode+' '+empname
  };
- function edittotal(thisdata){
-	 var unid = $(thisdata).data('unid');
-	 $('#SPAREPART').val(unid);
-   $('#SPAREPART').select2({
-		 width:'116%',
-	 }).trigger('change');
-	 var total = sparepart_total[unid];
-	 $('#TOTAL_SPAREPART').val(total);
- }
- function removesparepart(thisdata){
-	 var unid = $(thisdata).data('unid');
-	 for( var i = 0; i < arr_spare_total.length; i++){
-			 if ( arr_spare_total[i].unid == unid) {
-					 arr_spare_total.splice(i, 1);
-					 arr_spare_type.splice(i,1);
-					 arr_spare_cost.splice(i,1);
+	 for( var i = 0; i < array_emp_unid.length; i++){
+			 if ( array_emp_unid[i] == unid) {
+					 array_emp_unid.splice(i, 1);
 			 }
 	 }
-	 loop_tabel_sparepart(unid);
+	var newOption = new Option(data.text, data.id, false, false);
+	$('#WORKER_SELECT').append(newOption).trigger('change');
+	loop_tabel_worker(array_emp_unid);
  }
+//******************************* End function worker********************
+
+//******************************* function worker********************
+function add_sparepart(typeadd){
+ $(document).off('focusin.modal');
+ var unid 	= $('#SPAREPART').val();
+ var total 	= $('#TOTAL_SPAREPART').val();
+ var cost 	= $('#SPAREPART_COST').val();
+ loop_tabel_sparepart(unid,total,typeadd,cost);
+};
+function edittotal(thisdata){
+ var unid = $(thisdata).data('unid');
+ $('#SPAREPART').val(unid);
+ $('#SPAREPART').select2({
+	 width:'116%',
+ }).trigger('change');
+ var total = sparepart_total[unid];
+ $('#TOTAL_SPAREPART').val(total);
+}
+function removesparepart(thisdata){
+ var unid = $(thisdata).data('unid');
+ for( var i = 0; i < arr_spare_total.length; i++){
+		 if ( arr_spare_total[i].unid == unid) {
+				 arr_spare_total.splice(i, 1);
+				 arr_spare_type.splice(i,1);
+				 arr_spare_cost.splice(i,1);
+		 }
+ }
+ loop_tabel_sparepart(unid);
+}
+//******************************* End function worker********************
 
  $('#closestep_1').on('click',function(){
-	 var docno 				= $('#TITLE_DOCNO').html();
-	 var detail 			 	= $('#DETAIL_REPAIR option:selected').attr('data-name');
+	 var docno 				 = $('#TITLE_DOCNO').html();
+	 var detail 			 = $('#DETAIL_REPAIR option:selected').attr('data-name');
 	 var check_select  = $('#REC_WORKER').val();
 	 if (check_select != '' && check_select != null) {
 		 $('#TITLE_DOCNO_SUB').html(docno);
 		 $("#show-detail").html('อาการเสีย : '+detail);
 		 loop_removeclass();
-		 modalstep0(docno,detail);
+		 $('.WORK_STEP_1').addClass('badge-primary fw-bold');
+		 $('#WORK_STEP_1').addClass('active show');
+		 $('#Recform').modal('hide');
+		 $('#CloseForm').modal({backdrop: 'static', keyboard: false});
+		 $('#CloseForm').modal('show');
 		 savestep('WORK_STEP_0','WORK_STEP_1');
 	 }
-
  });
  $('#nextstep_3').on('click',function(){
 	 var type_worker = $('#nextstep_3').data('type');
@@ -852,8 +831,8 @@ function savestep(idform,steppoint){
 				loop_tabel_worker(array_emp_unid);
 			}
 		});
-		function buysparepart(check){
-			var check = check;
+function buysparepart(check){
+	var check = check;
 			$('#buy_sparepart .buy_sparepart').attr('disabled',false);
 			$('#addbuy_sparepart').attr("onclick","buysparepart('2')");
 			$('#buy_sparepart').attr('hidden',false);
@@ -863,73 +842,72 @@ function savestep(idform,steppoint){
 				$('#buy_sparepart').attr('hidden',true);
 			}
 		}
-
- $('#SPAREPART').on('change',function(){
-		var unid = $('#SPAREPART').val();
-		var sparepartcost  = $('#'+unid).data('sparepartcost');
-		$('#SPAREPART_COST').val(sparepartcost);
-	 });
-
- $('#add_workerout').on('click',function(){
-	 var name = $('.WORKEROUT_NAME').val();
-	 var cost = $('.WORKEROUT_COST').val();
-	 var detail = $('.WORKEROUT_DETAIL').val();
-	 var number_check = 0;
-	 if (name != '') {
-		 $("#table_workerout").each(function () {
-			 number_count++;
-			var tds = '<tr id="tablerow'+number_count+'" class="tablerow">';
-			jQuery.each($('tr:last td', this), function () {
-					number_check++;
-					if (number_check == '1') {
-						tds += '<td class="tablecolumn">' + (number_count) + '</td>';
-					}else if(number_check == '2'){
-						tds += '<td>' +name+
-						'<div class="row">'+
-							'<div class="col-md-12">'+
-								'<label>วิธีการแก้ไข</label>'+
-								'<input type="hidden" value="'+name+'" id="WORKOUT_NAME['+name+']" name="WORKOUT_NAME['+name+']">'+
-								'<input type="hidden" value="'+cost+'" id="WORKOUT_COST['+name+']" name="WORKOUT_COST['+name+']">'+
-								'<textarea class="form-control mt--1 mb-1" id="WORKOUT_DETAIL['+name+']" name="WORKOUT_DETAIL['+name+']">'+detail+'</textarea>'+
-							'</div>'+
-						'</div>' + '</td>';
-					}else if(number_check == '3'){
-						tds += '<td>' + cost + '</td>';
-					}else {
-						tds += '<td><button type="button" class="btn btn-warning btn-block btn-sm editworkout"'+
-												'onclick="editworkout(this)" data-name="'+name+'" data-table="'+number_count+'">แก้ไข</button>'+
-											 '<button type="button" class="btn btn-danger btn-block btn-sm deleteworkout"'+
-											 	'onclick="deleteworkout(this)" data-table="'+number_count+'">ลบรายการ</button></td>';
-					}
-			});
-			tds += '</tr>';
-					$('tbody', this).append(tds);
-		});
-
-		$('#add_workerout').html('<i class="fas fa-plus" > เพิ่ม</i>');
-		$('.WORKEROUT_NAME').val('');
-		$('.WORKEROUT_COST').val('');
-		$('.WORKEROUT_DETAIL').val('');
-	 }
-
+$('#SPAREPART').on('change',function(){
+	var unid = $('#SPAREPART').val();
+	var sparepartcost  = $('#'+unid).data('sparepartcost');
+	$('#SPAREPART_COST').val(sparepartcost);
  });
- function editworkout(thisdata){
-	 var name = $(thisdata).data('name');
-	 var cost = $('#WORKOUT_COST\\['+name+'\\]').val();
-   var detail = $('#WORKOUT_DETAIL\\['+name+'\\]').val();
-	 var table_id = $(thisdata).data('table');
-	 var i = $('#table_workerout .tablecolumn').length  ;
-	 $('#add_workerout').html('<i class="fas fa-plus" > แก้ไข</i>');
-	 $('.WORKEROUT_NAME').val(name);
-	 $('.WORKEROUT_COST').val(cost);
-	 $('.WORKEROUT_DETAIL').val(detail);
-	 $('table#table_workerout tr#tablerow'+table_id).remove();
-		resetIndexes();
-	 if( i == 0 ) {
-		 number_count = 0 ;
-	 }
+
+$('#add_workerout').on('click',function(){
+ var name = $('.WORKEROUT_NAME').val();
+ var cost = $('.WORKEROUT_COST').val();
+ var detail = $('.WORKEROUT_DETAIL').val();
+ var number_check = 0;
+ if (name != '') {
+	 $("#table_workerout").each(function () {
+		 number_count++;
+		var tds = '<tr id="tablerow'+number_count+'" class="tablerow">';
+		jQuery.each($('tr:last td', this), function () {
+				number_check++;
+				if (number_check == '1') {
+					tds += '<td class="tablecolumn">' + (number_count) + '</td>';
+				}else if(number_check == '2'){
+					tds += '<td>' +name+
+					'<div class="row">'+
+						'<div class="col-md-12">'+
+							'<label>วิธีการแก้ไข</label>'+
+							'<input type="hidden" value="'+name+'" id="WORKOUT_NAME['+name+']" name="WORKOUT_NAME['+name+']">'+
+							'<input type="hidden" value="'+cost+'" id="WORKOUT_COST['+name+']" name="WORKOUT_COST['+name+']">'+
+							'<textarea class="form-control mt--1 mb-1" id="WORKOUT_DETAIL['+name+']" name="WORKOUT_DETAIL['+name+']">'+detail+'</textarea>'+
+						'</div>'+
+					'</div>' + '</td>';
+				}else if(number_check == '3'){
+					tds += '<td>' + cost + '</td>';
+				}else {
+					tds += '<td><button type="button" class="btn btn-warning btn-block btn-sm editworkout"'+
+											'onclick="editworkout(this)" data-name="'+name+'" data-table="'+number_count+'">แก้ไข</button>'+
+										 '<button type="button" class="btn btn-danger btn-block btn-sm deleteworkout"'+
+										 	'onclick="deleteworkout(this)" data-table="'+number_count+'">ลบรายการ</button></td>';
+				}
+		});
+		tds += '</tr>';
+				$('tbody', this).append(tds);
+	});
+
+	$('#add_workerout').html('<i class="fas fa-plus" > เพิ่ม</i>');
+	$('.WORKEROUT_NAME').val('');
+	$('.WORKEROUT_COST').val('');
+	$('.WORKEROUT_DETAIL').val('');
  }
- function deleteworkout(thisdata){
+
+});
+function editworkout(thisdata){
+ var name 		= $(thisdata).data('name');
+ var cost 		= $('#WORKOUT_COST\\['+name+'\\]').val();
+ var detail 	= $('#WORKOUT_DETAIL\\['+name+'\\]').val();
+ var table_id = $(thisdata).data('table');
+ var i = $('#table_workerout .tablecolumn').length  ;
+ $('#add_workerout').html('<i class="fas fa-plus" > แก้ไข</i>');
+ $('.WORKEROUT_NAME').val(name);
+ $('.WORKEROUT_COST').val(cost);
+ $('.WORKEROUT_DETAIL').val(detail);
+ $('table#table_workerout tr#tablerow'+table_id).remove();
+	resetIndexes();
+ if( i == 0 ) {
+	 number_count = 0 ;
+ }
+}
+function deleteworkout(thisdata){
 	 var table_id = $(thisdata).data('table');
 	 var i = $('#table_workerout .tablecolumn').length;
 	 $('table#table_workerout tr#tablerow'+table_id).remove();
@@ -937,7 +915,7 @@ function savestep(idform,steppoint){
 	if( i == 0 ) {
 		number_count = 0 ;
 	}
- }
+}
 function resetIndexes(){
     var count = 0;
     $('.tablerow').each(function(){
@@ -973,9 +951,6 @@ $('#closeform').on('click',function(){
 							  title: 'ปิดเอกสารเรียบร้อย',
 							  timer: 1500,
 							}).then((result) => {
-								  $('#BG_'+repair_unid).removeClass('bg-danger');
-									$('#BG_'+repair_unid).removeClass('bg-warning');
-									$('#BG_'+repair_unid).addClass('bg-success');
 									$('#stepsave').attr('hidden',true);
 									$('.stepclose').attr('hidden',false);
 							});
@@ -997,14 +972,14 @@ $('#closeform').on('click',function(){
 			 $("#FRM_WORK_STEP_"+i)[0].reset();
 		 }
 	 }
-	 array_emp_unid = []; ;
-	 sparepart_total = {}; ;
-	 sparepart_type = {}; ;
-	 sparepart_cost = {}; ;
-	 arr_spare_total = []; ;
-	 arr_spare_type = []; ;
-	 arr_spare_cost = []; ;
-	 number_count = '' ;
+	 array_emp_unid 	= []	;
+	 sparepart_total 	= {}	;
+	 sparepart_type 	= {}	;
+	 sparepart_cost 	= {}	;
+	 arr_spare_total 	= []	;
+	 arr_spare_type 	= []	;
+	 arr_spare_cost 	= []	;
+	 number_count 		= '' 	;
 	 loop_tabel_worker(array_emp_unid);
 	 loop_removeclass();
 	 loaddata_table();
@@ -1020,7 +995,6 @@ $('#closeform').on('click',function(){
 	 resetIndexes();
 	 loop_tabel_sparepart('','','','');
 	 for (var i = 1; i < 5; i++) {
-		// document.getElementById("FRM_WORK_STEP_"+i)['0'].reset();
 		$('#FRM_WORK_STEP_'+i).trigger("reset");
 	 }
  })
@@ -1029,10 +1003,10 @@ $('#closeform').on('click',function(){
 	function changesubmit(){
 		$('#BTN_SUBMIT').click();
 	}
-	function pdfrepair(m){
-		var unid = (m);
-		window.open('/machine/repair/pdf/'+unid,'Repairprint','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');
-	}
+		// function pdfrepair(m){
+		// 	var unid = (m);
+		// 	window.open('/machine/repair/pdf/'+unid,'Repairprint','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');
+		// }
 	function pdfsaverepair(unid){
 		var unid = unid;
 		window.open('/machine/repair/savepdf/'+unid,'RepairSaveprint','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');

@@ -12,7 +12,7 @@ body.modal-open {
 </style>
 
 {{-- ปิดเอกสาร --}}
-<div class="modal fade" id="RepairForm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLalavel" aria-hidden="true">
+<div class="modal fade" id="Recform" tabindex="-1" role="dialog" aria-labelledby="exampleModalLalavel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable" role="document">
 
     <div class="modal-content">

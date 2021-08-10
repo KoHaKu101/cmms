@@ -183,7 +183,7 @@ class MachineRepairController extends Controller
         $REC_WORK_STATUS = '<i class="fas fa-clipboard fa-lg mx-1"></i> ดำเนินการสำเร็จ';
       }
       $html.= '<tr>
-                <td>'.$key+1 .'</td>
+                <td>'.$dataset->firstItem() + $key .'</td>
                 <td width="8%">'.date('d-m-Y',strtotime($row->DOC_DATE)).'</td>
                 <td width="10%">'.$row->DOC_NO.'</td>
                 <td width="4%">'.$row->MACHINE_LINE.'</td>
