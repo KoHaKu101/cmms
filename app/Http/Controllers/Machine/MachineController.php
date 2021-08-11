@@ -371,11 +371,13 @@ class MachineController extends Controller
 
   public function UserHomePage(Request $request){
     $ROLE = $request->role;
+  
     if (Gate::allows('isManager_Ma')) {
       return View('machine.userpage.userhomepageforma');
     }elseif(Gate::allows('isManager_Pd')) {
       return View('machine.userpage.userhomepageforpd');
     }elseif (Gate::allows('isAdmin')) {
+
         if ($ROLE == 'MA') {
           return View('machine.userpage.userhomepageforma');
         }elseif ($ROLE == 'PD') {
