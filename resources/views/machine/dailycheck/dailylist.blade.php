@@ -45,21 +45,22 @@
 												<div class="col-md-12 col-lg-9 form-inline">
 													<h4 class="card-title text-white">Daily CheckSheet ปี :</h4>
 													<select class="form-control form-control-sm input-group filled text-info my-1 mx-3 col-4 col-md" id="YEAR" name="YEAR">
-														@for ($m=date('Y')-2; $m < date('Y')+2; $m++)
-															<option value="{{$m}}" {{  $YEAR == $m ? 'selected' : '' }}>{{$m}}</option>
+														@for ($y=date('Y')-2; $y < date('Y')+2; $y++)
+															<option value="{{$y}}" {{  $YEAR == $y ? 'selected' : '' }}>{{$y}}</option>
 														@endfor
 													</select>
 													<h4 class="card-title text-white"> เดือน : </h4>
 													<select class="form-control form-control-sm input-group filled text-info my-1 mx-3 col-4 col-md" id="MONTH" name="MONTH">
-															@for ($i=1; $i < 13; $i++)
-																<option value="{{$i}}" {{ $MONTH_NAME_TH[$MONTH] == $MONTH_NAME_TH[$i] ? 'selected' : '' }}>{{$MONTH_NAME_TH[$i]}}</option>
+															@for ($m=1; $m < 13; $m++)
+
+																<option value="{{$m}}" {{ $MONTH == $m ? 'selected' : '' }}>{{$MONTH_NAME_TH[$m]}}</option>
 															@endfor
 													</select>
 												<h4 class="card-title text-white">Line</h4>
 													<select class="form-control form-control-sm input-group filled text-info my-1 mx-3 col col-md-2" id="MACHINE_LINE" name="MACHINE_LINE">
 														<option value="0" >ALL</option>
 														@for ($l=1; $l < 7; $l++)
-															<option value="L{{$l}}" {{ $MACHINE_LINE == 'L'.$l ? 'selected' : ''}}>L{{$l}}</option>
+															<option value="{{'L'.$l}}" {{ $MACHINE_LINE == 'L'.$l ? 'selected' : ''}}>L{{$l}}</option>
 														@endfor
 													</select>
 												</div>
@@ -107,37 +108,36 @@
 									        <tbody>
 									          @foreach ($DATA_MACHINE as $index => $row_machine)
 															@php
-																$DAILRY_UNID =  isset($img_unidarray[$row_machine->UNID]) ? $img_unidarray[$row_machine->UNID] : "";
+
+																$MACHINE_UNID = $row_machine->UNID;
+																$DAILRY_UNID 	= isset($img_unidarray[$MACHINE_UNID]) ? $img_unidarray[$MACHINE_UNID] : "";
+																$STYLE_NONE   = isset($img_array[$MACHINE_UNID]) ? '' : 'none';
 															@endphp
 									          <tr>
-									            <td class="text-center">{{ $index+1 }}</td>
+									            <td class="text-center">{{ $DATA_MACHINE->firstItem() + $index }}</td>
 									            <td>{{$row_machine->MACHINE_CODE}}</td>
 									            <td>{{$row_machine->MACHINE_NAME_V2}}</td>
 									            <td>{{$row_machine->MACHINE_LINE}}</td>
 									            <td><button type="button" class="btn btn-secondary btn-block btn-sm my-1 BTN_UPLOAD" onclick="uploadimg(this)"
 									              data-mccode="{{$row_machine->MACHINE_CODE}}"
-									              data-mcunid="{{ $row_machine->UNID }}"
-									              data-toggle="modal"id="{{ $row_machine->UNID }}" name="{{ $row_machine->UNID }}"
+									              data-mcunid="{{ $MACHINE_UNID }}"
+									              data-toggle="modal"id="{{ $MACHINE_UNID }}" name="{{ $MACHINE_UNID }}"
 									              >
 									              <i class="fas fas fa-image fa-lg mr-1"></i>
 									               Upload</button></td>
 									            <td>
 
 									              <button type="button" class="btn btn-primary btn-sm mx-1 my-1 view-img"
-																 {{-- onclick="viewimg(this)" --}}
 																onclick="window.open('{{ url('machine/daily/view/'.$DAILRY_UNID) }}', '_blank', 'width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');"
-{{--
-									                data-img="{{ isset($img_array[$row_machine->UNID]) ? $img_array[$row_machine->UNID] : '' }}"
-									                data-mccode="{{ $row_machine->MACHINE_CODE }}" --}}
-									                style="display:{{isset($img_array[$row_machine->UNID]) ? '' : 'none'}};"
+									                style="display:{{$STYLE_NONE}};"
 																	>
 									                <i class="fas fa-eye fa-lg"></i> View
 									              </button>
 									              <button type="button" class="btn btn-danger btn-sm mx-1 my-1"
 									                onclick="deleteimg(this)"
-									                data-imgunid="{{ isset($img_unidarray[$row_machine->UNID]) ? $img_unidarray[$row_machine->UNID] : '' }}"
+									                data-imgunid="{{ isset($img_unidarray[$MACHINE_UNID]) ? $img_unidarray[$MACHINE_UNID] : '' }}"
 									                data-mccode="{{ $row_machine->MACHINE_CODE }}"
-									                style="display:{{isset($img_array[$row_machine->UNID]) ? '' : 'none'}};">
+									                style="display:{{$STYLE_NONE}};">
 									                <i class="fas fa-trash fa-lg"></i> Delete
 									              </button></td>
 									          </tr>
@@ -147,7 +147,7 @@
 									        </tbody>
 									      </table>
 									    </div>
-									    {{ $DATA_MACHINE->appends(['MACHINE_CODE'=>$MACHINE_CODE,'MACHINE_LINE'=>$MACHINE_LINE,'YEAR'=>$YEAR,'MONTH'=>$MONTH])->links('pagination.default') }}
+									    {{ $DATA_MACHINE->appends(['SEARCH_MACHINE'=>$MACHINE_CODE])->links('pagination.default') }}
 									  </div>
 									</div>
 								</div>
@@ -168,54 +168,7 @@
 }
 		</style>
 		{{-- เพิ่ม Template --}}
-		<div class="modal fade" id="UploadImg" tabindex="-1" role="dialog" aria-labelledby="exampleModalLalavel" aria-hidden="true">
-		  <div class="modal-dialog " role="document">
-		    <div class="modal-content">
-		      <div class="modal-header bg-primary">
-		        <h5 class="modal-title" id="title_text">เพิ่มประเภทรายการ</h5>
-		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		          <span aria-hidden="true">&times;</span>
-		        </button>
-		      </div>
-					<div class="modal-body">
-						<form action="{{ route('daily.upload')}}" method="post" enctype="multipart/form-data" id="FRM_UPLOAD_SHEET" name="FRM_UPLOAD_SHEET" >
-			        @csrf
-							<input type="hidden" id="MACHINE_UNID" 					name="MACHINE_UNID" 				value="">
-							<input type="hidden" id="MACHINE_CODE" 					name="MACHINE_CODE" 				value="">
-							<input type="hidden" id="CHECK_YEAR" 						name="CHECK_YEAR" 					value="">
-							<input type="hidden" id="CHECK_MONTH" 					name="CHECK_MONTH" 					value="">
-							<div class="row">
-								<div class="col-md-12 col-lg-12">
-									<div class="form-group">
-										<div class="input-group">
-												<input type="file" class="form-control form-control-sm" placeholder="" aria-label="" aria-describedby="basic-addon1"
-												id="FILE_NAME" name="FILE_NAME" accept="application/pdf" required>
-											<div class="input-group-prepend">
-												<button class="btn btn-primary btn-border btn-sm" type="submit"><i class="fa fa-fw fa-upload fa-lg"></i></button>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-			      </form>
-
-
-						{{-- <div id="owl-demo2" class="owl-carousel owl-theme owl-img-responsive owl-loaded owl-drag">
-					 		<div class="owl-stage-outer">
-								<div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 100%;height:400px">
-									<div class="owl-item active" style="width: 100%;height:400px">
-										<div class="item">
-											<img class="img-fluid" id="preview-image-before-upload" src="{{ asset('assets/img/no_image1200_900.png') }}" style="width: 100%;height:400px">
-										</div>
-									</div>
-								</div>
-							</div>
-						</div> --}}
-					</div>
-
-		    </div>
-		  </div>
-		</div>
+		@include('machine.dailycheck.modaluploadimg')
 	{{-- view --}}
 		<div class="modal fade" id="ViewImg" tabindex="-1" role="dialog" aria-labelledby="exampleModalLalavel" aria-hidden="true">
 		  <div class="modal-dialog modal-lg" role="document">

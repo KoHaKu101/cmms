@@ -133,7 +133,7 @@
 															</select>
 														<label class="text-white mx-1">ค้นหา : </label>
 								              <div class="col-6 col-md-3 input-group mx-1">
-								                <input  type="search" id="SEARCH"  name="SEARCH" class="form-control form-control-sm mt-1 " placeholder="ค้นหา........."
+								                <input  type="search" id="SEARCH_MACHINE"  name="SEARCH_MACHINE" class="form-control form-control-sm mt-1 " placeholder="ค้นหา........."
 																value="{{ $SEARCH }}">
 								                <div class="input-group-prepend">
 								                  <button type="submit" class="btn btn-search pr-1 btn-xs	mt-1" id="BTN_SUBMIT">
@@ -302,8 +302,7 @@
 								    </table>
 								  	</div>
 										<input type="hidden" id="PAGE" name="PAGE" value="{{$dataset->currentPage()}}">
-									{{$dataset->appends(['MACHINE_LINE'=>$MACHINE_LINE,'MONTH' => $MONTH,'YEAR' => $YEAR,'DOC_STATUS' => $DOC_STATUS,'SEARCH',$SEARCH])
-														->links('pagination.default')}}
+									{{$dataset->appends(['SEARCH_MACHINE'=>$SEARCH])->links('pagination.default')}}
 								    </div>
 								</div>
 								</div>
@@ -340,6 +339,28 @@
 	var arr_spare_type = [];
 	var arr_spare_cost = [];
 	let number_count = 0;
+</script>
+{{-- common script--}}
+<script>
+function styletable(table_style){
+	if (table_style == '1') {
+		$('#table_style').attr('hidden',false);
+		$('#list_table').attr('hidden',true);
+		 setcookie('table_style','1');
+	}else {
+		$('#table_style').attr('hidden',true);
+		$('#list_table').attr('hidden',false);
+		 setcookie('table_style','2');
+	}
+}
+function sweetalertnoinput(){
+	Swal.fire({
+	  icon: 'error',
+	  title: 'ไม่สามารถไปขั้นตอนถัดไปได้',
+	  text: 'กรุณากรอกข้อมูลให้ครบถ้วน!',
+		timer: 1500
+	});
+}
 </script>
 {{-- Loop function --}}
 <script>
@@ -477,27 +498,9 @@
 				});
 	}
 </script>
-{{-- Common Function --}}
+{{-- Function --}}
 <script>
-function styletable(table_style){
-	if (table_style == '1') {
-		$('#table_style').attr('hidden',false);
-		$('#list_table').attr('hidden',true);
-		 setcookie('table_style','1');
-	}else {
-		$('#table_style').attr('hidden',true);
-		$('#list_table').attr('hidden',false);
-		 setcookie('table_style','2');
-	}
-}
-function sweetalertnoinput(){
-	Swal.fire({
-	  icon: 'error',
-	  title: 'ไม่สามารถไปขั้นตอนถัดไปได้',
-	  text: 'กรุณากรอกข้อมูลให้ครบถ้วน!',
-		timer: 1500
-	});
-}
+
 //********************** function open step ที่ ค้างเอาไว้ ***********************
 
 function modalstep3(repair_sparepart,repair_count){

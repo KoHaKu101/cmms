@@ -44,17 +44,19 @@ class RepairCloseFormController extends Controller
 
   public function EMPCallAjax(Request $request){
     $REPAIR_REQ_UNID = isset($request->REPAIR_REQ_UNID) ? $request->REPAIR_REQ_UNID : '';
-    $DATA_EMPNAME    = EMPName::select('UNID','EMP_CODE')->selectraw("dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH")
-                                        ->where('EMP_STATUS','=','9')->orderBy('EMP_CODE')->get();
-    $DATA_SPAREPART  = SparePart::where('STATUS','=','9')->orderBy('SPAREPART_NAME')->get();
+
+
     //*************************** select worker *******************************************//
-    $html_select = '<select class="form-control form-control-sm col-9 REC_WORKER" id="REC_WORKER" name="REC_WORKER">
+    $DATA_EMPNAME = EMPName::select('UNID','EMP_CODE')->selectraw("dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH")
+                                        ->where('EMP_STATUS','=','9')->orderBy('EMP_CODE')->get();
+    $html_select  = '<select class="form-control form-control-sm col-9 REC_WORKER" id="REC_WORKER" name="REC_WORKER">
                       <option value> กรุณาเลือก </option>';
                       foreach ($DATA_EMPNAME as $index => $row){
                         $html_select.= '<option value="'.$row->UNID.'">'.$row->EMP_CODE." ".$row->EMP_NAME_TH.'</option>';
                       }
     $html_select.='</select>';
     //*************************** select sparepart **************************************//
+    $DATA_SPAREPART = SparePart::where('STATUS','=','9')->orderBy('SPAREPART_NAME')->get();
     $html_sparepart = '<select class="form-control form-control-sm col-9 REC_WORKER_NAME" id="REC_WORKER_NAME" name="REC_WORKER_NAME" required>
       <option value=""> กรุณาเลือก </option>';
       foreach ($DATA_SPAREPART as $index => $row_sparepart){
@@ -70,8 +72,8 @@ class RepairCloseFormController extends Controller
     //*********************************** table ของรายละเอียด ****************************************/
     $html_detail = "";
     if ($REPAIR_REQ_UNID != '') {
-      $REPAIR                 = MachineRepairREQ::select('*')->selectraw("dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH")
-                                                             ->where('UNID','=',$REPAIR_REQ_UNID)->first();
+      $REPAIR                 = MachineRepairREQ::selectRaw('PRIORITY,UNID,MACHINE_CODE,MACHINE_LINE,REPAIR_SUBSELECT_UNID,WORK_STEP,dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
+                                                ->where('UNID','=',$REPAIR_REQ_UNID)->first();
       $REPAIR_SPAREPART       = RepairSparepart::where('REPAIR_REQ_UNID','=',$REPAIR_REQ_UNID)->orderBy('SPAREPART_NAME')->get();
       $REPAIR_SPAREPART_COUNT = RepairSparepart::where('REPAIR_REQ_UNID','=',$REPAIR_REQ_UNID)->where('SPAREPART_STOCK_TYPE','=','OUT')->count();
       $DATA_SELECMAIN         = SelectMainRepair::select('REPAIR_MAINSELECT_NAME','UNID')->where('STATUS','=','9')->get();
@@ -120,49 +122,7 @@ class RepairCloseFormController extends Controller
     return Response()->json(['html_detail'=>$html_detail,'html_select' => $html_select,'html_sparepart' => $html_sparepart
     ,'step' => $REPAIR->WORK_STEP,'repair_sparepart'=>$REPAIR_SPAREPART,'repair_count' => $REPAIR_SPAREPART_COUNT]);
   }
-  public function SelectRepairDetail(Request $request){
-    $UNID = $request->UNID;
-    $data_selectsubrepair = SelectSubRepair::select('UNID','REPAIR_SUBSELECT_NAME')->where('REPAIR_MAINSELECT_UNID','=',$UNID)->get();
-    $html = '<div class="row">
-              <style>
-              .card-stats .card-body-new {
-                padding: 0px!important;
-                }
-              </style>';
-    foreach ($data_selectsubrepair as $index => $data_row) {
-      $html.='
-      <div class="col-sm-6 col-md-3">
-        <a  onclick="selectrepairdetail(this)"  data-unid="'.$data_row->UNID.'" data-name="'.$data_row->REPAIR_SUBSELECT_NAME.'"style="cursor:pointer">
-        <div class="card card-stats card-primary card-round">
-          <div class="card-body card-body-new">
-            <div class="row">
-              <div class="col-2">
-                <div class="icon-big text-center">
-                  <i class="fas fa-wrench"></i>
-                </div>
-              </div>
-              <div class="col-10 col-stats">
-                <div class="numbers">
-                  <p class="card-category">'.$data_row->REPAIR_SUBSELECT_NAME.'</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </a >
-      </div>';
-    }
-    $html.='</div>
-    <div class="card-action text-center">
-      <button type="button" class="btn btn-warning mx-1 my-1"
-      onclick="previousstep(this)"
-      data-step="step1"><i class="fas fa-arrow-alt-circle-left mr-1"></i>Previous</button>
-      <button type="button" class="btn btn-primary mx-1 my-1"
-      onclick="nextstep(this)"
-      data-step="step3">Next <i class="fas fa-arrow-alt-circle-right ml-1"></i></button>
-    </div>';
-    return Response()->json(['html' => $html]);
-  }
+
   public function AddTableWorker(Request $request){
       $UNID = $request->UNID;
       $html = '';
@@ -185,8 +145,7 @@ class RepairCloseFormController extends Controller
       return Response()->json(['html' => $html]);
   }
   public function AddSparePart(Request $request){
-    // dd($request);
-    // dd($request);
+
       $arr_TOTAL_SPAREPART = $request->TOTAL_SPAREPART;
       $UNID   = array();
       $TOTAL  = array();
@@ -634,3 +593,49 @@ class RepairCloseFormController extends Controller
     return $MINUTES;
   }
 }
+
+
+
+// public function SelectRepairDetail(Request $request){
+//   $UNID = $request->UNID;
+//   $data_selectsubrepair = SelectSubRepair::select('UNID','REPAIR_SUBSELECT_NAME')->where('REPAIR_MAINSELECT_UNID','=',$UNID)->get();
+//   $html = '<div class="row">
+//             <style>
+//             .card-stats .card-body-new {
+//               padding: 0px!important;
+//               }
+//             </style>';
+//   foreach ($data_selectsubrepair as $index => $data_row) {
+//     $html.='
+//     <div class="col-sm-6 col-md-3">
+//       <a  onclick="selectrepairdetail(this)"  data-unid="'.$data_row->UNID.'" data-name="'.$data_row->REPAIR_SUBSELECT_NAME.'"style="cursor:pointer">
+//       <div class="card card-stats card-primary card-round">
+//         <div class="card-body card-body-new">
+//           <div class="row">
+//             <div class="col-2">
+//               <div class="icon-big text-center">
+//                 <i class="fas fa-wrench"></i>
+//               </div>
+//             </div>
+//             <div class="col-10 col-stats">
+//               <div class="numbers">
+//                 <p class="card-category">'.$data_row->REPAIR_SUBSELECT_NAME.'</p>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </a >
+//     </div>';
+//   }
+//   $html.='</div>
+//   <div class="card-action text-center">
+//     <button type="button" class="btn btn-warning mx-1 my-1"
+//     onclick="previousstep(this)"
+//     data-step="step1"><i class="fas fa-arrow-alt-circle-left mr-1"></i>Previous</button>
+//     <button type="button" class="btn btn-primary mx-1 my-1"
+//     onclick="nextstep(this)"
+//     data-step="step3">Next <i class="fas fa-arrow-alt-circle-right ml-1"></i></button>
+//   </div>';
+//   return Response()->json(['html' => $html]);
+// }

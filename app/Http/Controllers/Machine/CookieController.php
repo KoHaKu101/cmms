@@ -5,12 +5,10 @@ namespace App\Http\Controllers\Machine;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
-use Auth;
 use Cookie;
 use Response;
 //******************** model ***********************
-use App\Models\Machine\Uploadimg;
+
 //************** Package form github ***************
 
 class CookieController extends Controller

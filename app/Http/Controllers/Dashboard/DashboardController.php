@@ -26,7 +26,6 @@ class DashboardController extends Controller
     });
   }
   public function Sumaryline(){
-    //dd($data_set);
     return View('machine/dashboard/sumaryline');
   }
   public function Dashboard(){

@@ -64,7 +64,7 @@ body.modal-open {
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header bg-primary text-primary">
-        <h5 class="modal-title" id="TITLE_DOCNO_SUB"></h5>
+        <h5 class="modal-title" id="TITLE_DOCNO"></h5>
         <button type="button" class="btn btn-sm btn-danger "data-dismiss="modal" ><i class="fas fa-times"></i></button>
       </div>
       <div class="modal-body modal-body-step">

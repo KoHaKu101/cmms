@@ -76,12 +76,12 @@ use App\Http\Controllers\Machine\ReportPRController;
 |
 */
 if (Gate::allows('isManager_Ma')) {
-  Route::get('/machine/user/homepage/ma', function () {
-      return redirect('/machine/user/homepage/ma');
+  Route::get('/machine/user/homepage', function () {
+      return redirect('/machine/user/homepage');
   })->middleware('auth');
 }elseif (Gate::allows('isManager_Pd')) {
-  Route::get('/machine/user/homepage/pd', function () {
-      return redirect('/machine/user/homepage/pd');
+  Route::get('/machine/user/homepage', function () {
+      return redirect('/machine/user/homepage');
   })->middleware('auth');
 }else {
   Route::get('/', function () {
@@ -93,7 +93,7 @@ if (Gate::allows('isManager_Ma')) {
 Route::get('/user/logout/',[MenuController::class,'Logout'])->name('user.logout');
 Route::middleware(['auth:sanctum', 'verified']);
 //user Page
-Route::get('/machine/user/homepage/{role?}',     [MachineController::class,'UserHomePage'])->name('user.homepage');
+Route::get('/machine/user/homepage',     [MachineController::class,'UserHomePage'])->name('user.homepage');
 Route::get('/machine/repair/pdf/{UNID}',        'App\Http\Controllers\PDF\MachineRepairPDFController@RepairPdf');
 Route::get('/machine/repair/savepdf/{UNID}',    'App\Http\Controllers\PDF\RepairSaveFormPDFController@RepairSaveForm');
 
@@ -124,7 +124,7 @@ Route::get('machine/repair/fetchdata'                     ,[MachineRepairControl
   Route::get('machine/repair/readnotify/ma'                   ,[MachineRepairController::class,'ReadNotify'])        ->name('repair.readnotify');
   Route::get('machine/repair/readnotify/pd'                   ,[PDRepairController::class,'ReadNotify'])        ->name('repair.readnotify.pd');
 
-  Route::post('machine/repair/select/selectrepairdetail'  ,[RepairCloseFormController::class,'SelectRepairDetail'])->name('repair.selectrepairdetail');
+  Route::post('machine/repair/select/selectrepairdetail'  ,[RepairCloseFormController::class,'SelectRepairDetail']);
   Route::get('machine/repair/empcallajax'                 ,[RepairCloseFormController::class,'EMPCallAjax'])       ->name('repair.empcallajax');
   Route::post('machine/repair/addtableworker'             ,[RepairCloseFormController::class,'AddTableWorker'])    ->name('repair.addtableworker');
   Route::post('machine/repair/addsparepart'               ,[RepairCloseFormController::class,'AddSparePart'])      ->name('repair.addsparepart');

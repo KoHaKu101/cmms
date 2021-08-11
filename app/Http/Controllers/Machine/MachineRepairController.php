@@ -58,15 +58,12 @@ class MachineRepairController extends Controller
       }
     }
 
-
-    $SEARCH       = isset($request->SEARCH) ? '%'.$request->SEARCH.'%' : '';
-    $LINE         = MachineLine::select('LINE_CODE','LINE_NAME')->where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
-    $MACHINE_LINE = isset($request->LINE) ? $request->LINE : $request->cookie('LINE');
-    $MONTH        = isset($request->MONTH) ? $request->MONTH : ($request->cookie('MONTH') != '' ? $request->cookie('MONTH') : date('m') ) ;
+    $SEARCH       = isset($request->SEARCH_MACHINE)? $request->SEARCH_MACHINE     : '' ;
+    $MACHINE_LINE = isset($request->LINE)       ? $request->LINE       : ($request->cookie('LINE')       != '' ? $request->cookie('LINE')       : 0 );
+    $MONTH        = isset($request->MONTH)      ? $request->MONTH      : ($request->cookie('MONTH')      != '' ? $request->cookie('MONTH')      : date('m') ) ;
+    $YEAR         = isset($request->YEAR)       ? $request->YEAR       : ($request->cookie('YEAR')       != '' ? $request->cookie('YEAR')       : date('Y') ) ;
     $DOC_STATUS   = isset($request->DOC_STATUS) ? $request->DOC_STATUS : ($request->cookie('DOC_STATUS') != '' ? $request->cookie('DOC_STATUS') : 9 );
-    $YEAR         = isset($request->YEAR) ? $request->YEAR : ($request->cookie('YEAR') != '' ? $request->cookie('YEAR') : date('Y') ) ;
-
-    $MINUTES = 30;
+    $MINUTES      = 30;
     Cookie::queue('PAGE_TYPE','MA_REPAIR',$MINUTES);
     Cookie::queue('LINE',$MACHINE_LINE,$MINUTES);
     Cookie::queue('MONTH',$MONTH,$MINUTES);
@@ -112,13 +109,14 @@ class MachineRepairController extends Controller
                                             ->orderBy('DOC_MONTH','DESC')
                                             ->orderBy('DOC_NO','DESC')
                                             ->paginate(10);
+
     $array_EMP = array();
     $array_IMG = array();
     foreach ($DATA_EMP as $index => $row_emp) {
       $array_EMP[$row_emp->EMP_CODE] = $row_emp->EMP_NAME_TH;
       $array_IMG[$row_emp->EMP_CODE] = $row_emp->EMP_ICON;
     }
-
+    $LINE         = MachineLine::select('LINE_CODE','LINE_NAME')->where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
     return View('machine/repair/repairlist',compact('dataset','SEARCH','LINE',
     'MACHINE_LINE','MONTH','YEAR','DOC_STATUS','array_EMP','array_IMG'));
   }

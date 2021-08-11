@@ -59,14 +59,13 @@ class PDRepairController extends Controller
       }
     }
 
-    $SEARCH       = isset($request->SEARCH) ? $request->SEARCH : '';
-
-    $LINE         = MachineLine::select('LINE_CODE','LINE_NAME')->where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
-    $MACHINE_LINE = isset($request->LINE)  ? $request->LINE  : $request->cookie('LINE');
-    $MONTH        = isset($request->MONTH) ? $request->MONTH : ($request->cookie('MONTH') != '' ? $request->cookie('MONTH') : date('m') ) ;
+    $SEARCH       = isset($request->SEARCH_MACHINE)     ? $request->SEARCH_MACHINE     : '';
+    $MACHINE_LINE = isset($request->LINE)       ? $request->LINE       : ($request->cookie('LINE')       != '' ? $request->cookie('LINE')       : 0 );
+    $MONTH        = isset($request->MONTH)      ? $request->MONTH      : ($request->cookie('MONTH')      != '' ? $request->cookie('MONTH')      : date('m') ) ;
+    $YEAR         = isset($request->YEAR)       ? $request->YEAR       : ($request->cookie('YEAR')       != '' ? $request->cookie('YEAR')       : date('Y') ) ;
     $DOC_STATUS   = isset($request->DOC_STATUS) ? $request->DOC_STATUS : ($request->cookie('DOC_STATUS') != '' ? $request->cookie('DOC_STATUS') : 9 );
-    $YEAR         = isset($request->YEAR)  ? $request->YEAR  : ($request->cookie('YEAR') != '' ? $request->cookie('YEAR') : date('Y') ) ;
     $MINUTES      = 30;
+
     Cookie::queue('PAGE_TYPE','PD_REPAIR',$MINUTES);
     Cookie::queue('LINE',$MACHINE_LINE,$MINUTES);
     Cookie::queue('MONTH',$MONTH,$MINUTES);
@@ -116,7 +115,7 @@ class PDRepairController extends Controller
       $array_EMP[$row_emp->EMP_CODE] = $row_emp->EMP_NAME_TH;
       $array_IMG[$row_emp->EMP_CODE] = $row_emp->EMP_ICON;
     }
-
+    $LINE         = MachineLine::select('LINE_CODE','LINE_NAME')->where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
     return View('machine/repair/repairlistpd',compact('dataset','SEARCH','LINE',
     'MACHINE_LINE','MONTH','YEAR','DOC_STATUS','array_EMP','array_IMG'));
   }
@@ -164,7 +163,9 @@ class PDRepairController extends Controller
                                             ->paginate(10);
     $html = '';
     $html_style = '';
+    //********************************** TABLE ******************************************************************
     foreach ($dataset->items($page) as $key => $row) {
+      //************************* BUTTON *****************************************
       $BTN_CONFIRM			= $row->CLOSE_STATUS		== '1' ? "onclick=rec_work(this)" : '';
       $BTN              = '<button class="btn btn-danger btn-sm btn-block my-1"
                             style="cursor:default">รอรับงาน</button>';
@@ -179,16 +180,16 @@ class PDRepairController extends Controller
                             </button>';
       }elseif ($row->CLOSE_STATUS == '1') {
         $BTN_COLOR_WORKER = 'btn-pink';
-        $BTN				= '<button onclick=rec_work(this) type="button"
-                        data-unid="'.$row->UNID.'"
-                        data-docno="'.$row->DOC_NO.'"
-                        data-detail="'.$row->REPAIR_SUBSELECT_NAME.'"
-                        class="btn btn-primary btn-block btn-sm my-1 text-left">
-                        <span class="btn-label">
-                        <i class="fas fa-clipboard mx-1"></i>
-                          ดำเนินการสำเร็จ
-                        </span>
-                      </button>';
+        $BTN				      = '<button onclick=rec_work(this) type="button"
+                              data-unid="'.$row->UNID.'"
+                              data-docno="'.$row->DOC_NO.'"
+                              data-detail="'.$row->REPAIR_SUBSELECT_NAME.'"
+                              class="btn btn-primary btn-block btn-sm my-1 text-left">
+                              <span class="btn-label">
+                              <i class="fas fa-clipboard mx-1"></i>
+                                ดำเนินการสำเร็จ
+                              </span>
+                            </button>';
       }elseif ($row->INSPECTION_CODE != '') {
         $BTN				= '<button class="btn btn-warning btn-sm btn-block my-1 text-left"
                          style="cursor:default">
@@ -196,7 +197,7 @@ class PDRepairController extends Controller
                          '.$row->INSPECTION_NAME_TH.'
                        </button>';
       }
-
+      //************************* END BUTTON *****************************************
       $html.= '<tr>
                  <td>'.$dataset->firstItem() + $key.'</td>
                  <td width="9%">'.date('d-m-Y',strtotime($row->DOC_DATE)).'</td>
@@ -209,12 +210,12 @@ class PDRepairController extends Controller
                  <td width="9%">'.date('d-m-Y').'</td>
               </tr>';
       }
-
-      foreach ($dataset->items($page) as $index => $sub_row) {
+    //********************************** CARD ******************************************************************
+    foreach ($dataset->items($page) as $index => $sub_row) {
         $INSPECTION_CODE= $sub_row->INSPECTION_CODE;
-        $EMP_NAME       = EMPName::select('EMP_ICON')->where('EMP_CODE','=',$INSPECTION_CODE)->first();
         $SPAREPART_UNID = $sub_row->UNID;
 
+        $EMP_NAME       = EMPName::select('EMP_ICON')->where('EMP_CODE','=',$INSPECTION_CODE)->first();
         $IMG         	  = isset($EMP_NAME->EMP_ICON) ? asset('image/emp/'.$EMP_NAME->EMP_ICON) : asset('../assets/img/noemp.png');
         $BG_COLOR    		= isset($INSPECTION_CODE) ? 'bg-warning' : 'bg-danger';
         $TEXT_STATUS    = isset($INSPECTION_CODE) ? 'กำลังดำเนินการ' : 'รอรับงาน';
@@ -287,26 +288,24 @@ class PDRepairController extends Controller
         </div>';
         }
         $last_data = MachineRepairREQ::selectraw('UNID,STATUS')->where('STATUS','=',9)->first();
-
         $newrepair = isset($last_data->STATUS) ? true : false;
         $UNID      = isset($last_data->STATUS) ? $last_data->UNID : '';
     return Response()->json(['html'=>$html,'html_style' => $html_style,'newrepair' => $newrepair,'UNID' => $UNID]);
   }
-
   public function Store(Request $request,$MACHINE_UNID){
       //******************* Request parameter *******************//
-      $CLOSE_STATUS = '9';
-        $MACHINE_UNID = $MACHINE_UNID;
-        $EMP_CODE = $request->cookie('empcode');
-        $SELECT_MAIN_REPAIR_UNID = $request->cookie('selectmainrepair');
-        $SELECT_SUB_REPAIR_UNID = $request->cookie('selectsubrepair');
-        $PRIORITY = $request->cookie('priority');
-        $UNID = $this->randUNID('PMCS_CMMS_REPAIR_REQ');
+      $CLOSE_STATUS               = '9';
+        $MACHINE_UNID             = $MACHINE_UNID;
+        $EMP_CODE                 = $request->cookie('empcode');
+        $SELECT_MAIN_REPAIR_UNID  = $request->cookie('selectmainrepair');
+        $SELECT_SUB_REPAIR_UNID   = $request->cookie('selectsubrepair');
+        $PRIORITY                 = $request->cookie('priority');
+        $UNID                     = $this->randUNID('PMCS_CMMS_REPAIR_REQ');
       //******************* data *******************//
-      $DATA_MACHINE = Machine::where('UNID','=',$MACHINE_UNID)->first();
-        $DATA_SELECTMACHINEREPAIR = SelectMainRepair::where('UNID','=',$SELECT_MAIN_REPAIR_UNID)->first();
-        $DATA_SELECTSUBREPAIR = SelectSubRepair::where('UNID','=',$SELECT_SUB_REPAIR_UNID)->first();
-        $DATA_EMP = DB::select("select EMP_TH_NAME_FIRST,EMP_CODE,UNID from EMCS_EMPLOYEE where LINE_CODE = 'PD' and EMP_CODE = '".$EMP_CODE."'");
+      $MACHINE               = Machine::select('UNID','MACHINE_CODE','MACHINE_LINE','MACHINE_NAME')->where('UNID','=',$MACHINE_UNID)->first();
+        $SELECTMACHINEREPAIR = SelectMainRepair::select('UNID','REPAIR_MAINSELECT_NAME')->where('UNID','=',$SELECT_MAIN_REPAIR_UNID)->first();
+        $SELECTSUBREPAIR     = SelectSubRepair::select('STATUS_MACHINE','UNID','REPAIR_SUBSELECT_NAME')->where('UNID','=',$SELECT_SUB_REPAIR_UNID)->first();
+        $EMP                 = DB::select("select EMP_TH_NAME_FIRST,EMP_CODE,UNID from EMCS_EMPLOYEE where LINE_CODE = 'PD' and EMP_CODE = '".$EMP_CODE."'");
       //******************* docno *******************//
       $DATA_MACHINEREPAIRREQ = MachineRepairREQ::selectraw('max(DOC_NO)DOC_NO,max(DOC_DATE)DOC_DATE')->first();
       $DATE_DOCNO            = Carbon::now()->addyears('543');
@@ -321,18 +320,18 @@ class PDRepairController extends Controller
       //******************* insert *******************//
       MachineRepairREQ::insert([
         'UNID'=> $UNID
-        ,'MACHINE_UNID'          => $DATA_MACHINE->UNID
-        ,'MACHINE_CODE'          => $DATA_MACHINE->MACHINE_CODE
-        ,'MACHINE_LINE'          => $DATA_MACHINE->MACHINE_LINE
-        ,'MACHINE_NAME'          => $DATA_MACHINE->MACHINE_NAME
-        ,'MACHINE_STATUS'        => $DATA_SELECTSUBREPAIR->STATUS_MACHINE
-        ,'REPAIR_MAINSELECT_UNID'=> $DATA_SELECTMACHINEREPAIR->UNID
-        ,'REPAIR_MAINSELECT_NAME'=> $DATA_SELECTMACHINEREPAIR->REPAIR_MAINSELECT_NAME
-        ,'REPAIR_SUBSELECT_UNID' => $DATA_SELECTSUBREPAIR->UNID
-        ,'REPAIR_SUBSELECT_NAME' => $DATA_SELECTSUBREPAIR->REPAIR_SUBSELECT_NAME
-        ,'EMP_UNID'              => $DATA_EMP[0]->UNID
-        ,'EMP_CODE'              => $DATA_EMP[0]->EMP_CODE
-        ,'EMP_NAME'              => $DATA_EMP[0]->EMP_TH_NAME_FIRST
+        ,'MACHINE_UNID'          => $MACHINE->UNID
+        ,'MACHINE_CODE'          => $MACHINE->MACHINE_CODE
+        ,'MACHINE_LINE'          => $MACHINE->MACHINE_LINE
+        ,'MACHINE_NAME'          => $MACHINE->MACHINE_NAME
+        ,'REPAIR_MAINSELECT_UNID'=> $SELECTMACHINEREPAIR->UNID
+        ,'REPAIR_MAINSELECT_NAME'=> $SELECTMACHINEREPAIR->REPAIR_MAINSELECT_NAME
+        ,'MACHINE_STATUS'        => $SELECTSUBREPAIR->STATUS_MACHINE
+        ,'REPAIR_SUBSELECT_UNID' => $SELECTSUBREPAIR->UNID
+        ,'REPAIR_SUBSELECT_NAME' => $SELECTSUBREPAIR->REPAIR_SUBSELECT_NAME
+        ,'EMP_UNID'              => $EMP[0]->UNID
+        ,'EMP_CODE'              => $EMP[0]->EMP_CODE
+        ,'EMP_NAME'              => $EMP[0]->EMP_TH_NAME_FIRST
         ,'PRIORITY'              => $PRIORITY
         ,'DOC_NO'                => $DOC_NO
         ,'DOC_DATE'              => date('Y-m-d')

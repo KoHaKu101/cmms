@@ -3,12 +3,6 @@
 @section('meta')
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<link href="{{asset('assets/css/select2.min.css')}}" rel="stylesheet" />
-	<link href="{{asset('assets\css\cubeportfolio.css')}}" rel="stylesheet" type="text/css">
-
-  	  <link href="{{asset('assets\css\portfolio.min.css')}}" rel="stylesheet" type="text/css">
-
- 	 <link href="{{asset('assets\css\customize.css')}}" rel="stylesheet" type="text/css">
-
 @endsection
 @section('css')
 
@@ -137,7 +131,7 @@
 															</select>
 														<label class="text-white mx-1">ค้นหา : </label>
 								              <div class="input-group mx-1">
-								                <input  type="search" id="SEARCH"  name="SEARCH" class="form-control form-control-sm mt-1 col-lg-9" placeholder="ค้นหา........."
+								                <input  type="search" id="SEARCH_MACHINE"  name="SEARCH_MACHINE" class="form-control form-control-sm mt-1 col-lg-9" placeholder="ค้นหา........."
 																value="{{ $SEARCH }}">
 								                <div class="input-group-prepend">
 								                  <button type="submit" class="btn btn-search pr-1 btn-xs	mt-1" id="BTN_SUBMIT">
@@ -204,7 +198,7 @@
  										        $BG_COLOR  		= 'bg-primary text-white';
  														$HTML_STATUS  = '<div class="status" id="DATE_DIFF_'.$row->UNID.'" >ดำเนินงานสำเร็จ</div>';
 														$HTML_BTN     = '<button class="btn  btn-primary  btn-sm"
-	 																						onclick="rec_work(this)"
+	 																						onclick="ConFirmForm(this)"
 	 																						data-unid="'.$row->UNID.'"
 	 																						data-docno="'.$row->DOC_NO.'"
 	 																						data-detail="'.$row->REPAIR_SUBSELECT_NAME.'">
@@ -280,7 +274,7 @@
 								        <tbody id="result">
 								          @foreach ($dataset as $key => $sub_row)
 														@php
-															$BTN_CONFIRM			= $sub_row->CLOSE_STATUS		== '1' ? "onclick=rec_work(this)" : '';
+															$BTN_CONFIRM			= $sub_row->CLOSE_STATUS		== '1' ? "onclick=ConFirmForm(this)" : '';
 															$BTN              = '<button class="btn btn-danger btn-sm btn-block my-1"
 																										style="cursor:default">รอรับงาน</button>';
 															if ($sub_row->PD_CHECK_STATUS == '1') {
@@ -294,7 +288,7 @@
 																	 	 					</button>';
 															}elseif ($sub_row->CLOSE_STATUS == '1') {
 																$BTN_COLOR_WORKER = 'btn-pink';
-																$BTN				= '<button onclick=rec_work(this) type="button"
+																$BTN				= '<button onclick=ConFirmForm(this) type="button"
 																	 							data-unid="'.$sub_row->UNID.'"
 																	 							data-docno="'.$sub_row->DOC_NO.'"
 																	 							data-detail="'.$sub_row->REPAIR_SUBSELECT_NAME.'"
@@ -328,8 +322,7 @@
 								    </table>
 								  	</div>
 										<input type="hidden" id="PAGE" name="PAGE" value="{{$dataset->currentPage()}}">
-									{{$dataset->appends(['MACHINE_LINE'=>$MACHINE_LINE,'MONTH' => $MONTH,'YEAR' => $YEAR,'DOC_STATUS' => $DOC_STATUS,'SEARCH',$SEARCH])
-														->links('pagination.default')}}
+									{{$dataset->appends(['SEARCH_MACHINE' => $SEARCH])->links('pagination.default')}}
 								    </div>
 								</div>
 								</div>
@@ -355,13 +348,28 @@
 <script src="{{ asset('assets/js/select2.min.js') }}"></script>
 <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
 <script type="module" src="{{ asset('assets/js/js.cookie.min.js') }}"></script>
+{{-- Cookie --}}
 <script>
-$(document).ready(function(){
-
 	var cookie_tablestyle = "{{Cookie::get('table_style_pd')}}";
 	if (cookie_tablestyle == '') {
 			styletable('1');
 	}
+	function setcookie(name,value){
+		var urlcookie = "{{ route('cookie.set') }}";
+		var data = {"_token": "{{ csrf_token() }}",NAME : name,VALUE : value}
+		$.ajax({
+			type:'GET',
+			url: urlcookie,
+			datatype: 'json',
+			data: data ,
+			success:function(res){
+					}
+				});
+	}
+</script>
+{{-- function loop --}}
+<script>
+$(document).ready(function(){
 		var loaddata_table_all = function loopdata_table(){
 			var page = $('#PAGE').val();
 			var url = "{{ route('pd.fetchdata') }}?page="+page;
@@ -401,30 +409,7 @@ $(document).ready(function(){
 	setInterval(loaddata_table_all,10000);
 	loopdata_table();
 });
-//********************** function common **********************
-function setcookie(name,value){
-	var urlcookie = "{{ route('cookie.set') }}";
-	var data = {"_token": "{{ csrf_token() }}",NAME : name,VALUE : value}
-	$.ajax({
-		type:'GET',
-		url: urlcookie,
-		datatype: 'json',
-		data: data ,
-		success:function(res){
-				}
-			});
-}
-function styletable(table_style){
-	if (table_style == '1') {
-		$('#table_style').attr('hidden',false);
-		$('#list_table').attr('hidden',true);
-		 setcookie('table_style_pd','1');
-	}else {
-		$('#table_style').attr('hidden',true);
-		$('#list_table').attr('hidden',false);
-		 setcookie('table_style_pd','2');
-	}
-}
+
 function loopdata_table(){
 	var page = $('#PAGE').val();
 	var url = "{{ route('pd.fetchdata') }}?page="+page;
@@ -441,14 +426,26 @@ function loopdata_table(){
 				 }
 			 });
 		 }
-//******************************* End function ********************
-	function rec_work(thisdata){
+</script>
+{{-- function common  --}}
+<script>
+function styletable(table_style){
+	if (table_style == '1') {
+		$('#table_style').attr('hidden',false);
+		$('#list_table').attr('hidden',true);
+		 setcookie('table_style_pd','1');
+	}else {
+		$('#table_style').attr('hidden',true);
+		$('#list_table').attr('hidden',false);
+		 setcookie('table_style_pd','2');
+	}
+}
+	function ConFirmForm(thisdata){
 		$("#overlayinpage").fadeIn(300);　
 		var repair_unid = $(thisdata).data('unid');
-		var docno = $(thisdata).data('docno');
-		var detail = $(thisdata).data('detail');
-		var url = "{{ route('pd.result') }}";
-
+		var docno 			= $(thisdata).data('docno');
+		var detail 			= $(thisdata).data('detail');
+		var url 				= "{{ route('pd.result') }}";
 		$.ajax({
 				 type:'POST',
 				 url: url,
@@ -458,81 +455,77 @@ function loopdata_table(){
 					 $("#overlayinpage").fadeOut(300);
 					 $("#WORK_STEP_RESULT").html(result.html);
 					 $('#stepsave').html(result.footer);
-					 $('#TITLE_DOCNO_SUB').html(docno);
-
+					 $('#TITLE_DOCNO').html(docno);
 					 $('#EMP_CODE').select2({
 						 width: '30%',
 					 });
 					 $.fn.modal.Constructor.prototype._enforceFocus = function() {};
 					 $('#show-detail').html('อาการเสีย : '+detail);
 					 $("#Result").modal('show');
-					 $('#ConFirm').on('click',function(event){
-				 		event.preventDefault();
-						$("#overlay").fadeIn(300);
-				 		var urlsub = "{{ route('pd.confirm') }}";
-				 		var unid = $(this).attr('data-unid');
-				 		var emp_code = $('#EMP_CODE').val();
-				 		if (emp_code != "") {
-				 			$.ajax({
-				 					 type:'POST',
-				 					 url: urlsub,
-				 					 data: {REPAIR_REQ_UNID : unid,
-				 			 		 				USER_PD_CODE    : emp_code},
-				 					 datatype: 'json',
-				 					 success:function(result){
-				 						 $("#overlay").fadeOut(300);
-										 if (result.pass) {
-											 loopdata_table();
-											 Swal.fire({
-				 				 				  icon: 'success',
-				 				 				  title: 'บันทึกสำเร็จ',
-				 				 				  timer: 1500,
-				 				 				}).then((Result)=>{
-													$.ajax({
-										 					 type:'POST',
-										 					 url: url,
-										 					 data: {REPAIR_REQ_UNID : repair_unid},
-										 					 datatype: 'json',
-										 					 success:function(result){
-																 $("#WORK_STEP_RESULT").html(result.html);
-																 $('#stepsave').html(result.footer);
-															 }
-														 });
-												});
-										 }else {
-											 Swal.fire({
- 								 				  icon: 'error',
- 								 				  title: 'เกิดข้อผิดพลาด',
- 								 				  timer: 1500,
- 								 				});
-										 }
-
-				 					 }
-				 				 });
-				 		}else {
-							$("#overlay").fadeOut(300);
-				 			Swal.fire({
-				 				  icon: 'error',
-				 				  title: 'กรุณาใส่ชื่อผู้ตรวจสอบ',
-				 				  timer: 1500,
-				 				});
-				 		}
-
-				 	});
+					 $('#ConFirm').on('click',function(){
+						 SaveFrom();
+				 		});
 				 }
 			 });
 	}
 
+	function SaveFrom(){
+		 $("#overlay").fadeIn(300);
+		 var url = "{{ route('pd.confirm') }}";
+		 var unid = $(this).attr('data-unid');
+		 var emp_code = $('#EMP_CODE').val();
+		 if (emp_code != "") {
+			 $.ajax({
+						type:'POST',
+						url: url,
+						data: {REPAIR_REQ_UNID : unid,
+									 USER_PD_CODE    : emp_code},
+						datatype: 'json',
+						success:function(result){
+							$("#overlay").fadeOut(300);
+							if (result.pass) {
+								loopdata_table();
+								Swal.fire({
+									 icon: 'success',
+									 title: 'บันทึกสำเร็จ',
+									 timer: 1500,
+								 }).then((Result)=>{
+									 var url 	= "{{ route('pd.result') }}";
+									 $.ajax({
+												type:'POST',
+												url: url,
+												data: {REPAIR_REQ_UNID : repair_unid},
+												datatype: 'json',
+												success:function(result){
+													$("#WORK_STEP_RESULT").html(result.html);
+													$('#stepsave').html(result.footer);
+												}
+											});
+								 });
+							}else {
+								Swal.fire({
+									 icon: 'error',
+									 title: 'เกิดข้อผิดพลาด',
+									 timer: 1500,
+								 });
+							}
 
+						}
+					});
+		 }else {
+			 $("#overlay").fadeOut(300);
+			 Swal.fire({
+					 icon: 'error',
+					 title: 'กรุณาเลือกผู้ตรวจสอบ',
+					 timer: 1500,
+				 });
+		 }
+	}
 </script>
 <script type="text/javascript">
 	function changesubmit(){
 		$('#BTN_SUBMIT').click();
 	}
-	// function pdfrepair(m){
-	// 	var unid = (m);
-	// 	window.open('/machine/repair/pdf/'+unid,'Repairprint','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');
-	// }
 	function pdfsaverepair(unid){
 		var unid = unid;
 		window.open('/machine/repair/savepdf/'+unid,'RepairSaveprint','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');
