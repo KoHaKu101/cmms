@@ -350,6 +350,17 @@
 <script type="module" src="{{ asset('assets/js/js.cookie.min.js') }}"></script>
 {{-- Cookie --}}
 <script>
+function styletable(table_style){
+	if (table_style == '1') {
+		$('#table_style').attr('hidden',false);
+		$('#list_table').attr('hidden',true);
+		 setcookie('table_style_pd','1');
+	}else {
+		$('#table_style').attr('hidden',true);
+		$('#list_table').attr('hidden',false);
+		 setcookie('table_style_pd','2');
+	}
+}
 	var cookie_tablestyle = "{{Cookie::get('table_style_pd')}}";
 	if (cookie_tablestyle == '') {
 			styletable('1');
@@ -429,17 +440,7 @@ function loopdata_table(){
 </script>
 {{-- function common  --}}
 <script>
-function styletable(table_style){
-	if (table_style == '1') {
-		$('#table_style').attr('hidden',false);
-		$('#list_table').attr('hidden',true);
-		 setcookie('table_style_pd','1');
-	}else {
-		$('#table_style').attr('hidden',true);
-		$('#list_table').attr('hidden',false);
-		 setcookie('table_style_pd','2');
-	}
-}
+
 	function ConFirmForm(thisdata){
 		$("#overlayinpage").fadeIn(300);　
 		var repair_unid = $(thisdata).data('unid');
