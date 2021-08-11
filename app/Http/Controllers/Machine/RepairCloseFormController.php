@@ -592,50 +592,47 @@ class RepairCloseFormController extends Controller
 
     return $MINUTES;
   }
+  public function SelectRepairDetail(Request $request){
+    $UNID = $request->UNID;
+    $data_selectsubrepair = SelectSubRepair::select('UNID','REPAIR_SUBSELECT_NAME')->where('REPAIR_MAINSELECT_UNID','=',$UNID)->get();
+    $html = '<div class="row">
+              <style>
+              .card-stats .card-body-new {
+                padding: 0px!important;
+                }
+              </style>';
+    foreach ($data_selectsubrepair as $index => $data_row) {
+      $html.='
+      <div class="col-sm-6 col-md-3">
+        <a  onclick="selectrepairdetail(this)"  data-unid="'.$data_row->UNID.'" data-name="'.$data_row->REPAIR_SUBSELECT_NAME.'"style="cursor:pointer">
+        <div class="card card-stats card-primary card-round">
+          <div class="card-body card-body-new">
+            <div class="row">
+              <div class="col-2">
+                <div class="icon-big text-center">
+                  <i class="fas fa-wrench"></i>
+                </div>
+              </div>
+              <div class="col-10 col-stats">
+                <div class="numbers">
+                  <p class="card-category">'.$data_row->REPAIR_SUBSELECT_NAME.'</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </a >
+      </div>';
+    }
+    $html.='</div>
+    <div class="card-action text-center">
+      <button type="button" class="btn btn-warning mx-1 my-1"
+      onclick="previousstep(this)"
+      data-step="step1"><i class="fas fa-arrow-alt-circle-left mr-1"></i>Previous</button>
+      <button type="button" class="btn btn-primary mx-1 my-1"
+      onclick="nextstep(this)"
+      data-step="step3">Next <i class="fas fa-arrow-alt-circle-right ml-1"></i></button>
+    </div>';
+    return Response()->json(['html' => $html]);
+  }
 }
-
-
-
-// public function SelectRepairDetail(Request $request){
-//   $UNID = $request->UNID;
-//   $data_selectsubrepair = SelectSubRepair::select('UNID','REPAIR_SUBSELECT_NAME')->where('REPAIR_MAINSELECT_UNID','=',$UNID)->get();
-//   $html = '<div class="row">
-//             <style>
-//             .card-stats .card-body-new {
-//               padding: 0px!important;
-//               }
-//             </style>';
-//   foreach ($data_selectsubrepair as $index => $data_row) {
-//     $html.='
-//     <div class="col-sm-6 col-md-3">
-//       <a  onclick="selectrepairdetail(this)"  data-unid="'.$data_row->UNID.'" data-name="'.$data_row->REPAIR_SUBSELECT_NAME.'"style="cursor:pointer">
-//       <div class="card card-stats card-primary card-round">
-//         <div class="card-body card-body-new">
-//           <div class="row">
-//             <div class="col-2">
-//               <div class="icon-big text-center">
-//                 <i class="fas fa-wrench"></i>
-//               </div>
-//             </div>
-//             <div class="col-10 col-stats">
-//               <div class="numbers">
-//                 <p class="card-category">'.$data_row->REPAIR_SUBSELECT_NAME.'</p>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </a >
-//     </div>';
-//   }
-//   $html.='</div>
-//   <div class="card-action text-center">
-//     <button type="button" class="btn btn-warning mx-1 my-1"
-//     onclick="previousstep(this)"
-//     data-step="step1"><i class="fas fa-arrow-alt-circle-left mr-1"></i>Previous</button>
-//     <button type="button" class="btn btn-primary mx-1 my-1"
-//     onclick="nextstep(this)"
-//     data-step="step3">Next <i class="fas fa-arrow-alt-circle-right ml-1"></i></button>
-//   </div>';
-//   return Response()->json(['html' => $html]);
-// }

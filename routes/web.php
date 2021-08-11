@@ -124,7 +124,7 @@ Route::get('machine/repair/fetchdata'                     ,[MachineRepairControl
   Route::get('machine/repair/readnotify/ma'                   ,[MachineRepairController::class,'ReadNotify'])        ->name('repair.readnotify');
   Route::get('machine/repair/readnotify/pd'                   ,[PDRepairController::class,'ReadNotify'])        ->name('repair.readnotify.pd');
 
-  Route::post('machine/repair/select/selectrepairdetail'  ,[RepairCloseFormController::class,'SelectRepairDetail']);
+  Route::post('machine/repair/select/selectrepairdetail'  ,[RepairCloseFormController::class,'SelectRepairDetail']) ->name('repair.selectrepairdetail');
   Route::get('machine/repair/empcallajax'                 ,[RepairCloseFormController::class,'EMPCallAjax'])       ->name('repair.empcallajax');
   Route::post('machine/repair/addtableworker'             ,[RepairCloseFormController::class,'AddTableWorker'])    ->name('repair.addtableworker');
   Route::post('machine/repair/addsparepart'               ,[RepairCloseFormController::class,'AddSparePart'])      ->name('repair.addsparepart');
