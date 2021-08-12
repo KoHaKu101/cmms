@@ -292,66 +292,6 @@ class PDRepairController extends Controller
         $UNID      = isset($last_data->STATUS) ? $last_data->UNID : '';
     return Response()->json(['html'=>$html,'html_style' => $html_style,'newrepair' => $newrepair,'UNID' => $UNID]);
   }
-  public function Store(Request $request,$MACHINE_UNID){
-      //******************* Request parameter *******************//
-      $CLOSE_STATUS               = '9';
-        $MACHINE_UNID             = $MACHINE_UNID;
-        $EMP_CODE                 = $request->cookie('empcode');
-        $SELECT_MAIN_REPAIR_UNID  = $request->cookie('selectmainrepair');
-        $SELECT_SUB_REPAIR_UNID   = $request->cookie('selectsubrepair');
-        $PRIORITY                 = $request->cookie('priority');
-        $UNID                     = $this->randUNID('PMCS_CMMS_REPAIR_REQ');
-      //******************* data *******************//
-      $MACHINE               = Machine::select('UNID','MACHINE_CODE','MACHINE_LINE','MACHINE_NAME')->where('UNID','=',$MACHINE_UNID)->first();
-        $SELECTMACHINEREPAIR = SelectMainRepair::select('UNID','REPAIR_MAINSELECT_NAME')->where('UNID','=',$SELECT_MAIN_REPAIR_UNID)->first();
-        $SELECTSUBREPAIR     = SelectSubRepair::select('STATUS_MACHINE','UNID','REPAIR_SUBSELECT_NAME')->where('UNID','=',$SELECT_SUB_REPAIR_UNID)->first();
-        $EMP                 = DB::select("select EMP_TH_NAME_FIRST,EMP_CODE,UNID from EMCS_EMPLOYEE where LINE_CODE = 'PD' and EMP_CODE = '".$EMP_CODE."'");
-      //******************* docno *******************//
-      $DATA_MACHINEREPAIRREQ = MachineRepairREQ::selectraw('max(DOC_NO)DOC_NO,max(DOC_DATE)DOC_DATE')->first();
-      $DATE_DOCNO            = Carbon::now()->addyears('543');
-      $DOC_NO = 'RE' . $DATE_DOCNO->format('ym') . sprintf('-%04d', 1);
-      if ($DATA_MACHINEREPAIRREQ->DOC_DATE != NULL) {
-        $DATE_RESET_DOCNO      = Carbon::parse($DATA_MACHINEREPAIRREQ->DOC_DATE);
-        if ($DATE_RESET_DOCNO->format('m') == Carbon::now()->format('m') ) {
-          $EXPLOT = str_replace('RE'.$DATE_RESET_DOCNO->addyears('543')->format('ym').'-','',$DATA_MACHINEREPAIRREQ->DOC_NO)+1;
-          $DOC_NO = 'RE' . $DATE_RESET_DOCNO->format('ym'). sprintf('-%04d', $EXPLOT);
-        }
-      }
-      //******************* insert *******************//
-      MachineRepairREQ::insert([
-        'UNID'=> $UNID
-        ,'MACHINE_UNID'          => $MACHINE->UNID
-        ,'MACHINE_CODE'          => $MACHINE->MACHINE_CODE
-        ,'MACHINE_LINE'          => $MACHINE->MACHINE_LINE
-        ,'MACHINE_NAME'          => $MACHINE->MACHINE_NAME
-        ,'REPAIR_MAINSELECT_UNID'=> $SELECTMACHINEREPAIR->UNID
-        ,'REPAIR_MAINSELECT_NAME'=> $SELECTMACHINEREPAIR->REPAIR_MAINSELECT_NAME
-        ,'MACHINE_STATUS'        => $SELECTSUBREPAIR->STATUS_MACHINE
-        ,'REPAIR_SUBSELECT_UNID' => $SELECTSUBREPAIR->UNID
-        ,'REPAIR_SUBSELECT_NAME' => $SELECTSUBREPAIR->REPAIR_SUBSELECT_NAME
-        ,'EMP_UNID'              => $EMP[0]->UNID
-        ,'EMP_CODE'              => $EMP[0]->EMP_CODE
-        ,'EMP_NAME'              => $EMP[0]->EMP_TH_NAME_FIRST
-        ,'PRIORITY'              => $PRIORITY
-        ,'DOC_NO'                => $DOC_NO
-        ,'DOC_DATE'              => date('Y-m-d')
-        ,'DOC_YEAR'              => date('Y')
-        ,'DOC_MONTH'             => date('m')
-        ,'REPAIR_REQ_TIME'       => $DATE_DOCNO->format('H:i:s')
-        ,'CLOSE_STATUS'          => $CLOSE_STATUS
-        ,'CLOSE_BY'              => ''
-        ,'CREATE_BY'             =>Auth::user()->name
-        ,'CREATE_TIME'           =>Carbon::now()
-        ,'MODIFY_BY'             => Auth::user()->name
-        ,'MODIFY_TIME'           => Carbon::now()
-        ]);
-      //******************* Remove cookie *******************//
-      $cookie_array = array('0' => 'empcode','1' => 'selectmainrepair','2' => 'selectsubrepair','3' => 'priority' );
-      foreach ($cookie_array as $index => $row) {
-        Cookie::queue(Cookie::forget($row));
-      }
-      return redirect()->route('repair.list');
-  }
 
   public function ShowResult(Request $request){
 
