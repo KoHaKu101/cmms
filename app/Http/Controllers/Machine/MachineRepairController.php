@@ -372,7 +372,7 @@ class MachineRepairController extends Controller
           $DOC_NO = 'RE' . $DATE_RESET_DOCNO->format('ym'). sprintf('-%04d', $EXPLOT);
         }
       }
-      dd();
+      dd($DATA_MACHINE);
       //******************* insert *******************//
       MachineRepairREQ::insert([
         'UNID'=> $UNID
