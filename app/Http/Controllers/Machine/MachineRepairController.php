@@ -373,10 +373,10 @@ class MachineRepairController extends Controller
           $DOC_NO = 'RE' . $DATE_RESET_DOCNO->format('ym'). sprintf('-%04d', $EXPLOT);
         }
       }
-
+      dd($DATA_EMP[0]->EMP_CODE,$DATA_SELECTSUBREPAIR->REPAIR_SUBSELECT_NAME);
       //******************* insert *******************//
       MachineRepairREQ::insert([
-        'UNID'=> $UNID
+        'UNID'                   => $UNID
         ,'MACHINE_UNID'          => $DATA_MACHINE->UNID
         ,'MACHINE_CODE'          => $DATA_MACHINE->MACHINE_CODE
         ,'MACHINE_LINE'          => $DATA_MACHINE->MACHINE_LINE
@@ -410,7 +410,7 @@ class MachineRepairController extends Controller
       foreach ($cookie_array as $index => $row) {
         Cookie::queue(Cookie::forget($row));
       }
-      dd($cookie_array);
+
 
       if (Gate::allows('isManager_Pd')) {
       return redirect()->route('pd.repairlist');
