@@ -352,9 +352,9 @@ class MachineRepairController extends Controller
 
       $CLOSE_STATUS = '9';
         $MACHINE_UNID = $MACHINE_UNID;
-        $EMP_CODE = $request->cookie('empcode');
+        $EMP_CODE     = $request->cookie('empcode');
         $SELECT_MAIN_REPAIR_UNID = $request->cookie('selectmainrepair');
-        $SELECT_SUB_REPAIR_UNID = $request->cookie('selectsubrepair');
+        $SELECT_SUB_REPAIR_UNID  = $request->cookie('selectsubrepair');
         $PRIORITY = $request->cookie('priority');
         $UNID = $this->randUNID('PMCS_CMMS_REPAIR_REQ');
       //******************* data *******************//
@@ -378,7 +378,6 @@ class MachineRepairController extends Controller
           $DOC_NO = 'RE' . $DATE_RESET_DOCNO->format('ym'). sprintf('-%04d', $EXPLOT);
         }
       }
-      dd($DATA_EMP[0]->EMP_CODE);
       //******************* insert *******************//
       MachineRepairREQ::insert([
         'UNID'                   => $UNID
