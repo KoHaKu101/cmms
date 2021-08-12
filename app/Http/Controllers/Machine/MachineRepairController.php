@@ -349,6 +349,7 @@ class MachineRepairController extends Controller
   }
   public function Store(Request $request,$MACHINE_UNID){
       //******************* Request parameter *******************//
+      dd($request);
       $CLOSE_STATUS = '9';
         $MACHINE_UNID = $MACHINE_UNID;
         $EMP_CODE = $request->cookie('empcode');
@@ -372,7 +373,7 @@ class MachineRepairController extends Controller
           $DOC_NO = 'RE' . $DATE_RESET_DOCNO->format('ym'). sprintf('-%04d', $EXPLOT);
         }
       }
-      dd($DATA_MACHINE);
+
       //******************* insert *******************//
       MachineRepairREQ::insert([
         'UNID'=> $UNID
