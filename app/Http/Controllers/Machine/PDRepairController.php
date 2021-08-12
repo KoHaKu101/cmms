@@ -166,7 +166,7 @@ class PDRepairController extends Controller
     //********************************** TABLE ******************************************************************
     foreach ($dataset->items($page) as $key => $row) {
       //************************* BUTTON *****************************************
-      $BTN_CONFIRM			= $row->CLOSE_STATUS		== '1' ? "onclick=rec_work(this)" : '';
+      $BTN_CONFIRM			= $row->CLOSE_STATUS		== '1' ? "onclick=ConFirmForm(this)" : '';
       $BTN              = '<button class="btn btn-danger btn-sm btn-block my-1"
                             style="cursor:default">รอรับงาน</button>';
       if ($row->PD_CHECK_STATUS == '1') {
@@ -180,7 +180,7 @@ class PDRepairController extends Controller
                             </button>';
       }elseif ($row->CLOSE_STATUS == '1') {
         $BTN_COLOR_WORKER = 'btn-pink';
-        $BTN				      = '<button onclick=rec_work(this) type="button"
+        $BTN				      = '<button onclick=ConFirmForm(this) type="button"
                               data-unid="'.$row->UNID.'"
                               data-docno="'.$row->DOC_NO.'"
                               data-detail="'.$row->REPAIR_SUBSELECT_NAME.'"
@@ -242,7 +242,7 @@ class PDRepairController extends Controller
           $BG_COLOR  		= 'bg-primary';
           $HTML_STATUS  = '<div class="status" id="DATE_DIFF_'.$SPAREPART_UNID.'" >ดำเนินงานสำเร็จ</div>';
           $HTML_BTN     = '<button class="btn  btn-primary  btn-sm"
-                            onclick="rec_work(this)"
+                            onclick="ConFirmForm(this)"
                             data-unid="'.$SPAREPART_UNID.'"
                             data-docno="'.$sub_row->DOC_NO.'"
                             data-detail="'.$sub_row->REPAIR_SUBSELECT_NAME.'">
@@ -354,6 +354,7 @@ class PDRepairController extends Controller
   }
 
   public function ShowResult(Request $request){
+
     $UNID_REPAIR        = $request->REPAIR_REQ_UNID;
 
     $COST_WORKER        = RepairWorker::where('REPAIR_REQ_UNID','=',$UNID_REPAIR)->sum('WORKER_COST');
@@ -390,6 +391,7 @@ class PDRepairController extends Controller
     $MINUTES    = $DOWMTIME - ($DAYS * 1440) - ($HOURS * 60);
     $DOWN_TIME  = $DAYS.' วัน '.$HOURS.' ชั่วโมง '.$MINUTES.' นาที';
    //*******************************************************************************************
+
    if ($PLANING_CHECK_BY == '') {
      $TEXT = '<select class="form-control form-control-sm col-lg-4 " id="EMP_CODE" name="EMP_CODE">
              <option value>กรุณาเลือก</option>';
@@ -527,23 +529,19 @@ class PDRepairController extends Controller
     $footer.= $TEXT.
     '</div>
     <div class="col-7 col-sm-5 col-md-5 col-lg-2  ml-auto " >'.$BTN.'</div>';
-
     return Response()->json(['html' => $html,'footer'=>$footer,'status' => $PLANING_CHECK_BY,'repair_unid' => $UNID_REPAIR]);
-
   }
  public function ConFirm(Request $request){
-
    $UNID     = $request->REPAIR_REQ_UNID;
    $PD_CODE  = $request->USER_PD_CODE;
-   $DATA_PD  = EMPALL::select("EMP_TH_NAME_FIRST",'EMP_TH_NAME_LAST','EMP_CODE','UNID')->where('EMP_CODE','=',$PD_CODE)->where('EMP_STATUS','=','9')->first();
    $PD_NAME  = $DATA_PD->EMP_TH_NAME_FIRST.' '.$DATA_PD->EMP_TH_NAME_LAST;
-
+   $DATA_PD  = EMPALL::select("EMP_TH_NAME_FIRST",'EMP_TH_NAME_LAST','EMP_CODE','UNID')->where('EMP_CODE','=',$PD_CODE)->where('EMP_STATUS','=','9')->first();
    MachineRepairREQ::where('UNID','=',$UNID)->update([
-      'PD_UNID'       => $DATA_PD->UNID
-     ,'PD_CODE'       => $DATA_PD->EMP_CODE
-     ,'PD_NAME'       => $PD_NAME
-     ,'PD_CHECK_DATE' => date('Y-m-d')
-     ,'PD_CHECK_TIME' => date('H:i:s')
+      'PD_UNID'         => $DATA_PD->UNID
+     ,'PD_CODE'         => $DATA_PD->EMP_CODE
+     ,'PD_NAME'         => $PD_NAME
+     ,'PD_CHECK_DATE'   => date('Y-m-d')
+     ,'PD_CHECK_TIME'   => date('H:i:s')
      ,'PD_CHECK_STATUS' => 1
    ]);
    History::where('REPAIR_REQ_UNID','=',$UNID)->update([

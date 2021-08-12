@@ -464,16 +464,18 @@ function loopdata_table(){
 					 $('#show-detail').html('อาการเสีย : '+detail);
 					 $("#Result").modal('show');
 					 $('#ConFirm').on('click',function(){
-						 SaveFrom();
+						 var unid 				= $(this).attr('data-unid');
+						 SaveFrom(repair_unid,unid);
 				 		});
 				 }
 			 });
 	}
 
-	function SaveFrom(){
+	function SaveFrom(repair_unid,unid){
+		var repair_unid = repair_unid;
 		 $("#overlay").fadeIn(300);
 		 var url = "{{ route('pd.confirm') }}";
-		 var unid = $(this).attr('data-unid');
+		 var unid = unid;
 		 var emp_code = $('#EMP_CODE').val();
 		 if (emp_code != "") {
 			 $.ajax({

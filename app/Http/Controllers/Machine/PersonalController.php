@@ -9,17 +9,11 @@ use Auth;
 use File;
 use Illuminate\Http\Request;
 //******************** model ***********************
-use App\Models\Machine\MachineEMP;
 use App\Models\Machine\MachineLine;
 use App\Models\Machine\EMPName;
 use App\Models\Machine\EMPPAYTYPE;
 use App\Models\Machine\EMPPOSTION;
 //************** Package form github ***************
-use App\Exports\MachineExport;
-use Maatwebsite\Excel\Facades\Excel;
-
-
-
 class PersonalController extends Controller
 {
   public function __construct(){
@@ -38,18 +32,17 @@ class PersonalController extends Controller
     ->first(['UNID'])) );
     return $number;
   }
-
   public function Index(Request $request){
-    $SEARCH = isset($request->SEARCH) ?  $request->SEARCH : '';
-    $dataset = EMPName::select('PMCS_EMP_NAME.*','EMP_TYPE','POSITION_CODE')
+    $SEARCH   = isset($request->SEARCH) ?  $request->SEARCH : '';
+    $dataset  = EMPName::select('PMCS_EMP_NAME.*','EMP_TYPE','POSITION_CODE')
                       ->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
                       ->leftjoin('EMCS_EMPLOYEE','EMCS_EMPLOYEE.EMP_CODE','=','PMCS_EMP_NAME.EMP_CODE')
                       ->where(function($query) use ($SEARCH){
                          if ($SEARCH != '') {
-                            $encode = EMPName::selectRaw("dbo.encode_utf8('$SEARCH') as SEARCH")->first();
+                            $endcode = EMPName::selectRaw("dbo.encode_utf8('$SEARCH') as SEARCH")->first();
                             $query->where('PMCS_EMP_NAME.EMP_CODE', 'like', '%'.$SEARCH.'%')
                                   ->orwhere('PMCS_EMP_NAME.EMP_NAME', 'like', '%'.$SEARCH.'%')
-                                  ->orwhere('PMCS_EMP_NAME.EMP_NAME','like' ,'%'.$encode->SEARCH.'%') ;
+                                  ->orwhere('PMCS_EMP_NAME.EMP_NAME','like' ,'%'.$endcode->SEARCH.'%') ;
                           }
                       })
                       ->orderBy('PMCS_EMP_NAME.EMP_CODE')->paginate(8);

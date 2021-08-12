@@ -96,7 +96,7 @@ class PRController extends Controller
     $COUNT_DETAIL        = DocItemOutDetail::select('STATUS')->where('DOC_ITEMOUT_UNID','=',$DOC_ITEMOUT_UNID)->where('STATUS','=',9)->count();
     $CHECKED_RADIO_SELL  = $DOC_ITEM->DOC_TYPE == '1' ? 'checked' : '';
     $CHECKED_RADIO_OUT   = $DOC_ITEM->DOC_TYPE == '9' ? 'checked' : '';
-
+    $TEXT_TYPE           = $DOC_ITEM->DOC_TYPE == '9' ?  'กำหนดส่งคืน' : 'วันที่ขาย';
     $READONLY_TEXT       = 'readonly';
     $FORM                = 'form-control-plaintext';
     $BG_COLOR            = 'has-error' ;
@@ -150,7 +150,7 @@ class PRController extends Controller
           												<th width="30%">รายการ</th>
           												<th width="5%">จำนวน</th>
           												<th width="8%">หน่วย</th>
-          												<th width="12%">กำหนดส่งคืน</th>
+          												<th width="12%">'.$TEXT_TYPE.'</th>
                                   <th width="10%">ส่งคืนจริง</th>
                                   <th width="15%">PR Code</th>
                                   <th width="15%">Service Code</th>
