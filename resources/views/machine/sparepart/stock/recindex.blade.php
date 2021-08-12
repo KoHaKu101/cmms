@@ -141,43 +141,42 @@
 	<script src="{{ asset('assets/js/select2.min.js') }}"></script>
 	<script src="{{ asset('assets/js/plugin/datatables/datatables.min.js')}}"></script>
 	<script>
-		function matchCustom(params, data) {
-    // If there are no search terms, return all of the data
-    if ($.trim(params.term) === '') {
-      return data;
-    }
-
-    // Do not display the item if there is no 'text' property
-    if (typeof data.text === 'undefined') {
-      return null;
-    }
-
-    // `params.term` should be the term that is used for searching
-    // `data.text` is the text that is displayed for the data object
-    if (data.text.indexOf(params.term) > -1) {
-      var modifiedData = $.extend({}, data, true);
-      modifiedData.text;
-
-      // You can return modified objects from here
-      // This includes matching the `children` how you want in nested data sets
-      return modifiedData;
-    }
-
-    // Return `null` if the term should not be displayed
-    return null;
-}
+		var url = "{{ route('sparepart.rec') }}";
 		 $('#SPAREPART_UNID').select2({
-			 containerCssClass: "mt-2"
+			 ajax: {
+ 		    url: url,
+ 		    dataType:'json',
+ 				data: function (params) {
+ 	      var data = {
+ 	        search: params.term,
+ 					type:'SPAREPART'
+ 	      	}
+ 					return data;
+ 	 			},
+ 				processResults: function (data) {
+                 return {
+                     results: $.map(data, function (data) {
+                         return {
+                             text: data.SPAREPART_CODE+' : '+data.SPAREPART_NAME,
+                             id: data.UNID
+                         }
+                     })
+                 };
+             },
+ 		  },
+ 			containerCssClass: "mt-2",
 		 });
-		 // $('#RECODE_BY').select2({
-			//  containerCssClass: "mt-2",
-		 // })
-		 var url = "{{ route('sparepart.rec') }}";
 		 $('#RECODE_BY').select2({
-
 		  ajax: {
 		    url: url,
 		    dataType:'json',
+				data: function (params) {
+	      var data = {
+	        search: params.term,
+					type:'EMP'
+	      	}
+					return data;
+	 			},
 				processResults: function (data) {
                 return {
                     results: $.map(data, function (data) {

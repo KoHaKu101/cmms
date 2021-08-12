@@ -71,16 +71,25 @@ class SparepartController extends Controller
 
     public function RecSparepartList(Request $request){
       $DATA_SPAREPART     = SparePart::where('STATUS','=',9)->orderBy('SPAREPART_NAME')->get();
-      $DATA_SPAREPART_REC = SparepartRec::orderBy('DOC_DATE','DESC')->get();
+      $DATA_SPAREPART_REC = SparepartRec::orderBy('DOC_DATE','DESC')->orderBy('CREATE_TIME','DESC')->get();
       $DATA_EMP           = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')->where('EMP_STATUS','=',9)->orderBy('EMP_NAME')->get();
       if($request->ajax()){
-        $endcode          = EMPName::selectRaw("dbo.encode_utf8('$request->term') as SEARCH")->first();
-        $DATA_EMP           = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
-                                      ->where('EMP_STATUS','=',9)->where(function($query) use ($endcode){
-                                        $query->where('EMP_NAME','like','%'.$endcode->SEARCH.'%')
-                                              ->orwhere('EMP_CODE','like','%'.$endcode->SEARCH.'%');
-                                      })->orderBy('EMP_NAME')->get();
-        return Response()->json($DATA_EMP);
+        if ($request->type == 'EMP') {
+          $endcode          = EMPName::selectRaw("dbo.encode_utf8('$request->search') as SEARCH")->first();
+          $DATA_EMP           = EMPName::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
+                                        ->where('EMP_STATUS','=',9)->where(function($query) use ($endcode){
+                                          $query->where('EMP_NAME','like','%'.$endcode->SEARCH.'%')
+                                                ->orwhere('EMP_CODE','like','%'.$endcode->SEARCH.'%');
+                                        })->orderBy('EMP_NAME')->get();
+          return Response()->json($DATA_EMP);
+        }elseif ($request->type == 'SPAREPART') {
+          $SEARCH             = $request->search;
+          $DATA_SPAREPART     = SparePart::where('STATUS','=',9)->where(function($query) use ($SEARCH){
+                                            $query->where('SPAREPART_CODE','like','%'.$SEARCH.'%')
+                                                  ->orwhere('SPAREPART_NAME','like','%'.$SEARCH.'%');
+                                          })->orderBy('SPAREPART_NAME')->get();
+          return Response()->json($DATA_SPAREPART);
+        }
       }
       return View('machine.sparepart.stock.recindex',compact('DATA_SPAREPART','DATA_SPAREPART_REC','DATA_EMP'));
     }
