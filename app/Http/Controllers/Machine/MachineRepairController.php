@@ -361,7 +361,12 @@ class MachineRepairController extends Controller
       $DATA_MACHINE = Machine::where('UNID','=',$MACHINE_UNID)->first();
         $DATA_SELECTMACHINEREPAIR = SelectMainRepair::where('UNID','=',$SELECT_MAIN_REPAIR_UNID)->first();
         $DATA_SELECTSUBREPAIR = SelectSubRepair::where('UNID','=',$SELECT_SUB_REPAIR_UNID)->first();
-        $DATA_EMP = DB::select("select EMP_TH_NAME_FIRST,EMP_CODE,UNID from EMCS_EMPLOYEE where LINE_CODE = 'PD' and EMP_CODE = '".$EMP_CODE."'");
+        $DATA_EMP = DB::select("select EMP_TH_NAME_FIRST,EMP_CODE,UNID
+                                        from EMCS_EMPLOYEE
+                                        where POSITION_CODE IN ('LD','ASSTMGR','CF')
+                                        and LINE_CODE NOT IN ('QA','QC','PC','FNL','EG','MK','HR','AC','QS')
+                                        and EMP_STATUS = '9'
+                                        and EMP_CODE = '".$EMP_CODE."'");
       //******************* docno *******************//
       $DATA_MACHINEREPAIRREQ = MachineRepairREQ::selectraw('max(DOC_NO)DOC_NO,max(DOC_DATE)DOC_DATE')->first();
       $DATE_DOCNO            = Carbon::now()->addyears('543');
@@ -373,7 +378,7 @@ class MachineRepairController extends Controller
           $DOC_NO = 'RE' . $DATE_RESET_DOCNO->format('ym'). sprintf('-%04d', $EXPLOT);
         }
       }
-      dd($DATA_EMP[0]->EMP_CODE,$DATA_SELECTSUBREPAIR->REPAIR_SUBSELECT_NAME);
+      dd($EMP_CODE,$SELECT_SUB_REPAIR_UNID,$SELECT_MAIN_REPAIR_UNID,$DATA_EMP[0],$DATA_SELECTSUBREPAIR,$DATA_SELECTMACHINEREPAIR);
       //******************* insert *******************//
       MachineRepairREQ::insert([
         'UNID'                   => $UNID
