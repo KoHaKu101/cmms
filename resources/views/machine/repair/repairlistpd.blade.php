@@ -316,11 +316,7 @@
 															<td>{{ $sub_row->REPAIR_SUBSELECT_NAME }}</td>
 						                  <td width='15%'>{!! $BTN !!}</td>
 															<td width="9%">{{ date('d-m-Y') }}</td>
-															<td>
-																	<a href="{{ route('repair.delete') }}?UNID={{ $sub_row->UNID }}">
-																		<button class="btn btn-danger btn-sm btn-block">delete</button>
-																	</a>
-															 </td>
+															
 								             </tr>
 								            @endforeach
 								        </tbody>
