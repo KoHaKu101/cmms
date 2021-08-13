@@ -139,8 +139,6 @@
 								                  </button>
 								                </div>
 								              </div>
-														{{-- </div> --}}
-														{{-- <div class="col-md-12 col-lg-1 text-right"> --}}
 														<div class="col-md-7 col-lg-1 text-right">
 															<a href="{{ route('repair.repairsearch') }}"class="btn btn-warning  btn-xs mt-1 ">
 																<span style="font-size: 13px;margin-bottom: 7px;">	แจ้งซ่อม</span>
@@ -316,7 +314,6 @@
 															<td>{{ $sub_row->REPAIR_SUBSELECT_NAME }}</td>
 						                  <td width='15%'>{!! $BTN !!}</td>
 															<td width="9%">{{ date('d-m-Y') }}</td>
-															
 								             </tr>
 								            @endforeach
 								        </tbody>

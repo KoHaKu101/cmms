@@ -33,24 +33,26 @@ class DashboardController extends Controller
     $dataset = Machine::select('MACHINE_CHECK')->get();
     $datarepair = MachineRepairREQ::select('CLOSE_STATUS')->get();
 
+    $datarepairlist   = MachineRepairREQ::where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(9)->get();
+    $array_line       = array();
+    $array_repair     = array();
+    for ($i=1; $i < 7 ; $i++) {
+      $data_line            = Machine::select('MACHINE_LINE')->where('MACHINE_LINE','=','L'.$i)->count();
+      $data_repair          = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L'.$i)->count();
+      $array_line['L'.$i]   = $data_line;
+      $array_repair['L'.$i] = $data_repair;
 
-    $data_line1 = Machine::select('MACHINE_LINE')->where('MACHINE_LINE','=','L1')->count();
-    $data_line2 = Machine::select('MACHINE_LINE')->where('MACHINE_LINE','=','L2')->count();
-    $data_line3 = Machine::select('MACHINE_LINE')->where('MACHINE_LINE','=','L3')->count();
-    $data_line4 = Machine::select('MACHINE_LINE')->where('MACHINE_LINE','=','L4')->count();
-    $data_line5 = Machine::select('MACHINE_LINE')->where('MACHINE_LINE','=','L5')->count();
-    $data_line6 = Machine::select('MACHINE_LINE')->where('MACHINE_LINE','=','L6')->count();
-
-    $datarepairlist = MachineRepairREQ::where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(9)->get();
-    $datarepairline1 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L1')->count();
-    $datarepairline2 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L2')->count();
-    $datarepairline3 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L3')->count();
-    $datarepairline4 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L4')->count();
-    $datarepairline5 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L5')->count();
-    $datarepairline6 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L6')->count();
+    }
+    // $datarepairline1 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L1')->count();
+    // $datarepairline2 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L2')->count();
+    // $datarepairline3 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L3')->count();
+    // $datarepairline4 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L4')->count();
+    // $datarepairline5 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L5')->count();
+    // $datarepairline6 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L6')->count();
+    //,'datarepairline1','datarepairline2','datarepairline3','datarepairline4','datarepairline5','datarepairline6'
     return View('machine/dashboard/dashboard',compact('datarepairlist','dataset','datarepair'
-    ,'data_line1','data_line2','data_line3','data_line4','data_line5','data_line6'
-    ,'datarepairline1','datarepairline2','datarepairline3','datarepairline4','datarepairline5','datarepairline6'));
+    ,'array_line','array_repair'
+    ));
   }
 
 
