@@ -49,7 +49,7 @@
 									<div class="col-7 col-stats">
 										<div class="numbers">
 											<p class="card-category">เครื่องจักรทั้งหมด</p>
-											<h4 class="card-title">{{$dataset->where('MACHINE_CHECK','!=','4')->count()}}</h4>
+											<h4 class="card-title">{{$machine_all}}</h4>
 										</div>
 									</div>
 								</div>
@@ -69,7 +69,7 @@
 										<div class="numbers">
 											<p class="card-category">เครื่องเปิดใช้งาน</p>
 
-											<h4 class="card-title">{{$dataset->where('MACHINE_CHECK','=','2')->count()}}</h4>
+											<h4 class="card-title">{{$machine_ready}}</h4>
 										</div>
 									</div>
 								</div>
@@ -88,7 +88,7 @@
 									<div class="col-7 col-stats">
 										<div class="numbers">
 											<p class="card-category">เครื่องรอขึ้นงาน</p>
-											<h4 class="card-title">{{$dataset->where('MACHINE_CHECK','=','1')->count()}}</h4>
+											<h4 class="card-title">{{$machine_wait}}</h4>
 										</div>
 									</div>
 								</div>
@@ -107,7 +107,7 @@
 									<div class="col-7 col-stats">
 										<div class="numbers">
 											<p class="card-category">เครื่องแจ้งซ่อม</p>
-											<h4 class="card-title"> {{ $datarepair->where('CLOSE_STATUS','=','9')->count() }}</h4>
+											<h4 class="card-title"> {{ $datarepair }}</h4>
 										</div>
 									</div>
 								</div>
@@ -189,7 +189,6 @@
 											@endif
 											 	{{$dataitem->MACHINE_STATUS == '1' ? 'หยุดทำงาน' : 'ทำงานปกติ'}}
 										</span></h4>
-
 										<span class="text-muted" >{{ $dataitem->REPAIR_SUBSELECT_NAME }}</span>
 									</div>
 									<div class="float-right pt-1 col-md-6 col-lg-3">

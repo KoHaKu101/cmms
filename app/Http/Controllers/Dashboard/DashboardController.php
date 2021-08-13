@@ -30,10 +30,16 @@ class DashboardController extends Controller
   }
   public function Dashboard(){
 
-    $dataset = Machine::select('MACHINE_CHECK')->get();
-    $datarepair = MachineRepairREQ::select('CLOSE_STATUS')->get();
+    $machine_all    = Machine::select('MACHINE_CHECK')->where('MACHINE_CHECK','!=','4')->count();
+    $machine_ready  = Machine::select('MACHINE_CHECK')->where('MACHINE_CHECK','=','2')->count();
+    $machine_wait   = Machine::select('MACHINE_CHECK')->where('MACHINE_CHECK','!=','2')->where('MACHINE_CHECK','!=','4')->count();
 
-    $datarepairlist   = MachineRepairREQ::where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(9)->get();
+
+
+    $datarepair = MachineRepairREQ::select('CLOSE_STATUS')->where('CLOSE_STATUS','=','9')->count();
+
+    $datarepairlist   = MachineRepairREQ::select('PRIORITY','MACHINE_CODE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME','DOC_DATE')
+                                        ->where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(9)->get();
     $array_line       = array();
     $array_repair     = array();
     for ($i=1; $i < 7 ; $i++) {
@@ -41,16 +47,9 @@ class DashboardController extends Controller
       $data_repair          = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L'.$i)->count();
       $array_line['L'.$i]   = $data_line;
       $array_repair['L'.$i] = $data_repair;
-
     }
-    // $datarepairline1 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L1')->count();
-    // $datarepairline2 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L2')->count();
-    // $datarepairline3 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L3')->count();
-    // $datarepairline4 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L4')->count();
-    // $datarepairline5 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L5')->count();
-    // $datarepairline6 = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L6')->count();
-    //,'datarepairline1','datarepairline2','datarepairline3','datarepairline4','datarepairline5','datarepairline6'
-    return View('machine/dashboard/dashboard',compact('datarepairlist','dataset','datarepair'
+
+    return View('machine/dashboard/dashboard',compact('datarepairlist','datarepair','machine_all','machine_ready','machine_wait'
     ,'array_line','array_repair'
     ));
   }
