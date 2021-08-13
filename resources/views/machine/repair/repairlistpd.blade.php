@@ -316,6 +316,11 @@
 															<td>{{ $sub_row->REPAIR_SUBSELECT_NAME }}</td>
 						                  <td width='15%'>{!! $BTN !!}</td>
 															<td width="9%">{{ date('d-m-Y') }}</td>
+															<td>
+																	<a href="{{ route('repair.delete') }}?UNID={{ $sub_row->UNID }}">
+																		<button class="btn btn-danger btn-sm btn-block">delete</button>
+																	</a>
+															 </td>
 								             </tr>
 								            @endforeach
 								        </tbody>
@@ -379,7 +384,7 @@ function styletable(table_style){
 	}
 </script>
 {{-- function loop --}}
-<script>
+{{-- <script>
 $(document).ready(function(){
 		var loaddata_table_all = function loopdata_table(){
 			var page = $('#PAGE').val();
@@ -437,7 +442,7 @@ function loopdata_table(){
 				 }
 			 });
 		 }
-</script>
+</script> --}}
 {{-- function common  --}}
 <script>
 
@@ -535,6 +540,13 @@ function loopdata_table(){
 
 	}
 
+</script>
+<script>
+	function DELETEREPARI(thisdata){
+		var unid = $(thisdata).data('unid');
+		var url  = "/machine/repair/delete?UNID="+unid;
+		window.location.href = url;
+	}
 </script>
 @stop
 {{-- ปิดส่วนjava --}}

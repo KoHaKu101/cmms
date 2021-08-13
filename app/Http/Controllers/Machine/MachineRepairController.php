@@ -475,22 +475,11 @@ class MachineRepairController extends Controller
         alert()->success('อัพเดทรายการ สำเร็จ')->autoclose('1500');
             return Redirect()->route('repair.edit',[$UNID]);
           }
-  public function Delete($UNID){
-
-        $checkuser = Auth::user();
-        if ($checkuser->role == 'user') {
-          alert()->error('ไม่สิทธิ์การเข้าถึง')->autoclose('1500');
-          return Redirect()->route('user.homepage');
-        }
-            $CLOSE_STATUS = '1';
-              $data_set = MachineRepairREQ::where('UNID',$UNID)->update([
-                      'CLOSE_STATUS'          => $CLOSE_STATUS,
-
-                'MODIFY_BY'            => Auth::user()->name,
-                'MODIFY_TIME'          => Carbon::now(),
-                ]);
-                alert()->success('ปิดเอกสารเสำเร็จ')->autoclose('1500');
-              return Redirect()->back();
+  public function Delete(Request $request){
+    $UNID = $request->UNID;
+    MachineRepairREQ::where('UNID','=',$UNID)->delete();
+    alert()->success('ลบสำเร็จ')->autoClose('1500');
+    return Redirect()->back();
           }
   public function ReadNotify(Request $request){
     $STATUS = $request->STATUS;

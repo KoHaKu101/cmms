@@ -119,7 +119,7 @@ Route::get('machine/repair/fetchdata'                     ,[MachineRepairControl
   Route::post('machine/repair/store/{MACHINE_UNID}'       ,[MachineRepairController::class,'Store'])             ->name('repair.store');
   Route::get('machine/repair/edit/{UNID}'                 ,[MachineRepairController::class,'Edit'])              ->name('repair.edit');
   Route::post('machine/repair/update/{UNID}'              ,[MachineRepairController::class,'Update'])            ->name('repair.update');
-  Route::get('machine/repair/delete/{UNID}'               ,[MachineRepairController::class,'Delete'])            ->name('repair.delete');
+  Route::get('machine/repair/delete'                      ,[MachineRepairController::class,'Delete'])            ->name('repair.delete');
 
   Route::get('machine/repair/readnotify/ma'                   ,[MachineRepairController::class,'ReadNotify'])        ->name('repair.readnotify');
   Route::get('machine/repair/readnotify/pd'                   ,[PDRepairController::class,'ReadNotify'])        ->name('repair.readnotify.pd');
