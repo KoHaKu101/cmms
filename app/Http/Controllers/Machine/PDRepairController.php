@@ -288,9 +288,12 @@ class PDRepairController extends Controller
         </div>';
         }
         $last_data = MachineRepairREQ::selectraw('UNID,STATUS')->where('STATUS','=',9)->first();
+        $data_count = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->whereRaw('DOC_NO = (SELECT MAX(DOC_NO)FROM [PMCS_CMMS_REPAIR_REQ])')->count();
+
         $newrepair = isset($last_data->STATUS) ? true : false;
         $UNID      = isset($last_data->STATUS) ? $last_data->UNID : '';
-    return Response()->json(['html'=>$html,'html_style' => $html_style,'newrepair' => $newrepair,'UNID' => $UNID]);
+        $NUMBER    = $data_count;
+    return Response()->json(['html'=>$html,'html_style' => $html_style,'newrepair' => $newrepair,'UNID' => $UNID,'number' => $NUMBER]);
   }
 
   public function ShowResult(Request $request){

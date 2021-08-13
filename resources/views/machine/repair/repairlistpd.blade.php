@@ -377,8 +377,17 @@ function styletable(table_style){
 	}
 </script>
 {{-- function loop --}}
-{{-- <script>
+<script>
 $(document).ready(function(){
+		var title = document.title;
+		function changeTitle(number) {
+				var number = number
+				var newTitle = title;
+				if (number > '0') {
+					var newTitle = '(' + number + ') ' + title;
+				}
+				document.title = newTitle;
+		}
 		var loaddata_table_all = function loopdata_table(){
 			var page = $('#PAGE').val();
 			var url = "{{ route('pd.fetchdata') }}?page="+page;
@@ -391,7 +400,9 @@ $(document).ready(function(){
 						 success:function(data){
 							 $('#result').html(data.html);
 							 $('#table_style').html(data.html_style);
+							 changeTitle('0');
 							 if (data.newrepair) {
+								 changeTitle(data.number);
 								var url = "{{ route('repair.readnotify.pd')}}";
 									  Swal.fire({
 											icon : 'error',
@@ -435,7 +446,7 @@ function loopdata_table(){
 				 }
 			 });
 		 }
-</script> --}}
+</script>
 {{-- function common  --}}
 <script>
 
