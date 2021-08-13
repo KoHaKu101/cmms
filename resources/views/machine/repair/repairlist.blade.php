@@ -369,6 +369,15 @@ function sweetalertnoinput(){
 	var data = $('#FRM_SEARCH').serialize();
 	// 1 Loop page and alert new repair
 	$(document).ready(function(){
+			var title = document.title;
+			function changeTitle(number) {
+					var number = number
+					var newTitle = title;
+					if (number > '0') {
+						var newTitle = '(' + number + ') ' + title;
+					}
+			    document.title = newTitle;
+			}
 			var loaddata_table_all = function loaddata_table(){
 				$.ajax({
 							 type:'GET',
@@ -378,7 +387,9 @@ function sweetalertnoinput(){
 							 success:function(data){
 								 $('#result').html(data.html);
 								 $('#table_style').html(data.html_style);
+								 changeTitle('0');
 								 if (data.newrepair) {
+									 changeTitle(data.number);
 									var url = "{{ route('repair.readnotify')}}";
 											Swal.fire({
 												icon : 'error',
@@ -1013,10 +1024,6 @@ $('#closeform').on('click',function(){
 	function changesubmit(){
 		$('#BTN_SUBMIT').click();
 	}
-		// function pdfrepair(m){
-		// 	var unid = (m);
-		// 	window.open('/machine/repair/pdf/'+unid,'Repairprint','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');
-		// }
 	function pdfsaverepair(unid){
 		var unid = unid;
 		window.open('/machine/repair/savepdf/'+unid,'RepairSaveprint','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');

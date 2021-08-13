@@ -276,10 +276,13 @@ class MachineRepairController extends Controller
       </div>';
       }
 
-    $last_data = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->whereRaw('DOC_NO = (SELECT MAX(DOC_NO)FROM [PMCS_CMMS_REPAIR_REQ])')->first();
-    $newrepair = $last_data->STATUS_NOTIFY == '9'? true : false;
-    $UNID      = $last_data->STATUS_NOTIFY == '9'? $last_data->UNID : '';
-    return Response()->json(['html'=>$html,'html_style' => $html_style,'newrepair' => $newrepair,'UNID' => $UNID]);
+    $last_data  = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->whereRaw('DOC_NO = (SELECT MAX(DOC_NO)FROM [PMCS_CMMS_REPAIR_REQ])')->first();
+    $data_count = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->whereRaw('DOC_NO = (SELECT MAX(DOC_NO)FROM [PMCS_CMMS_REPAIR_REQ])')->count();
+
+    $newrepair = $last_data->STATUS_NOTIFY == 9 ? true : false;
+    $UNID      = $last_data->STATUS_NOTIFY == 9 ? $last_data->UNID : '';
+    $NUMBER    = $data_count;
+    return Response()->json(['html'=>$html,'html_style' => $html_style,'newrepair' => $newrepair,'UNID' => $UNID,'number' => $NUMBER]);
   }
   public function PrepareSearch(Request $request){
     $qrcode_text = '';
