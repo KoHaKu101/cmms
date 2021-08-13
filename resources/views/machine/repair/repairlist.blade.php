@@ -523,6 +523,7 @@ function modalstep3(repair_sparepart,repair_count){
 	}
 function modalstep5(repair_unid){
 	var url = "{{ route('repair.result') }}";
+	$.fn.modal.Constructor.prototype._enforceFocus = function() {};
 	$('#CloseForm').modal({backdrop: 'static', keyboard: false});
 	$('#CloseForm').modal('show');
 	$("#overlay").fadeIn(300);　
@@ -586,6 +587,7 @@ function rec_work(thisdata){
 					 width:'100%',
 					 selectionCssClass:'required',
 					});
+					$.fn.modal.Constructor.prototype._enforceFocus = function() {};
 
 		//***************************** step ที่ค้างไว้ *********************************
 				 if (data.step) {
@@ -647,6 +649,10 @@ function savestep(work_step_current,work_step_next){
 					// Sparepart
 					if (res.pass == 'false') {
 						var text 		= '';
+						var title   = 'รายการอะไหล่หมด';
+						if (res.text) {
+							var title = res.text;
+						}
 						let number 	= 0 ;
 						buysparepart('1');
 						$('#addbuy_sparepart').attr('disabled',true);
@@ -656,7 +662,7 @@ function savestep(work_step_current,work_step_next){
 				    });
 						Swal.fire({
 						  icon: 'error',
-						  title: 'รายการอะไหล่หมด',
+						  title: title,
 						  text: text,
 						});
 					}else if (res.pass == 'true') {
@@ -801,6 +807,7 @@ function removesparepart(thisdata){
 	 var detail 			 = $('#DETAIL_REPAIR option:selected').attr('data-name');
 	 var check_select  = $('#REC_WORKER').val();
 	 if (check_select != '' && check_select != null) {
+		 $.fn.modal.Constructor.prototype._enforceFocus = function() {};
 		 $('#TITLE_DOCNO_SUB').html(docno);
 		 $("#show-detail").html('อาการเสีย : '+detail);
 		 loop_removeclass();

@@ -85,6 +85,7 @@
 																	<option value="{{ $srow->STATUS_CODE }}">{{$srow->STATUS_NAME}}</option>
 																@endforeach
 															</select>
+															
 														</div>
 														<div class="col-6 col-sm-6 col-lg-6">
 															<label>ตำแหน่งเครื่อง</label>

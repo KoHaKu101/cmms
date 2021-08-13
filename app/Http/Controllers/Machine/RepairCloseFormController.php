@@ -238,7 +238,11 @@ class RepairCloseFormController extends Controller
       if ($RepairWorker->count() > 0) {
         $RepairWorker->delete();
       }
+      if ($request->WORKER_UNID == null) {
+        return Response()->json(['pass' => 'false','text' => 'กรุณาลองใหม่']);
+      }
       $DATA_EMP_NAME = isset($request->WORKOUT_NAME) ? $request->WORKOUT_NAME : EMPName::whereIn('UNID',$request->WORKER_UNID)->get();
+
       foreach ($DATA_EMP_NAME as $key => $row) {
         $WORKER_UNID          = $WORKER_TYPE == 'OUT' ?  '' : $row->UNID ;
         $WORKER_CODE          = $WORKER_TYPE == 'OUT' ?  '' : $row->EMP_CODE ;
