@@ -73,6 +73,8 @@
 									 7 =>"กรกฎาคม",8 =>"สิงหาคม",9 =>"กันยายน",10 =>"ตุลาคม",11 => "พฤศจิกายน",12 =>"ธันวาคม");
 
 	@endphp
+		<audio id="music" src="{{asset('assets/sound/mixkit-arabian-mystery-harp-notification-2489.wav')}}" ></audio>
+		<button type="button" style="display:none;" id="startbtn"></button>
 	  <div class="content">
       <div class="page-inner">
 				<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
@@ -378,7 +380,14 @@ function styletable(table_style){
 </script>
 {{-- function loop --}}
 <script>
+
 $(document).ready(function(){
+
+
+	$('#startbtn').on('click',function(){
+		const  music = document.getElementById("music");
+		music.play();
+	});
 		var title = document.title;
 		function changeTitle(number) {
 				var number = number
@@ -403,6 +412,8 @@ $(document).ready(function(){
 							 changeTitle('0');
 							 if (data.newrepair) {
 								 changeTitle(data.number);
+								 // $('#startbtn').click();
+								 $('#startbtn').trigger('click');
 								var url = "{{ route('repair.readnotify.pd')}}";
 									  Swal.fire({
 											icon : 'error',
