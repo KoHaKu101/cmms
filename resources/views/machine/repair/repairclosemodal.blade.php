@@ -138,7 +138,7 @@ body.modal-open {
                 </div>
                 <div class="col-6 col-sm-6 col-md-6 col-lg-4 mr-auto">
                   <label>เวลาตรวจสอบ</label>
-                  <input type="time-local" class="form-control form-control-sm "
+                  <input type="time" class="form-control form-control-sm "
                     id="INSPECTION_START_TIME" name="INSPECTION_START_TIME" value="{{ date('H:m') }}" required>
                 </div>
               </div>
