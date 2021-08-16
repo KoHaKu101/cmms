@@ -24,7 +24,8 @@
 	{{-- ส่วนเนื้อหาและส่วนท้า --}}
 @section('contentandfooter')
 
-
+	<audio id="music" src="{{asset('assets/sound/mixkit-arabian-mystery-harp-notification-2489.wav')}}" ></audio>
+	<button type="button" style="display:none;" id="startbtn"></button>
 		<div class="content">
 			<div class="panel-header bg-primary-gradient">
 				<div class="page-inner py-5">
@@ -171,30 +172,29 @@
 										</div>
 									</div>
 								</div>
-								<div class="card-body">
+								<div class="card-body" id="NEW_REPAIR">
 
 									@foreach($datarepairlist as $dataitem)
 										<div class="row">
-									<div class="d-flex col-md-6 col-lg-1">
-										<input type="hidden" value="1">
-										<div class="avatar avatar-online">
-											<span class="avatar-title rounded-circle border border-white {{$dataitem->PRIORITY == '9' ? 'bg-danger' : 'bg-warning'}}" style="width:50px"><i class="fa fa-wrench"></i></span>
-										</div>
-									</div>
-									<div class="flex-1 ml-3 pt-1 col-md-6 col-lg-7">
-										<h4 class="text-uppercase fw-bold mb-1">{{$dataitem->MACHINE_CODE}}
-										<span class="{{$dataitem->MACHINE_STATUS == '1' ? 'text-danger' : 'text-warning'}} pl-3">
-											@if ($dataitem->PRIORITY == '9')
-												<img src="{{asset('assets/css/flame.png')}}" class="mt--2" width="20px" height="20px">
-											@endif
-											 	{{$dataitem->MACHINE_STATUS == '1' ? 'หยุดทำงาน' : 'ทำงานปกติ'}}
-										</span></h4>
-										<span class="text-muted" >{{ $dataitem->REPAIR_SUBSELECT_NAME }}</span>
-									</div>
-									<div class="float-right pt-1 col-md-6 col-lg-3">
-										<h5 class="text-muted">{{$dataitem->DOC_DATE}}</h5>
-
-									</div>
+											<div class="d-flex col-md-6 col-lg-1">
+												<input type="hidden" value="1">
+												<div class="avatar avatar-online">
+													<span class="avatar-title rounded-circle border border-white {{$dataitem->PRIORITY == '9' ? 'bg-danger' : 'bg-warning'}}" style="width:50px"><i class="fa fa-wrench"></i></span>
+												</div>
+											</div>
+											<div class="flex-1 ml-3 pt-1 col-md-6 col-lg-7">
+												<h4 class="text-uppercase fw-bold mb-1">{{$dataitem->MACHINE_CODE}}
+												<span class="{{$dataitem->MACHINE_STATUS == '1' ? 'text-danger' : 'text-warning'}} pl-3">
+													@if ($dataitem->PRIORITY == '9')
+														<img src="{{asset('assets/css/flame.png')}}" class="mt--2" width="20px" height="20px">
+													@endif
+													 	{{$dataitem->MACHINE_STATUS == '1' ? 'หยุดทำงาน' : 'ทำงานปกติ'}}
+												</span></h4>
+												<span class="text-muted" >{{ $dataitem->REPAIR_SUBSELECT_NAME }}</span>
+											</div>
+											<div class="float-right pt-1 col-md-6 col-lg-3">
+												<h5 class="text-muted">{{$dataitem->DOC_DATE}}</h5>
+											</div>
 									</div>
 									<hr>
 								@endforeach
@@ -265,6 +265,62 @@
 <script type="text/javascript" src="{{asset('/echart/echarts-en.common.min.js')}}"></script>
 <script src="{{asset('/assets/js/plugin/chart.js/chart.min.js')}}"></script>
 <script src="{{asset('/assets/js/plugin/chart-circle/circles.min.js')}}"></script>
+<script>
+	$('#startbtn').on('click',function(){
+	const  music = document.getElementById("music");
+	music.play();
+	});
+
+	var url = "{{ route('dashboard.notificationrepair') }}"
+	$(document).ready(function(){
+	var title = document.title;
+			function changeTitle(number) {
+					var number = number
+					var newTitle = title;
+					if (number > '0') {
+						var newTitle = '(' + number + ') ' + title;
+					}
+			    document.title = newTitle;
+			}
+	var loaddata_table_all = function loaddata_table(){
+				$.ajax({
+							 type:'GET',
+							 url: url,
+							 datatype: 'json',
+							 success:function(data){
+								 changeTitle('0');
+								 $('#NEW_REPAIR').html(data.html)
+								 if (data.newrepair) {
+									 changeTitle(data.number);
+									 $('#startbtn').trigger('click');
+
+									var url = "{{ route('repair.readnotify')}}";
+											Swal.fire({
+												icon : 'error',
+												title: '!! มีรายการแจ้งซ่อมใหม่ !!',
+												showCloseButton: false,
+												showCancelButton: false,
+												showconfirmButton: true,
+												confirmButtonText: 'ตกลง',
+											}).then((result) => {
+												if (result.isConfirmed) {
+													$.ajax({
+														type:'GET',
+														 url: url,
+														 data: {STATUS:'1'
+																		,UNID:data.UNID},
+														 datatype: 'json',
+													});
+												}
+											})
+								 }
+							 }
+						 });
+					 }
+					 setInterval(loaddata_table_all,10000);
+	});
+
+</script>
 	{{-- แจ้งซ่อมแต่ล่ะLine--}}
 <script type="text/javascript">
 

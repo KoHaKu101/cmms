@@ -143,7 +143,8 @@ Route::get('/machine/repairhistory/pdf/{UNID}', 'App\Http\Controllers\PDF\Machin
 Route::get('/machine/systemcheck/pdf/{UNID}',   'App\Http\Controllers\PDF\MachineSystemCheckPDFController@SystemCheckPdf');
   Route::get('/machine/assets/machineall/{LINE?}',[MachinePDFController::class,'MachinePDF']);
 //Dashboard
-Route::get('/machine/dashboard/sumaryline',[DashboardController::class,'Sumaryline'])->name('dashboard.sumaryline');
+Route::get('/machine/dashboard/sumaryline'          ,[DashboardController::class,'Sumaryline'])->name('dashboard.sumaryline');
+Route::get('/machine/dashboard/notificationrepair'  ,[DashboardController::class,'NotificationRepair'])->name('dashboard.notificationrepair');
 
 // calendar
  Route::get('/machine/calendar'         ,[CalendarController::class,'Index']);
