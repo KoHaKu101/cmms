@@ -38,7 +38,7 @@ class DashboardController extends Controller
 
     $datarepair = MachineRepairREQ::select('CLOSE_STATUS')->where('CLOSE_STATUS','=','9')->count();
 
-    $datarepairlist   = MachineRepairREQ::select('PRIORITY','MACHINE_CODE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME','DOC_DATE')
+    $datarepairlist   = MachineRepairREQ::select('STATUS_NOTIFY','PRIORITY','MACHINE_CODE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME','DOC_DATE')
                                         ->where('CLOSE_STATUS','=','9')->orderBy('DOC_DATE','DESC')->orderBy("REPAIR_REQ_TIME",'DESC')->orderBy('PRIORITY','ASC')->take(9)->get();
     $array_line       = array();
     $array_repair     = array();
@@ -112,10 +112,10 @@ class DashboardController extends Controller
                 <h4 class="text-uppercase fw-bold mb-1" style="color:#6c757d;">'.$row->MACHINE_CODE .'
                 <span class="'.$COLOR_MACHINE_STATUS.' pl-3">';
                   if ($row->PRIORITY == '9'){
-                    $html.='<img src="'.asset('assets/css/flame.png').'" class="mt--2" width="20px" height="20px">'.$NEW_IMG.'';
-                  }else {
-                    $html.= $TEXT.''.$NEW_IMG.'';
+                    $html.='<img src="'.asset('assets/css/flame.png').'" class="mt--2" width="20px" height="20px">';
                   }
+                    $html.= $TEXT.''.$NEW_IMG.'';
+
                   $html.= '</span></h4>
                 <span class="text-muted" >' .$row->REPAIR_SUBSELECT_NAME  .'</span>
               </div>

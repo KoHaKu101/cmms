@@ -175,6 +175,9 @@
 								<div class="card-body" id="NEW_REPAIR">
 
 									@foreach($datarepairlist as $dataitem)
+										@php
+											$NEW_IMG               = $dataitem->STATUS_NOTIFY  == 9 ? '<img src="'.asset('assets/img/new.gif').'" class="mt--2" width="20px" height="20px">': '' ;
+										@endphp
 										<a href="{{ route('repair.list') }}"style="text-decoration:none;">
 											<div class="row">
 												<div class="d-flex col-md-6 col-lg-1">
@@ -189,7 +192,7 @@
 														@if ($dataitem->PRIORITY == '9')
 															<img src="{{asset('assets/css/flame.png')}}" class="mt--2" width="20px" height="20px">
 														@endif
-														 	{{$dataitem->MACHINE_STATUS == '1' ? 'หยุดทำงาน' : 'ทำงานปกติ'}}
+														 	{{$dataitem->MACHINE_STATUS == '1' ? 'หยุดทำงาน' : 'ทำงานปกติ'}}{!! $NEW_IMG !!}
 													</span></h4>
 													<span class="text-muted" >{{ $dataitem->REPAIR_SUBSELECT_NAME }}</span>
 												</div>
