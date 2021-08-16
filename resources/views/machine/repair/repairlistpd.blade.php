@@ -3,6 +3,8 @@
 @section('meta')
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<link href="{{asset('assets/css/select2.min.css')}}" rel="stylesheet" />
+	<link href="{{asset('assets/css/useinproject/stylerepair.css')}}" rel="stylesheet" />
+
 @endsection
 @section('css')
 
@@ -26,48 +28,6 @@
 
 	{{-- ส่วนเนื้อหาและส่วนท้า --}}
 @section('contentandfooter')
-	<style>
-	#overlayinpage{
-		position: fixed;
-	  top: 0;
-	  z-index: 100;
-	  width: 100%;
-	  height:100%;
-	  display: none;
-	  background: rgba(0,0,0,0.6);
-	}
-		#overlay{
-	  position: fixed;
-	  top: 0;
-	  z-index: 100;
-	  width: 100%;
-	  height:100%;
-	  display: none;
-	  background: rgba(0,0,0,0.6);
-	}
-	.cv-spinner {
-	  height: 100%;
-	  display: flex;
-	  justify-content: center;
-	  align-items: center;
-	}
-	.spinner {
-	  width: 40px;
-	  height: 40px;
-	  border: 4px #ddd solid;
-	  border-top: 4px #2e93e6 solid;
-	  border-radius: 50%;
-	  animation: sp-anime 0.8s infinite linear;
-	}
-	@keyframes sp-anime {
-	  100% {
-	    transform: rotate(360deg);
-	  }
-	}
-	.is-hide{
-	  display:none;
-	}
-	</style>
 	@php
 	$months=array(0 =>'ALL',1 => "มกราคม",2 => "กุมภาพันธ์",3 =>"มีนาคม",4 => "เมษายน",5 =>"พฤษภาคม",6 =>"มิถุนายน",
 									 7 =>"กรกฎาคม",8 =>"สิงหาคม",9 =>"กันยายน",10 =>"ตุลาคม",11 => "พฤศจิกายน",12 =>"ธันวาคม");
@@ -383,7 +343,6 @@ function styletable(table_style){
 
 $(document).ready(function(){
 
-
 	$('#startbtn').on('click',function(){
 		const  music = document.getElementById("music");
 		music.play();
@@ -412,7 +371,6 @@ $(document).ready(function(){
 							 changeTitle('0');
 							 if (data.newrepair) {
 								 changeTitle(data.number);
-								 // $('#startbtn').click();
 								 $('#startbtn').trigger('click');
 								var url = "{{ route('repair.readnotify.pd')}}";
 									  Swal.fire({
@@ -482,6 +440,8 @@ function loopdata_table(){
 					 });
 					 $.fn.modal.Constructor.prototype._enforceFocus = function() {};
 					 $('#show-detail').html('อาการเสีย : '+detail);
+					 $('#Result').modal({backdrop: 'static', keyboard: false});
+
 					 $("#Result").modal('show');
 					 $('#ConFirm').on('click',function(){
 						 var unid 				= $(this).attr('data-unid');

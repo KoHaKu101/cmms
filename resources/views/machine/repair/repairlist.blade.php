@@ -3,6 +3,7 @@
 @section('meta')
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<link href="{{asset('assets/css/select2.min.css')}}" rel="stylesheet" />
+	<link href="{{asset('assets/css/useinproject/stylerepair.css')}}" rel="stylesheet" />
 
 @endsection
 @section('css')
@@ -27,53 +28,14 @@
 
 	{{-- ส่วนเนื้อหาและส่วนท้า --}}
 @section('contentandfooter')
-	<style>
-	#overlayinpage{
-		position: fixed;
-	  top: 0;
-	  z-index: 100;
-	  width: 100%;
-	  height:100%;
-	  display: none;
-	  background: rgba(0,0,0,0.6);
-	}
-		#overlay{
-	  position: fixed;
-	  top: 0;
-	  z-index: 100;
-	  width: 100%;
-	  height:100%;
-	  display: none;
-	  background: rgba(0,0,0,0.6);
-	}
-	.cv-spinner {
-	  height: 100%;
-	  display: flex;
-	  justify-content: center;
-	  align-items: center;
-	}
-	.spinner {
-	  width: 40px;
-	  height: 40px;
-	  border: 4px #ddd solid;
-	  border-top: 4px #2e93e6 solid;
-	  border-radius: 50%;
-	  animation: sp-anime 0.8s infinite linear;
-	}
-	@keyframes sp-anime {
-	  100% {
-	    transform: rotate(360deg);
-	  }
-	}
-	.is-hide{
-	  display:none;
-	}
-	</style>
+
 	@php
 	$months=array(0 =>'ALL',1 => "มกราคม",2 => "กุมภาพันธ์",3 =>"มีนาคม",4 => "เมษายน",5 =>"พฤษภาคม",6 =>"มิถุนายน",
 									 7 =>"กรกฎาคม",8 =>"สิงหาคม",9 =>"กันยายน",10 =>"ตุลาคม",11 => "พฤศจิกายน",12 =>"ธันวาคม");
 
 	@endphp
+	<audio id="music" src="{{asset('assets/sound/mixkit-arabian-mystery-harp-notification-2489.wav')}}" ></audio>
+	<button type="button" style="display:none;" id="startbtn"></button>
 	  <div class="content">
       <div class="page-inner">
 				<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
@@ -364,10 +326,15 @@ function sweetalertnoinput(){
 </script>
 {{-- Loop function --}}
 <script>
+
+$('#startbtn').on('click',function(){
+	const  music = document.getElementById("music");
+	music.play();
+});
 	var page = $('#PAGE').val();
 	var url = "{{ route('repair.fetchdata') }}?page="+page;
 	var data = $('#FRM_SEARCH').serialize();
-	// 1 Loop page and alert new repair
+	// 1. Loop page and alert new repair
 	$(document).ready(function(){
 			var title = document.title;
 			function changeTitle(number) {
@@ -390,6 +357,8 @@ function sweetalertnoinput(){
 								 changeTitle('0');
 								 if (data.newrepair) {
 									 changeTitle(data.number);
+									 $('#startbtn').trigger('click');
+
 									var url = "{{ route('repair.readnotify')}}";
 											Swal.fire({
 												icon : 'error',
@@ -416,7 +385,7 @@ function sweetalertnoinput(){
 			setInterval(loaddata_table_all,10000);
 		loaddata_table();
 	});
-	// 2 Loop page
+	// 2. Loop page
 	function loaddata_table(){
 		$.ajax({
 					 type:'GET',
@@ -429,7 +398,7 @@ function sweetalertnoinput(){
 					 }
 				 });
 			 }
-	// 3 loop table worker in step close repair
+	// 3. loop table worker in step close repair
 	function loop_tabel_worker(array_emp_unid){
 	 var url = "{{ route('repair.addtableworker') }}";
 	 	$.ajax({
@@ -445,7 +414,7 @@ function sweetalertnoinput(){
 	 			 }
 	 		 });
 	 };
-	// 4 Loop table sparepart in step close repair
+	// 4. Loop table sparepart in step close repair
 	function loop_tabel_sparepart(unid,total,type,cost){
 	 	//********************* input array ***********************
 	 	arr_spare_total.push({unid:unid,total:total});
@@ -474,14 +443,14 @@ function sweetalertnoinput(){
 	 			 }
 	 		 });
 	 	 };
-	// 5 Loop removeclass active
+	// 5. Loop removeclass active
 	function loop_removeclass(){
 		for (var i = 1; i < 6; i++) {
 			$('.WORK_STEP_'+i).removeClass('badge-primary badge-success fw-bold');
 			$('#WORK_STEP_'+i).removeClass('active show');
 		}
 	}
-	// 6 Loop add class step active
+	// 6. Loop add class step active
 	function loop_addclass(step_number){
 		for (var i = 1; i < step_number ; i++) {
 			$('.WORK_STEP_'+i).addClass('badge-success fw-bold');
