@@ -100,7 +100,8 @@ class DashboardController extends Controller
       $COLOR_PRIORITY        = $row->PRIORITY       == 9 ? 'bg-danger' : 'bg-warning';
       $COLOR_MACHINE_STATUS  = $row->MACHINE_STATUS == '1' ? 'text-danger' : 'text-warning' ;
       $NEW_IMG               = $row->STATUS_NOTIFY  == 9 ? '<img src="'.asset('assets/img/new.gif').'" class="mt--2" width="20px" height="20px">': '' ;
-      $html.='<div class="row">
+      $html.='<a href="'.route('repair.list').'"style="text-decoration:none;">
+            <div class="row">
               <div class="d-flex col-md-6 col-lg-1">
                 <input type="hidden" value="1">
                 <div class="avatar avatar-online">
@@ -108,7 +109,7 @@ class DashboardController extends Controller
                 </div>
               </div>
               <div class="flex-1 ml-3 pt-1 col-md-6 col-lg-7">
-                <h4 class="text-uppercase fw-bold mb-1">'.$row->MACHINE_CODE .'
+                <h4 class="text-uppercase fw-bold mb-1" style="color:#6c757d;">'.$row->MACHINE_CODE .'
                 <span class="'.$COLOR_MACHINE_STATUS.' pl-3">';
                   if ($row->PRIORITY == '9'){
                     $html.='<img src="'.asset('assets/css/flame.png').'" class="mt--2" width="20px" height="20px">'.$NEW_IMG.'';
@@ -123,7 +124,9 @@ class DashboardController extends Controller
 
               </div>
             </div>
-            <hr>';
+            <hr>
+            </a>
+            ';
     }
 
 

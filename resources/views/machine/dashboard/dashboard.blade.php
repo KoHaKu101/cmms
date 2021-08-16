@@ -175,28 +175,31 @@
 								<div class="card-body" id="NEW_REPAIR">
 
 									@foreach($datarepairlist as $dataitem)
-										<div class="row">
-											<div class="d-flex col-md-6 col-lg-1">
-												<input type="hidden" value="1">
-												<div class="avatar avatar-online">
-													<span class="avatar-title rounded-circle border border-white {{$dataitem->PRIORITY == '9' ? 'bg-danger' : 'bg-warning'}}" style="width:50px"><i class="fa fa-wrench"></i></span>
+										<a href="{{ route('repair.list') }}"style="text-decoration:none;">
+											<div class="row">
+												<div class="d-flex col-md-6 col-lg-1">
+													<input type="hidden" value="1">
+													<div class="avatar avatar-online">
+														<span class="avatar-title rounded-circle border border-white {{$dataitem->PRIORITY == '9' ? 'bg-danger' : 'bg-warning'}}" style="width:50px"><i class="fa fa-wrench"></i></span>
+													</div>
 												</div>
-											</div>
-											<div class="flex-1 ml-3 pt-1 col-md-6 col-lg-7">
-												<h4 class="text-uppercase fw-bold mb-1">{{$dataitem->MACHINE_CODE}}
-												<span class="{{$dataitem->MACHINE_STATUS == '1' ? 'text-danger' : 'text-warning'}} pl-3">
-													@if ($dataitem->PRIORITY == '9')
-														<img src="{{asset('assets/css/flame.png')}}" class="mt--2" width="20px" height="20px">
-													@endif
-													 	{{$dataitem->MACHINE_STATUS == '1' ? 'หยุดทำงาน' : 'ทำงานปกติ'}}
-												</span></h4>
-												<span class="text-muted" >{{ $dataitem->REPAIR_SUBSELECT_NAME }}</span>
-											</div>
-											<div class="float-right pt-1 col-md-6 col-lg-3">
-												<h5 class="text-muted">{{$dataitem->DOC_DATE}}</h5>
-											</div>
-									</div>
-									<hr>
+												<div class="flex-1 ml-3 pt-1 col-md-6 col-lg-7">
+													<h4 class="text-uppercase fw-bold mb-1 " style="color:#6c757d;">{{$dataitem->MACHINE_CODE}}
+													<span class="{{$dataitem->MACHINE_STATUS == '1' ? 'text-danger' : 'text-warning'}} pl-3">
+														@if ($dataitem->PRIORITY == '9')
+															<img src="{{asset('assets/css/flame.png')}}" class="mt--2" width="20px" height="20px">
+														@endif
+														 	{{$dataitem->MACHINE_STATUS == '1' ? 'หยุดทำงาน' : 'ทำงานปกติ'}}
+													</span></h4>
+													<span class="text-muted" >{{ $dataitem->REPAIR_SUBSELECT_NAME }}</span>
+												</div>
+												<div class="float-right pt-1 col-md-6 col-lg-3">
+													<h5 class="text-muted">{{$dataitem->DOC_DATE}}</h5>
+												</div>
+										</div>
+										<hr>
+										</a>
+
 								@endforeach
 
 							</div>
