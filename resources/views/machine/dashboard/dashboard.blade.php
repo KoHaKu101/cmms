@@ -176,7 +176,7 @@
 
 									@foreach($datarepairlist as $dataitem)
 										@php
-											$NEW_IMG               = $dataitem->STATUS_NOTIFY  == 9 ? '<img src="'.asset('assets/img/new.gif').'" class="mt--2" width="20px" height="20px">': '' ;
+											$NEW_IMG               = $dataitem->STATUS_NOTIFY  == 9 ? '<img src="'.asset('assets/img/new.gif').'" class="mt--2" width="40px" height="40px">': '' ;
 										@endphp
 										<a href="{{ route('repair.list') }}"style="text-decoration:none;">
 											<div class="row">
