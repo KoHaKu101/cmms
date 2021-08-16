@@ -103,6 +103,9 @@
 					-ms-transform: rotate(45deg);
 					transform: rotate(45deg);
 				}
+				.has-error label{
+					color: #6c757d!important;
+				}
 				</style>
 				<div class="tab-content my-4">
 					<div class="tab-pane active" id="step1">
@@ -110,7 +113,7 @@
 							@csrf
 							<div class="row">
 								<div class="col-md-6 ml-auto has-error ">
-									<label class="my-2">ประเภท</label>
+									<label class="my-2" >ประเภท</label>
 									<div class="row ">
 										<label class="container col-md-5">ขาย
 											<input type="radio" name="DOC_TYPE" id="DOC_TYPE" value="SELL">
@@ -124,13 +127,13 @@
 
 								</div>
 								<div class="col-md-4 mr-auto has-error">
-									<label class="my-2">วันที่</label>
+									<label class="my-2" >วันที่</label>
 									<input type="date" class="form-control form-control-sm" id="DOC_DATE" name="DOC_DATE" value="{{ date('Y-m-d') }}">
 								</div>
 							</div>
 							<div class="row mt-4">
 								<div class="col-md-6 ml-auto has-error">
-									<label class="my-2">บริษัท</label>
+									<label class="my-2" >บริษัท</label>
 									<select class="form-control form-control-sm" id="COMPANY_UNID" name="COMPANY_UNID">
 										<option>TOYOTA</option>
 										<option>TAKAMI</option>
@@ -139,7 +142,7 @@
 								</div>
 
 								<div class="col-md-4 mr-auto has-error">
-									<label class="my-2">ผู้นำออก</label>
+									<label class="my-2" >ผู้นำออก</label>
 									<select class="form-control form-control-sm" id="EMP_UNID" name="EMP_UNID">
 										<option>TOYOTA</option>
 										<option>TAKAMI</option>
@@ -149,46 +152,6 @@
 							</div>
 						</form>
 					</div>
-					{{-- <div class="tab-pane" id="step2">
-						<div class="row text-center">
-							<div class="col-sm-6 col-md-4 ml-auto">
-								<div class="card card-stats card-info card-round" onclick="nextstep2(this)" data-type="SPAREPART" style="cursor:pointer">
-									<div class="card-body">
-										<div class="row">
-											<div class="col-5">
-												<div class="icon-big text-center">
-													<i class="fas fa-wrench"></i>
-												</div>
-											</div>
-											<div class="col-7 col-stats">
-												<div class="numbers">
-													<p class="card-category">อะไหล่</p>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-6 col-md-4 mr-auto">
-								<div class="card card-stats card-info card-round" onclick="nextstep2(this)" data-type="MAHCINE" style="cursor:pointer">
-									<div class="card-body">
-										<div class="row">
-											<div class="col-5">
-												<div class="icon-big text-center">
-													<i class="fas fa-cubes"></i>
-												</div>
-											</div>
-											<div class="col-7 col-stats">
-												<div class="numbers">
-													<p class="card-category">เครื่องจักร</p>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div> --}}
 					<div class="tab-pane" id="step2">
 						<form action="#" method="post" enctype="multipart/form-data" id="FRM_SAVE_STEP2">
 							@csrf
