@@ -274,6 +274,7 @@ class RepairCloseFormController extends Controller
        ]);
       return Response()->json(['pass' => 'true']);
    }elseif ($WORK_STEP == 'WORK_STEP_3') {
+
       $REPAIRSPAREPART = RepairSparepart::where('REPAIR_REQ_UNID','=',$REPAIR_REQ_UNID);
       if ($REPAIRSPAREPART->count() > 0) {
           $REPAIRSPAREPART->delete();

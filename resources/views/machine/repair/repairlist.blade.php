@@ -698,7 +698,8 @@ function nextstep(step_number){
 	var work_step_next 			= 'WORK_STEP_'+step_number;
 	var work_step_current  	= 'WORK_STEP_'+step_number_down;
 	if ( $('#FRM_'+work_step_current).valid() ){
-		 if (work_step_next == 'WORK_STEP_5') {
+		 if (work_step_current == 'WORK_STEP_4') {
+			 savestep(work_step_current,work_step_next);
 			result(work_step_next,work_step_current);
 		}else {
 			savestep(work_step_current,work_step_next);
