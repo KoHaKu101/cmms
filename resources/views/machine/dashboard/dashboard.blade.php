@@ -166,14 +166,13 @@
 											<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
 												<li class="nav-item">
 
-													<a class="nav-link active" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">Today</a>
+													<a class="nav-link active" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">See More...</a>
 												</li>
 											</ul>
 										</div>
 									</div>
 								</div>
 								<div class="card-body" id="NEW_REPAIR">
-
 									@foreach($datarepairlist as $dataitem)
 										@php
 											$NEW_IMG               = $dataitem->STATUS_NOTIFY  == 9 ? '<img src="'.asset('assets/img/new.gif').'" class="mt--2" width="40px" height="40px">': '' ;
@@ -208,10 +207,26 @@
 							</div>
 						</div>
 					</div>
+						@php
+							$MONTH_NAME_TH = array(0 =>'ALL',1 => "มกราคม",2 => "กุมภาพันธ์",3 =>"มีนาคม",4 => "เมษายน",5 =>"พฤษภาคม",6 =>"มิถุนายน",
+															 7 =>"กรกฎาคม",8 =>"สิงหาคม",9 =>"กันยายน",10 =>"ตุลาคม",11 => "พฤศจิกายน",12 =>"ธันวาคม");
+						@endphp
 					<div class="col-md-7" >
 						<div class="card">
-							<div class="card-header">
-								<div class="card-title">แจ้งซ่อมแต่ล่ะ LINE</div>
+							<div class="card-header row">
+								<div class="col-md-8 ">
+									<div class="card-title">แจ้งซ่อมแต่ล่ะ LINE : เดือน {{ $MONTH_NAME_TH[date('n')].' ปี '.date('Y')+543 }}</div>
+
+								</div>
+								<div class="col-md-4 d-flex justify-content-end">
+									<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
+										<li class="nav-item">
+
+											<a class="nav-link active" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">See More...</a>
+										</li>
+									</ul>
+								</div>
+
 							</div>
 							<div class="card-body">
 								<div class="chart-container">
@@ -219,20 +234,20 @@
 								</div>
 							</div>
 						</div>
-						<div class="card">
-							<div class="card-header">
-									<div class="card-title">ค่าซ่อมประจำเดือน
-										<a href="{{url('machine/dashboard/sumaryline')}}" class="btn btn-primary float-right" style="color:white">ค่าซ่อมแต่ล่ะ Line</a>
-									</div>
-							</div>
-							<div class="card-body">
-								<div class="chart-container">
-									<div id="price" style="width: 650px;height:350px;"></div>
-								</div>
-							</div>
-						</div>
+
 					</div>
 
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="card" style="width: 650px;height:400px;">
+						<div class="card-body" >
+							<canvas id="myChart"></canvas>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+				</div>
 			</div>
 		</div>
 		<footer class="footer">
@@ -271,6 +286,10 @@
 <script type="text/javascript" src="{{asset('/echart/echarts-en.common.min.js')}}"></script>
 <script src="{{asset('/assets/js/plugin/chart.js/chart.min.js')}}"></script>
 <script src="{{asset('/assets/js/plugin/chart-circle/circles.min.js')}}"></script>
+
+<script src="{{asset('/assets/js/chart.min.js')}}"></script>
+<script src="{{asset('/assets/js/chartjs-plugin-datalabels@2.js')}}"></script>
+
 <script>
 	$('#startbtn').on('click',function(){
 	const  music = document.getElementById("music");
@@ -327,7 +346,102 @@
 	});
 
 </script>
-	{{-- แจ้งซ่อมแต่ล่ะLine--}}
+	{{-- แจ้งซ่อมแต่ล่ะLine --}}
+	<script>
+	Chart.register(ChartDataLabels);
+var ctx = document.getElementById('myChart').getContext('2d');
+var data = [12, 19];
+var backgroundColor = ['rgba(178, 0, 250)','rgba(243, 250, 0)',];
+var chartpm3month = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+			labels: ['ดําเนินการแล้ว', 'งานค้าง'],
+        datasets: [{
+            data: data,
+            backgroundColor: backgroundColor,
+						datalabels: {
+			        formatter: function(value,context){
+								anchor: 'center'
+								return context.chart.data.datasets[0].data[context.dataIndex];
+							}
+			      }
+        }],
+
+    },
+    options: {
+			responsive: true,
+			layout: {
+        padding: {
+            left: 0,
+            right: 40,
+            top: 0,
+            bottom: 250,
+        }
+	     },
+			plugins: {
+				title: {
+		      display: true,
+		      text: '3 เดือน',
+					font: {
+						size:30,
+						weight: 'bold'
+						},
+		    	},
+				legend: {
+						display: true,
+						position: 'bottom',
+						labels: {
+                font: {
+                    size: 16
+                }
+            }
+				},
+				datalabels: {
+					borderColor: 'black',
+	        borderRadius: 25,
+	        borderWidth: 2,
+	        color: 'black',
+	        font: {
+						size:25,
+	          weight: 'bold'
+	        },
+	        padding: 6,
+	        formatter: Math.round
+	      }
+			 },
+     },
+		 centerText: {
+			 display: true,
+			 text: "280"
+	 }
+});
+// var value = 75;
+// textCenter(value);
+//
+// function textCenter(val) {
+//   Chart.register({
+//     beforeDraw: function(chart) {
+//       var width = chart.chart.width,
+//           height = chart.chart.height,
+//           ctx = chart.chart.ctx;
+//
+//       ctx.restore();
+//       var fontSize = (height / 114).toFixed(2);
+//       ctx.font = fontSize + "em sans-serif";
+//       ctx.textBaseline = "middle";
+//
+//       var text = val+"%",
+//           textX = Math.round((width - ctx.measureText(text).width) / 2),
+//           textY = height / 2;
+//
+//       ctx.fillText(text, textX, textY);
+//       ctx.save();
+//     }
+//   });
+// }
+
+
+</script>
 <script type="text/javascript">
 
 	var chartDom = document.getElementById('repair');
@@ -367,13 +481,9 @@
 	};
 	option && myChart.setOption(option);
 	</script>
-	{{-- ค่าใช้จ่าย--}}
-<script type="text/javascript" src="{{ asset('assets/js/useinproject/dashboard/repairpay.js') }}">
-	</script>
 <script type="text/javascript" >
-
 	@php
-		$array_color = array('L1'=>'#14BAFD','L2'=>'#FF944F','L3'=>'#BAFF4F','L4'=>'#FF4F4F','L5'=>'#FF4FCF','L6'=>'#4F62FF',);
+		$array_color = array('L1'=>'#14BAFD','L2'=>'#FF944F','L3'=>'#BAFF4F','L4'=>'#FF4F4F','L5'=>'#FF4FCF','L6'=>'#4F62FF');
 		$i = 1;
 	@endphp
 	@foreach ($array_line as $key => $value)

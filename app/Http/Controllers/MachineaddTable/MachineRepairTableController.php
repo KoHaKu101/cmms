@@ -37,7 +37,12 @@ class MachineRepairTableController extends Controller
     return $number;
   }
 
-  public function Index($UNID = NULL){
+  public function Index(Request $request,$UNID = NULL){
+
+    $page       = $request['page'];
+    if ($request->PAGE != Null) {
+      $page   = $request->page;
+    }
     $CHECK_UNID = isset($UNID) ? $UNID : '';
     $DATA_SELECTMAINREPAIR  = SelectMainRepair::paginate(10);
     $MACHINESTATUS          = MachineStatusTable::where('STATUS','=','9')->get();
@@ -45,11 +50,11 @@ class MachineRepairTableController extends Controller
     $DATA_SELECTSUBREPAIR   = '';
     if ($CHECK_UNID != '' ) {
       $SELECTMAINREPAIR_FIRST = SelectMainRepair::where('UNID','=',$CHECK_UNID)->first();
-      $DATA_SELECTSUBREPAIR   = SelectSubRepair::where('REPAIR_MAINSELECT_UNID','=',$CHECK_UNID)->paginate(10);
+      $DATA_SELECTSUBREPAIR   = SelectSubRepair::where('REPAIR_MAINSELECT_UNID','=',$CHECK_UNID)->get();
     }
     $OPEN = isset($UNID) ? 1 : 0;
     return View('machine/add/repair/repairlist',compact('DATA_SELECTMAINREPAIR','DATA_SELECTSUBREPAIR','MACHINESTATUS'
-    ,'OPEN','SELECTMAINREPAIR_FIRST'));
+    ,'OPEN','SELECTMAINREPAIR_FIRST','page'));
   }
   public function Save(Request $request){
     $STATUS = isset($request->STATUS) ? $request->STATUS : 1;

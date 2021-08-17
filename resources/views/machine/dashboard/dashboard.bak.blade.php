@@ -166,13 +166,14 @@
 											<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
 												<li class="nav-item">
 
-													<a class="nav-link active" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">See More...</a>
+													<a class="nav-link active" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">Today</a>
 												</li>
 											</ul>
 										</div>
 									</div>
 								</div>
 								<div class="card-body" id="NEW_REPAIR">
+
 									@foreach($datarepairlist as $dataitem)
 										@php
 											$NEW_IMG               = $dataitem->STATUS_NOTIFY  == 9 ? '<img src="'.asset('assets/img/new.gif').'" class="mt--2" width="40px" height="40px">': '' ;
@@ -207,26 +208,10 @@
 							</div>
 						</div>
 					</div>
-						@php
-							$MONTH_NAME_TH = array(0 =>'ALL',1 => "มกราคม",2 => "กุมภาพันธ์",3 =>"มีนาคม",4 => "เมษายน",5 =>"พฤษภาคม",6 =>"มิถุนายน",
-															 7 =>"กรกฎาคม",8 =>"สิงหาคม",9 =>"กันยายน",10 =>"ตุลาคม",11 => "พฤศจิกายน",12 =>"ธันวาคม");
-						@endphp
 					<div class="col-md-7" >
 						<div class="card">
-							<div class="card-header row">
-								<div class="col-md-8 ">
-									<div class="card-title">แจ้งซ่อมแต่ล่ะ LINE : เดือน {{ $MONTH_NAME_TH[date('n')].' ปี '.date('Y')+543 }}</div>
-
-								</div>
-								<div class="col-md-4 d-flex justify-content-end">
-									<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
-										<li class="nav-item">
-
-											<a class="nav-link active" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">See More...</a>
-										</li>
-									</ul>
-								</div>
-
+							<div class="card-header">
+								<div class="card-title">แจ้งซ่อมแต่ล่ะ LINE</div>
 							</div>
 							<div class="card-body">
 								<div class="chart-container">
@@ -234,7 +219,18 @@
 								</div>
 							</div>
 						</div>
-
+						<div class="card">
+							<div class="card-header">
+									<div class="card-title">ค่าซ่อมประจำเดือน
+										<a href="{{url('machine/dashboard/sumaryline')}}" class="btn btn-primary float-right" style="color:white">ค่าซ่อมแต่ล่ะ Line</a>
+									</div>
+							</div>
+							<div class="card-body">
+								<div class="chart-container">
+									<div id="price" style="width: 650px;height:350px;"></div>
+								</div>
+							</div>
+						</div>
 					</div>
 
 			</div>
@@ -275,7 +271,7 @@
 <script type="text/javascript" src="{{asset('/echart/echarts-en.common.min.js')}}"></script>
 <script src="{{asset('/assets/js/plugin/chart.js/chart.min.js')}}"></script>
 <script src="{{asset('/assets/js/plugin/chart-circle/circles.min.js')}}"></script>
-{{-- <script>
+<script>
 	$('#startbtn').on('click',function(){
 	const  music = document.getElementById("music");
 	music.play();
@@ -330,7 +326,7 @@
 					 setInterval(loaddata_table_all,10000);
 	});
 
-</script> --}}
+</script>
 	{{-- แจ้งซ่อมแต่ล่ะLine--}}
 <script type="text/javascript">
 
@@ -371,9 +367,13 @@
 	};
 	option && myChart.setOption(option);
 	</script>
+	{{-- ค่าใช้จ่าย--}}
+<script type="text/javascript" src="{{ asset('assets/js/useinproject/dashboard/repairpay.js') }}">
+	</script>
 <script type="text/javascript" >
+
 	@php
-		$array_color = array('L1'=>'#14BAFD','L2'=>'#FF944F','L3'=>'#BAFF4F','L4'=>'#FF4F4F','L5'=>'#FF4FCF','L6'=>'#4F62FF');
+		$array_color = array('L1'=>'#14BAFD','L2'=>'#FF944F','L3'=>'#BAFF4F','L4'=>'#FF4F4F','L5'=>'#FF4FCF','L6'=>'#4F62FF',);
 		$i = 1;
 	@endphp
 	@foreach ($array_line as $key => $value)

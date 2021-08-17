@@ -137,7 +137,7 @@
 															$MACHINE_STATUS[$row_set->STATUS_CODE] = $row_set->STATUS_NAME;
 														}
 													@endphp
-													@foreach ($DATA_SELECTMAINREPAIR as $index => $datarow)
+													@foreach ($DATA_SELECTMAINREPAIR->items($page) as $index => $datarow)
 														<tr>
 															<td>{{$index+1}}</td>
 															<td>{{$datarow->REPAIR_MAINSELECT_NAME}}</td>
@@ -156,17 +156,21 @@
 																data-repair_name="{{ $datarow->REPAIR_MAINSELECT_NAME }}"
 																>
 																	<i class="fas fa-trash fa-lg"></i></button>
-																<a href="{{ route('repairtemplate.list',$datarow->UNID) }}" class="btn btn-info btn-sm mx-1 my-1">
+																<a href="{{ route('repairtemplate.list',$datarow->UNID).'?page='.$DATA_SELECTMAINREPAIR->currentPage() }}" class="btn btn-info btn-sm mx-1 my-1">
 																	<i class="fas fa-eye fa-lg"></i></a>
 															</td>
 														</tr>
+
 													@endforeach
 												</tbody>
 											</table>
 										</div>
+
+										{{ $DATA_SELECTMAINREPAIR->links() }}
 									</div>
 								</div>
 							</div>
+
 							@if ($OPEN == 1)
 								<div class="col-md-7">
 									<div class="card ">
