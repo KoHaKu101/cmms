@@ -477,8 +477,8 @@ class PDRepairController extends Controller
  public function ConFirm(Request $request){
    $UNID     = $request->REPAIR_REQ_UNID;
    $PD_CODE  = $request->USER_PD_CODE;
-   $PD_NAME  = $DATA_PD->EMP_TH_NAME_FIRST.' '.$DATA_PD->EMP_TH_NAME_LAST;
    $DATA_PD  = EMPALL::select("EMP_TH_NAME_FIRST",'EMP_TH_NAME_LAST','EMP_CODE','UNID')->where('EMP_CODE','=',$PD_CODE)->where('EMP_STATUS','=','9')->first();
+    $PD_NAME  = $DATA_PD->EMP_TH_NAME_FIRST.' '.$DATA_PD->EMP_TH_NAME_LAST;
    MachineRepairREQ::where('UNID','=',$UNID)->update([
       'PD_UNID'         => $DATA_PD->UNID
      ,'PD_CODE'         => $DATA_PD->EMP_CODE

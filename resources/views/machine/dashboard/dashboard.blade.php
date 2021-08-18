@@ -287,10 +287,15 @@
 <script src="{{asset('/assets/js/plugin/chart.js/chart.min.js')}}"></script>
 <script src="{{asset('/assets/js/plugin/chart-circle/circles.min.js')}}"></script>
 
-<script src="{{asset('/assets/js/chart.min.js')}}"></script>
-<script src="{{asset('/assets/js/chartjs-plugin-datalabels@2.js')}}"></script>
+<script src="{{asset('/assets/js/Chart.bundle.js')}}"></script>
+{{-- <script src="{{asset('/assets/js/chartjs-plugin-datalabels@2.js')}}"></script> --}}
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@1"></script>
 
-<script>
+
+{{-- <script src="{{asset('/assets/js/chartjs-plugin-doughnutlabel.js')}}"></script> --}}
+
+
+{{-- <script>
 	$('#startbtn').on('click',function(){
 	const  music = document.getElementById("music");
 	music.play();
@@ -345,10 +350,11 @@
 					 setInterval(loaddata_table_all,10000);
 	});
 
-</script>
+</script> --}}
 	{{-- แจ้งซ่อมแต่ล่ะLine --}}
 	<script>
-	Chart.register(ChartDataLabels);
+	'use strict';
+	Chart.plugins.register(ChartDataLabels);
 var ctx = document.getElementById('myChart').getContext('2d');
 var data = [12, 19];
 var backgroundColor = ['rgba(178, 0, 250)','rgba(243, 250, 0)',];
@@ -369,40 +375,38 @@ var chartpm3month = new Chart(ctx, {
 
     },
     options: {
-			responsive: true,
-			layout: {
-        padding: {
-            left: 0,
-            right: 40,
-            top: 0,
-            bottom: 250,
-        }
-	     },
-			plugins: {
 				title: {
-		      display: true,
-		      text: '3 เดือน',
-					font: {
-						size:30,
-						weight: 'bold'
-						},
-		    	},
-				legend: {
+					display: true,
+					text: '3 เดือน',
+					fontSize:20,
+
+				},
+			legend: {
 						display: true,
 						position: 'bottom',
 						labels: {
-                font: {
-                    size: 16
-                }
-            }
+								fontSize:14,
+								padding:20,
+					}
 				},
+			layout: {
+            padding: {
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0
+            }
+        },
+		responsive: true,
+		cutoutPercentage:55,
+			plugins: {
 				datalabels: {
 					borderColor: 'black',
-	        borderRadius: 25,
+	        borderRadius: 20,
 	        borderWidth: 2,
 	        color: 'black',
 	        font: {
-						size:25,
+						size:18	,
 	          weight: 'bold'
 	        },
 	        padding: 6,
@@ -410,35 +414,30 @@ var chartpm3month = new Chart(ctx, {
 	      }
 			 },
      },
-		 centerText: {
-			 display: true,
-			 text: "280"
-	 }
 });
-// var value = 75;
-// textCenter(value);
-//
-// function textCenter(val) {
-//   Chart.register({
-//     beforeDraw: function(chart) {
-//       var width = chart.chart.width,
-//           height = chart.chart.height,
-//           ctx = chart.chart.ctx;
-//
-//       ctx.restore();
-//       var fontSize = (height / 114).toFixed(2);
-//       ctx.font = fontSize + "em sans-serif";
-//       ctx.textBaseline = "middle";
-//
-//       var text = val+"%",
-//           textX = Math.round((width - ctx.measureText(text).width) / 2),
-//           textY = height / 2;
-//
-//       ctx.fillText(text, textX, textY);
-//       ctx.save();
-//     }
-//   });
-// }
+var value = 100;
+textCenter(value);
+function textCenter(val) {
+  Chart.pluginService.register({
+    beforeDraw: function(chart) {
+      var width = chart.chart.width,
+          height = chart.chart.height,
+          ctx = chart.chart.ctx;
+
+      ctx.restore();
+      var fontSize = (height / 160).toFixed(2);
+      ctx.font = fontSize + "em sans-serif";
+      ctx.textBaseline = "middle";
+
+      var text = val+"%",
+          textX = Math.round((width - ctx.measureText(text).width) / 2),
+          textY = height - 150;
+
+      ctx.fillText(text, textX, textY);
+      ctx.save();
+    }
+  });
+}
 
 
 </script>
