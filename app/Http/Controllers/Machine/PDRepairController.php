@@ -120,7 +120,7 @@ class PDRepairController extends Controller
     'MACHINE_LINE','MONTH','YEAR','DOC_STATUS','array_EMP','array_IMG'));
   }
   public function FetchData(Request $request){
-    $SEARCH         = isset($request->SEARCH) ? $request->SEARCH : '';
+    $SEARCH         = isset($request->SEARCH_MACHINE) ? $request->SEARCH_MACHINE : '';
     $MACHINE_LINE   = isset($request->LINE)   ? $request->LINE   : '';
     $MONTH          = isset($request->MONTH)  ? $request->MONTH  : 0 ;
     $DOC_STATUS     = isset($request->DOC_STATUS) ? $request->DOC_STATUS : 0 ;

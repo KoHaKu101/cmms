@@ -447,7 +447,15 @@ function loopdata_table(){
 						 var unid 				= $(this).attr('data-unid');
 						 SaveFrom(repair_unid,unid);
 				 		});
-				 }
+				 },
+				 error: function (request, status, error) {
+					 Swal.fire({
+							icon: 'error',
+							title: 'เกิดข้อผิดพลาดกรุณาลองใหม่',
+							timer: 1500,
+						});
+						$("#overlayinpage").fadeOut(300);
+    			}
 			 });
 	}
 
@@ -482,7 +490,16 @@ function loopdata_table(){
 												success:function(result){
 													$("#WORK_STEP_RESULT").html(result.html);
 													$('#stepsave').html(result.footer);
-												}
+												},
+												error: function (request, status, error) {
+								 					 Swal.fire({
+								 							icon: 'error',
+								 							title: 'เกิดข้อผิดพลาดกรุณาลองใหม่',
+								 							timer: 1500,
+								 						});
+								 						$("#overlayinpage").fadeOut(300);
+								     			}
+								 			 });
 											});
 								 });
 							}else {

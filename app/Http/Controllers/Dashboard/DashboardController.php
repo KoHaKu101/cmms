@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Machine\Machine;
 use App\Models\Machine\MachineRepairREQ;
+use App\Models\Machine\MachinePlanPm;
 use Carbon\Carbon;
 use Auth;
 use Illuminate\Support\Facades\DB;
@@ -38,8 +39,21 @@ class DashboardController extends Controller
 
     $datarepair = MachineRepairREQ::select('CLOSE_STATUS')->where('CLOSE_STATUS','=','9')->count();
 
-    $datarepairlist   = MachineRepairREQ::select('STATUS_NOTIFY','PRIORITY','MACHINE_CODE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME','DOC_DATE')
-                                        ->where('CLOSE_STATUS','=','9')->orderBy('DOC_DATE','DESC')->orderBy("REPAIR_REQ_TIME",'DESC')->orderBy('PRIORITY','ASC')->take(4)->get();
+    $datarepairlist   = MachineRepairREQ::select('STATUS_NOTIFY','PRIORITY','MACHINE_CODE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME','DOC_DATE','DOC_NO')
+                                        ->where('CLOSE_STATUS','=','9')->orderBy('DOC_DATE','DESC')->orderBy("REPAIR_REQ_TIME",'DESC')
+                                        ->orderBy('PRIORITY','ASC')->take(4)->get();
+    $data_downtime   = MachineRepairREQ::select('MACHINE_CODE')->selectraw('MAX(DOWNTIME) as DOWNTIME')->groupBy('MACHINE_CODE')->orderBy('DOWNTIME','DESC')->take(7)->get();
+
+    $data_complete   = array();
+    $data_uncomplete = array();
+    for ($i=0; $i < 4; $i++) {
+      $data_complete[$i * 3+3]   = MachinePlanPm::select('PLAN_STATUS')->where('PLAN_YEAR','=',date('Y'))->where('PLAN_MONTH','=',date('n'))
+                                                ->where('PLAN_PERIOD','=',$i * 3+3)->where('PLAN_STATUS','=','COMPLETE')->count();
+      $data_uncomplete[$i * 3+3] = MachinePlanPm::select('PLAN_STATUS')->where('PLAN_YEAR','=',date('Y'))->where('PLAN_MONTH','=',date('n'))
+                                                ->where('PLAN_PERIOD','=',$i * 3+3)->where('PLAN_STATUS','!=','COMPLETE')->count();
+    }
+
+
     $array_line       = array();
     $array_repair     = array();
     for ($i=1; $i < 7 ; $i++) {
@@ -51,6 +65,7 @@ class DashboardController extends Controller
 
     return View('machine/dashboard/dashboard',compact('datarepairlist','datarepair','machine_all','machine_ready','machine_wait'
     ,'array_line','array_repair'
+    ,'data_complete','data_uncomplete','data_downtime'
     ));
   }
 
@@ -85,7 +100,7 @@ class DashboardController extends Controller
   }
 
   public function NotificationRepair(){
-    $datarepairlist   = MachineRepairREQ::select('STATUS_NOTIFY','PRIORITY','MACHINE_CODE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME','DOC_DATE')
+    $datarepairlist   = MachineRepairREQ::select('STATUS_NOTIFY','PRIORITY','MACHINE_CODE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME','DOC_DATE','DOC_NO')
                                         ->where('CLOSE_STATUS','=','9')->orderBy('DOC_DATE','DESC')->orderBy("REPAIR_REQ_TIME",'DESC')->orderBy('PRIORITY','ASC')->take(4)->get();
     $last_data  = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->whereRaw('DOC_NO = (SELECT MAX(DOC_NO)FROM [PMCS_CMMS_REPAIR_REQ])')->first();
     $data_count = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->whereRaw('DOC_NO = (SELECT MAX(DOC_NO)FROM [PMCS_CMMS_REPAIR_REQ])')->count();
@@ -100,7 +115,7 @@ class DashboardController extends Controller
       $COLOR_PRIORITY        = $row->PRIORITY       == 9 ? 'bg-danger' : 'bg-warning';
       $COLOR_MACHINE_STATUS  = $row->MACHINE_STATUS == '1' ? 'text-danger' : 'text-warning' ;
       $NEW_IMG               = $row->STATUS_NOTIFY  == 9 ? '<img src="'.asset('assets/img/new.gif').'" class="mt--2" width="40px" height="40px">': '' ;
-      $html.='<a href="'.route('repair.list').'"style="text-decoration:none;">
+      $html.='<a href="'.route('repair.list').'?SEARCH_MACHINE='.$row->DOC_NO.'"style="text-decoration:none;">
             <div class="row">
               <div class="d-flex col-md-6 col-lg-1">
                 <input type="hidden" value="1">

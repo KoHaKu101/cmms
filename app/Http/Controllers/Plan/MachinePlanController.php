@@ -309,6 +309,7 @@ class MachinePlanController extends Controller
                   $this->IMPSandPlanUpdate($PM_PLAN_UNID,$CHECK_DATE,$MACHINE_UNID,$PM_MASTER_UNID,$START_TIME,$END_TIME,$DOWNTIME);
                   $this->LoopUpdatePlan($PLAN_PERIOD,$CHECK_DATE,$MACHINE_UNID,$PM_MASTER_UNID);
                   $TOTAL_COST_SPAREPART = $this->SaveSparePart($PM_PLAN_UNID,$CHECK_DATE,$SPAREPART_TOTAL,$ARRAY_COST,$PM_USER_CHECK);
+                  // dd($TOTAL_COST_SPAREPART);
                   $SAVEHISTORYPM = new HistoryController;
                   $SAVEHISTORYPM->SaveHistoryPM($PM_PLAN_UNID,$DOWNTIME,$REMARK,$CHECK_DATE,$PM_USER_CHECK,$TOTAL_COST_SPAREPART );
                   $SAVE_HISTORY_SPAREPART = new SparepartController;
@@ -687,11 +688,13 @@ class MachinePlanController extends Controller
     return Response()->json(['html' => $html]);
   }
   public function SaveSparePart($PM_PLAN_UNID,$CHECK_DATE,$SPAREPART_TOTAL,$ARRAY_COST,$PM_USER_CHECK){
-    $array_unid = array();
-    $PLAN_UNID = $PM_PLAN_UNID;
-    $CHANGE_DATE = $CHECK_DATE;
+    $array_unid   = array();
+    $PLAN_UNID    = $PM_PLAN_UNID;
+    $CHANGE_DATE  = $CHECK_DATE;
     $SPAREPART_TOTAL = $SPAREPART_TOTAL;
     $ARRAY_COST = $ARRAY_COST;
+    $TOTAL_COST_SPAREPART_ALL = 0;
+
     if (is_array($SPAREPART_TOTAL)) {
       foreach ($SPAREPART_TOTAL as $key => $row) {
         $array_unid[$key] = $row;
@@ -703,16 +706,14 @@ class MachinePlanController extends Controller
       if ($PmPlanSparepart->count() > 0) {
         $PmPlanSparepart->delete();
       }
-      $TOTAL_COST_SPAREPART_ALL = 0;
+
       foreach ($DATA_SPAREPART as $key => $row_sparepart) {
-
         $TOTAL_COST_SPAREPART = $TOTAL_COST_SPAREPART_ALL;
-
         $TOTAL_PIC = $SPAREPART_TOTAL[$row_sparepart->UNID];
         $SPAREPART_COST = $ARRAY_COST[$row_sparepart->UNID];
         $TOTAL_COST =  $SPAREPART_COST * $TOTAL_PIC ;
-
         $TOTAL_COST_SPAREPART_ALL = $TOTAL_COST_SPAREPART + $TOTAL_COST;
+
         PmPlanSparepart::insert([
           'UNID'                =>$this->randUNID('PMCS_CMMS_PM_SPAREPART')
           ,'PM_PLAN_UNID'       =>$DATA_PLAN->UNID
@@ -737,7 +738,7 @@ class MachinePlanController extends Controller
           ,'MODIFY_TIME'        =>Carbon::now()
         ]);
       }
-      return $TOTAL_COST_SPAREPART_ALL;
     }
+    return $TOTAL_COST_SPAREPART_ALL;
   }
 }

@@ -84,7 +84,7 @@ class HistoryController extends Controller
                                           ->orderBy('MACHINE_CODE')->get();
       $DATA_SPAREPART     = RepairSparepart::orderBy('SPAREPART_NAME')->get();
       $COMPACT_NAME = compact('DOC_TYPE','DATA_REPAIR_HEADER','DOC_YEAR','DOC_MONTH','SEARCH','DATA_SPAREPART','DATA_REPAIR');
-      
+
     }elseif ($DOC_TYPE == 'PLAN_PM') {
       $DATA_PLANPM        = History::select('PM_PLAN_UNID','DOC_DATE','REPAIR_DATE','DOWN_TIME')
                                     ->selectraw('dbo.decode_utf8(INSPECTION_BY) as INSPECTION_BY_TH')
@@ -249,37 +249,7 @@ class HistoryController extends Controller
     ]);
   }
   public function SaveHistoryPM($PM_PLAN_UNID,$DOWNTIME,$REMARK,$CHECK_DATE,$PM_USER_CHECK,$TOTAL_COST_SPAREPART){
-    // $checkrow = HistoryPlanPM::where('PM_PLAN_UNID','=',$PM_PLAN_UNID);
-    // if ($checkrow->count() > 0) {
-    //   $checkrow->delete();
-    // }
-    // $PLAN = MachinePlanPm::where('UNID','=',$PM_PLAN_UNID)->first();
-    // $MACHINE = Machine::where('UNID','=',$PLAN->MACHINE_UNID)->first();
-    // HistoryPlanPM::insert([
-    //   'UNID'          => $this->randUNID('PMCS_CMMS_HISTORY_PM')
-    //   ,'PM_PLAN_UNID' => $PLAN->UNID
-    //   ,'MACHINE_UNID' => $PLAN->MACHINE_UNID
-    //   ,'MACHINE_CODE' => $MACHINE->MACHINE_CODE
-    //   ,'MACHINE_NAME' => $MACHINE->MACHINE_NAME
-    //   ,'MACHINE_TYPE' => $MACHINE->MACHINE_TYPE
-    //   ,'DOC_NO'       => $PLAN->DOCNO
-    //   ,'DOC_DATE'     => $PLAN->PLAN_DATE
-    //   ,'DOC_YEAR'     => $PLAN->PLAN_YEAR
-    //   ,'DOC_MONTH'    => $PLAN->PLAN_MONTH
-    //   ,'DOC_TYPE'     => 'PM'
-    //   ,'CHECK_DATE'   => $CHECK_DATE
-    //   ,'CHECK_BY'     => $PM_USER_CHECK
-    //   ,'START_TIME'   => $START_TIME
-    //   ,'END_TIME'     => $END_TIME
-    //   ,'DOWN_TIME'    => $DOWNTIME
-    //   ,'RANK'         => $PLAN->PLAN_RANK
-    //   ,'PERIOD'       => $PLAN->PLAN_PERIOD
-    //   ,'NOTE'         => $REMARK
-    //   ,'CREATE_BY'    => Auth::user()->name
-    //   ,'CREATE_TIME'  => Carbon::now()
-    //   ,'MODIFY_BY'    => Auth::user()->name
-    //   ,'MODIFY_TIME'  => Carbon::now()
-    // ]);
+
     $checkrow = History::where('PM_PLAN_UNID','=',$PM_PLAN_UNID);
     if ($checkrow->count() > 0) {
      $checkrow->delete();

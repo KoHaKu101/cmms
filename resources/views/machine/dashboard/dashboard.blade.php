@@ -23,7 +23,11 @@
 
 	{{-- ส่วนเนื้อหาและส่วนท้า --}}
 @section('contentandfooter')
+	@php
+	$months=array(0 =>'ALL',1 => "มกราคม",2 => "กุมภาพันธ์",3 =>"มีนาคม",4 => "เมษายน",5 =>"พฤษภาคม",6 =>"มิถุนายน",
+									 7 =>"กรกฎาคม",8 =>"สิงหาคม",9 =>"กันยายน",10 =>"ตุลาคม",11 => "พฤศจิกายน",12 =>"ธันวาคม");
 
+	@endphp
 	<audio id="music" src="{{asset('assets/sound/mixkit-arabian-mystery-harp-notification-2489.wav')}}" ></audio>
 	<button type="button" style="display:none;" id="startbtn"></button>
 		<div class="content">
@@ -177,7 +181,7 @@
 										@php
 											$NEW_IMG               = $dataitem->STATUS_NOTIFY  == 9 ? '<img src="'.asset('assets/img/new.gif').'" class="mt--2" width="40px" height="40px">': '' ;
 										@endphp
-										<a href="{{ route('repair.list') }}"style="text-decoration:none;">
+										<a href="{{ route('repair.list').'?SEARCH_MACHINE='.$dataitem->DOC_NO }}"style="text-decoration:none;">
 											<div class="row">
 												<div class="d-flex col-md-6 col-lg-1">
 													<input type="hidden" value="1">
@@ -216,17 +220,14 @@
 							<div class="card-header row">
 								<div class="col-md-8 ">
 									<div class="card-title">แจ้งซ่อมแต่ล่ะ LINE : เดือน {{ $MONTH_NAME_TH[date('n')].' ปี '.date('Y')+543 }}</div>
-
 								</div>
 								<div class="col-md-4 d-flex justify-content-end">
 									<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
 										<li class="nav-item">
-
 											<a class="nav-link active" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">See More...</a>
 										</li>
 									</ul>
 								</div>
-
 							</div>
 							<div class="card-body">
 								<div class="chart-container">
@@ -234,19 +235,73 @@
 								</div>
 							</div>
 						</div>
-
 					</div>
 
 			</div>
 			<div class="row">
 				<div class="col-md-6">
-					<div class="card" style="width: 650px;height:400px;">
+					<div class="card"  >
+						<div class="card-header">
+							<div class="row">
+								<div class="col-md-9 form-inline">
+									<div class="card-title">การทำแผน</div>
+									<select class="mx-2 form-control form-control-sm">
+										<option>PM</option>
+										<option>PDM</option>
+									</select>
+									<div class="card-title">เดือน {{ $months[date('n')].' '.date('Y')+543  }}</div>
+								</div>
+								<div class="col-md-3 d-flex justify-content-end">
+									<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
+										<li class="nav-item">
+											<a class="nav-link active" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">See More...</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
 						<div class="card-body" >
-							<canvas id="myChart"></canvas>
+							<div class="row">
+								<div class="col-md-4">
+									<canvas id="ChartPM3" height="290%" width="270%"></canvas>
+								</div>
+								<div class="col-md-4">
+									<canvas id="ChartPM6" height="290%" width="270%"></canvas>
+								</div>
+								<div class="col-md-4">
+									<canvas id="ChartPM12" height="290%" width="270%"></canvas>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 				<div class="col-md-6">
+					<div class="card"  >
+						<div class="card-header">
+							<div class="row">
+								<div class="col-md-9 form-inline">
+									<div class="card-title">Down Time สูงที่สุด </div>
+
+									<div class="card-title mx-4">เดือน {{ $months[date('n')].' '.date('Y')+543  }}</div>
+								</div>
+								<div class="col-md-3 d-flex justify-content-end">
+									<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
+										<li class="nav-item">
+											<a class="nav-link active" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">See More...</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="card-body" >
+							<div class="row">
+								<div class="col-md-12">
+									<canvas id="ChartDownTime" height="290%" width="550%"></canvas>
+
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -287,15 +342,8 @@
 <script src="{{asset('/assets/js/plugin/chart.js/chart.min.js')}}"></script>
 <script src="{{asset('/assets/js/plugin/chart-circle/circles.min.js')}}"></script>
 
-<script src="{{asset('/assets/js/Chart.bundle.js')}}"></script>
-{{-- <script src="{{asset('/assets/js/chartjs-plugin-datalabels@2.js')}}"></script> --}}
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@1"></script>
 
-
-{{-- <script src="{{asset('/assets/js/chartjs-plugin-doughnutlabel.js')}}"></script> --}}
-
-
-{{-- <script>
+<script>
 	$('#startbtn').on('click',function(){
 	const  music = document.getElementById("music");
 	music.play();
@@ -350,97 +398,158 @@
 					 setInterval(loaddata_table_all,10000);
 	});
 
-</script> --}}
-	{{-- แจ้งซ่อมแต่ล่ะLine --}}
-	<script>
-	'use strict';
-	Chart.plugins.register(ChartDataLabels);
-var ctx = document.getElementById('myChart').getContext('2d');
-var data = [12, 19];
-var backgroundColor = ['rgba(178, 0, 250)','rgba(243, 250, 0)',];
-var chartpm3month = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-			labels: ['ดําเนินการแล้ว', 'งานค้าง'],
-        datasets: [{
-            data: data,
-            backgroundColor: backgroundColor,
-						datalabels: {
-			        formatter: function(value,context){
-								anchor: 'center'
-								return context.chart.data.datasets[0].data[context.dataIndex];
-							}
+</script>
+
+{{-- PLan PM ในแต่ละเดือน --}}
+<script>
+	var colorPalette3 = ['rgba(197,0,250, 1)','rgba(239, 250, 0, 1)' ];
+	var colorPalette6 = ['rgba(3, 204, 236,1)','rgba(231, 112, 0, 1)' ];
+	var colorPalette12 = ['rgba(46, 255, 122,1)','rgba(255, 78, 46, 1)' ];
+
+		var NamePlanPm = { 'ChartPM3': 3,'ChartPM6': 6,'ChartPM12': 12, }
+		var colorplan  = {3:colorPalette3,6:colorPalette6,12:colorPalette12,}
+		var value_complete 	 = {3:{{  $data_complete[3]}}
+													 ,6:{{  $data_complete[6]}}
+													 ,12:{{ $data_complete[12]}},}
+		var value_uncomplete = {3:{{  $data_uncomplete[3]}}
+													 ,6:{{  $data_uncomplete[6]}}
+													 ,12:{{ $data_uncomplete[12]}},}
+		$.each(NamePlanPm,function(namepm,month){
+			var namepm 	= document.getElementById(namepm);
+			var namepm 	= echarts.init(namepm);
+			var text = month+' เดือน';
+			var data = [{value: value_complete[month], name: 'ดำเนินการสำเร็จ'},
+								 {value: value_uncomplete[month], name: 'รอดำเนินการ'},]
+			var option;
+			option = {
+			  title: {
+			      text:text,
+						right:'55%',
+			      top:'6%',
+			  },
+			  tooltip: {
+			      show :false,
+			      trigger: 'item',
+
+			  },
+			  legend: {
+			      bottom: '0%',
+						right:'40%',
+			      textStyle:{
+			          fontSize:'12',
 			      }
-        }],
-
-    },
-    options: {
-				title: {
-					display: true,
-					text: '3 เดือน',
-					fontSize:20,
-
-				},
-			legend: {
-						display: true,
-						position: 'bottom',
-						labels: {
-								fontSize:14,
-								padding:20,
+			  },
+			  series: [{
+			        type: 'pie',
+			        radius: ['25%', '73%'],
+							right:'30%',
+			        avoidLabelOverlap: false,
+			        label: {
+			            show: true,
+			            position:'inside',
+			            formatter:'{c}',
+			             fontSize:'15',
+			            fontWeight:'bold',
+									color:'#000000',
+			        },
+			        data: data,
+							color: colorplan[month],
+			      }],
+					itemStyle:{
+						shadowBlur: 1,
+						shadowColor: "rgba(10, 10, 10, 1)",
+						shadowOffsetY: 7
 					}
-				},
-			layout: {
-            padding: {
-                left: 0,
-                right: 0,
-                top: 0,
-                bottom: 0
-            }
-        },
-		responsive: true,
-		cutoutPercentage:55,
-			plugins: {
-				datalabels: {
-					borderColor: 'black',
-	        borderRadius: 20,
-	        borderWidth: 2,
-	        color: 'black',
-	        font: {
-						size:18	,
-	          weight: 'bold'
-	        },
-	        padding: 6,
-	        formatter: Math.round
-	      }
-			 },
-     },
-});
-var value = 100;
-textCenter(value);
-function textCenter(val) {
-  Chart.pluginService.register({
-    beforeDraw: function(chart) {
-      var width = chart.chart.width,
-          height = chart.chart.height,
-          ctx = chart.chart.ctx;
-
-      ctx.restore();
-      var fontSize = (height / 160).toFixed(2);
-      ctx.font = fontSize + "em sans-serif";
-      ctx.textBaseline = "middle";
-
-      var text = val+"%",
-          textX = Math.round((width - ctx.measureText(text).width) / 2),
-          textY = height - 150;
-
-      ctx.fillText(text, textX, textY);
-      ctx.save();
-    }
-  });
-}
+			};
+			option && namepm.setOption(option);
+		});
 
 
 </script>
+<script>
+	var DowmTime = document.getElementById('ChartDownTime');
+	var myChart = echarts.init(DowmTime);
+	var data_downtime = [];
+	var name_machine = [];
+	@foreach ($data_downtime as $key => $row)
+	data_downtime.push({"{{$key+1}}":"{{$row->DOWNTIME}}"});
+	name_machine.push({"{{$key+1}}":"{{$row->MACHINE_CODE}}"});
+	@endforeach
+  var color_rgba = {1:'rgba(255, 45, 45, 1)'
+									 ,2:'rgba(255, 45, 217, 1)'
+									 ,3:'rgba(255, 131, 40, 1)'
+									 ,4:'rgba(255, 255, 40, 1)'
+									 ,5:'rgba(24, 137, 231, 1)'
+									 ,6:'rgba(49, 249, 58, 1)'
+									 ,7:'rgba(155, 155, 155, 1)'}
+	var color_shadow = {1:"rgba(89, 4, 4, 1)"
+										 ,2:"rgba(93, 16, 79,1)"
+										 ,3:"rgba(144, 61, 0,1)"
+										 ,4:"rgba(134, 134, 0,1)"
+										 ,5:"rgba(9, 90, 158,1)"
+										 ,6:"rgba(1, 171, 9,1)"
+										 ,7:"rgba(55, 55, 55,1)"}
+	var option;
+
+	option = {
+	  tooltip: {
+	      show :false,
+		  trigger: 'item',
+	  },
+	  legend: {
+	      show:true,
+
+	  },
+	  xAxis: {
+	    data:[
+				@for ($i=0; $i < count($data_downtime); $i++)
+					name_machine[{{ $i }}][{{$i+1}}],
+				@endfor
+			],
+	    show:true,
+	    axisLabel:{
+	    fontSize :'10'
+	    }
+	  },
+	  yAxis: {
+	      name:'ระยะเวลา (นาที)',
+	      nameLocation:'center',
+	      nameTextStyle:{
+	          fontSize:'16',
+	          lineHeight: 55
+	      }
+
+	  },
+	  series: [{
+
+	    type: "bar",
+			barWidth:'30',
+	    data:[
+				@for ($D=0; $D < count($data_downtime); $D++)
+					{value:data_downtime[{{$D}}][{{ $D+1 }}],
+	        	itemStyle:{
+	            color:color_rgba[{{$D+1}}],
+	            shadowColor:color_shadow[{{$D+1}}] ,
+	        	}
+					},
+				@endfor
+				],
+	    itemStyle: {
+	      shadowOffsetX: 10,
+
+	    }
+	  }],
+	  label:{
+	      show:true,
+				color:'black',
+	      position:'top',
+	  }
+	}
+
+	option && myChart.setOption(option);
+
+</script>
+{{-- แจ้งซ่อมแต่ล่ะLine --}}
 <script type="text/javascript">
 
 	var chartDom = document.getElementById('repair');
