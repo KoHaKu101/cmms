@@ -42,8 +42,12 @@ class DashboardController extends Controller
     $datarepairlist   = MachineRepairREQ::select('STATUS_NOTIFY','PRIORITY','MACHINE_CODE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME','DOC_DATE','DOC_NO')
                                         ->where('CLOSE_STATUS','=','9')->orderBy('DOC_DATE','DESC')->orderBy("REPAIR_REQ_TIME",'DESC')
                                         ->orderBy('PRIORITY','ASC')->take(4)->get();
-    $data_downtime   = MachineRepairREQ::select('MACHINE_CODE')->selectraw('MAX(DOWNTIME) as DOWNTIME')->groupBy('MACHINE_CODE')->orderBy('DOWNTIME','DESC')->take(7)->get();
-
+    $data_downtime      = MachineRepairREQ::select('MACHINE_CODE')->selectraw('MAX(DOWNTIME) as DOWNTIME')
+                                          ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
+                                          ->groupBy('MACHINE_CODE')->orderBy('DOWNTIME','DESC')->take(7)->get();
+    $data_count_repair  = MachineRepairREQ::selectraw('MACHINE_CODE,COUNT(MACHINE_CODE) as MACHINE_CODE_COUNT')->groupBy('MACHINE_CODE')
+                                       ->orderBy('MACHINE_CODE_COUNT','DESC')->get();
+    // PLAN MACHINE PM
     $data_complete   = array();
     $data_uncomplete = array();
     for ($i=0; $i < 4; $i++) {
@@ -52,8 +56,21 @@ class DashboardController extends Controller
       $data_uncomplete[$i * 3+3] = MachinePlanPm::select('PLAN_STATUS')->where('PLAN_YEAR','=',date('Y'))->where('PLAN_MONTH','=',date('n'))
                                                 ->where('PLAN_PERIOD','=',$i * 3+3)->where('PLAN_STATUS','!=','COMPLETE')->count();
     }
-
-
+    // Dowm Time
+    $downtime_machine       = array();
+    $downtime_machine_code  = array();
+    
+    foreach ($data_downtime as $index => $row) {
+      $downtime_machine[$index+1]       = $row->DOWNTIME;
+      $downtime_machine_code [$index+1] = $row->MACHINE_CODE;
+    }
+    //Repair Count
+    $array_count_repair     = array();
+    $array_count_machine    = array();
+    foreach ($data_count_repair as $index => $row) {
+      $array_count_repair[$index+1] = $row->MACHINE_CODE_COUNT;
+      $array_count_machine[$index+1]= $row->MACHINE_CODE;
+    }
     $array_line       = array();
     $array_repair     = array();
     for ($i=1; $i < 7 ; $i++) {
@@ -64,8 +81,8 @@ class DashboardController extends Controller
     }
 
     return View('machine/dashboard/dashboard',compact('datarepairlist','datarepair','machine_all','machine_ready','machine_wait'
-    ,'array_line','array_repair'
-    ,'data_complete','data_uncomplete','data_downtime'
+    ,'array_line','array_repair','array_count_repair','array_count_machine'
+    ,'data_complete','data_uncomplete','downtime_machine','downtime_machine_code'
     ));
   }
 

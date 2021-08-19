@@ -304,6 +304,26 @@
 					</div>
 				</div>
 			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<div class="card">
+						<div class="card-header">
+						</div>
+						<div class="card-body">
+							<div id="repair_top5" style="width: 600px;height:350px;"></div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="card">
+						<div class="card-header">
+						</div>
+						<div class="card-body">
+							<div id="repair" style="width: 600px;height:350px;"></div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 		<footer class="footer">
 			<div class="container-fluid">
@@ -466,15 +486,10 @@
 
 
 </script>
+{{-- Down Time --}}
 <script>
-	var DowmTime = document.getElementById('ChartDownTime');
-	var myChart = echarts.init(DowmTime);
-	var data_downtime = [];
-	var name_machine = [];
-	@foreach ($data_downtime as $key => $row)
-	data_downtime.push({"{{$key+1}}":"{{$row->DOWNTIME}}"});
-	name_machine.push({"{{$key+1}}":"{{$row->MACHINE_CODE}}"});
-	@endforeach
+	var DowmTime  = document.getElementById('ChartDownTime');
+	var myChart 	= echarts.init(DowmTime);
   var color_rgba = {1:'rgba(255, 45, 45, 1)'
 									 ,2:'rgba(255, 45, 217, 1)'
 									 ,3:'rgba(255, 131, 40, 1)'
@@ -490,7 +505,6 @@
 										 ,6:"rgba(1, 171, 9,1)"
 										 ,7:"rgba(55, 55, 55,1)"}
 	var option;
-
 	option = {
 	  tooltip: {
 	      show :false,
@@ -498,12 +512,17 @@
 	  },
 	  legend: {
 	      show:true,
-
 	  },
 	  xAxis: {
 	    data:[
-				@for ($i=0; $i < count($data_downtime); $i++)
-					name_machine[{{ $i }}][{{$i+1}}],
+				@for ($i=1; $i < 8; $i++)
+				@php
+					$MACHINE_CODE = '';
+					if (array_key_exists($i,$downtime_machine_code)) {
+						$MACHINE_CODE = $downtime_machine_code[$i];
+					}
+				@endphp
+					'{{$MACHINE_CODE}}',
 				@endfor
 			],
 	    show:true,
@@ -521,15 +540,21 @@
 
 	  },
 	  series: [{
-
 	    type: "bar",
 			barWidth:'30',
 	    data:[
-				@for ($D=0; $D < count($data_downtime); $D++)
-					{value:data_downtime[{{$D}}][{{ $D+1 }}],
+				@for ($D=1; $D < 8; $D++)
+				@php
+					$DOWNTIME = '';
+
+					if (array_key_exists($D,$downtime_machine)) {
+						$DOWNTIME = $downtime_machine[$D];
+					}
+				@endphp
+					{value:"{{$DOWNTIME}}",
 	        	itemStyle:{
-	            color:color_rgba[{{$D+1}}],
-	            shadowColor:color_shadow[{{$D+1}}] ,
+	            color:color_rgba[{{$D}}],
+	            shadowColor:color_shadow[{{$D}}] ,
 	        	}
 					},
 				@endfor
@@ -549,6 +574,79 @@
 	option && myChart.setOption(option);
 
 </script>
+{{-- เครื่องจักรเสีย บ่อย --}}
+<script>
+	var DowmTime  = document.getElementById('repair_top5');
+	var myChart 	= echarts.init(DowmTime);
+  var color_rgba = {1:'rgba(255, 45, 45, 1)'
+									 ,2:'rgba(255, 255, 40, 1)'
+									 ,3:'rgba(24, 137, 231, 1)'
+									 ,4:'rgba(49, 249, 58, 1)'
+									 ,5:'rgba(155, 155, 155, 1)'}
+	var color_shadow = {1:"rgba(89, 4, 4, 1)"
+										 ,2:"rgba(134, 134, 0,1)"
+										 ,3:"rgba(9, 90, 158,1)"
+										 ,4:"rgba(1, 171, 9,1)"
+										 ,5:"rgba(55, 55, 55,1)"}
+	var option;
+	option = {
+	  tooltip: {
+	      show :false,
+		  trigger: 'item',
+	  },
+	  legend: {
+	      show:true,
+	  },
+	  xAxis: {
+	    data:[
+				@for ($i=1; $i < 6; $i++)
+					'{{$array_count_machine[$i]}}',
+				@endfor
+			],
+	    show:true,
+	    axisLabel:{
+	    fontSize :'10'
+	    }
+	  },
+	  yAxis: {
+	      name:'จำนวน (ครั้ง)',
+	      nameLocation:'center',
+	      nameTextStyle:{
+	          fontSize:'16',
+	          lineHeight: 55
+	      }
+
+	  },
+	  series: [{
+	    type: "bar",
+			barWidth:'30',
+	    data:[
+				@for ($D=1; $D < 6; $D++)
+					{value:"{{$array_count_repair[$D]}}",
+	        	itemStyle:{
+	            color:color_rgba[{{$D}}],
+	            shadowColor:color_shadow[{{$D}}] ,
+	        	}
+					},
+				@endfor
+				],
+	    itemStyle: {
+	      shadowOffsetX: 10,
+
+	    }
+	  }],
+	  label:{
+	      show:true,
+				color:'black',
+	      position:'top',
+	  }
+	}
+
+	option && myChart.setOption(option);
+
+</script>
+{{-- Top 5 อาการเสีย บ่อย --}}
+
 {{-- แจ้งซ่อมแต่ล่ะLine --}}
 <script type="text/javascript">
 
