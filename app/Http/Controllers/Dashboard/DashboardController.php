@@ -31,22 +31,25 @@ class DashboardController extends Controller
   }
   public function Dashboard(){
 
-    $machine_all    = Machine::select('MACHINE_CHECK')->where('MACHINE_CHECK','!=','4')->count();
-    $machine_ready  = Machine::select('MACHINE_CHECK')->where('MACHINE_CHECK','=','2')->count();
-    $machine_wait   = Machine::select('MACHINE_CHECK')->where('MACHINE_CHECK','!=','2')->where('MACHINE_CHECK','!=','4')->count();
+    $machine_all        = Machine::select('MACHINE_CHECK')->where('MACHINE_CHECK','!=','4')->count();
+    $machine_ready      = Machine::select('MACHINE_CHECK')->where('MACHINE_CHECK','=','2')->count();
+    $machine_wait       = Machine::select('MACHINE_CHECK')->where('MACHINE_CHECK','!=','2')->where('MACHINE_CHECK','!=','4')->count();
 
+    $datarepair         = MachineRepairREQ::select('CLOSE_STATUS')->where('CLOSE_STATUS','=','9')->count();
 
-
-    $datarepair = MachineRepairREQ::select('CLOSE_STATUS')->where('CLOSE_STATUS','=','9')->count();
-
-    $datarepairlist   = MachineRepairREQ::select('STATUS_NOTIFY','PRIORITY','MACHINE_CODE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME','DOC_DATE','DOC_NO')
+    $datarepairlist     = MachineRepairREQ::select('STATUS_NOTIFY','PRIORITY','MACHINE_CODE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME','DOC_DATE','DOC_NO')
                                         ->where('CLOSE_STATUS','=','9')->orderBy('DOC_DATE','DESC')->orderBy("REPAIR_REQ_TIME",'DESC')
                                         ->orderBy('PRIORITY','ASC')->take(4)->get();
     $data_downtime      = MachineRepairREQ::select('MACHINE_CODE')->selectraw('MAX(DOWNTIME) as DOWNTIME')
                                           ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
                                           ->groupBy('MACHINE_CODE')->orderBy('DOWNTIME','DESC')->take(7)->get();
-    $data_count_repair  = MachineRepairREQ::selectraw('MACHINE_CODE,COUNT(MACHINE_CODE) as MACHINE_CODE_COUNT')->groupBy('MACHINE_CODE')
-                                       ->orderBy('MACHINE_CODE_COUNT','DESC')->get();
+    $data_count_repair  = MachineRepairREQ::selectraw('MACHINE_CODE,COUNT(MACHINE_CODE) as MACHINE_CODE_COUNT')
+                                          ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
+                                          ->groupBy('MACHINE_CODE')->orderBy('MACHINE_CODE_COUNT','DESC')->get();
+    $data_repair_detail = MachineRepairREQ::selectraw('REPAIR_SUBSELECT_NAME,COUNT(REPAIR_SUBSELECT_UNID) as REPAIR_SUBSELECT_UNID_COUNT')
+                                          ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
+                                          ->groupBy('REPAIR_SUBSELECT_UNID')->groupBy('REPAIR_SUBSELECT_NAME')
+                                          ->orderBy('REPAIR_SUBSELECT_UNID_COUNT','DESC')->get();
     // PLAN MACHINE PM
     $data_complete   = array();
     $data_uncomplete = array();
@@ -59,7 +62,6 @@ class DashboardController extends Controller
     // Dowm Time
     $downtime_machine       = array();
     $downtime_machine_code  = array();
-    
     foreach ($data_downtime as $index => $row) {
       $downtime_machine[$index+1]       = $row->DOWNTIME;
       $downtime_machine_code [$index+1] = $row->MACHINE_CODE;
@@ -71,6 +73,13 @@ class DashboardController extends Controller
       $array_count_repair[$index+1] = $row->MACHINE_CODE_COUNT;
       $array_count_machine[$index+1]= $row->MACHINE_CODE;
     }
+    //Repair Detail
+    $array_count_detail     = array();
+    $array_count_name    = array();
+    foreach ($data_repair_detail as $index => $row) {
+      $array_count_detail[$index+1] = $row->REPAIR_SUBSELECT_UNID_COUNT;
+      $array_count_name[$index+1]= $row->REPAIR_SUBSELECT_NAME;
+    }
     $array_line       = array();
     $array_repair     = array();
     for ($i=1; $i < 7 ; $i++) {
@@ -81,7 +90,7 @@ class DashboardController extends Controller
     }
 
     return View('machine/dashboard/dashboard',compact('datarepairlist','datarepair','machine_all','machine_ready','machine_wait'
-    ,'array_line','array_repair','array_count_repair','array_count_machine'
+    ,'array_line','array_repair','array_count_repair','array_count_machine','array_count_detail','array_count_name'
     ,'data_complete','data_uncomplete','downtime_machine','downtime_machine_code'
     ));
   }
