@@ -14,17 +14,7 @@ class DashboardController extends Controller
 {
   public function __construct(){
     $this->middleware('auth');
-    $this->middleware(function ($request, $next) {
-        $checkuser = Auth::user();
-
-        if ($checkuser->role == 'user') {
-
-          return Redirect()->route('user.homepage');
-        }else {
-          return $next($request);
-        }
-
-    });
+  
   }
   public function Sumaryline(){
     return View('machine/dashboard/sumaryline');
