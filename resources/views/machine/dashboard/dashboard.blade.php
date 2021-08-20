@@ -308,6 +308,20 @@
 				<div class="col-md-6">
 					<div class="card">
 						<div class="card-header">
+							<div class="row">
+								<div class="col-md-9 form-inline">
+									<div class="card-title">เครื่องจักรเสียบ่อย </div>
+
+									<div class="card-title mx-4">เดือน {{ $months[date('n')].' '.date('Y')+543  }}</div>
+								</div>
+								<div class="col-md-3 d-flex justify-content-end">
+									<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
+										<li class="nav-item">
+											<a class="nav-link active" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">See More...</a>
+										</li>
+									</ul>
+								</div>
+							</div>
 						</div>
 						<div class="card-body">
 							<div id="repair_top5" style="width: 600px;height:350px;"></div>

@@ -500,8 +500,7 @@ function loopdata_table(){
 								 						$("#overlayinpage").fadeOut(300);
 								     			}
 								 			 });
-											});
-								 });
+										 });
 							}else {
 								Swal.fire({
 									 icon: 'error',
