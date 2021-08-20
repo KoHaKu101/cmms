@@ -405,7 +405,12 @@ var value_uncomplete = {3	:{{  $data_uncomplete[3]}}
 
 </script>
 
-<script src="{{ asset('/assets/js/useinproject/dashboard/looprepair.js') }}"></script>
+@can('isAdmin')
+	<script src="{{ asset('/assets/js/useinproject/dashboard/looprepair.js') }}"></script>
+@elsecan('isManager_Ma')
+	<script src="{{ asset('/assets/js/useinproject/dashboard/looprepair.js') }}"></script>
+@elsecan('isManager_Pd')
+@endcan
 {{-- PLan PM ในแต่ละเดือน --}}
 <script src="{{ asset('/assets/js/useinproject/dashboard/pmplanchart.js') }}"></script>
 {{-- Down Time --}}
