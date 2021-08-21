@@ -110,6 +110,7 @@ Route::get('machine/pd/repairlist'                       ,[PDRepairController::c
 Route::get('machine/pd/fetchdata'                        ,[PDRepairController::class,'FetchData'])    ->name('pd.fetchdata');
 Route::post('machine/pd/result'                          ,[PDRepairController::class,'ShowResult'])   ->name('pd.result');
 Route::post('machine/pd/confirm'                         ,[PDRepairController::class,'ConFirm'])   ->name('pd.confirm');
+Route::post('machine/repair/renew'                       ,[PDRepairController::class,'Renew']) ->name('pd.renew');
 //repair
 Route::get('machine/repair/repairlist'                    ,[MachineRepairController::class,'Index'])             ->name('repair.list');
 Route::get('machine/repair/fetchdata'                     ,[MachineRepairController::class,'FetchData'])         ->name('repair.fetchdata');
@@ -132,6 +133,7 @@ Route::get('machine/repair/fetchdata'                     ,[MachineRepairControl
   Route::post('machine/repair/savestep'                   ,[RepairCloseFormController::class,'SaveStep'])          ->name('repair.savestep');
   Route::post('machine/repair/result'                     ,[RepairCloseFormController::class,'Result'])          ->name('repair.result');
   Route::post('machine/repair/closeform'                  ,[RepairCloseFormController::class,'CloseForm'])          ->name('repair.closeform');
+
 
   Route::get('machine/history/repairlist'        ,[HistoryController::class,'RepairList'])->name('history.repairlist');
   Route::get('machine/history/repairpdf/{UNID?}' ,[HistoryController::class,'RepairPDF'])->name('history.repairpdf');

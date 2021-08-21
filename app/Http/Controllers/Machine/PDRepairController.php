@@ -467,36 +467,52 @@ class PDRepairController extends Controller
         </div>
       </div>
     </div>';
-    $footer = '<div class="col-5 col-sm-7 col-md-7 col-lg-10 form-inline justify-content-end" >
+    $footer = '
+    <div class="col col-sm col-lg-4 text-right ">
+      <button class="btn btn-danger btn-sm" type="button" onclick="Renew(this)" data-unid="'.$UNID_REPAIR.'">แจ้งซ่อมไม่สำเร็จ</button>
+    </div>
+    <div class="col-5 col-sm-7 col-md-7 col-lg-6 form-inline" >
       <lable> ผู้ตรวจสอบ (PD)</lable>';
     $footer.= $TEXT.
     '</div>
     <div class="col-7 col-sm-5 col-md-5 col-lg-2  ml-auto " >'.$BTN.'</div>';
     return Response()->json(['html' => $html,'footer'=>$footer,'status' => $PLANING_CHECK_BY,'repair_unid' => $UNID_REPAIR]);
   }
- public function ConFirm(Request $request){
-   $UNID     = $request->REPAIR_REQ_UNID;
-   $PD_CODE  = $request->USER_PD_CODE;
-   $DATA_PD  = EMPALL::select("EMP_TH_NAME_FIRST",'EMP_TH_NAME_LAST','EMP_CODE','UNID')->where('EMP_CODE','=',$PD_CODE)->where('EMP_STATUS','=','9')->first();
+  public function ConFirm(Request $request){
+    $UNID     = $request->REPAIR_REQ_UNID;
+    $PD_CODE  = $request->USER_PD_CODE;
+    $DATA_PD  = EMPALL::select("EMP_TH_NAME_FIRST",'EMP_TH_NAME_LAST','EMP_CODE','UNID')->where('EMP_CODE','=',$PD_CODE)->where('EMP_STATUS','=','9')->first();
     $PD_NAME  = $DATA_PD->EMP_TH_NAME_FIRST.' '.$DATA_PD->EMP_TH_NAME_LAST;
-   MachineRepairREQ::where('UNID','=',$UNID)->update([
+    MachineRepairREQ::where('UNID','=',$UNID)->update([
       'PD_UNID'         => $DATA_PD->UNID
      ,'PD_CODE'         => $DATA_PD->EMP_CODE
      ,'PD_NAME'         => $PD_NAME
      ,'PD_CHECK_DATE'   => date('Y-m-d')
      ,'PD_CHECK_TIME'   => date('H:i:s')
      ,'PD_CHECK_STATUS' => 1
-   ]);
-   History::where('REPAIR_REQ_UNID','=',$UNID)->update([
+    ]);
+    History::where('REPAIR_REQ_UNID','=',$UNID)->update([
      'PD_CHECK_BY' => $DATA_PD->UNID
-   ]);
-   return Response()->json(['pass'=>'true']);
- }
- public function ReadNotify(Request $request){
-   $STATUS = $request->STATUS;
-   $UNID   = $request->UNID;
-   MachineRepairREQ::where('UNID','=',$UNID)->update([
+    ]);
+    return Response()->json(['pass'=>'true']);
+    }
+  public function ReadNotify(Request $request){
+    $STATUS = $request->STATUS;
+    $UNID   = $request->UNID;
+    MachineRepairREQ::where('UNID','=',$UNID)->update([
      'STATUS' => $STATUS,
-   ]);
- }
+    ]);
+  }
+  public function Renew(Request $request){
+    $UNID = $request->REPAIR_UNID;
+    MachineRepairREQ::where('UNID','=',$UNID)->update([
+      'CLOSE_BY'        => ''
+      ,'CLOSE_STATUS'    => 9
+      ,'STATUS_NOTIFY'   => 9
+      ,'STATUS'          => 1
+      ,'PD_CHECK_STATUS' => 9
+      ,'WORK_STEP'       => ''
+    ]);
+
+  }
 }

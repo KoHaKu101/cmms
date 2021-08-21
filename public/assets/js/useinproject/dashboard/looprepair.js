@@ -1,6 +1,15 @@
+
 $('#startbtn').on('click',function(){
-const  music = document.getElementById("music");
-music.play();
+  const  music = document.getElementById("music");
+
+  var playedPromise = music.play();
+  if (playedPromise) {
+    playedPromise.catch((e) => {
+                 if (e.name === 'NotAllowedError' || e.name === 'NotSupportedError') {
+                  }
+             })
+
+  }
 });
 
 $(document).ready(function(){

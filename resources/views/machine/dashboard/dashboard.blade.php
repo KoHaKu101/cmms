@@ -23,7 +23,11 @@
 
 	{{-- ส่วนเนื้อหาและส่วนท้า --}}
 @section('contentandfooter')
-
+	<style>
+	 .hide-display{
+		 display:none;
+	 }
+	</style>
 	<audio id="music" src="{{asset('assets/sound/mixkit-arabian-mystery-harp-notification-2489.wav')}}" ></audio>
 	<button type="button" style="display:none;" id="startbtn"></button>
 		<div class="content">
@@ -247,16 +251,16 @@
 							<div class="row">
 								<div class="col-md-9 form-inline">
 									<div class="card-title">การทำแผน</div>
-									<select class="mx-2 form-control form-control-sm">
-										<option>PM</option>
-										<option>PDM</option>
+									<select class="mx-2 form-control form-control-sm " id="SELECT_CHART">
+										<option value="PM">PM</option>
+										<option value="PDM">PDM</option>
 									</select>
 									<div class="card-title">เดือน {{ $CURRENT_MONTH  }}</div>
 								</div>
 								<div class="col-md-3 d-flex justify-content-end">
 									<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
 										<li class="nav-item">
-											<a href="{{ route('dashboard.pm') }}"class="nav-link active" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">See More...</a>
+											<a class="nav-link active" id="PM_DASHBOARD" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">See More...</a>
 										</li>
 									</ul>
 								</div>
@@ -312,7 +316,7 @@
 						<div class="card-header">
 							<div class="row">
 								<div class="col-md-9 form-inline">
-									<div class="card-title">เครื่องจักรเสียบ่อย </div>
+									<div class="card-title">เครื่องจักรเสียสูงสุด </div>
 
 									<div class="card-title mx-4">เดือน {{ $CURRENT_MONTH  }}</div>
 								</div>
@@ -334,13 +338,13 @@
 					<div class="card">
 						<div class="card-header">
 							<div class="row">
-								<div class="col-md-9 form-inline">
-									<div class="card-title">เครื่องจักรเสียบ่อย </div>
+								<div class="col-md-12 form-inline">
+									<div class="card-title">รายการแจ้งซ่อมสูงสุด </div>
 
 									<div class="card-title mx-4">เดือน {{ $CURRENT_MONTH  }}</div>
-								</div>
-								<div class="col-md-3 d-flex justify-content-end">
-									<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
+								{{-- </div> --}}
+								{{-- <div class="col-md-3 d-flex justify-content-end"> --}}
+									<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm ml-auto" id="pills-tab" role="tablist">
 										<li class="nav-item">
 											<a class="nav-link active" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">See More...</a>
 										</li>
@@ -392,17 +396,44 @@
 <script src="{{asset('/assets/js/plugin/chart.js/chart.min.js')}}"></script>
 <script src="{{asset('/assets/js/plugin/chart-circle/circles.min.js')}}"></script>
 <script>
+	$(document).ready(function(){
+		var value_complete 	 = {3 :{{  $data_complete[3]}}
+													 ,6 :{{  $data_complete[6]}}
+													 ,12:{{  $data_complete[12]}},}
+		var value_uncomplete = {3	:{{  $data_uncomplete[3]}}
+													 ,6	:{{  $data_uncomplete[6]}}
+													 ,12:{{  $data_uncomplete[12]}},}
+		chart_pm(value_complete,value_uncomplete);
+	});
+$('#PM_DASHBOARD').on('click',function(){
+	window.location.href = "{{ route('dashboard.pm') }}";
+});
+$("#SELECT_CHART").on('change',function(){
+	var slectval = $('#SELECT_CHART').val();
+	if (slectval == 'PDM') {
+		var value_complete	 	= "{{ $count_pdm->COMPLETE == null ? '0' : $count_pdm->COMPLETE}}";
+		var value_uncomplete	= "{{ $count_pdm->NOCOMPLETE == null ? '0' : $count_pdm->NOCOMPLETE}}";
+		$('#ChartPM3').addClass('hide-display');
+		$('#ChartPM12').addClass('hide-display');
+		chart_pdm(value_complete,value_uncomplete);
+	}else {
+		var value_complete 	 = {3 :{{  $data_complete[3]}}
+													 ,6 :{{  $data_complete[6]}}
+													 ,12:{{  $data_complete[12]}},}
+		var value_uncomplete = {3	:{{  $data_uncomplete[3]}}
+													 ,6	:{{  $data_uncomplete[6]}}
+													 ,12:{{  $data_uncomplete[12]}},}
+		$('#ChartPM3').removeClass('hide-display');
+		$('#ChartPM12').removeClass('hide-display');
+		chart_pm(value_complete,value_uncomplete);
+	}
+});
+</script>
+<script>
 {{--  Use In looprepair--}}
 var urldashboard = "{{ route('dashboard.notificationrepair') }}";
 var urlnotify = "{{ route('repair.readnotify')}}";
 {{--  Use In pmplanchart--}}
-var value_complete 	 = {3 :{{  $data_complete[3]}}
-											 ,6 :{{  $data_complete[6]}}
-											 ,12:{{  $data_complete[12]}},}
-var value_uncomplete = {3	:{{  $data_uncomplete[3]}}
-											 ,6	:{{  $data_uncomplete[6]}}
-											 ,12:{{  $data_uncomplete[12]}},}
-
 </script>
 
 @can('isAdmin')
@@ -413,6 +444,7 @@ var value_uncomplete = {3	:{{  $data_uncomplete[3]}}
 @endcan
 {{-- PLan PM ในแต่ละเดือน --}}
 <script src="{{ asset('/assets/js/useinproject/dashboard/pmplanchart.js') }}"></script>
+<script src="{{ asset('/assets/js/useinproject/dashboard/pdmplanchart.js') }}"></script>
 {{-- Down Time --}}
 <script>
 	var DowmTime  = document.getElementById('ChartDownTime');
@@ -465,6 +497,13 @@ var value_uncomplete = {3	:{{  $data_uncomplete[3]}}
 	          lineHeight: 55
 	      }
 	  },
+		grid: {
+        left: '7%',
+        right: '0%',
+        bottom: '0%',
+				top:'6%',
+        containLabel: true
+    },
 	  series: [{
 	    type: "bar",
 			barWidth:'30',
@@ -520,6 +559,13 @@ var value_uncomplete = {3	:{{  $data_uncomplete[3]}}
 	  legend: {
 	      show:true,
 	  },
+		grid: {
+        left: '5%',
+        right: '10%',
+        bottom: '0%',
+				top:'6%',
+        containLabel: true
+    },
 	  xAxis: {
 	    data:[
 				@for ($i=1; $i < 6; $i++)
@@ -534,17 +580,8 @@ var value_uncomplete = {3	:{{  $data_uncomplete[3]}}
 			],
 	    show:true,
 	    axisLabel:{
-	    fontSize :'10'
+	    	fontSize :'10'
 			},
-			ticks: {
-	           beginAtZero: true,
-	           userCallback: function(label, index, labels) {
-	             if (Math.floor(label) === label) {
-	               return label;
-	             }
-
-	           },
-	         }
 	  },
 	  yAxis: {
 	      name:'จำนวน (ครั้ง)',
@@ -633,6 +670,13 @@ var value_uncomplete = {3	:{{  $data_uncomplete[3]}}
 			interval: 0,
  	    }
  	  },
+		grid: {
+				left: '5%',
+				right: '10%',
+				bottom: '0%',
+				top:'6%',
+				containLabel: true
+		},
  	  yAxis: {
  	      name:'จำนวน (ครั้ง)',
  	      nameLocation:'center',

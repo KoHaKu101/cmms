@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Machine\Machine;
 use App\Models\Machine\MachineRepairREQ;
 use App\Models\Machine\MachinePlanPm;
+use App\Models\Machine\SparePartPlan;
 use Carbon\Carbon;
 use Auth;
 use Illuminate\Support\Facades\DB;
@@ -40,6 +41,9 @@ class DashboardController extends Controller
                                           ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
                                           ->groupBy('REPAIR_SUBSELECT_UNID')->groupBy('REPAIR_SUBSELECT_NAME')
                                           ->orderBy('REPAIR_SUBSELECT_UNID_COUNT','DESC')->get();
+    $count_pdm           = SparePartPlan::selectraw("sum(CASE WHEN STATUS = 'COMPLETE' THEN 1 ELSE 0 END) as COMPLETE,
+	                                               sum(CASE WHEN STATUS != 'COMPLETE' THEN 1 ELSE 0 END) as NOCOMPLETE")
+                                       ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))->first();
     // PLAN MACHINE PM
     $data_complete   = array();
     $data_uncomplete = array();
@@ -49,6 +53,7 @@ class DashboardController extends Controller
       $data_uncomplete[$i * 3+3] = MachinePlanPm::select('PLAN_STATUS')->where('PLAN_YEAR','=',date('Y'))->where('PLAN_MONTH','=',date('n'))
                                                 ->where('PLAN_PERIOD','=',$i * 3+3)->where('PLAN_STATUS','!=','COMPLETE')->count();
     }
+
     // Dowm Time
     $downtime_machine       = array();
     $downtime_machine_code  = array();
@@ -81,12 +86,11 @@ class DashboardController extends Controller
 
     return View('machine/dashboard/dashboard',compact('datarepairlist','datarepair','machine_all','machine_ready','machine_wait'
     ,'array_line','array_repair','array_count_repair','array_count_machine','array_count_detail','array_count_name'
-    ,'data_complete','data_uncomplete','downtime_machine','downtime_machine_code'
+    ,'data_complete','data_uncomplete','downtime_machine','downtime_machine_code','count_pdm'
     ));
   }
   public function PM(){
-
-    return 'wellcome';
+    return view('machine.dashboard.pmandpdm');
   }
 
   public function Notification(Request $request){

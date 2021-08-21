@@ -275,9 +275,8 @@ class MachineRepairController extends Controller
       </div>';
       }
 
-    $last_data  = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->whereRaw('DOC_NO = (SELECT MAX(DOC_NO)FROM [PMCS_CMMS_REPAIR_REQ])')->first();
+    $last_data  = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->first();
     $data_count = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->whereRaw('DOC_NO = (SELECT MAX(DOC_NO)FROM [PMCS_CMMS_REPAIR_REQ])')->count();
-
     $newrepair = $last_data->STATUS_NOTIFY == 9 ? true : false;
     $UNID      = $last_data->STATUS_NOTIFY == 9 ? $last_data->UNID : '';
     $NUMBER    = $data_count;

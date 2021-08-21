@@ -239,6 +239,7 @@ class SparepartController extends Controller
       $DOC_NO         = $DOC_NO != NULL ? $DOC_NO : '';
       $MACHINE        = Machine::select('UNID','MACHINE_CODE')->where('UNID','=',$MACHINE_UNID)->first();
       $ARRAY_REMARK   = array('REPAIR'=>'ซ่อมเครื่อง','PLAN_PM'=>'ตรวจเช็คเครื่อง','PLAN_PDM'=>'เปลี่ยนอะไหล่เครื่อง');
+      $check_row      = HistorySparepart::where('UNID_REF','=',$UNID_REF)->count();
       foreach ($DATA_SPAREPART as $index => $row) {
         $SPAREPART      = Sparepart::select('LAST_STOCK')->where('UNID','=',$row->SPAREPART_UNID)->first();
         $UNID           = $this->randUNID('PMCS_CMMS_HISTORY_SPAREPART');

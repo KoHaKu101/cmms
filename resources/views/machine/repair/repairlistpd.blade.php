@@ -436,7 +436,7 @@ function loopdata_table(){
 					 $('#stepsave').html(result.footer);
 					 $('#TITLE_DOCNO').html(docno);
 					 $('#EMP_CODE').select2({
-						 width: '30%',
+						 width: '60%',
 					 });
 					 $.fn.modal.Constructor.prototype._enforceFocus = function() {};
 					 $('#show-detail').html('อาการเสีย : '+detail);
@@ -458,7 +458,25 @@ function loopdata_table(){
     			}
 			 });
 	}
-
+	function Renew(thisdata){
+		var unid = $(thisdata).data('unid');
+		var url = "{{ route('pd.renew') }}";
+		$.ajax({
+			type:'POST',
+			url:url,
+			data:{REPAIR_UNID:unid},
+			success:function(result){
+				Swal.fire({
+					 icon: 'success',
+					 title: 'บันทึกสำเร็จ',
+					 timer: 1500,
+				 }).then((Result)=>{
+					 $('#Result').modal('hide');
+					 window.location.reload();
+				 });
+			}
+		})
+	}
 	function SaveFrom(repair_unid,unid){
 		var repair_unid = repair_unid;
 		 $("#overlay").fadeIn(300);
