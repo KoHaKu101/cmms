@@ -97,10 +97,11 @@ Route::get('/machine/user/homepage',     [MachineController::class,'UserHomePage
 Route::get('/machine/repair/pdf/{UNID}',        'App\Http\Controllers\PDF\MachineRepairPDFController@RepairPdf');
 Route::get('/machine/repair/savepdf/{UNID}',    'App\Http\Controllers\PDF\RepairSaveFormPDFController@RepairSaveForm');
 
-Route::get('/machine/dashboard/dashboard',[DashboardController::class,'Dashboard']);
-Route::get('/machine',[DashboardController::class,'Dashboard']);
-Route::get('/machine/dashboard',[DashboardController::class,'Dashboard'])->name('dashboard.dashboard');
-Route::get('/dashboard',[DashboardController::class,'Dashboard'])->name('dashboard');
+Route::get('/machine/dashboard/dashboard'   ,[DashboardController::class,'Dashboard']);
+Route::get('/machine'                       ,[DashboardController::class,'Dashboard']);
+Route::get('/machine/dashboard'             ,[DashboardController::class,'Dashboard'])->name('dashboard.dashboard');
+Route::get('/dashboard'                     ,[DashboardController::class,'Dashboard'])->name('dashboard');
+Route::get('/dashboard/pm'                  ,[DashboardController::class,'PM'])->name('dashboard.pm');
 //Cookie
 Route::get('/cookie/set',[CookieController::class,'setCookie'])->name('cookie.set');
 Route::get('/cookie/get',[CookieController::class,'getCookie'])->name('cookie.get');

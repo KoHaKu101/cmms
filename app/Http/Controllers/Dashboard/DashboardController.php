@@ -14,7 +14,7 @@ class DashboardController extends Controller
 {
   public function __construct(){
     $this->middleware('auth');
-  
+
   }
   public function Sumaryline(){
     return View('machine/dashboard/sumaryline');
@@ -84,7 +84,10 @@ class DashboardController extends Controller
     ,'data_complete','data_uncomplete','downtime_machine','downtime_machine_code'
     ));
   }
+  public function PM(){
 
+    return 'wellcome';
+  }
 
   public function Notification(Request $request){
     $data = MachineRepairREQ::select('*')->where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(4)->get();

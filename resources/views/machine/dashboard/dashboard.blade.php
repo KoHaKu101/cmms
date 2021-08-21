@@ -256,7 +256,7 @@
 								<div class="col-md-3 d-flex justify-content-end">
 									<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
 										<li class="nav-item">
-											<a class="nav-link active" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">See More...</a>
+											<a href="{{ route('dashboard.pm') }}"class="nav-link active" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">See More...</a>
 										</li>
 									</ul>
 								</div>
@@ -535,7 +535,16 @@ var value_uncomplete = {3	:{{  $data_uncomplete[3]}}
 	    show:true,
 	    axisLabel:{
 	    fontSize :'10'
-	    }
+			},
+			ticks: {
+	           beginAtZero: true,
+	           userCallback: function(label, index, labels) {
+	             if (Math.floor(label) === label) {
+	               return label;
+	             }
+
+	           },
+	         }
 	  },
 	  yAxis: {
 	      name:'จำนวน (ครั้ง)',
