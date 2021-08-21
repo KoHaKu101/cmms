@@ -461,11 +461,13 @@ function loopdata_table(){
 	function Renew(thisdata){
 		var unid = $(thisdata).data('unid');
 		var url = "{{ route('pd.renew') }}";
+		$("#overlay").fadeIn(300);
 		$.ajax({
 			type:'POST',
 			url:url,
 			data:{REPAIR_UNID:unid},
 			success:function(result){
+				$("#overlay").fadeIn(300);
 				Swal.fire({
 					 icon: 'success',
 					 title: 'บันทึกสำเร็จ',
