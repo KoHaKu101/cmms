@@ -103,7 +103,7 @@ Route::get('/machine/dashboard'             ,[DashboardController::class,'Dashbo
 Route::get('/dashboard'                     ,[DashboardController::class,'Dashboard'])->name('dashboard');
 Route::get('/dashboard/pm'                  ,[DashboardController::class,'PM'])->name('dashboard.pm');
 //Cookie
-Route::get('/cookie/set',[CookieController::class,'setCookie'])->name('cookie.set');
+Route::post('/cookie/set',[CookieController::class,'setCookie'])->name('cookie.set');
 Route::get('/cookie/get',[CookieController::class,'getCookie'])->name('cookie.get');
 //repair for pd
 Route::get('machine/pd/repairlist'          ,[PDRepairController::class,'Index'])        ->name('pd.repairlist');

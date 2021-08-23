@@ -275,10 +275,10 @@ class MachineRepairController extends Controller
       </div>';
       }
 
-    $last_data  = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->first();
+    $last_data  = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->where('STATUS_NOTIFY','=',9)->get();
     $data_count = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->whereRaw('DOC_NO = (SELECT MAX(DOC_NO)FROM [PMCS_CMMS_REPAIR_REQ])')->count();
-    $newrepair = $last_data->STATUS_NOTIFY == 9 ? true : false;
-    $UNID      = $last_data->STATUS_NOTIFY == 9 ? $last_data->UNID : '';
+    $newrepair = $last_data[0]->STATUS_NOTIFY == 9 ? true : false;
+    $UNID      = $last_data[0]->STATUS_NOTIFY == 9 ? $last_data[0]->UNID : '';
     $NUMBER    = $data_count;
     return Response()->json(['html'=>$html,'html_style' => $html_style,'newrepair' => $newrepair,'UNID' => $UNID,'number' => $NUMBER]);
   }
@@ -483,8 +483,10 @@ class MachineRepairController extends Controller
     return Redirect()->back();
           }
   public function ReadNotify(Request $request){
+
     $STATUS = $request->STATUS;
     $UNID   = $request->UNID;
+    
     MachineRepairREQ::where('UNID','=',$UNID)->update([
       'STATUS_NOTIFY' => $STATUS,
     ]);

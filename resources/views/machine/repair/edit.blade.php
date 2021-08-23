@@ -309,7 +309,7 @@
 		var urlcookie = "{{ route('cookie.set') }}";
 		var data = {"_token": "{{ csrf_token() }}",VALUE : value,NAME : name}
 		$.ajax({
-			type:'GET',
+			type:'POST',
 			url: urlcookie,
 			datatype: 'json',
 			data: data ,

@@ -469,7 +469,7 @@ $('#startbtn').on('click',function(){
 		var urlcookie = "{{ route('cookie.set') }}";
 		var data = {"_token": "{{ csrf_token() }}",NAME : name,VALUE : value}
 		$.ajax({
-			type:'GET',
+			type:'POST',
 			url: urlcookie,
 			datatype: 'json',
 			data: data ,

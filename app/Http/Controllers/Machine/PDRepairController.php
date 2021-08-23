@@ -351,7 +351,6 @@ class PDRepairController extends Controller
                    </button>';
    }else {
      $RENEW_BTN = '<div class="col col-sm col-lg-4 text-right ">
-
                    </div>';
      $SELECT_PD = '<input type="text" class="form-control-sm form-control-plaintext bg-success text-white text-center mx-2 col-lg-7"
                     value="'.$REPAIR_REQ->PD_NAME_TH.'" >';

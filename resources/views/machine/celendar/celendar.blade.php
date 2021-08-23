@@ -83,7 +83,7 @@
 		var urlcookie = "{{ route('cookie.set') }}";
 		var data = {"_token": "{{ csrf_token() }}",NAME : name,VALUE : value}
 		$.ajax({
-			type:'GET',
+			type:'POST',
 			url: urlcookie,
 			datatype: 'json',
 			data: data ,
@@ -152,7 +152,7 @@
 });
 	calendar.setOption('locale', 'th');
 	calendar.render();
-	
+
 		var cookie_style = '{{ Cookie::get('style_calendar') }}';
 		if (cookie_style == '2') {
 			console.log($('.fc-listYear-button'));
