@@ -106,25 +106,26 @@ Route::get('/dashboard/pm'                  ,[DashboardController::class,'PM'])-
 Route::get('/cookie/set',[CookieController::class,'setCookie'])->name('cookie.set');
 Route::get('/cookie/get',[CookieController::class,'getCookie'])->name('cookie.get');
 //repair for pd
-Route::get('machine/pd/repairlist'                       ,[PDRepairController::class,'Index'])        ->name('pd.repairlist');
-Route::get('machine/pd/fetchdata'                        ,[PDRepairController::class,'FetchData'])    ->name('pd.fetchdata');
-Route::post('machine/pd/result'                          ,[PDRepairController::class,'ShowResult'])   ->name('pd.result');
-Route::post('machine/pd/confirm'                         ,[PDRepairController::class,'ConFirm'])   ->name('pd.confirm');
-Route::post('machine/repair/renew'                       ,[PDRepairController::class,'Renew']) ->name('pd.renew');
+Route::get('machine/pd/repairlist'          ,[PDRepairController::class,'Index'])        ->name('pd.repairlist');
+Route::get('machine/pd/fetchdata'           ,[PDRepairController::class,'FetchData'])    ->name('pd.fetchdata');
+Route::post('machine/pd/result'             ,[PDRepairController::class,'ShowResult'])   ->name('pd.result');
+Route::post('machine/pd/confirm'            ,[PDRepairController::class,'ConFirm'])   ->name('pd.confirm');
+Route::get('machine/repair/renewconfirm'   ,[PDRepairController::class,'RenewConfirm'])     ->name('pd.renewconfirm');
+Route::post('machine/repair/renew'          ,[PDRepairController::class,'Renew'])     ->name('pd.renew');
 //repair
-Route::get('machine/repair/repairlist'                    ,[MachineRepairController::class,'Index'])             ->name('repair.list');
-Route::get('machine/repair/fetchdata'                     ,[MachineRepairController::class,'FetchData'])         ->name('repair.fetchdata');
+Route::get('machine/repair/repairlist'               ,[MachineRepairController::class,'Index'])         ->name('repair.list');
+Route::get('machine/repair/fetchdata'                ,[MachineRepairController::class,'FetchData'])     ->name('repair.fetchdata');
 
-  Route::get('machine/repair/form/{MACHINE_CODE}'         ,[MachineRepairController::class,'Create'])            ->name('repair.form');
-  Route::get('machine/repair/repairsearch'                ,[MachineRepairController::class,'PrepareSearch'])     ->name('repair.repairsearch');
+  Route::get('machine/repair/form/{MACHINE_CODE}'    ,[MachineRepairController::class,'Create'])        ->name('repair.form');
+  Route::get('machine/repair/repairsearch'           ,[MachineRepairController::class,'PrepareSearch']) ->name('repair.repairsearch');
 
-  Route::post('machine/repair/store/{MACHINE_UNID}'       ,[MachineRepairController::class,'Store'])             ->name('repair.store');
-  Route::get('machine/repair/edit/{UNID}'                 ,[MachineRepairController::class,'Edit'])              ->name('repair.edit');
-  Route::post('machine/repair/update/{UNID}'              ,[MachineRepairController::class,'Update'])            ->name('repair.update');
-  Route::get('machine/repair/delete'                      ,[MachineRepairController::class,'Delete'])            ->name('repair.delete');
+  Route::post('machine/repair/store/{MACHINE_UNID}'  ,[MachineRepairController::class,'Store'])  ->name('repair.store');
+  Route::get('machine/repair/edit/{UNID}'            ,[MachineRepairController::class,'Edit'])   ->name('repair.edit');
+  Route::post('machine/repair/update/{UNID}'         ,[MachineRepairController::class,'Update']) ->name('repair.update');
+  Route::get('machine/repair/delete'                 ,[MachineRepairController::class,'Delete']) ->name('repair.delete');
 
-  Route::get('machine/repair/readnotify/ma'                   ,[MachineRepairController::class,'ReadNotify'])        ->name('repair.readnotify');
-  Route::get('machine/repair/readnotify/pd'                   ,[PDRepairController::class,'ReadNotify'])        ->name('repair.readnotify.pd');
+  Route::get('machine/repair/readnotify/ma'          ,[MachineRepairController::class,'ReadNotify'])  ->name('repair.readnotify');
+  Route::get('machine/repair/readnotify/pd'          ,[PDRepairController::class,'ReadNotify'])       ->name('repair.readnotify.pd');
 
   Route::post('machine/repair/select/selectrepairdetail'  ,[RepairCloseFormController::class,'SelectRepairDetail']) ->name('repair.selectrepairdetail');
   Route::get('machine/repair/empcallajax'                 ,[RepairCloseFormController::class,'EMPCallAjax'])       ->name('repair.empcallajax');

@@ -460,24 +460,62 @@ function loopdata_table(){
 	}
 	function Renew(thisdata){
 		var unid = $(thisdata).data('unid');
-		var url = "{{ route('pd.renew') }}";
-		$("#overlay").fadeIn(300);
-		$.ajax({
-			type:'POST',
-			url:url,
-			data:{REPAIR_UNID:unid},
-			success:function(result){
-				$("#overlay").fadeIn(300);
-				Swal.fire({
-					 icon: 'success',
-					 title: 'บันทึกสำเร็จ',
-					 timer: 1500,
-				 }).then((Result)=>{
-					 $('#Result').modal('hide');
-					 window.location.reload();
-				 });
-			}
-		})
+
+		Swal.fire({
+					title: 'กรุณาใส่หมายเหตุ',
+					input: 'text',
+					inputAttributes: {
+						autocapitalize: 'off'
+					},
+					showDenyButton: true,
+					showCancelButton: false,
+					confirmButtonText: `ยืนยัน`,
+					denyButtonText: `ยกเลิก`,
+					preConfirm: (text) => {
+						return fetch(`/machine/repair/renewconfirm?note=${text}&unid=`+unid)
+							.then(response => {
+										if (!response.ok) {
+											throw new Error(response)
+										}
+										return response.json()
+									})
+							.then(data => {
+								if (!data.pass) {
+									throw new Error(data)
+								}else {
+									return data.pass
+								}
+							})
+							.catch(error => {
+								Swal.showValidationMessage(
+									'กรุณาใส่ข้อหมายเหตุ'
+								)
+							})
+						},
+						allowOutsideClick: () => !Swal.isLoading()
+				}).then((result) => {
+					if (result.isConfirmed) {
+						var url = "{{ route('pd.renew') }}";
+						$("#overlay").fadeIn(300);
+						$.ajax({
+							type:'POST',
+							url:url,
+							data:{REPAIR_UNID:unid},
+							success:function(result){
+								$("#overlay").fadeIn(300);
+								Swal.fire({
+									 icon: 'success',
+									 title: 'บันทึกสำเร็จ',
+									 timer: 1500,
+								 }).then((Result)=>{
+									 $('#Result').modal('hide');
+									 window.location.reload();
+								 });
+							}
+						})
+					}
+				})
+
 	}
 	function SaveFrom(repair_unid,unid){
 		var repair_unid = repair_unid;

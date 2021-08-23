@@ -336,22 +336,29 @@ class PDRepairController extends Controller
    //*******************************************************************************************
 
    if ($PLANING_CHECK_BY == '') {
-     $TEXT = '<select class="form-control form-control-sm col-lg-4 " id="EMP_CODE" name="EMP_CODE">
-             <option value>กรุณาเลือก</option>';
-             foreach ($DATA_PD as $index => $row_pd) {
-               $TEXT.='<option value="'.$row_pd->EMP_CODE.'">'.$row_pd->EMP_TH_NAME_FIRST_TH.' '.$row_pd->EMP_TH_NAME_LAST_TH.'</option>';
-             }
-            $TEXT.='</select>';
-     $BTN = '<button type="button" class="btn btn-secondary btn-sm  text-right"
-             id="ConFirm" data-unid="'.$UNID_REPAIR.'" >
-               <i class="fas fa-clipboard-check fa-2x"> ปิดเอกสาร</i>
-             </button>';
+     $RENEW_BTN = '<div class="col col-sm col-lg-4 text-right ">
+                    <button class="btn btn-danger btn-sm" type="button" onclick="Renew(this)" data-unid="'.$UNID_REPAIR.'">แจ้งซ่อมไม่สำเร็จ</button>
+                   </div>';
+     $SELECT_PD = '<select class="form-control form-control-sm col-lg-4 " id="EMP_CODE" name="EMP_CODE">
+                     <option value>กรุณาเลือก</option>';
+                     foreach ($DATA_PD as $index => $row_pd) {
+                       $SELECT_PD.='<option value="'.$row_pd->EMP_CODE.'">'.$row_pd->EMP_TH_NAME_FIRST_TH.' '.$row_pd->EMP_TH_NAME_LAST_TH.'</option>';
+                     }
+    $SELECT_PD .= '</select>';
+    $BTN        = '<button type="button" class="btn btn-secondary btn-sm  text-right"
+                   id="ConFirm" data-unid="'.$UNID_REPAIR.'" >
+                     <i class="fas fa-clipboard-check fa-2x"> ปิดเอกสาร</i>
+                   </button>';
    }else {
-     $TEXT = '<input type="text" class="form-control-sm form-control-plaintext bg-success text-white text-center mx-2 col-lg-4" value="'.$REPAIR_REQ->PD_NAME_TH.'" >';
-     $BTN  = '<button type="button" class="btn btn-secondary btn-sm text-right"
-               data-dismiss="modal" >
-                 <i class="fas fa-door-open fa-2x"> ออก</i>
-               </button>';
+     $RENEW_BTN = '<div class="col col-sm col-lg-4 text-right ">
+
+                   </div>';
+     $SELECT_PD = '<input type="text" class="form-control-sm form-control-plaintext bg-success text-white text-center mx-2 col-lg-7"
+                    value="'.$REPAIR_REQ->PD_NAME_TH.'" >';
+     $BTN       = '<button type="button" class="btn btn-secondary btn-sm text-right"
+                     data-dismiss="modal" >
+                       <i class="fas fa-door-open fa-2x"> ออก</i>
+                     </button>';
    }
     $html = '<div class="col-12 col-lg-10 ml-auto mr-auto" >
       <div class="page-divider"></div>
@@ -467,13 +474,11 @@ class PDRepairController extends Controller
         </div>
       </div>
     </div>';
-    $footer = '
-    <div class="col col-sm col-lg-4 text-right ">
-      <button class="btn btn-danger btn-sm" type="button" onclick="Renew(this)" data-unid="'.$UNID_REPAIR.'">แจ้งซ่อมไม่สำเร็จ</button>
-    </div>
-    <div class="col-5 col-sm-7 col-md-7 col-lg-6 form-inline" >
-      <lable> ผู้ตรวจสอบ (PD)</lable>';
-    $footer.= $TEXT.
+    $footer = $RENEW_BTN;
+
+    $footer.='<div class="col-5 col-sm-7 col-md-7 col-lg-6 form-inline" >
+              <lable> ผู้ตรวจสอบ (PD)</lable>';
+    $footer.= $SELECT_PD.
     '</div>
     <div class="col-7 col-sm-5 col-md-5 col-lg-2  ml-auto " >'.$BTN.'</div>';
     return Response()->json(['html' => $html,'footer'=>$footer,'status' => $PLANING_CHECK_BY,'repair_unid' => $UNID_REPAIR]);
@@ -502,6 +507,19 @@ class PDRepairController extends Controller
     MachineRepairREQ::where('UNID','=',$UNID)->update([
      'STATUS' => $STATUS,
     ]);
+  }
+  public function RenewConfirm(Request $request){
+    $NOTE = $request->note;
+    $UNID = $request->unid;
+    if ($NOTE == '') {
+      return Response()->json(['pass'=>false]);
+    }else {
+      MachineRepairREQ::where('UNID','=',$UNID)->update([
+        'NOTE_RENEW'  => $NOTE
+      ]);
+      return Response()->json(['pass'=>true]);
+    }
+
   }
   public function Renew(Request $request){
     $UNID = $request->REPAIR_UNID;
