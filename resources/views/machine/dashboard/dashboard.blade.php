@@ -1,7 +1,7 @@
 @extends('masterlayout.masterlayout')
 @section('tittle','homepage')
 @section('css')
-<script type="text/javascript" src="{{asset('/assets/js/useinproject/echarts.min.js')}}"></script>
+{{-- <script type="text/javascript" src="{{asset('/assets/js/useinproject/echarts.min.js')}}"></script> --}}
 
 @endsection
 {{-- ส่วนหัว --}}
@@ -300,12 +300,12 @@
 							</div>
 						</div>
 						<div class="card-body" >
-							<div class="row">
-								<div class="col-md-12">
-									<canvas id="ChartDownTime" height="290%" width="550%"></canvas>
+							{{-- <div class="row"> --}}
+								{{-- <div class="col-md-12"> --}}
+									<div id="ChartDownTime" style="height:290%;width=550%;"></div>
 
-								</div>
-							</div>
+								{{-- </div> --}}
+							{{-- </div> --}}
 						</div>
 					</div>
 				</div>
@@ -392,8 +392,8 @@
 {{-- ส่วนjava --}}
 @section('javascript')
 
-<script type="text/javascript" src="{{asset('/echart/echarts-en.common.min.js')}}"></script>
-<script src="{{asset('/assets/js/plugin/chart.js/chart.min.js')}}"></script>
+{{-- <script type="text/javascript" src="{{asset('/echart/echarts-en.common.min.js')}}"></script> --}}
+<script src="{{asset('/assets/js/plugin/chart.js/echarts.js')}}"></script>
 <script src="{{asset('/assets/js/plugin/chart-circle/circles.min.js')}}"></script>
 <script>
 	$(document).ready(function(){
@@ -448,7 +448,7 @@ var urlnotify = "{{ route('repair.readnotify')}}";
 {{-- Down Time --}}
 <script>
 	var DowmTime  = document.getElementById('ChartDownTime');
-	var myChart 	= echarts.init(DowmTime);
+	var DowmTimeChart 	= echarts.init(DowmTime);
   var color_rgba = {1:'rgba(255, 45, 45, 1)'
 									 ,2:'rgba(255, 45, 217, 1)'
 									 ,3:'rgba(255, 131, 40, 1)'
@@ -465,10 +465,7 @@ var urlnotify = "{{ route('repair.readnotify')}}";
 										 ,7:"rgba(55, 55, 55,1)"}
 	var option;
 	option = {
-	  tooltip: {
-	      show :false,
-		  trigger: 'item',
-	  },
+		tooltip: {},
 	  legend: {
 	      show:true,
 	  },
@@ -524,6 +521,7 @@ var urlnotify = "{{ route('repair.readnotify')}}";
 			  	@endfor
 			 ],
 	    itemStyle: {
+				shadowBlur:4,
 	      shadowOffsetX: 10,
 	    }
 	  }],
@@ -533,7 +531,7 @@ var urlnotify = "{{ route('repair.readnotify')}}";
 	      position:'top',
 	  }
 	}
-	option && myChart.setOption(option);
+	option && DowmTimeChart.setOption(option);
 
 </script>
 {{-- เครื่องจักรเสีย บ่อย --}}
@@ -553,7 +551,7 @@ var urlnotify = "{{ route('repair.readnotify')}}";
 	var option;
 	option = {
 	  tooltip: {
-	      show :false,
+	      show :true,
 		  trigger: 'item',
 	  },
 	  legend: {
@@ -606,6 +604,7 @@ var urlnotify = "{{ route('repair.readnotify')}}";
 					{value:"{{$COUNT_REPAIR}}",
 	        	itemStyle:{
 	            color:color_rgba[{{$D}}],
+							shadowBlur:4,
 	            shadowColor:color_shadow[{{$D}}] ,
 	        	}
 					},
@@ -643,7 +642,7 @@ var urlnotify = "{{ route('repair.readnotify')}}";
 	 var option;
  	option = {
  	  tooltip: {
- 	      show :false,
+ 	      show :true,
  		  trigger: 'item',
  	  },
  	  legend: {
@@ -707,7 +706,7 @@ var urlnotify = "{{ route('repair.readnotify')}}";
  				],
  	    itemStyle: {
  	      shadowOffsetX: 10,
-
+				shadowBlur:4,
  	    }
  	  }],
  	  label:{
@@ -723,7 +722,7 @@ var urlnotify = "{{ route('repair.readnotify')}}";
 {{-- แจ้งซ่อมแต่ล่ะLine --}}
 <script type="text/javascript">
 	var chartDom = document.getElementById('repair');
-	var myChart = echarts.init(chartDom);
+	var myChart  = echarts.init(chartDom);
 	var option;
 	option = {
 		legend: {show: true,textStyle: {

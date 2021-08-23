@@ -100,9 +100,13 @@ class DashboardController extends Controller
                                        ->where('PLAN_MONTH','=',date('n'))->get();
     $PM_BAR_CHART[$i] = $DATA_PM_BARCHART;
     }
+    for ($i=1; $i < 13; $i++) {
+      $DATA_PDM_BARCHART = SparePartPlan::where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',$i)->count();
+    $PDM_BAR_CHART[$i] = $DATA_PDM_BARCHART;
+    }
     $DATA_PM_TABLE = MachinePlanPM::where('MACHINE_LINE','=','L1')->where('PLAN_YEAR','=',date('Y'))->where('PLAN_MONTH','=',date('n'))->get();
     $PM_USER_CHECK = Pmplanresult::select('PM_PLAN_UNID','PM_USER_CHECK')->get();
-    return view('machine.dashboard.pmandpdm',compact('PM_BAR_CHART','DATA_PM_TABLE','PM_USER_CHECK'));
+    return view('machine.dashboard.pmandpdm',compact('PM_BAR_CHART','PDM_BAR_CHART','DATA_PM_TABLE','PM_USER_CHECK'));
   }
   public function TablePM(Request $request){
     $LINE = $request->LINE;

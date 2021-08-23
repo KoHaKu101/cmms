@@ -1,7 +1,7 @@
 @extends('masterlayout.masterlayout')
 @section('tittle','homepage')
 @section('css')
-<script type="text/javascript" src="{{asset('/assets/js/useinproject/echarts.min.js')}}"></script>
+{{-- <script type="text/javascript" src="{{asset('/assets/js/useinproject/echarts.min.js')}}"></script> --}}
 
 @endsection
 {{-- ส่วนหัว --}}
@@ -58,11 +58,11 @@
 				<div class="row">
 					<div class="col-sm-12">
 						<div class="card">
-							<div class="card-header">
+							<div class="card-header bg-primary">
 								<div class="row">
 									<div class="col-md-8 ">
-										<div class="card-title form-inline">
-											<div class="text-left mr-auto">
+										<div class="card-title form-inline text-white">
+											<div class="text-left mr-auto ">
 												แผน PM ในแต่ละ Line
 											</div>
 											<div class="mr-auto">
@@ -73,7 +73,7 @@
 								</div>
 							</div>
 							<div class="card-body">
-								<canvas id="PlanPm" width="1150%" height="380%"></canvas>
+								<div id="PlanPm" style="width:100%; height:380%;"></div>
 							</div>
 						</div>
 					</div>
@@ -82,7 +82,6 @@
 			<div class="page-inner mt--5">
 				<div class="row">
 					<div class="col-md-8">
-
 						<div class="card">
 							<div class="card-header bg-primary ">
 								<div class="row">
@@ -106,38 +105,6 @@
 									<h5>ตารางรายการ PM ของ Line 1</h5>
 								</div>
 								<div class="table" id="CHANGE_TABLE">
-									<table class="table table-bordered table-head-bg-info table-bordered-bd-info " id="data_table_pm">
-										{{-- <thead>
-											<tr>
-												<th >#</th>
-												<th width="12%" class="text-center">MC-CODE</th>
-												<th >MC-NAME</th>
-												<th width="10%">รอบ(เดือน)</th>
-												<th width="16%">สถานะ</th>
-												<th width="16%">ผู้ตรวจสอบ</th>
-												<th width="14%">วันที่ตรวจสอบ</th>
-											</tr>
-										</thead>
-										<tbody>
-											@foreach ($DATA_PM_TABLE as $key => $row)
-												@php
-													$USER_CHECK  = $PM_USER_CHECK->where('PM_PLAN_UNID','=',$row->UNID)->first();
-													$STATUS_TEXT = $row->PLAN_STATUS == 'COMPLETE' ? 'ตรวจสอบแล้ว' : ($row->PLAN_STATUS == 'EDIT' ? 'กำลังดำเนินการ' : 'ยังไม่ได้ตรวจสอบ');
-													$STATUS_BG 	 = $row->PLAN_STATUS == 'COMPLETE' ? 'bg-success' : ($row->PLAN_STATUS == 'EDIT' ? 'bg-warning' : 'bg-danger');
-													$CHECK_BY    = isset($USER_CHECK->PM_USER_CHECK) ? $USER_CHECK->PM_USER_CHECK : '-';
-												@endphp
-												<tr>
-													<td class="text-center">{{ $key+1 }}</td>
-													<td class="text-center">{{$row->MACHINE_CODE}}</td>
-													<td>{{$row->MACHINE_NAME}}</td>
-													<td class="text-center">{{$row->PLAN_PERIOD}}</td>
-													<td class="{{ $STATUS_BG }} text-white" >{{$STATUS_TEXT}}</td>
-													<td>{{$CHECK_BY}}</td>
-													<td>{{$row->COMPLETE_DATE}}</td>
-												</tr>
-											@endforeach
-										</tbody> --}}
-									</table>
 								</div>
 							</div>
 						</div>
@@ -154,6 +121,25 @@
 							</div>
 						</div>
 					</div>
+				</div>
+			</div>
+			<div class="page-inner mt--5">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="card">
+							<div class="card-header bg-primary ">
+								<div class="row">
+									<div class="card-title text-white">
+										แผน PDM ใน {{ ' ปี '.date('Y')+543 }}
+									</div>
+								</div>
+							</div>
+							<div class="card-body">
+								<div id="PlanPdm" style="width:100%;height:380%;"></div>
+							</div>
+						</div>
+					</div>
+
 				</div>
 			</div>
 
@@ -192,8 +178,8 @@
 {{-- ส่วนjava --}}
 @section('javascript')
 
-<script type="text/javascript" src="{{asset('/echart/echarts-en.common.min.js')}}"></script>
-<script src="{{asset('/assets/js/plugin/chart.js/chart.min.js')}}"></script>
+{{-- <script type="text/javascript" src="{{asset('/echart/echarts-en.common.min.js')}}"></script> --}}
+<script src="{{asset('/assets/js/plugin/chart.js/echarts.js')}}"></script>
 <script src="{{ asset('../../assets/js/plugin/datatables/datatables.min.js')}}"></script>
 
 <script type="text/javascript">
@@ -218,10 +204,10 @@
 	option = {
 	    tooltip: {
 					show:true,
-	        trigger: 'axis',
-	        axisPointer: {
-	            type: 'shadow'
-	        }
+					trigger: 'axis',
+					axisPointer: {
+							type: 'shadow'
+					}
 	    },
 	    grid: {
 	        left: '3%',
@@ -246,7 +232,7 @@
 						lineHeight: 55
 				},
 	     type: 'value',
-	        boundaryGap: [0, 0.01]
+			 boundaryGap: [0, 1]
 	    },
 	    series: [
 				{
@@ -300,18 +286,74 @@
 	};
 	option && chart_Plan_pm.setOption(option);
 </script>
+<script type="text/javascript">
+
+	var Plan_pdm 		   = document.getElementById('PlanPdm');
+	var chart_Plan_pdm = echarts.init(Plan_pdm);
+	var option;
+	option = {
+			tooltip: {
+					show:true,
+					trigger: 'axis',
+					axisPointer: {
+							type: 'shadow'
+					}
+			},
+			grid: {
+					left: '3%',
+					right: '0%',
+					bottom: '6%',
+					top:'3%',
+					containLabel: true
+			},
+			xAxis: {
+					type: 'category',
+					data: [
+
+								@for ($i = 1;$i < 13;$i++)
+									'{{ $MONTH_NAME_TH[$i] }}',
+								@endfor
+							 ]
+			},
+			yAxis: {
+				name:'จำนวนเครื่องจักร (เครื่อง)',
+				nameLocation:'center',
+				nameTextStyle:{
+						fontSize:'16',
+						lineHeight: 55
+				},
+			 type: 'value',
+					boundaryGap: [0,1]
+			},
+			series: [
+				{
+						name: '3 เดือน',
+						type: 'bar',
+						barWidth:'40',
+						data: [
+							@for ($i=1; $i < 13; $i++)
+								'{{ $PDM_BAR_CHART[$i] }}',
+							@endfor
+						],
+						label:{
+								show:true,
+								color:'black',
+								position:'top',
+						},
+						itemStyle:{
+							color:'rgba(134, 48, 227)',
+							shadowOffsetX: 10,
+							shadowBlur:4,
+								shadowColor:'rgba(46, 7, 88,1)',
+						}
+				},
+			],
+
+	};
+	option && chart_Plan_pdm.setOption(option);
+</script>
 <script>
 	$('#BTN-L1').click();
-	$('#data_table_pm').DataTable({
-			"pageLength": 5,
-			"bLengthChange": false,
-			"bFilter": true,
-			"bInfo": false,
-			"bAutoWidth": false,
-			columnDefs: [
-			{ orderable: false, targets:[0,1,2,3,4,5,6] }
-		]
-		});
 	function changepmline(thisdata){
 		var Line = $(thisdata).data('line');
 		var url  = "{{ route('dashboard.tablepm') }}";
