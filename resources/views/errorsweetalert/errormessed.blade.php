@@ -7,6 +7,5 @@ if (has_errors) {
     html: jQuery('#Errorsystem').html(),
     showCloseButton: true,
   });
-
 }
 </script>

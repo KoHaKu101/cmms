@@ -8,6 +8,7 @@ use App\Models\Machine\Machine;
 use App\Models\Machine\MachineRepairREQ;
 use App\Models\Machine\MachinePlanPm;
 use App\Models\Machine\SparePartPlan;
+use App\Models\Machine\Pmplanresult;
 use Carbon\Carbon;
 use Auth;
 use Illuminate\Support\Facades\DB;
@@ -89,10 +90,63 @@ class DashboardController extends Controller
     ,'data_complete','data_uncomplete','downtime_machine','downtime_machine_code','count_pdm'
     ));
   }
-  public function PM(){
-    return view('machine.dashboard.pmandpdm');
+  public function PM(Request $request){
+    $PM_BAR_CHART = array();
+    for ($i=1; $i < 7; $i++) {
+      $DATA_PM_BARCHART = MachinePlanPm::selectraw("sum(CASE WHEN PLAN_PERIOD = '3'	and MACHINE_LINE = 'L$i' THEN 1 ELSE 0 END) as COUNT_MONTH3,
+                                                	  sum(CASE WHEN PLAN_PERIOD = '6'	and MACHINE_LINE = 'L$i' THEN 1 ELSE 0 END) as COUNT_MONTH6,
+                                                	  sum(CASE WHEN PLAN_PERIOD = '12'	and MACHINE_LINE = 'L$i' THEN 1 ELSE 0 END) as COUNT_MONTH12")
+                                       ->where('PLAN_YEAR','=',date('Y'))
+                                       ->where('PLAN_MONTH','=',date('n'))->get();
+    $PM_BAR_CHART[$i] = $DATA_PM_BARCHART;
+    }
+    $DATA_PM_TABLE = MachinePlanPM::where('MACHINE_LINE','=','L1')->where('PLAN_YEAR','=',date('Y'))->where('PLAN_MONTH','=',date('n'))->get();
+    $PM_USER_CHECK = Pmplanresult::select('PM_PLAN_UNID','PM_USER_CHECK')->get();
+    return view('machine.dashboard.pmandpdm',compact('PM_BAR_CHART','DATA_PM_TABLE','PM_USER_CHECK'));
   }
+  public function TablePM(Request $request){
+    $LINE = $request->LINE;
+    $ARRAY_LINE = array('L1'=>'LINE 1','L2'=>'LINE 2','L3'=>'LINE 3','L4'=>'LINE 4','L5'=>'LINE 5','L6'=>'LINE 6',);
+    $DATA_PM_TABLE = MachinePlanPM::where('MACHINE_LINE','=',$LINE)->where('PLAN_YEAR','=',date('Y'))->where('PLAN_MONTH','=',date('n'))->get();
+    $DATA_RESULT   = MachinePlanPm::selectraw("sum(CASE WHEN PLAN_STATUS = 'COMPLETE' and MACHINE_LINE = '$LINE'THEN 1 ELSE 0 END) as COMPLETE,
+                                               sum(CASE WHEN PLAN_STATUS = 'EDIT'     and MACHINE_LINE = '$LINE'THEN 1 ELSE 0 END) as EDIT,
+                                               sum(CASE WHEN PLAN_STATUS = 'NEW'      and MACHINE_LINE = '$LINE'THEN 1 ELSE 0 END) as NOCOMPLETE")
+                                               ->where('PLAN_YEAR','=',date('Y'))->where('PLAN_MONTH','=',date('n'))->first();
+    $RESULT        = array('complete'=>$DATA_RESULT->COMPLETE,'waiting'=>$DATA_RESULT->EDIT,'nocomplete'=>$DATA_RESULT->NOCOMPLETE);
+    $PM_USER_CHECK = Pmplanresult::select('PM_PLAN_UNID','PM_USER_CHECK')->get();
+    $html = '<table class="table table-bordered table-head-bg-info table-bordered-bd-info " id="data_table_pm">
+      <thead>
+        <tr>
+          <th >#</th>
+          <th width="12%" class="text-center">MC-CODE</th>
+          <th >MC-NAME</th>
+          <th width="10%">รอบ(เดือน)</th>
+          <th width="16%">สถานะ</th>
+          <th width="16%">ผู้ตรวจสอบ</th>
+          <th width="14%">วันที่ตรวจสอบ</th>
+        </tr>
+      </thead>
+      <tbody>';
+        foreach ($DATA_PM_TABLE as $key => $row){
+            $USER_CHECK  = $PM_USER_CHECK->where('PM_PLAN_UNID','=',$row->UNID)->first();
+            $STATUS_TEXT = $row->PLAN_STATUS == 'COMPLETE' ? 'ตรวจสอบแล้ว' : ($row->PLAN_STATUS == 'EDIT' ? 'กำลังดำเนินการ' : 'ยังไม่ได้ตรวจสอบ');
+            $STATUS_BG 	 = $row->PLAN_STATUS == 'COMPLETE' ? 'bg-success' : ($row->PLAN_STATUS == 'EDIT' ? 'bg-warning' : 'bg-danger');
+            $CHECK_BY    = isset($USER_CHECK->PM_USER_CHECK) ? $USER_CHECK->PM_USER_CHECK : '-';
+      $html.='<tr>
+                <td class="text-center">'. $key+1 .'</td>
+                <td class="text-center">'.$row->MACHINE_CODE.'</td>
+                <td>'.$row->MACHINE_NAME.'</td>
+                <td class="text-center">'.$row->PLAN_PERIOD.'</td>
+                <td class="'. $STATUS_BG .' text-white" >'.$STATUS_TEXT.'</td>
+                <td>'.$CHECK_BY.'</td>
+                <td>'.$row->COMPLETE_DATE.'</td>
+              </tr>';
+        }
+    $html.='</tbody>
+      </table>';
 
+    return Response()->json(['html'=>$html,'LINE' => $ARRAY_LINE[$LINE],'data'=>$RESULT]);
+  }
   public function Notification(Request $request){
     $data = MachineRepairREQ::select('*')->where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(4)->get();
 
