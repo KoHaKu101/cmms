@@ -22,7 +22,6 @@ class DashboardController extends Controller
     return View('machine/dashboard/sumaryline');
   }
   public function Dashboard(){
-
     $machine_all        = Machine::select('MACHINE_CHECK')->where('MACHINE_CHECK','!=','4')->count();
     $machine_ready      = Machine::select('MACHINE_CHECK')->where('MACHINE_CHECK','=','2')->count();
     $machine_wait       = Machine::select('MACHINE_CHECK')->where('MACHINE_CHECK','!=','2')->where('MACHINE_CHECK','!=','4')->count();
@@ -201,7 +200,22 @@ class DashboardController extends Controller
 
     return Response()->json(['html'=>$html,'LINE' => $ARRAY_LINE[$LINE]]);
   }
-  // public function 
+  public function Downtime(Request $request){
+    $DATA_DOWNTIME      = MachineRepairREQ::select('UNID')->selectraw('MAX(DOWNTIME) as DOWNTIME')
+                                          ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
+                                          ->groupBy('UNID')->groupBy('UNID')->orderBy('DOWNTIME','DESC')->take(7)->get();
+    // $ARRAY_MACHINE_UNID = array();
+    $ARRAY_REPAIR_UNID  = array();
+    foreach ($DATA_DOWNTIME as $index => $row) {
+      // $ARRAY_MACHINE_UNID[$row->MACHINE_UNID] = $row->MACHINE_UNID;
+      $ARRAY_REPAIR_UNID[$row->UNID]          = $row->UNID;
+    }
+    // $DATA_MACHINE       = Machine::whereIn('UNID',$ARRAY_MACHINE_UNID)->get();
+    $DATA_REPAIR        = MachineRepairREQ::selectraw('MAX(UNID) as UNID')->whereIn('UNID',$ARRAY_REPAIR_UNID)->dd();
+
+
+    return view('machine.dashboard.downtime',compact('DATA_REPAIR'));
+  }
   public function Notification(Request $request){
     $data = MachineRepairREQ::select('*')->where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(4)->get();
     return response()->json(['datarepair' => $data]);

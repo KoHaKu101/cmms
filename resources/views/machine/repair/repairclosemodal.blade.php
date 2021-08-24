@@ -130,16 +130,16 @@ body.modal-open {
         <div class="tab-content my-4  ">
           <div class="tab-pane active" id="WORK_STEP_1">
             <form action="#" id="FRM_WORK_STEP_1" enctype="multipart/form-data">
-              <div class="row has-error">
+              <div class="row">
                 <div class="col-6 col-sm-6 col-md-6 col-lg-4 ml-auto">
                   <label>วันที่เริ่มตรวจสอบ</label>
                   <input type="date" class="form-control form-control-sm "
-                    id="INSPECTION_START_DATE" name="INSPECTION_START_DATE" value="{{ date('Y-m-d') }}" required>
+                    id="INSPECTION_START_DATE" name="INSPECTION_START_DATE" readonly required>
                 </div>
                 <div class="col-6 col-sm-6 col-md-6 col-lg-4 mr-auto">
                   <label>เวลาตรวจสอบ</label>
                   <input type="time" class="form-control form-control-sm "
-                    id="INSPECTION_START_TIME" name="INSPECTION_START_TIME" value="{{ date('H:m') }}" required>
+                    id="INSPECTION_START_TIME" name="INSPECTION_START_TIME" readonly required>
                 </div>
               </div>
               <div class="row has-error">

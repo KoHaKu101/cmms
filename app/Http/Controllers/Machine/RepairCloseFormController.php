@@ -45,7 +45,6 @@ class RepairCloseFormController extends Controller
   public function EMPCallAjax(Request $request){
     $REPAIR_REQ_UNID = isset($request->REPAIR_REQ_UNID) ? $request->REPAIR_REQ_UNID : '';
 
-
     //*************************** select worker *******************************************//
     $DATA_EMPNAME = EMPName::select('UNID','EMP_CODE')->selectraw("dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH")
                                         ->where('EMP_STATUS','=','9')->orderBy('EMP_CODE')->get();
@@ -72,7 +71,8 @@ class RepairCloseFormController extends Controller
     //*********************************** table ของรายละเอียด ****************************************/
     $html_detail = "";
     if ($REPAIR_REQ_UNID != '') {
-      $REPAIR                 = MachineRepairREQ::selectRaw('PRIORITY,UNID,MACHINE_CODE,MACHINE_LINE,REPAIR_SUBSELECT_UNID,WORK_STEP,dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
+      $REPAIR                 = MachineRepairREQ::selectRaw('PRIORITY,UNID,MACHINE_CODE,MACHINE_LINE,REPAIR_SUBSELECT_UNID,WORK_STEP,dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH
+                                                            ,DOC_DATE,REPAIR_REQ_TIME')
                                                 ->where('UNID','=',$REPAIR_REQ_UNID)->first();
       $REPAIR_SPAREPART       = RepairSparepart::where('REPAIR_REQ_UNID','=',$REPAIR_REQ_UNID)->orderBy('SPAREPART_NAME')->get();
       $REPAIR_SPAREPART_COUNT = RepairSparepart::where('REPAIR_REQ_UNID','=',$REPAIR_REQ_UNID)->where('SPAREPART_STOCK_TYPE','=','OUT')->count();
@@ -84,9 +84,9 @@ class RepairCloseFormController extends Controller
       <table class="table table-bordered table-bordered-bd-info">
         <tbody>
           <tr>
-            <td width="80px" style="background:#aab7c1;color:black;"><h5 class="my-1"> MC-NO </h5></td>
+            <td width="20%" style="background:#aab7c1;color:black;"><h5 class="my-1"> MC-NO </h5></td>
             <td > '.$REPAIR->MACHINE_CODE.' </td>
-            <td style="background:#aab7c1;color:black;">LINE</td>
+            <td width="10%" style="background:#aab7c1;color:black;">LINE</td>
             <td >'.$REPAIR->MACHINE_LINE.'</td>
           </tr>
           <tr>
@@ -116,10 +116,15 @@ class RepairCloseFormController extends Controller
             <td style="background:#aab7c1;color:black;"><h5 class="my-1">ระดับ</h5>  </td>
             <td  colspan="3">'.$PRIORITY_TEXT.'</td>
           </tr>
+          <tr>
+            <td style="background:#aab7c1;color:black;">เวลาแจ้งซ่อม</td>
+            <td colspan="3" >วันที่ : '.date('d-m-Y',strtotime($REPAIR->DOC_DATE)).' เวลา : '.$REPAIR->REPAIR_REQ_TIME.'</td>
+          </tr>
         </tbody>
       </table>';
     }
     return Response()->json(['html_detail'=>$html_detail,'html_select' => $html_select,'html_sparepart' => $html_sparepart
+    ,'date'=>$REPAIR->DOC_DATE,'time'=>date('H:i',strtotime($REPAIR->REPAIR_REQ_TIME))
     ,'step' => $REPAIR->WORK_STEP,'repair_sparepart'=>$REPAIR_SPAREPART,'repair_count' => $REPAIR_SPAREPART_COUNT]);
   }
 

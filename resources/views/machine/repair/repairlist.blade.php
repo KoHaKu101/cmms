@@ -544,6 +544,8 @@ function rec_work(thisdata){
 			 datatype: 'json',
 			 success:function(data){
 				 $("#overlayinpage").fadeOut(300);
+				 $('#INSPECTION_START_DATE').val(data.date);
+				 $('#INSPECTION_START_TIME').val(data.time);
 				 $('#TITLE_DOCNO').html('เลขที่เอกสาร : '+docno);
 		 //************************ set select 2 **************************
 				 $('#show_detail')											.html(data.html_detail);
@@ -586,6 +588,7 @@ function rec_work(thisdata){
 							modalstep5(repair_unid)
 						}else if (step_number == '1' || step_number == '2' || step_number == '4') {
 							//***************************** step 1 & 2 & 4 *********************************
+
 							$('#stepsave').attr('hidden',false);
 							$('.stepclose').attr('hidden',true);
 						}

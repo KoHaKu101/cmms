@@ -281,7 +281,7 @@
 								<div class="col-md-3 d-flex justify-content-end">
 									<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
 										<li class="nav-item">
-											<a class="nav-link active" id="PM_DASHBOARD" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">See More...</a>
+											<a class="nav-link active"   href="{{ route('dashboard.pm') }}" role="tab" aria-selected="true">See More...</a>
 										</li>
 									</ul>
 								</div>
@@ -308,13 +308,12 @@
 							<div class="row">
 								<div class="col-md-9 form-inline">
 									<div class="card-title">Down Time สูงที่สุด </div>
-
 									<div class="card-title mx-4">เดือน {{ $CURRENT_MONTH  }}</div>
 								</div>
 								<div class="col-md-3 d-flex justify-content-end">
 									<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
 										<li class="nav-item">
-											<a class="nav-link active" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">See More...</a>
+											<a class="nav-link active"  href="{{ route('dashboard.downtime') }}" role="tab" aria-selected="true">See More...</a>
 										</li>
 									</ul>
 								</div>
@@ -426,9 +425,9 @@
 													 ,12:{{  $data_uncomplete[12]}},}
 		chart_pm(value_complete,value_uncomplete);
 	});
-	$('#PM_DASHBOARD').on('click',function(){
-		window.location.href = "{{ route('dashboard.pm') }}";
-	});
+	// $('#PM_DASHBOARD').on('click',function(){
+	// 	window.location.href = "{{ route('dashboard.pm') }}";
+	// });
 	$("#SELECT_CHART").on('change',function(){
 		var slectval = $('#SELECT_CHART').val();
 		if (slectval == 'PDM') {
