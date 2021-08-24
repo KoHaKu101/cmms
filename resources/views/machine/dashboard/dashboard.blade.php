@@ -493,7 +493,7 @@ var urlnotify = "{{ route('repair.readnotify')}}";
 	          fontSize:'16',
 	          lineHeight: 55
 	      },
-				
+
  	     minInterval:1,
 	  },
 		grid: {
@@ -560,7 +560,7 @@ var urlnotify = "{{ route('repair.readnotify')}}";
 	      show:true,
 	  },
 		grid: {
-        left: '5%',
+        left: '8%',
         right: '10%',
         bottom: '0%',
 				top:'6%',
@@ -590,7 +590,7 @@ var urlnotify = "{{ route('repair.readnotify')}}";
 	          fontSize:'16',
 	          lineHeight: 55
 	      },
-				
+
  	     minInterval:1,
 
 	  },
@@ -674,7 +674,7 @@ var urlnotify = "{{ route('repair.readnotify')}}";
  	    }
  	  },
 		grid: {
-				left: '5%',
+				left: '8%',
 				right: '10%',
 				bottom: '0%',
 				top:'6%',
@@ -687,7 +687,7 @@ var urlnotify = "{{ route('repair.readnotify')}}";
  	          fontSize:'16',
  	          lineHeight: 55
  	      },
-				
+
  	     minInterval:1,
 
  	  },
