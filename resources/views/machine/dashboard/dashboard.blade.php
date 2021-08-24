@@ -27,7 +27,28 @@
 	 .hide-display{
 		 display:none;
 	 }
+
+		#btntop {
+			display: none;
+			position: fixed;
+			bottom: 42px;
+			right: 25px;
+			z-index: 99;
+			font-size: 13px;
+			border: none;
+			outline: none;
+			background-color: #1572e8;
+			color: white;
+			cursor: pointer;
+			padding: 12px;
+			border-radius: 8px;
+		}
+
+		#btntop:hover {
+		  background-color: #003C89;
+		}
 	</style>
+	<button onclick="topFunction()" id="btntop" title="Go to top"><i class="fas fa-arrow-circle-up fa-lg"></i></button>
 	<audio id="music" src="{{asset('assets/sound/mixkit-arabian-mystery-harp-notification-2489.wav')}}" ></audio>
 	<button type="button" style="display:none;" id="startbtn"></button>
 		<div class="content">
@@ -405,35 +426,35 @@
 													 ,12:{{  $data_uncomplete[12]}},}
 		chart_pm(value_complete,value_uncomplete);
 	});
-$('#PM_DASHBOARD').on('click',function(){
-	window.location.href = "{{ route('dashboard.pm') }}";
-});
-$("#SELECT_CHART").on('change',function(){
-	var slectval = $('#SELECT_CHART').val();
-	if (slectval == 'PDM') {
-		var value_complete	 	= "{{ $count_pdm->COMPLETE == null ? '0' : $count_pdm->COMPLETE}}";
-		var value_uncomplete	= "{{ $count_pdm->NOCOMPLETE == null ? '0' : $count_pdm->NOCOMPLETE}}";
-		$('#ChartPM3').addClass('hide-display');
-		$('#ChartPM12').addClass('hide-display');
-		chart_pdm(value_complete,value_uncomplete);
-	}else {
-		var value_complete 	 = {3 :{{  $data_complete[3]}}
-													 ,6 :{{  $data_complete[6]}}
-													 ,12:{{  $data_complete[12]}},}
-		var value_uncomplete = {3	:{{  $data_uncomplete[3]}}
-													 ,6	:{{  $data_uncomplete[6]}}
-													 ,12:{{  $data_uncomplete[12]}},}
-		$('#ChartPM3').removeClass('hide-display');
-		$('#ChartPM12').removeClass('hide-display');
-		chart_pm(value_complete,value_uncomplete);
-	}
-});
+	$('#PM_DASHBOARD').on('click',function(){
+		window.location.href = "{{ route('dashboard.pm') }}";
+	});
+	$("#SELECT_CHART").on('change',function(){
+		var slectval = $('#SELECT_CHART').val();
+		if (slectval == 'PDM') {
+			var value_complete	 	= "{{ $count_pdm->COMPLETE == null ? '0' : $count_pdm->COMPLETE}}";
+			var value_uncomplete	= "{{ $count_pdm->NOCOMPLETE == null ? '0' : $count_pdm->NOCOMPLETE}}";
+			$('#ChartPM3').addClass('hide-display');
+			$('#ChartPM12').addClass('hide-display');
+			chart_pdm(value_complete,value_uncomplete);
+		}else {
+			var value_complete 	 = {3 :{{  $data_complete[3]}}
+														 ,6 :{{  $data_complete[6]}}
+														 ,12:{{  $data_complete[12]}},}
+			var value_uncomplete = {3	:{{  $data_uncomplete[3]}}
+														 ,6	:{{  $data_uncomplete[6]}}
+														 ,12:{{  $data_uncomplete[12]}},}
+			$('#ChartPM3').removeClass('hide-display');
+			$('#ChartPM12').removeClass('hide-display');
+			chart_pm(value_complete,value_uncomplete);
+		}
+	});
 </script>
 <script>
-{{--  Use In looprepair--}}
-var urldashboard = "{{ route('dashboard.notificationrepair') }}";
-var urlnotify = "{{ route('repair.readnotify')}}";
-{{--  Use In pmplanchart--}}
+	{{--  Use In looprepair--}}
+	var urldashboard = "{{ route('dashboard.notificationrepair') }}";
+	var urlnotify = "{{ route('repair.readnotify')}}";
+	{{--  Use In pmplanchart--}}
 </script>
 
 @can('isAdmin')
@@ -787,7 +808,8 @@ var urlnotify = "{{ route('repair.readnotify')}}";
 		})
 	@endforeach
 </script>
-
+{{-- Button go to top --}}
+<script src="{{ asset('assets/js/btntop.js') }}"></script>
 
 @stop
 {{-- ปิดส่วนjava --}}

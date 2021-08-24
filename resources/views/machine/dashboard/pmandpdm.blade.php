@@ -34,6 +34,25 @@
 		 border-color:#F32AFC;
 		 color:white;
 	 }
+	 #btntop {
+		 display: none;
+		 position: fixed;
+		 bottom: 42px;
+		 right: 25px;
+		 z-index: 99;
+		 font-size: 13px;
+		 border: none;
+		 outline: none;
+		 background-color: #1572e8;
+		 color: white;
+		 cursor: pointer;
+		 padding: 12px;
+		 border-radius: 8px;
+	 }
+
+	 #btntop:hover {
+		 background-color: #003C89;
+	 }
 	</style>
 	@php
 		$MONTH_NAME_TH = array(0 =>'ALL',1 => "มกราคม",2 => "กุมภาพันธ์",3 =>"มีนาคม",4 => "เมษายน",5 =>"พฤษภาคม",6 =>"มิถุนายน",
@@ -42,8 +61,7 @@
 		$BTN_COLOR_LINE = array('1'=>'btn-info','2'=>'btn-warning','3'=>'btn-green'
 													 ,'4'=>'btn-danger','5'=>'btn-pink','6'=>'btn-primary');
 	@endphp
-	<audio id="music" src="{{asset('assets/sound/mixkit-arabian-mystery-harp-notification-2489.wav')}}" ></audio>
-	<button type="button" style="display:none;" id="startbtn"></button>
+	<button onclick="topFunction()" id="btntop" title="Go to top"><i class="fas fa-arrow-circle-up fa-lg"></i></button>
 		<div class="content">
 			<div class="panel-header bg-primary-gradient">
 				<div class="page-inner py-5">
@@ -218,7 +236,7 @@
 {{-- <script type="text/javascript" src="{{asset('/echart/echarts-en.common.min.js')}}"></script> --}}
 <script src="{{asset('/assets/js/plugin/chart.js/echarts.js')}}"></script>
 <script src="{{ asset('../../assets/js/plugin/datatables/datatables.min.js')}}"></script>
-
+<script src="{{ asset('assets/js/btntop.js') }}"></script>
 <script type="text/javascript">
 	var Plan_pm = document.getElementById('PlanPm');
 	var chart_Plan_pm = echarts.init(Plan_pm);
