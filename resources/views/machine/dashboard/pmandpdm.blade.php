@@ -253,7 +253,7 @@
 					}
 	    },
 	    grid: {
-	        left: '3%',
+	        left: '6%',
 	        right: '0%',
 	        bottom: '6%',
 					top:'3%',
@@ -317,7 +317,7 @@
 					}
 			},
 			grid: {
-					left: '3%',
+					left: '6%',
 					right: '0%',
 					bottom: '6%',
 					top:'3%',
