@@ -46,3 +46,9 @@
         </form>
     </x-jet-authentication-card>
 </x-guest-layout>
+<script>
+  var loadtimeout = function loadtimeout(){
+    window.location.reload();
+  }
+  setInterval(loadtimeout,600000);
+</script>

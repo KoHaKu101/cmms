@@ -153,7 +153,6 @@ class DashboardController extends Controller
     return Response()->json(['html'=>$html,'LINE' => $ARRAY_LINE[$LINE],'data'=>$RESULT]);
   }
   public function TablePDM(Request $request){
-
     $LINE           = $request->LINE;
     $ARRAY_LINE     = array('L1'=>'LINE 1','L2'=>'LINE 2','L3'=>'LINE 3','L4'=>'LINE 4','L5'=>'LINE 5','L6'=>'LINE 6',);
     $DATA_PDM_TABLE = SparePartPlan::where('MACHINE_LINE','=',$LINE)->where('DOC_YEAR','=',date('Y'))
@@ -175,16 +174,7 @@ class DashboardController extends Controller
         </tr>
       </thead>
       <tbody>';
-
         foreach ($DATA_PDM_TABLE as $key => $row){
-
-
-
-
-
-
-
-
 
             $STATUS       = $row->STATUS;
             $STATUS_TEXT  = $STATUS == 'COMPLETE' ? 'ตรวจสอบแล้ว' : ($STATUS == 'EDIT' ? 'กำลังดำเนินการ' : 'ยังไม่ได้ตรวจสอบ');
@@ -205,40 +195,20 @@ class DashboardController extends Controller
                 <td>'.$CHECK_BY.'</td>
                 <td>'.$COMPLETE_DATE.'</td>
               </tr>';
-
         }
     $html.='</tbody>
       </table>';
 
     return Response()->json(['html'=>$html,'LINE' => $ARRAY_LINE[$LINE]]);
   }
+  public function 
   public function Notification(Request $request){
     $data = MachineRepairREQ::select('*')->where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(4)->get();
-
     return response()->json(['datarepair' => $data]);
   }
-
   public function NotificationCount(Request $request){
     $data = MachineRepairREQ::where('CLOSE_STATUS','9')->take(4)->get()->count();
     return response()->json(['datacount' => $data]);
-  }
-  public function SystemcheckMonthly(Request $request){
-    $systemcheck = 'PMCS_CMMS_MACHINE_SYSTEMCHECK';
-    $systemtable = 'PMCS_CMMS_MACHINE_SYSTEMTABLE';
-    $machine = 'PMCS_MACHINE';
-    $data = MachineSysTemCheck::select($systemcheck.'.MACHINE_UNID_REF',$systemtable.'.SYSTEM_NAME'
-                                ,$machine.'.MACHINE_LINE',$machine.'.MACHINE_CODE',$systemcheck.'.SYSTEM_MONTHSTORE')
-                          ->leftJoin($systemtable,$systemtable.'.SYSTEM_CODE',$systemcheck.'.SYSTEM_CODE')
-                          ->leftJoin($machine,$machine.'.UNID',$systemcheck.'.MACHINE_UNID_REF')
-                          ->whereDate('SYSTEM_MONTHSTORE','<=',Carbon::now('Asia/Bangkok'))
-                          ->orderBy('SYSTEM_MONTHSTORE','DESC')->take(4)->get();
-
-    return response()->json(['datamonth' => $data]);
-  }
-  public function SystemcheckMonthlycount(Request $request){
-    $data = MachineSysTemCheck::select('SYSTEM_MONTHSTORE')->whereDate('SYSTEM_MONTHSTORE','<=',Carbon::now('Asia/Bangkok'))->take(4)
-                                ->get()->count();
-    return response()->json(['datamonthcount' => $data]);
   }
 
   public function NotificationRepair(){
@@ -250,7 +220,7 @@ class DashboardController extends Controller
     $newrepair = $last_data->STATUS_NOTIFY == 9 ? true : false;
     $UNID      = $last_data->STATUS_NOTIFY == 9 ? $last_data->UNID : '';
     $NUMBER    = $data_count;
-    $html = '';
+    $html      = '';
 
     foreach ($datarepairlist as $key => $row) {
       $TEXT                  = $row->MACHINE_STATUS == 1 ? 'หยุดทำงาน' : 'ทำงานปกติ' ;
@@ -285,17 +255,8 @@ class DashboardController extends Controller
             </a>
             ';
     }
-
-
     return Response()->json(['html'=>$html,'newrepair' => $newrepair,'UNID' => $UNID,'number' => $NUMBER]);
-
   }
-
-
-
-
-
-
 
 
   //**********************************************************************************************************//

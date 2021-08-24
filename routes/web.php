@@ -104,6 +104,7 @@ Route::get('/dashboard'                     ,[DashboardController::class,'Dashbo
 Route::get('/dashboard/pm'                  ,[DashboardController::class,'PM'])       ->name('dashboard.pm');
 Route::get('/dashboard/tablepm'             ,[DashboardController::class,'TablePM'])  ->name('dashboard.tablepm');
 Route::get('/dashboard/tablepdm'            ,[DashboardController::class,'TablePDM']) ->name('dashboard.tablepdm');
+Route::get('/dashboard/dowmtime'            ,[DashboardController::class,'Dowmtime']) ->name('dashboard.dowmtime');
 //Cookie
 Route::post('/cookie/set',[CookieController::class,'setCookie'])->name('cookie.set');
 Route::get('/cookie/get' ,[CookieController::class,'getCookie'])->name('cookie.get');
