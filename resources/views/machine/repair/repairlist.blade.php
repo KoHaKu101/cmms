@@ -546,6 +546,7 @@ function rec_work(thisdata){
 				 $("#overlayinpage").fadeOut(300);
 				 $('#INSPECTION_START_DATE').val(data.date);
 				 $('#INSPECTION_START_TIME').val(data.time);
+				 $('#datetime-doc').html('วันที่แจ้ง : '+data.date+' เวลา : '+data.time)
 				 $('#TITLE_DOCNO').html('เลขที่เอกสาร : '+docno);
 		 //************************ set select 2 **************************
 				 $('#show_detail')											.html(data.html_detail);

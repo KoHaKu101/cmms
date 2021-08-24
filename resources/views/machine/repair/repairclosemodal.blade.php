@@ -99,8 +99,9 @@ body.modal-open {
         <div class="row">
           <div class="col-12 col-md-12">
             <div class="row">
-              <div class="col-12 col-md-12">
+              <div class="col-12 col-md-12 form-inline">
                   <h4 class="modal-title" id="show-detail">อาการเสีย : {{ Cookie::get('DETAIL')}}</h4>
+                  <h4 class="modal-title ml-auto" id="datetime-doc"></h4>
               </div>
             </div>
           </div>
