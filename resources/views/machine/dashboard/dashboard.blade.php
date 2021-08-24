@@ -492,7 +492,9 @@ var urlnotify = "{{ route('repair.readnotify')}}";
 	      nameTextStyle:{
 	          fontSize:'16',
 	          lineHeight: 55
-	      }
+	      },
+				
+ 	     minInterval:1,
 	  },
 		grid: {
         left: '7%',
@@ -587,7 +589,9 @@ var urlnotify = "{{ route('repair.readnotify')}}";
 	      nameTextStyle:{
 	          fontSize:'16',
 	          lineHeight: 55
-	      }
+	      },
+				
+ 	     minInterval:1,
 
 	  },
 	  series: [{
@@ -682,7 +686,9 @@ var urlnotify = "{{ route('repair.readnotify')}}";
  	      nameTextStyle:{
  	          fontSize:'16',
  	          lineHeight: 55
- 	      }
+ 	      },
+				
+ 	     minInterval:1,
 
  	  },
  	  series: [{
@@ -707,6 +713,7 @@ var urlnotify = "{{ route('repair.readnotify')}}";
  	    itemStyle: {
  	      shadowOffsetX: 10,
 				shadowBlur:4,
+
  	    }
  	  }],
  	  label:{

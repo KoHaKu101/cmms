@@ -200,6 +200,12 @@
 										 {{$PM_BAR_CHART[$i][0]->COUNT_MONTH12}},
 										@endfor
 									]
+
+	@php
+		$series_array = array('3'=>'3 เดือน','6'=>'6 เดือน','12'=>'12 เดือน');
+		$color				= array('3'=>'rgba(233, 233, 13,1)','6'=>'rgba(216, 0, 250,1)','12'=> 'rgba(54, 255, 0,1)',);
+		$shadowColor	= array('3'=>'rgba(102, 102, 4,1)','6'=>'rgba(73, 0, 85,1)','12'=> 'rgba(0, 72, 3,1)',);
+	@endphp
 	var option;
 	option = {
 	    tooltip: {
@@ -229,57 +235,65 @@
 				nameLocation:'center',
 				nameTextStyle:{
 						fontSize:'16',
-						lineHeight: 55
+						lineHeight: 55,
+
 				},
 	     type: 'value',
+			 
+	     minInterval:1,
 			 boundaryGap: [0, 1]
 	    },
 	    series: [
-				{
-						name: '3 เดือน',
-						type: 'bar',
-						barWidth:'30',
-						data: data_pm3,
-						label:{
-								show:true,
-								color:'black',
-								position:'top',
-						},
-						itemStyle:{
-	            color:'rgba(233, 233, 13,1)',
-	            shadowColor:'rgba(102, 102, 4,1)',
-	        	}
-				},
-	        {
-	            name: '6 เดือน',
-	            type: 'bar',
+				@foreach ($series_array as $key => $name)
+					{
+							name: '{{ $name }}',
+							type: 'bar',
 							barWidth:'30',
-	            data: data_pm6,
+							data: data_pm{{$key}},
 							label:{
-					 	      show:true,
-					 				color:'black',
-					 	      position:'top',
-					 	  },
+									show:true,
+									color:'black',
+									position:'top',
+							},
 							itemStyle:{
-		            color:'rgba(216, 0, 250,1)',
-		            shadowColor:'rgba(73, 0, 85,1)',
+		            color:'{{$color[$key]}}',
+		            shadowColor:'{{$shadowColor[$key]}}',
+								shadowOffsetX: 10,
+								shadowBlur:4,
 		        	}
-	        },
-	        {
-	            name: '12 เดือน',
-	            type: 'bar',
-							barWidth:'30',
-	            data: data_pm12,
-							label:{
-					 	      show:true,
-					 				color:'black',
-					 	      position:'top',
-					 	  },
-							itemStyle:{
-		            color:'rgba(54, 255, 0,1)',
-		            shadowColor:'rgba(0, 72, 3,1)',
-		        	}
-	        },
+					},
+				@endforeach
+
+	        // {
+	        //     name: '6 เดือน',
+	        //     type: 'bar',
+					// 		barWidth:'30',
+	        //     data: data_pm6,
+					// 		label:{
+					//  	      show:true,
+					//  				color:'black',
+					//  	      position:'top',
+					//  	  },
+					// 		itemStyle:{
+		      //       color:'rgba(216, 0, 250,1)',
+		      //       shadowColor:'rgba(73, 0, 85,1)',
+		      //   	}
+	        // },
+	        // {
+	        //     name: '12 เดือน',
+	        //     type: 'bar',
+					// 		barWidth:'30',
+	        //     data: data_pm12,
+					// 		label:{
+					//  	      show:true,
+					//  				color:'black',
+					//  	      position:'top',
+					//  	  },
+					// 		itemStyle:{
+		      //       color:'rgba(54, 255, 0,1)',
+		      //       shadowColor:'rgba(0, 72, 3,1)',
+		      //   	}
+	        // },
 
 
 	    ]
@@ -323,6 +337,8 @@
 						lineHeight: 55
 				},
 			 type: 'value',
+			 
+	     minInterval:1,
 					boundaryGap: [0,1]
 			},
 			series: [
