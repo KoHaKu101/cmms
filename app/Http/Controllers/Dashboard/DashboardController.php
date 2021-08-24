@@ -201,7 +201,7 @@ class DashboardController extends Controller
 
     return Response()->json(['html'=>$html,'LINE' => $ARRAY_LINE[$LINE]]);
   }
-  public function 
+  // public function 
   public function Notification(Request $request){
     $data = MachineRepairREQ::select('*')->where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(4)->get();
     return response()->json(['datarepair' => $data]);
