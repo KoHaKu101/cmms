@@ -211,8 +211,14 @@ class DashboardController extends Controller
       $ARRAY_REPAIR_UNID[$row->UNID]          = $row->UNID;
     }
     // $DATA_MACHINE       = Machine::whereIn('UNID',$ARRAY_MACHINE_UNID)->get();
-    $DATA_REPAIR        = MachineRepairREQ::selectraw('MAX(UNID) as UNID')->whereIn('UNID',$ARRAY_REPAIR_UNID)->dd();
-
+    $DATA_REPAIR        = MachineRepairREQ::select('MACHINE_CODE')
+                                          ->selectraw('MAX(MACHINE_UNID) as MACHINE_UNID,MAX(INSPECTION_RESULT_TIME) as INSPECTION_RESULT_TIME
+                                                      ,MAX(SPAREPART_RESULT_TIME) as SPAREPART_RESULT_TIME,MAX(WORKERIN_RESULT_TIME) as WORKERIN_RESULT_TIME
+                                                      ,MAX(MACHINE_CODE) as MACHINE_CODE,MAX(MACHINE_NAME) as MACHINE_NAME
+                                                      ,MAX(REPAIR_SUBSELECT_NAME) as REPAIR_SUBSELECT_NAME,MAX(REPAIR_DETAIL) as REPAIR_DETAIL
+                                                      ,MAX(DOWNTIME) as DOWNTIME,MAX(dbo.decode_utf8(CLOSE_BY)) as CLOSE_BY_TH')
+                                          ->whereIn('UNID',$ARRAY_REPAIR_UNID)
+                                          ->groupBy('MACHINE_CODE')->take(7)->get();
 
     return view('machine.dashboard.downtime',compact('DATA_REPAIR'));
   }

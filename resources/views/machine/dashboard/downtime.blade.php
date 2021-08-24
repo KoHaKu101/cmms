@@ -109,16 +109,16 @@
 									<table class="table table-bordered table-head-bg-info table-bordered-bd-info">
 										<thead>
 											<tr>
-												<th >No.</th>
-												<th >MC-CODE</th>
-												<th >MC-NAME</th>
-												<th >สาเหตุ / อาการที่เสีย</th>
-												<th >วิธีแก้ไข</th>
-												<th >เวลาตรวจสอบ</th>
-												<th >เวลาซ่อม</th>
-												<th >เวลาซื้ออะไหล่</th>
-												<th >รวม</th>
-												<th >ผู้ดำเนินการ</th>
+												<th width="2%">No.</th>
+												<th width="7%" class="text-center">MC-CODE</th>
+												<th width="15%">MC-NAME</th>
+												<th width="15%">สาเหตุ / อาการที่เสีย</th>
+												<th width="15%">วิธีแก้ไข</th>
+												<th width="10%" class="text-center">ตรวจสอบ(นาที)</th>
+												<th width="10%" class="text-center">ซื้ออะไหล่(นาที)</th>
+												<th width="6%">ซ่อม(นาที)</th>
+												<th width="6%">รวม(นาที)</th>
+												<th width="12%">ผู้ดำเนินการ</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -131,16 +131,16 @@
 
 												@endphp
 												<tr>
-													<td >{{$index+1}}</td>
-													<td >{{$row->MACHINE_CODE}}</td>
+													<td class="text-center">{{$index+1}}</td>
+													<td class="text-center">{{$row->MACHINE_CODE}}</td>
 													<td >{{$row->MACHINE_NAME}}</td>
 													<td >{{$row->REPAIR_SUBSELECT_NAME}}</td>
 													<td >{{$row->REPAIR_DETAIL}}</td>
-													<td >{{$INSPECTION_RESULT_TIME}}</td>
-													<td >{{$WORK_RESULT_TIME}}</td>
-													<td >{{$SPAREPART_RESULT_TIME}}</td>
-													<td >{{$row->DOWNTIME}}</td>
-													<td >ผู้ดำเนินการ</td>
+													<td class="text-center">{{$INSPECTION_RESULT_TIME}}</td>
+													<td class="text-center">{{$SPAREPART_RESULT_TIME}}</td>
+													<td class="text-center">{{$WORK_RESULT_TIME}}</td>
+													<td class="text-center">{{$row->DOWNTIME}}</td>
+													<td >{{$row->CLOSE_BY_TH}}</td>
 												</tr>
 											@endforeach
 										</tbody>
