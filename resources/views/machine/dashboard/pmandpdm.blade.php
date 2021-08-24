@@ -54,7 +54,14 @@
 						</div>
 				</div>
 			</div>
-			<div class="page-inner mt--5">
+			<div class="page-inner mt--4">
+				<div class="row">
+					<div class="col-md-3 my-2">
+						<a href="{{ route('dashboard.dashboard') }}">
+							<button class="btn btn-warning btn-sm"><i class="fas fa-arrow-left mx-2"></i>Back</button>
+						</a>
+					</div>
+				</div>
 				<div class="row">
 					<div class="col-sm-12">
 						<div class="card">
@@ -95,16 +102,16 @@
 								<div class="row">
 									@foreach ($BTN_COLOR_LINE as $name => $color)
 										<button class="btn {{$color}} btn-sm ml-auto mr-auto" onclick="changepmline(this)"
-										id="{{ 'BTN-L'.$name }}"
+										id="{{ 'BTN-PM-L'.$name }}"
 										data-line="{{ 'L'.$name }}">{{ 'LINE '.$name }}</button>
 									@endforeach
 								</div>
 							</div>
 							<div class="card-body">
-								<div class="row" id="NAME_TABLE">
+								<div class="row" id="NAME_PM_TABLE">
 									<h5>ตารางรายการ PM ของ Line 1</h5>
 								</div>
-								<div class="table" id="CHANGE_TABLE">
+								<div class="table" id="CHANGE_PM_TABLE">
 								</div>
 							</div>
 						</div>
@@ -140,6 +147,36 @@
 						</div>
 					</div>
 
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="card">
+							<div class="card-header bg-primary ">
+								<div class="row">
+									<div class="card-title text-white">
+										กรุณาเลือก PDM ในแต่ละ Line
+									</div>
+								</div>
+
+							</div>
+							<div class="card-header">
+								<div class="row">
+									@foreach ($BTN_COLOR_LINE as $name => $color)
+										<button class="btn {{$color}} btn-sm ml-auto mr-auto" onclick="changepdmline(this)"
+										id="{{ 'BTN-PDM-L'.$name }}"
+										data-line="{{ 'L'.$name }}">{{ 'LINE '.$name }}</button>
+									@endforeach
+								</div>
+							</div>
+							<div class="card-body">
+								<div class="row" id="NAME_PDM_TABLE">
+
+								</div>
+								<div class="table" id="CHANGE_PDM_TABLE">
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 
@@ -239,7 +276,7 @@
 
 				},
 	     type: 'value',
-			 
+
 	     minInterval:1,
 			 boundaryGap: [0, 1]
 	    },
@@ -263,45 +300,11 @@
 		        	}
 					},
 				@endforeach
-
-	        // {
-	        //     name: '6 เดือน',
-	        //     type: 'bar',
-					// 		barWidth:'30',
-	        //     data: data_pm6,
-					// 		label:{
-					//  	      show:true,
-					//  				color:'black',
-					//  	      position:'top',
-					//  	  },
-					// 		itemStyle:{
-		      //       color:'rgba(216, 0, 250,1)',
-		      //       shadowColor:'rgba(73, 0, 85,1)',
-		      //   	}
-	        // },
-	        // {
-	        //     name: '12 เดือน',
-	        //     type: 'bar',
-					// 		barWidth:'30',
-	        //     data: data_pm12,
-					// 		label:{
-					//  	      show:true,
-					//  				color:'black',
-					//  	      position:'top',
-					//  	  },
-					// 		itemStyle:{
-		      //       color:'rgba(54, 255, 0,1)',
-		      //       shadowColor:'rgba(0, 72, 3,1)',
-		      //   	}
-	        // },
-
-
 	    ]
 	};
 	option && chart_Plan_pm.setOption(option);
 </script>
 <script type="text/javascript">
-
 	var Plan_pdm 		   = document.getElementById('PlanPdm');
 	var chart_Plan_pdm = echarts.init(Plan_pdm);
 	var option;
@@ -336,13 +339,11 @@
 						fontSize:'16',
 						lineHeight: 55
 				},
-			 type: 'value',
-			 
-	     minInterval:1,
-					boundaryGap: [0,1]
+			 	type: 'value',
+	     	minInterval:1,
+				boundaryGap: [0,1]
 			},
-			series: [
-				{
+			series: [{
 						name: '3 เดือน',
 						type: 'bar',
 						barWidth:'40',
@@ -362,14 +363,13 @@
 							shadowBlur:4,
 								shadowColor:'rgba(46, 7, 88,1)',
 						}
-				},
-			],
-
+				}],
 	};
 	option && chart_Plan_pdm.setOption(option);
 </script>
 <script>
-	$('#BTN-L1').click();
+	$('#BTN-PM-L1').click();
+	$('#BTN-PDM-L1').click();
 	function changepmline(thisdata){
 		var Line = $(thisdata).data('line');
 		var url  = "{{ route('dashboard.tablepm') }}";
@@ -379,8 +379,8 @@
 			data:{LINE:Line},
 			datatype: 'json',
 			success:function(result){
-				$('#CHANGE_TABLE').html(result.html);
-				$('#NAME_TABLE').html('ตารางรายการ PM ของ'+result.LINE);
+				$('#CHANGE_PM_TABLE').html(result.html);
+				$('#NAME_PM_TABLE').html('<h5>ตารางรายการ PM ของ '+result.LINE+'</h5>');
 				$('#data_table_pm').DataTable({
 						"pageLength": 5,
 						"bLengthChange": false,
@@ -392,6 +392,31 @@
 					]
 					});
 					chart_circle_pm(result.LINE,result.data['complete'],result.data['waiting'],result.data['nocomplete']);
+			}
+
+		});
+	}
+	function changepdmline(thisdata){
+		var Line = $(thisdata).data('line');
+		var url  = "{{ route('dashboard.tablepdm') }}";
+		$.ajax({
+			type:'GET',
+			url: url,
+			data:{LINE:Line},
+			datatype: 'json',
+			success:function(result){
+				$('#CHANGE_PDM_TABLE').html(result.html);
+				$('#NAME_PDM_TABLE').html('<h5>ตารางรายการ PDM ของ '+result.LINE+'</h5>');
+				$('#data_table_pdm').DataTable({
+						"pageLength": 10,
+						"bLengthChange": false,
+						"bFilter": true,
+						"bInfo": false,
+						"bAutoWidth": false,
+						columnDefs: [
+						{ orderable: false, targets:[0,1,2,3,4,5,6] }
+					]
+					});
 			}
 
 		});

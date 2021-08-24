@@ -101,11 +101,12 @@ Route::get('/machine/dashboard/dashboard'   ,[DashboardController::class,'Dashbo
 Route::get('/machine'                       ,[DashboardController::class,'Dashboard']);
 Route::get('/machine/dashboard'             ,[DashboardController::class,'Dashboard'])->name('dashboard.dashboard');
 Route::get('/dashboard'                     ,[DashboardController::class,'Dashboard'])->name('dashboard');
-Route::get('/dashboard/pm'                  ,[DashboardController::class,'PM'])->name('dashboard.pm');
-Route::get('/dashboard/tablepm'             ,[DashboardController::class,'TablePM'])->name('dashboard.tablepm');
+Route::get('/dashboard/pm'                  ,[DashboardController::class,'PM'])       ->name('dashboard.pm');
+Route::get('/dashboard/tablepm'             ,[DashboardController::class,'TablePM'])  ->name('dashboard.tablepm');
+Route::get('/dashboard/tablepdm'            ,[DashboardController::class,'TablePDM']) ->name('dashboard.tablepdm');
 //Cookie
 Route::post('/cookie/set',[CookieController::class,'setCookie'])->name('cookie.set');
-Route::get('/cookie/get', [CookieController::class,'getCookie'])->name('cookie.get');
+Route::get('/cookie/get' ,[CookieController::class,'getCookie'])->name('cookie.get');
 //repair for pd
 Route::get('machine/pd/repairlist'          ,[PDRepairController::class,'Index'])        ->name('pd.repairlist');
 Route::get('machine/pd/fetchdata'           ,[PDRepairController::class,'FetchData'])    ->name('pd.fetchdata');

@@ -111,7 +111,8 @@ class DashboardController extends Controller
   public function TablePM(Request $request){
     $LINE = $request->LINE;
     $ARRAY_LINE = array('L1'=>'LINE 1','L2'=>'LINE 2','L3'=>'LINE 3','L4'=>'LINE 4','L5'=>'LINE 5','L6'=>'LINE 6',);
-    $DATA_PM_TABLE = MachinePlanPM::where('MACHINE_LINE','=',$LINE)->where('PLAN_YEAR','=',date('Y'))->where('PLAN_MONTH','=',date('n'))->get();
+    $DATA_PM_TABLE = MachinePlanPM::where('MACHINE_LINE','=',$LINE)->where('PLAN_YEAR','=',date('Y'))->where('PLAN_MONTH','=',date('n'))
+                                  ->orderBy('PLAN_STATUS','DESC')->orderBy('MACHINE_CODE')->get();
     $DATA_RESULT   = MachinePlanPm::selectraw("sum(CASE WHEN PLAN_STATUS = 'COMPLETE' and MACHINE_LINE = '$LINE'THEN 1 ELSE 0 END) as COMPLETE,
                                                sum(CASE WHEN PLAN_STATUS = 'EDIT'     and MACHINE_LINE = '$LINE'THEN 1 ELSE 0 END) as EDIT,
                                                sum(CASE WHEN PLAN_STATUS = 'NEW'      and MACHINE_LINE = '$LINE'THEN 1 ELSE 0 END) as NOCOMPLETE")
@@ -150,6 +151,66 @@ class DashboardController extends Controller
       </table>';
 
     return Response()->json(['html'=>$html,'LINE' => $ARRAY_LINE[$LINE],'data'=>$RESULT]);
+  }
+  public function TablePDM(Request $request){
+
+    $LINE           = $request->LINE;
+    $ARRAY_LINE     = array('L1'=>'LINE 1','L2'=>'LINE 2','L3'=>'LINE 3','L4'=>'LINE 4','L5'=>'LINE 5','L6'=>'LINE 6',);
+    $DATA_PDM_TABLE = SparePartPlan::where('MACHINE_LINE','=',$LINE)->where('DOC_YEAR','=',date('Y'))
+                                    ->where('DOC_MONTH','=',date('n'))->orderBy('STATUS','DESC')->orderBy('MACHINE_CODE')->get();
+    $MACHINE        = Machine::select('UNID','MACHINE_NAME');
+    $html = '<table class="table table-bordered table-head-bg-info table-bordered-bd-info " id="data_table_pdm">
+      <thead>
+        <tr>
+          <th >#</th>
+          <th width="7%" class="text-center">MC-CODE</th>
+          <th width="20%">MC-NAME</th>
+          <th width="20%">SparePart Name</th>
+          <th width="6%">ตามแผน</th>
+          <th width="6%">ที่เปลี่ยน</th>
+          <th width="7%">รอบ(เดือน)</th>
+          <th width="11%">สถานะ</th>
+          <th width="12%">ผู้ตรวจสอบ</th>
+          <th width="16%">วันที่ตรวจสอบ</th>
+        </tr>
+      </thead>
+      <tbody>';
+
+        foreach ($DATA_PDM_TABLE as $key => $row){
+
+
+
+
+
+
+
+
+
+            $STATUS       = $row->STATUS;
+            $STATUS_TEXT  = $STATUS == 'COMPLETE' ? 'ตรวจสอบแล้ว' : ($STATUS == 'EDIT' ? 'กำลังดำเนินการ' : 'ยังไม่ได้ตรวจสอบ');
+            $STATUS_BG 	  = $STATUS == 'COMPLETE' ? 'bg-success' : ($STATUS == 'EDIT' ? 'bg-warning' : 'bg-danger');
+            $CHECK_BY     = isset($row->USER_CHECK) ? $row->USER_CHECK : '-';
+            $MACHINE_NAME = $MACHINE->where('UNID','=',$row->MACHINE_UNID)->get();
+            $MACHINE_NAME = isset($MACHINE_NAME[0]->MACHINE_NAME) ? $MACHINE_NAME[0]->MACHINE_NAME: '-';
+            $COMPLETE_DATE = $row->COMPLETE_DATE == '1900-01-01' ? '-' : $row->COMPLETE_DATE;
+      $html.='<tr>
+                <td class="text-center">'. $key+1 .'</td>
+                <td class="text-center">'.$row->MACHINE_CODE.'</td>
+                <td >'.$MACHINE_NAME.'</td>
+                <td >'.$row->SPAREPART_NAME.'</td>
+                <td class="text-center">'.$row->PLAN_QTY.'</td>
+                <td class="text-center">'.$row->ACT_QTY.'</td>
+                <td class="text-center">'.$row->PERIOD.'</td>
+                <td class="'. $STATUS_BG .' text-white" >'.$STATUS_TEXT.'</td>
+                <td>'.$CHECK_BY.'</td>
+                <td>'.$COMPLETE_DATE.'</td>
+              </tr>';
+
+        }
+    $html.='</tbody>
+      </table>';
+
+    return Response()->json(['html'=>$html,'LINE' => $ARRAY_LINE[$LINE]]);
   }
   public function Notification(Request $request){
     $data = MachineRepairREQ::select('*')->where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(4)->get();
