@@ -425,9 +425,6 @@
 													 ,12:{{  $data_uncomplete[12]}},}
 		chart_pm(value_complete,value_uncomplete);
 	});
-	// $('#PM_DASHBOARD').on('click',function(){
-	// 	window.location.href = "{{ route('dashboard.pm') }}";
-	// });
 	$("#SELECT_CHART").on('change',function(){
 		var slectval = $('#SELECT_CHART').val();
 		if (slectval == 'PDM') {

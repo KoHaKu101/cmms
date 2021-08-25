@@ -33,7 +33,8 @@ class DashboardController extends Controller
                                         ->orderBy('PRIORITY','ASC')->take(4)->get();
     $data_downtime      = MachineRepairREQ::select('MACHINE_CODE')->selectraw('MAX(DOWNTIME) as DOWNTIME')
                                           ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
-                                          ->groupBy('MACHINE_CODE')->orderBy('DOWNTIME','DESC')->take(7)->get();
+                                          ->groupBy('MACHINE_CODE')->orderBy('DOWNTIME','DESC')
+                                          ->where('CLOSE_STATUS','=',1)->take(7)->get();
     $data_count_repair  = MachineRepairREQ::selectraw('MACHINE_CODE,COUNT(MACHINE_CODE) as MACHINE_CODE_COUNT')
                                           ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
                                           ->groupBy('MACHINE_CODE')->orderBy('MACHINE_CODE_COUNT','DESC')->get();
@@ -203,14 +204,20 @@ class DashboardController extends Controller
   public function Downtime(Request $request){
     $DATA_DOWNTIME      = MachineRepairREQ::select('UNID')->selectraw('MAX(DOWNTIME) as DOWNTIME')
                                           ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
-                                          ->groupBy('UNID')->groupBy('UNID')->orderBy('DOWNTIME','DESC')->take(7)->get();
-    // $ARRAY_MACHINE_UNID = array();
+                                          ->where('CLOSE_STATUS','=',1)
+                                          ->groupBy('UNID')->orderBy('DOWNTIME','DESC')->take(7)->get();
+    $DATA_SUM_DOWNTIME  = MachineRepairREQ::select('MACHINE_CODE','MACHINE_UNID','MACHINE_NAME')->selectraw('SUM(DOWNTIME) as DOWNTIME')->where('DOC_YEAR','=',date('Y'))
+                                          ->where('DOC_MONTH','=',date('n'))->where('CLOSE_STATUS','=',1)->groupBy('MACHINE_CODE')
+                                          ->groupBy('MACHINE_UNID')->groupBy('MACHINE_NAME')
+                                          ->orderBy('DOWNTIME','DESC')->take(7)->get();
+
+    $DATA_REPAIR_SUM    = MachineRepairREQ::select('MACHINE_UNID','DOWNTIME','REPAIR_SUBSELECT_NAME','REPAIR_DETAIL')
+                                          ->where('DOC_YEAR','=',date('Y'))
+                                          ->where('DOC_MONTH','=',date('n'))->orderBy('DOWNTIME','DESC')->get();
     $ARRAY_REPAIR_UNID  = array();
     foreach ($DATA_DOWNTIME as $index => $row) {
-      // $ARRAY_MACHINE_UNID[$row->MACHINE_UNID] = $row->MACHINE_UNID;
       $ARRAY_REPAIR_UNID[$row->UNID]          = $row->UNID;
     }
-    // $DATA_MACHINE       = Machine::whereIn('UNID',$ARRAY_MACHINE_UNID)->get();
     $DATA_REPAIR        = MachineRepairREQ::select('MACHINE_CODE')
                                           ->selectraw('MAX(MACHINE_UNID) as MACHINE_UNID,MAX(INSPECTION_RESULT_TIME) as INSPECTION_RESULT_TIME
                                                       ,MAX(SPAREPART_RESULT_TIME) as SPAREPART_RESULT_TIME,MAX(WORKERIN_RESULT_TIME) as WORKERIN_RESULT_TIME
@@ -220,7 +227,14 @@ class DashboardController extends Controller
                                           ->whereIn('UNID',$ARRAY_REPAIR_UNID)
                                           ->groupBy('MACHINE_CODE')->take(7)->get();
 
-    return view('machine.dashboard.downtime',compact('DATA_REPAIR'));
+    $array_downtime_count = array();
+    $array_downtime_name  = array();
+
+    for($i = 0; $i < 7 ; $i++){
+      $array_downtime_count[$i+1] = isset($DATA_SUM_DOWNTIME[$i]->DOWNTIME) ?  $DATA_SUM_DOWNTIME[$i]->DOWNTIME : '0';
+      $array_downtime_name[$i+1]  = isset($DATA_SUM_DOWNTIME[$i]->MACHINE_CODE) ?  $DATA_SUM_DOWNTIME[$i]->MACHINE_CODE : '-';
+    }
+    return view('machine.dashboard.downtime',compact('DATA_REPAIR','array_downtime_count','array_downtime_name','DATA_REPAIR_SUM','DATA_SUM_DOWNTIME'));
   }
   public function Notification(Request $request){
     $data = MachineRepairREQ::select('*')->where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(4)->get();

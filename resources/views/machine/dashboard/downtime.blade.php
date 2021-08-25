@@ -93,7 +93,6 @@
 											<div class="mr-auto">
 												เดือน {{$CURRENT_MONTH}}
 											</div>
-
 										</div>
 									</div>
 									<div class="col-md-4">
@@ -151,10 +150,82 @@
 					</div>
 				</div>
 			</div>
+			<div class="page-inner mt--5">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="card">
+							<div class="card-header bg-primary">
+								<div class="card-title">
+									<div class="row">
+										<div class="col-md-8 ">
+											<div class="card-title form-inline text-white">
+												<div class="text-left mr-auto ">
+													รายละเอียด DownTime สูงสุด
+												</div>
+												<div class="mr-auto">
+													เดือน {{$CURRENT_MONTH}}
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="card-body">
+								<div id="downtime_sum_chart" style="width:100%; height:380%;"></div>
+							</div>
+							<div class="card-body">
+								<div class="table">
+									<table class="table table-bordered table-head-bg-info table-bordered-bd-info" id="table_dowtime">
+										<thead>
+											<tr>
+												<th width="2%">No.</th>
+												<th width="7%" class="text-center">MC-CODE</th>
+												<th width="15%">MC-NAME</th>
+												<th width="15%">สาเหตุ / อาการที่เสีย</th>
+												<th width="15%">วิธีแก้ไข</th>
+												<th width="6%">เวลา(นาที)</th>
+												<th width="6%">รวม(นาที)</th>
 
+											</tr>
+										</thead>
+										<tbody>
+											@foreach ($DATA_SUM_DOWNTIME as $sub_index => $sub_row)
+												@php
+													$DOWNTIME_ALL 				 = 0;
+													$REPAIR_SUM   				 = $DATA_REPAIR_SUM->where('MACHINE_UNID','=',$sub_row->MACHINE_UNID);
+													$ROW_SPAN   					 = count($REPAIR_SUM);
+													$number 							 = 1;
+													$NUMBER_SUBSELECT_NAME = 1;
+													$NUMBER_REPAIR_DETAIL  = 1;
+												@endphp
 
+												@foreach ($REPAIR_SUM  as $subsub_index => $subsub_row)
 
+													@php
+														$DOWNTIME = $subsub_row->DOWNTIME == 0 ? '-' : $subsub_row->DOWNTIME;
+													@endphp
+													<tr >
+														<td class="text-center" >{{ $sub_index+1 }}</td>
+														<td class="text-center" >{{$sub_row->MACHINE_CODE}}</td>
+														<td >{{$sub_row->MACHINE_NAME}}</td>
+														<td>{{$NUMBER_SUBSELECT_NAME++ .'. '.$subsub_row->REPAIR_SUBSELECT_NAME."\n"}}</td>
+														<td >{{$NUMBER_REPAIR_DETAIL++ .'. '.$subsub_row->REPAIR_DETAIL."\n"}}</td>
+														<td class="text-center" >{{ $DOWNTIME }}</td>
+														{{-- @if ($number++ == 1) --}}
+															<td class="text-center" >{{$sub_row->DOWNTIME}}</td>
+														{{-- @endif --}}
+														</tr>
+												@endforeach
+											@endforeach
+										</tbody>
+									</table>
+								</div>
 
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
 		<footer class="footer">
 			<div class="container-fluid">
@@ -193,7 +264,109 @@
 <script src="{{asset('/assets/js/plugin/chart.js/echarts.js')}}"></script>
 <script src="{{ asset('../../assets/js/plugin/datatables/datatables.min.js')}}"></script>
 <script src="{{ asset('assets/js/btntop.js') }}"></script>
+<script src="{{ asset('assets./js/dataTables.rowsGroup.js')}}"></script>
 
+<script>
+	var Downtime = document.getElementById('downtime_sum_chart');
+	var downtime_sum_chart = echarts.init(Downtime);
+	var color_rgba = {1:'rgba(255, 45, 45, 1)'
+									 ,2:'rgba(255, 45, 217, 1)'
+									 ,3:'rgba(255, 131, 40, 1)'
+									 ,4:'rgba(255, 255, 40, 1)'
+									 ,5:'rgba(24, 137, 231, 1)'
+									 ,6:'rgba(49, 249, 58, 1)'
+									 ,7:'rgba(155, 155, 155, 1)'}
+	var color_shadow = {1:"rgba(89, 4, 4, 1)"
+										 ,2:"rgba(93, 16, 79,1)"
+										 ,3:"rgba(144, 61, 0,1)"
+										 ,4:"rgba(134, 134, 0,1)"
+										 ,5:"rgba(9, 90, 158,1)"
+										 ,6:"rgba(1, 171, 9,1)"
+										 ,7:"rgba(55, 55, 55,1)"}
+	var data = [
+							@for ($i=1; $i < 8; $i++)
+							{value:"{{$array_downtime_count[$i]}}",
+			        	itemStyle:{
+			            color:color_rgba['{{$i}}'],
+			            shadowColor:color_shadow['{{$i}}'] ,
+			        	}
+							},
+							@endfor
+						 ]
+	var option;
+	option = {
+		    tooltip: {
+						show:true,
+						trigger: 'axis',
+						axisPointer: {
+								type: 'shadow'
+						}
+		    },
+				legend: {
+			      show:true,
+			  },
+		    grid: {
+		        left: '6%',
+		        right: '0%',
+		        bottom: '6%',
+						top:'3%',
+		        containLabel: true
+		    },
+
+		    xAxis: {
+						show:true,
+
+		        data: [@for ($i=1; $i < 8; $i++)
+										'{{ $array_downtime_name[$i] }}',
+									@endfor],
+
+		    },
+		    yAxis: {
+					name:'ระยะเวลา (นาที)',
+					nameLocation:'center',
+					nameTextStyle:{
+							fontSize:'16',
+							lineHeight: 55,
+
+					},
+		     type: 'value',
+		     minInterval:1,
+		    },
+		    series: [
+						{
+								type: 'bar',
+								barWidth:'30',
+								data: data,
+								label:{
+										show:true,
+										color:'black',
+										position:'top',
+								},
+								itemStyle:{
+									shadowOffsetX: 10,
+									shadowBlur:4,
+			        	}
+						},
+
+		    ]
+		};
+		option && downtime_sum_chart.setOption(option);
+</script>
+<script>
+$('#table_dowtime').DataTable({
+		'rowsGroup': [0,1,2,6],
+		"pageLength": 20,
+		"bLengthChange": false,
+		"bFilter": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		searching: false,
+		paging: false,
+		columnDefs: [
+		{ orderable: false, targets:[0,1,2,3,4,5,6] }
+	]
+	});
+</script>
 
 
 @stop
