@@ -360,10 +360,7 @@
 							<div class="row">
 								<div class="col-md-12 form-inline">
 									<div class="card-title">รายการแจ้งซ่อมสูงสุด </div>
-
 									<div class="card-title mx-4">เดือน {{ $CURRENT_MONTH  }}</div>
-								{{-- </div> --}}
-								{{-- <div class="col-md-3 d-flex justify-content-end"> --}}
 									<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm ml-auto" id="pills-tab" role="tablist">
 										<li class="nav-item">
 											<a class="nav-link active" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">See More...</a>
@@ -495,7 +492,7 @@
 						$MACHINE_CODE = $downtime_machine_code[$i];
 					}
 				@endphp
-					'{{$MACHINE_CODE}}',
+					'{{$MACHINE_CODE}} ',
 				@endfor
 			],
 	    show:true,

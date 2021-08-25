@@ -11,6 +11,7 @@ use App\Http\Controllers\SettingMenu\MenuController;
 use App\Http\Controllers\SettingMenu\MenuSubController;
 //************************* Controller *******************************
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Dashboard\PDFController;
 use App\Http\Controllers\Dashboard\CalendarController;
 use App\Http\Controllers\Machine\MachineController;
 use App\Http\Controllers\Machine\PersonalController;
@@ -105,6 +106,7 @@ Route::get('/dashboard/pm'                  ,[DashboardController::class,'PM']) 
 Route::get('/dashboard/tablepm'             ,[DashboardController::class,'TablePM'])  ->name('dashboard.tablepm');
 Route::get('/dashboard/tablepdm'            ,[DashboardController::class,'TablePDM']) ->name('dashboard.tablepdm');
 Route::get('/dashboard/downtime'            ,[DashboardController::class,'Downtime']) ->name('dashboard.downtime');
+Route::get('/dashboard/downtime/print'      ,[PDFController::class,'PDFDowntime']) ->name('dashboard.downtime.print');
 //Cookie
 Route::post('/cookie/set',[CookieController::class,'setCookie'])->name('cookie.set');
 Route::get('/cookie/get' ,[CookieController::class,'getCookie'])->name('cookie.get');

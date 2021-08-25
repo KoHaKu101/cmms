@@ -98,7 +98,7 @@
 									<div class="col-md-4">
 										<div class="form-inline">
 											<button class="btn btn-secondary btn-sm mx-1 ml-auto"><i class="fas fa-file-excel fa-lg mx-1"></i>Excel</button>
-											<button class="btn btn-secondary btn-sm mx-1 "><i class="fas fa-print fa-lg mx-1"></i> Print</button>
+											<button class="btn btn-secondary btn-sm mx-1 "id="BTN_PRINT_DOWNTIME" data-type="downtime"><i class="fas fa-print fa-lg mx-1"></i> Print</button>
 										</div>
 									</div>
 								</div>
@@ -160,7 +160,7 @@
 										<div class="col-md-8 ">
 											<div class="card-title form-inline text-white">
 												<div class="text-left mr-auto ">
-													รายละเอียด DownTime สูงสุด
+													 DownTime รวม สูงสุด
 												</div>
 												<div class="mr-auto">
 													เดือน {{$CURRENT_MONTH}}
@@ -172,6 +172,35 @@
 							</div>
 							<div class="card-body">
 								<div id="downtime_sum_chart" style="width:100%; height:380%;"></div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div class="card">
+							<div class="card-header bg-primary">
+								<div class="card-title">
+									<div class="row">
+										<div class="col-md-8 ">
+											<div class="card-title form-inline text-white">
+												<div class="text-left mr-auto ">
+													 รายละเอียด DownTime รวม สูงสุด
+												</div>
+												<div class="mr-auto">
+													เดือน {{$CURRENT_MONTH}}
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="form-inline">
+												<button class="btn btn-secondary btn-sm mx-1 ml-auto"><i class="fas fa-file-excel fa-lg mx-1"></i>Excel</button>
+												<button class="btn btn-secondary btn-sm mx-1 "><i class="fas fa-print fa-lg mx-1"></i> Print</button>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 							<div class="card-body">
 								<div class="table">
@@ -198,9 +227,7 @@
 													$NUMBER_SUBSELECT_NAME = 1;
 													$NUMBER_REPAIR_DETAIL  = 1;
 												@endphp
-
 												@foreach ($REPAIR_SUM  as $subsub_index => $subsub_row)
-
 													@php
 														$DOWNTIME = $subsub_row->DOWNTIME == 0 ? '-' : $subsub_row->DOWNTIME;
 													@endphp
@@ -211,10 +238,8 @@
 														<td>{{$NUMBER_SUBSELECT_NAME++ .'. '.$subsub_row->REPAIR_SUBSELECT_NAME."\n"}}</td>
 														<td >{{$NUMBER_REPAIR_DETAIL++ .'. '.$subsub_row->REPAIR_DETAIL."\n"}}</td>
 														<td class="text-center" >{{ $DOWNTIME }}</td>
-														{{-- @if ($number++ == 1) --}}
-															<td class="text-center" >{{$sub_row->DOWNTIME}}</td>
-														{{-- @endif --}}
-														</tr>
+														<td class="text-center" >{{$sub_row->DOWNTIME}}</td>
+													</tr>
 												@endforeach
 											@endforeach
 										</tbody>
@@ -226,7 +251,6 @@
 					</div>
 				</div>
 			</div>
-
 		<footer class="footer">
 			<div class="container-fluid">
 				<nav class="pull-left">
@@ -264,7 +288,7 @@
 <script src="{{asset('/assets/js/plugin/chart.js/echarts.js')}}"></script>
 <script src="{{ asset('../../assets/js/plugin/datatables/datatables.min.js')}}"></script>
 <script src="{{ asset('assets/js/btntop.js') }}"></script>
-<script src="{{ asset('assets./js/dataTables.rowsGroup.js')}}"></script>
+<script src="{{ asset('assets/js/dataTables.rowsGroup.js')}}"></script>
 
 <script>
 	var Downtime = document.getElementById('downtime_sum_chart');
@@ -353,6 +377,12 @@
 		option && downtime_sum_chart.setOption(option);
 </script>
 <script>
+$('#BTN_PRINT_DOWNTIME').on('click',function(){
+	var type = $(this).data('type');
+	var url  = "{{ route('dashboard.downtime.print') }}?TYPE="+type;
+	window.open(url,'PDFDowntime','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');
+
+});
 $('#table_dowtime').DataTable({
 		'rowsGroup': [0,1,2,6],
 		"pageLength": 20,

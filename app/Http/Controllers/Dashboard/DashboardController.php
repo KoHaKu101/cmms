@@ -212,8 +212,8 @@ class DashboardController extends Controller
                                           ->orderBy('DOWNTIME','DESC')->take(7)->get();
 
     $DATA_REPAIR_SUM    = MachineRepairREQ::select('MACHINE_UNID','DOWNTIME','REPAIR_SUBSELECT_NAME','REPAIR_DETAIL')
-                                          ->where('DOC_YEAR','=',date('Y'))
-                                          ->where('DOC_MONTH','=',date('n'))->orderBy('DOWNTIME','DESC')->get();
+                                          ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
+                                          ->where('CLOSE_STATUS','=',1)->orderBy('DOWNTIME','DESC')->get();
     $ARRAY_REPAIR_UNID  = array();
     foreach ($DATA_DOWNTIME as $index => $row) {
       $ARRAY_REPAIR_UNID[$row->UNID]          = $row->UNID;

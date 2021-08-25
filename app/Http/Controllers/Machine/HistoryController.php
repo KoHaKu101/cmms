@@ -284,7 +284,7 @@ class HistoryController extends Controller
      ,'MODIFY_TIME'        => Carbon::now()
     ]);
   }
-  
+
   public function SaveHistoryPDM($SPAREPART_PLAN_UNID,$DOWNTIME){
     $DATA_SPAREPART_PLAN = SparePartPlan::where('UNID','=',$SPAREPART_PLAN_UNID)->first();
     $DATA_MACHINE = Machine::where('UNID','=',$DATA_SPAREPART_PLAN->MACHINE_UNID)->first();
