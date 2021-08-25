@@ -68,6 +68,7 @@ class PDFController extends Controller
                                             ->where('DOC_MONTH','=',date('n'))->where('CLOSE_STATUS','=',1)->groupBy('MACHINE_CODE')
                                             ->groupBy('MACHINE_UNID')->groupBy('MACHINE_NAME')
                                             ->orderBy('DOWNTIME','DESC')->get();
+      dd($DATA_SUM_DOWNTIME);
       foreach ($DATA_SUM_DOWNTIME as $index => $row){
 
           $REPAIR_SUM   				 = $DATA_REPAIR->where('MACHINE_UNID','=',$row->MACHINE_UNID);
@@ -78,6 +79,7 @@ class PDFController extends Controller
         foreach ($REPAIR_SUM  as $sub_index => $sub_row){
             $DOWNTIME = $sub_row->DOWNTIME == 0 ? '-' : $sub_row->DOWNTIME;
             $this->pdf->setX(5);
+            $GET_Y = $this->pdf->getY();
             $number_count = $number++;
             if($number_count == $ROW_SPAN && $number_count == number_format($ROW_SPAN/2)){
               $this->pdf->Cell(8,  7, iconv('UTF-8', 'cp874', $index+1)               ,'BR',0,'C',0);
@@ -114,7 +116,15 @@ class PDFController extends Controller
             }else {
               $this->pdf->Cell(35, 7, iconv('UTF-8', 'cp874', '') ,'R',1,'C',0);
             }
-
+            if ($GET_Y == 198) {
+              $this->pdf->AddFont('THSarabunNew','','THSarabunNew.php');
+              $this->pdf->AddFont('THSarabunNew','B','THSarabunNew_b.php');
+              $this->pdf->SetFont('THSarabunNew','',14 );
+              $this->pdf->AliasNbPages();
+              $this->pdf->AddPage(['L','A4',]);
+              $this->pdf->Rect(5,5,287,200);
+              $this->pdf->header($TYPE);
+            }
 
         }
       }
