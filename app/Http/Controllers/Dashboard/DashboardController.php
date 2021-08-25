@@ -236,6 +236,9 @@ class DashboardController extends Controller
     }
     return view('machine.dashboard.downtime',compact('DATA_REPAIR','array_downtime_count','array_downtime_name','DATA_REPAIR_SUM','DATA_SUM_DOWNTIME'));
   }
+  public function MachineRepair(Request $request){
+    return View('machine/dashboard/machinerepair');
+  }
   public function Notification(Request $request){
     $data = MachineRepairREQ::select('*')->where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(4)->get();
     return response()->json(['datarepair' => $data]);

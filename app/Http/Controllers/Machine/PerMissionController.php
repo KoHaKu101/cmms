@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Auth;
 use File;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Machine\MachineRepairREQ;
 //******************** model ***********************
 use App\Models\User;
 //************** Package form github ***************
@@ -50,6 +51,29 @@ class PerMissionController extends Controller
  public function Home(Request $request){
    $DATA_USER = User::orderby('role')->get();
 
+   $DATA_REAIR = MachineRepairREQ::select('MACHINE_REPORT_NO')where('MACHINE_REPORT_NO','like','MRP6408-'.'%')->get();
+   dd($DATA_REAIR);
+   // $DATA_MACHINEREPAIRREQ = MachineRepairREQ::select('DOC_DATE','MACHINE_REPORT_NO')
+   //                                           ->whereRaw('MACHINE_REPORT_NO = (SELECT MAX(MACHINE_REPORT_NO) FROM [PMCS_CMMS_REPAIR_REQ]) ')
+   //                                           ->where('DOC_YEAR',date('Y'))->where('DOC_MONTH',date('m'))->first();
+
+
+   // if ($DATA_MACHINEREPAIRREQ != "") {
+   //     $DOC_DATE          = $DATA_MACHINEREPAIRREQ->DOC_DATE;
+   //     $REPORT_NO         = $DATA_MACHINEREPAIRREQ->MACHINE_REPORT_NO;
+   //     $EXPLOT            = str_replace('MRP'.Carbon::parse($DOC_DATE)->addyears(543)->format('ym').'-','',$REPORT_NO)+1;
+   //     $MACHINE_REPORT_NO = 'MRP' . Carbon::parse($DOC_DATE)->addyears(543)->format('ym'). sprintf('-%04d', $EXPLOT);
+   // }
+
+
+   foreach ($DATA_REAIR as $key => $row) {
+     $MACHINE_REPORT_NO = 'MRP'.date('y')+43 .date('m').'-'.sprintf('%04d', 1);
+     if ($row->MACHINE_REPORT_NO == $MACHINE_REPORT_NO) {
+       $row->MACHINE_REPORT_NO
+     }
+     dd($MACHINE_REPORT_NO);
+   }
+   // dd(count($DATA_REAIR));
    return View('machine.setting.permission.list',compact('DATA_USER'));
  }
  public function Store(Request $request){

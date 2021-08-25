@@ -550,12 +550,14 @@ class RepairCloseFormController extends Controller
                                               ->whereRaw('MACHINE_REPORT_NO = (SELECT MAX(MACHINE_REPORT_NO) FROM [PMCS_CMMS_REPAIR_REQ]) ')
                                               ->where('DOC_YEAR',date('Y'))->where('DOC_MONTH',date('m'))->first();
     $MACHINE_REPORT_NO = 'MRP'.Carbon::now()->addyears(543)->isoFormat('YYMM').'-'.sprintf('%04d', 1);
+
     if ($DATA_MACHINEREPAIRREQ != "") {
         $DOC_DATE          = $DATA_MACHINEREPAIRREQ->DOC_DATE;
         $REPORT_NO         = $DATA_MACHINEREPAIRREQ->MACHINE_REPORT_NO;
         $EXPLOT            = str_replace('MRP'.Carbon::parse($DOC_DATE)->addyears(543)->format('ym').'-','',$REPORT_NO)+1;
         $MACHINE_REPORT_NO = 'MRP' . Carbon::parse($DOC_DATE)->addyears(543)->format('ym'). sprintf('-%04d', $EXPLOT);
     }
+    
     $INSPECTION_NAME = $DATA_REPAIR_FIRST->INSPECTION_NAME;
     $DATA_REPAIR->update([
       'DOWNTIME'              =>  $DOWNTIME

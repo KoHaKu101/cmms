@@ -343,7 +343,7 @@
 								<div class="col-md-3 d-flex justify-content-end">
 									<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
 										<li class="nav-item">
-											<a class="nav-link active" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">See More...</a>
+											<a class="nav-link active" href="{{route('dashboard.machinerepair')}}" role="tab" aria-selected="true">See More...</a>
 										</li>
 									</ul>
 								</div>
