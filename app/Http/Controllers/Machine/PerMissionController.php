@@ -10,6 +10,7 @@ use Auth;
 use File;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Machine\MachineRepairREQ;
+use App\Models\Machine\History;
 //******************** model ***********************
 use App\Models\User;
 //************** Package form github ***************
@@ -54,9 +55,7 @@ class PerMissionController extends Controller
    $DATA_REAIR = MachineRepairREQ::select('UNID','MACHINE_REPORT_NO','CREATE_TIME','DOC_DATE','MACHINE_REPORT_NO')->where('MACHINE_REPORT_NO','like','MRP6408-'.'%')->orderBy('CLOSE_DATE')->orderBy('CLOSE_TIME')->get();
    foreach ($DATA_REAIR as $key => $row) {
      $MACHINE_REPORT_NO = 'MRP'.date('y')+43 .date('m').'-'.sprintf('%04d', 1);
-
      if ($row->MACHINE_REPORT_NO == $MACHINE_REPORT_NO) {
-
        $REPORT_NO_DATE    = MachineRepairREQ::selectraw('MAX(MACHINE_REPORT_NO) as MACHINE_REPORT_NO')->first();
        $REPORT_NO         = $REPORT_NO_DATE->MACHINE_REPORT_NO;
        $EXPLOT            = str_replace('MRP'.date('y')+43 .date('m').'-','',$REPORT_NO)+1;
