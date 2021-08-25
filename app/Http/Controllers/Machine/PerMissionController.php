@@ -51,33 +51,25 @@ class PerMissionController extends Controller
  public function Home(Request $request){
    $DATA_USER = User::orderby('role')->get();
 
-   $DATA_REAIR = MachineRepairREQ::select('MACHINE_REPORT_NO','CREATE_TIME')->where('MACHINE_REPORT_NO','like','MRP6408-'.'%')->orderBy('CLOSE_DATE')->orderBy('CLOSE_TIME')->get();
-   dd($DATA_REAIR);
-   // $DATA_MACHINEREPAIRREQ = MachineRepairREQ::select('DOC_DATE','MACHINE_REPORT_NO')
-   //                                           ->whereRaw('MACHINE_REPORT_NO = (SELECT MAX(MACHINE_REPORT_NO) FROM [PMCS_CMMS_REPAIR_REQ]) ')
-   //                                           ->where('DOC_YEAR',date('Y'))->where('DOC_MONTH',date('m'))->first();
+   $DATA_REAIR = MachineRepairREQ::select('UNID','MACHINE_REPORT_NO','CREATE_TIME','DOC_DATE','MACHINE_REPORT_NO')->where('MACHINE_REPORT_NO','like','MRP6408-'.'%')->orderBy('CLOSE_DATE')->orderBy('CLOSE_TIME')->get();
+   foreach ($DATA_REAIR as $key => $row) {
+     $MACHINE_REPORT_NO = 'MRP'.date('y')+43 .date('m').'-'.sprintf('%04d', 1);
 
+     if ($row->MACHINE_REPORT_NO == $MACHINE_REPORT_NO) {
 
-   // if ($DATA_MACHINEREPAIRREQ != "") {
-   //     $DOC_DATE          = $DATA_MACHINEREPAIRREQ->DOC_DATE;
-   //     $REPORT_NO         = $DATA_MACHINEREPAIRREQ->MACHINE_REPORT_NO;
-   //     $EXPLOT            = str_replace('MRP'.Carbon::parse($DOC_DATE)->addyears(543)->format('ym').'-','',$REPORT_NO)+1;
-   //     $MACHINE_REPORT_NO = 'MRP' . Carbon::parse($DOC_DATE)->addyears(543)->format('ym'). sprintf('-%04d', $EXPLOT);
-   // }
+       $REPORT_NO_DATE    = MachineRepairREQ::selectraw('MAX(MACHINE_REPORT_NO) as MACHINE_REPORT_NO')->first();
+       $REPORT_NO         = $REPORT_NO_DATE->MACHINE_REPORT_NO;
+       $EXPLOT            = str_replace('MRP'.date('y')+43 .date('m').'-','',$REPORT_NO)+1;
+       $MACHINE_REPORT_NO = 'MRP'.date('y')+43 .date('m'). sprintf('-%04d', $EXPLOT);
+     }
 
+     if ($row->UNID != $DATA_REAIR[0]->UNID) {
+       MachineRepairREQ::where('UNID','=',$row->UNID)->update(['MACHINE_REPORT_NO' => $MACHINE_REPORT_NO]);
+     }
 
-   for ($i=1; $i < count($DATA_REAIR)+1; $i++) {
-     $MACHINE_REPORT_NO = 'MRP'.date('y')+43 .date('m').'-'.sprintf('%04d', $i++);
-     MachineRepairREQ::where('MACHINE_REPORT_NO','=','MRP6408-0001')->update(['MACHINE_REPORT_NO' => $MACHINE_REPORT_NO]);
    }
-   // foreach ($DATA_REAIR as $key => $row) {
-   //
-   //   if ($row->MACHINE_REPORT_NO == $MACHINE_REPORT_NO) {
-   //     $row->MACHINE_REPORT_NO
-   //   }
-   //   dd($MACHINE_REPORT_NO);
-   // }
-   // dd(count($DATA_REAIR));
+
+
    return View('machine.setting.permission.list',compact('DATA_USER'));
  }
  public function Store(Request $request){
