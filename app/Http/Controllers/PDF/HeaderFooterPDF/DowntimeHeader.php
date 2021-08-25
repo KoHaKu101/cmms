@@ -28,7 +28,7 @@ class DowntimeHeader extends Fpdf
       // header
       $this->SetFont('THSarabunNew','b',20);
 
-        $this->Cell(247, 18, iconv('UTF-8', 'cp874', 'รายละเอียด เครื่องจักร DownTime สูงสุด '),1,0,'C');
+        $this->Cell(247, 18, iconv('UTF-8', 'cp874', 'รายละเอียด เครื่องจักร DownTime '),1,0,'C');
         $this->Cell(20, 18, iconv('UTF-8', 'cp874', ''),1,1,'C',0);
         $this->SetFont('THSarabunNew','',14);
 
@@ -48,19 +48,6 @@ class DowntimeHeader extends Fpdf
     //end head ****************************************************************
 
 }
-// Page footer
-// function Footer()
-//   {
-//     $this->AddFont('THSarabunNew','','THSarabunNew.php');
-//     $this->AddFont('THSarabunNew','B','THSarabunNew_b.php');
-//     $this->SetY(-10);
-//
-//     // footer
-//     $this->SetX(264);
-//     $this->Cell(24, 5, iconv('UTF-8', 'cp874', 'PQM-F-MA-06 Rev.5 -13/03/49'),0,0,'C',0);
-//
-//   }
-
 
 function SetWidths($w)
 {
