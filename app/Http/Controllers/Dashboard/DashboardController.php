@@ -225,7 +225,7 @@ class DashboardController extends Controller
                                                       ,MAX(REPAIR_SUBSELECT_NAME) as REPAIR_SUBSELECT_NAME,MAX(REPAIR_DETAIL) as REPAIR_DETAIL
                                                       ,MAX(DOWNTIME) as DOWNTIME,MAX(dbo.decode_utf8(CLOSE_BY)) as CLOSE_BY_TH')
                                           ->whereIn('UNID',$ARRAY_REPAIR_UNID)
-                                          ->groupBy('MACHINE_CODE')->take(7)->get();
+                                          ->groupBy('MACHINE_CODE')->orderBy('DOWNTIME','DESC')->take(7)->get();
 
     $array_downtime_count = array();
     $array_downtime_name  = array();
