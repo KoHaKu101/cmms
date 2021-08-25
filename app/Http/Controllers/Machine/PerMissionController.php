@@ -65,6 +65,7 @@ class PerMissionController extends Controller
 
      if ($row->UNID != $DATA_REAIR[0]->UNID) {
        MachineRepairREQ::where('UNID','=',$row->UNID)->update(['MACHINE_REPORT_NO' => $MACHINE_REPORT_NO]);
+       History::where('REPAIR_REQ_UNID','=',$row->UNID)->update(['DOC_NO'=>$MACHINE_REPORT_NO]);
      }
 
    }
