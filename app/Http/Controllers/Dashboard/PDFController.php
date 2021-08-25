@@ -22,7 +22,7 @@ class PDFController extends Controller
     $TYPE = strtoupper($request->TYPE);
     $DATA_REPAIR = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(CLOSE_BY) as CLOSE_BY')->where('DOC_YEAR','=',date('Y'))
                                    ->where('DOC_MONTH','=',date('n'))->where('CLOSE_STATUS','=',1)->orderBy('DOWNTIME','DESC')->get();
-
+    dd($DATA_REPAIR);                               
     $this->pdf = $DowntimeHeader;
     $this->pdf->AddFont('THSarabunNew','','THSarabunNew.php');
     $this->pdf->AddFont('THSarabunNew','B','THSarabunNew_b.php');
@@ -68,7 +68,7 @@ class PDFController extends Controller
                                             ->where('DOC_MONTH','=',date('n'))->where('CLOSE_STATUS','=',1)->groupBy('MACHINE_CODE')
                                             ->groupBy('MACHINE_UNID')->groupBy('MACHINE_NAME')
                                             ->orderBy('DOWNTIME','DESC')->get();
-      dd($DATA_SUM_DOWNTIME);
+
       foreach ($DATA_SUM_DOWNTIME as $index => $row){
 
           $REPAIR_SUM   				 = $DATA_REPAIR->where('MACHINE_UNID','=',$row->MACHINE_UNID);
