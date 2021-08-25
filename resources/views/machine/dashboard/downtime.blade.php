@@ -98,7 +98,7 @@
 									<div class="col-md-4">
 										<div class="form-inline">
 											<button class="btn btn-secondary btn-sm mx-1 ml-auto"><i class="fas fa-file-excel fa-lg mx-1"></i>Excel</button>
-											<button class="btn btn-secondary btn-sm mx-1 "id="BTN_PRINT_DOWNTIME" data-type="downtime"><i class="fas fa-print fa-lg mx-1"></i> Print</button>
+											<button class="btn btn-secondary btn-sm mx-1 " onclick="printdowntime(this)" data-type="downtime"><i class="fas fa-print fa-lg mx-1"></i> Print</button>
 										</div>
 									</div>
 								</div>
@@ -127,7 +127,6 @@
 													$SPAREPART_RESULT_TIME  = $row->SPAREPART_RESULT_TIME  > 0 ? $row->SPAREPART_RESULT_TIME : '-';
 													$WORK_RESULT_TIME 			= $row->WORKERIN_RESULT_TIME 	 > 0 ? $row->WORKERIN_RESULT_TIME : $row->WORKEROUT_RESULT_TIME;
 													$WORK_RESULT_TIME 			= $WORK_RESULT_TIME != 0 ? $WORK_RESULT_TIME : '-';
-
 												@endphp
 												<tr>
 													<td class="text-center">{{$index+1}}</td>
@@ -196,7 +195,7 @@
 										<div class="col-md-4">
 											<div class="form-inline">
 												<button class="btn btn-secondary btn-sm mx-1 ml-auto"><i class="fas fa-file-excel fa-lg mx-1"></i>Excel</button>
-												<button class="btn btn-secondary btn-sm mx-1 "><i class="fas fa-print fa-lg mx-1"></i> Print</button>
+												<button class="btn btn-secondary btn-sm mx-1 "	onclick="printdowntime(this)" data-type="sumdowntime"><i class="fas fa-print fa-lg mx-1"></i> Print</button>
 											</div>
 										</div>
 									</div>
@@ -377,12 +376,11 @@
 		option && downtime_sum_chart.setOption(option);
 </script>
 <script>
-$('#BTN_PRINT_DOWNTIME').on('click',function(){
-	var type = $(this).data('type');
+function printdowntime(thisdata){
+	var type = $(thisdata).data('type');
 	var url  = "{{ route('dashboard.downtime.print') }}?TYPE="+type;
 	window.open(url,'PDFDowntime','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');
-
-});
+};
 $('#table_dowtime').DataTable({
 		'rowsGroup': [0,1,2,6],
 		"pageLength": 20,

@@ -14,12 +14,12 @@ class DowntimeHeader extends Fpdf
   // private $TYPE_DOWNTIME;
   function Header($TYPE = NULL)
 {
-    if ($TYPE == 'DOWNTIME') {
-    //head ********************************************************************
     $logo = "assets/img/logo13.jpg";
     $this->AddFont('THSarabunNew','','THSarabunNew.php');
     $this->AddFont('THSarabunNew','B','THSarabunNew_b.php');
     $this->SetFont('THSarabunNew','',18 );
+    if ($TYPE == 'DOWNTIME') {
+    //head ********************************************************************
     $this->text(278, 12, iconv('UTF-8', 'cp874', 'หน้า'));
     $this->text(279, 20, iconv('UTF-8', 'cp874', $this->PageNo().'/{nb}'));
     $this->setXY(5,5);
@@ -27,11 +27,9 @@ class DowntimeHeader extends Fpdf
       $this->Cell(20,18,$this->Image($logo,6,6,18),1,0,'C',0);
       // header
       $this->SetFont('THSarabunNew','b',20);
-
         $this->Cell(247, 18, iconv('UTF-8', 'cp874', 'รายละเอียด เครื่องจักร DownTime '),1,0,'C');
         $this->Cell(20, 18, iconv('UTF-8', 'cp874', ''),1,1,'C',0);
         $this->SetFont('THSarabunNew','',14);
-
       $this->SetFillColor(206,206,206);
         $this->setX(5);
         $this->Cell(8,  7, iconv('UTF-8', 'cp874', 'No.')               ,1,0,'C',1);
@@ -44,6 +42,28 @@ class DowntimeHeader extends Fpdf
         $this->Cell(20, 7, iconv('UTF-8', 'cp874', 'ซ่อม (นาที)')        ,1,0,'C',1);
         $this->Cell(20, 7, iconv('UTF-8', 'cp874', 'รวม (นาที)')         ,1,0,'C',1);
         $this->Cell(30, 7, iconv('UTF-8', 'cp874', 'ผู้ดำเนินการ')         ,1,1,'C',1);
+     }elseif ($TYPE == 'SUMDOWNTIME') {
+       $this->text(278, 12, iconv('UTF-8', 'cp874', 'หน้า'));
+       $this->text(279, 20, iconv('UTF-8', 'cp874', $this->PageNo().'/{nb}'));
+       $this->setXY(5,5);
+         // Logo
+         $this->Cell(20,18,$this->Image($logo,6,6,18),1,0,'C',0);
+         // header
+         $this->SetFont('THSarabunNew','b',20);
+           $this->Cell(247, 18, iconv('UTF-8', 'cp874', 'รายละเอียด DownTime รวมของ เครื่องจักร'),1,0,'C');
+           $this->Cell(20, 18, iconv('UTF-8', 'cp874', ''),1,1,'C',0);
+           $this->SetFont('THSarabunNew','',14);
+         $this->SetFillColor(206,206,206);
+           $this->setX(5);
+           $this->Cell(8,  7, iconv('UTF-8', 'cp874', 'No.')               ,1,0,'C',1);
+           $this->Cell(20, 7, iconv('UTF-8', 'cp874', 'MC-CODE')           ,1,0,'C',1);
+           $this->Cell(39, 7, iconv('UTF-8', 'cp874', 'MC-NAME')           ,1,0,'C',1);
+           $this->Cell(60, 7, iconv('UTF-8', 'cp874', 'สาเหตุ / อาการที่เสีย')  ,1,0,'C',1);
+           $this->Cell(65, 7, iconv('UTF-8', 'cp874', 'วิธีแก้ไข')              ,1,0,'C',1);
+           $this->Cell(30, 7, iconv('UTF-8', 'cp874', 'ผู้ดำเนินการ')          ,1,0,'C',1);
+           $this->Cell(30, 7, iconv('UTF-8', 'cp874', 'DownTime (นาที)')     ,1,0,'C',1);
+           $this->Cell(35, 7, iconv('UTF-8', 'cp874', 'DownTime รวม (นาที)') ,1,1,'C',1);
+
      }
     //end head ****************************************************************
 
