@@ -52,7 +52,9 @@ class PerMissionController extends Controller
  public function Home(Request $request){
    $DATA_USER = User::orderby('role')->get();
 
-   $DATA_REAIR = MachineRepairREQ::select('UNID','MACHINE_REPORT_NO','CREATE_TIME','DOC_DATE','MACHINE_REPORT_NO')->where('MACHINE_REPORT_NO','like','MRP6408-'.'%')->orderBy('CLOSE_DATE')->orderBy('CLOSE_TIME')->get();
+   $DATA_REAIR = MachineRepairREQ::select('UNID','MACHINE_REPORT_NO','CREATE_TIME','DOC_DATE','MACHINE_REPORT_NO')
+                                  ->where('MACHINE_REPORT_NO','like','MRP6408-'.'%')
+                                  ->where('CLOSE_DATE','like','2021-08'.'%')->orderBy('CLOSE_DATE')->orderBy('CLOSE_TIME')->get();
    foreach ($DATA_REAIR as $key => $row) {
      $MACHINE_REPORT_NO = 'MRP'.date('y')+43 .date('m').'-'.sprintf('%04d', 1);
      if ($row->MACHINE_REPORT_NO == $MACHINE_REPORT_NO) {
