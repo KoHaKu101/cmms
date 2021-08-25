@@ -22,7 +22,7 @@ class PDFController extends Controller
     $TYPE = strtoupper($request->TYPE);
     $DATA_REPAIR = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(CLOSE_BY) as CLOSE_BY')->where('DOC_YEAR','=',date('Y'))
                                    ->where('DOC_MONTH','=',date('n'))->where('CLOSE_STATUS','=',1)->orderBy('DOWNTIME','DESC')->get();
-    dd($DATA_REPAIR);                               
+
     $this->pdf = $DowntimeHeader;
     $this->pdf->AddFont('THSarabunNew','','THSarabunNew.php');
     $this->pdf->AddFont('THSarabunNew','B','THSarabunNew_b.php');
@@ -34,6 +34,7 @@ class PDFController extends Controller
     $this->pdf->header($TYPE);
 
     if ($TYPE == 'DOWNTIME') {
+      dd($DATA_REPAIR,'DOWNTIME');
       $index = 1;
       foreach($DATA_REPAIR as $index => $row) {
         $index = $index + 1;
@@ -64,6 +65,7 @@ class PDFController extends Controller
         }
       }
     }elseif ($TYPE == 'SUMDOWNTIME') {
+      dd($DATA_REPAIR,'SUMDOWNTIME');
       $DATA_SUM_DOWNTIME  = MachineRepairREQ::select('MACHINE_CODE','MACHINE_UNID','MACHINE_NAME')->selectraw('SUM(DOWNTIME) as DOWNTIME')->where('DOC_YEAR','=',date('Y'))
                                             ->where('DOC_MONTH','=',date('n'))->where('CLOSE_STATUS','=',1)->groupBy('MACHINE_CODE')
                                             ->groupBy('MACHINE_UNID')->groupBy('MACHINE_NAME')
