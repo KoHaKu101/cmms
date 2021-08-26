@@ -122,13 +122,13 @@
 											<theade>
 												<tr>
 													<th>MACHINE_REPORT_NO</th>
-													
+
 												</tr>
 											</theade>
 											<tbody>
 													@foreach ($History as $key => $row)
 														<tr>
-															<td>{{ $row->REPAIR_DOC_NO }}</td>
+															<td>{{ $row->DOC_NO }}</td>
 
 														</tr>
 													@endforeach
