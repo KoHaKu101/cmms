@@ -41,30 +41,30 @@ class PDFController extends Controller
         $INSPECTION_RESULT_TIME = $row->INSPECTION_RESULT_TIME > 0 ? number_format($row->INSPECTION_RESULT_TIME) : '-';
         $SPAREPART_RESULT_TIME  = $row->SPAREPART_RESULT_TIME  > 0 ? number_format($row->SPAREPART_RESULT_TIME)  : '-';
         $WORK_RESULT_TIME 			= $row->WORKERIN_RESULT_TIME 	 > 0 ? number_format($row->WORKERIN_RESULT_TIME)   : number_format($row->WORKEROUT_RESULT_TIME);
-        $WORK_RESULT_TIME 			= $WORK_RESULT_TIME != 0  ? $WORK_RESULT_TIME : '-';
-        $CLOSE_BY               = isset($row->CLOSE_BY)   ? $row->CLOSE_BY    : '-';
+        $WORK_RESULT_TIME 			= $WORK_RESULT_TIME != 0           ? $WORK_RESULT_TIME : '-';
+        $CLOSE_BY               = isset($row->CLOSE_BY)            ? $row->CLOSE_BY    : '-';
+        $MACHINE_NAME           = isset($row->MACHINE_NAME)        ? $row->MACHINE_NAME : '-';
+        $REPAIR_SUBSELECT_NAME  = isset($row->REPAIR_SUBSELECT_NAME) ? $row->REPAIR_SUBSELECT_NAME : '-';
+        $REPAIR_DETAIL          = isset($row->REPAIR_DETAIL)       ? $row->REPAIR_DETAIL : '-';
         $this->pdf->setX(5);
         $GET_Y = $this->pdf->getY();
 
         $this->pdf->Cell(8,  7, $index                                                ,1,0,'C',0);
         $this->pdf->Cell(20, 7, $row->MACHINE_CODE                                    ,1,0,'L',0);
-        $this->pdf->Cell(39, 7, iconv('UTF-8', 'cp874', $row->MACHINE_NAME)           ,1,0,'L',0);
-        $this->pdf->Cell(50, 7, iconv('UTF-8', 'cp874', $row->REPAIR_SUBSELECT_NAME)  ,1,0,'L',0);
-        // $this->pdf->Cell(50, 7, iconv('UTF-8', 'cp874', $row->REPAIR_DETAIL)          ,1,0,'L',0);
-        // $this->pdf->Cell(25, 7, $INSPECTION_RESULT_TIME                               ,1,0,'C',0);
-        // $this->pdf->Cell(25, 7, $SPAREPART_RESULT_TIME                                ,1,0,'C',0);
-        // $this->pdf->Cell(20, 7, $WORK_RESULT_TIME                                     ,1,0,'C',0);
+        $this->pdf->Cell(39, 7, iconv('UTF-8', 'cp874', $MACHINE_NAME)                ,1,0,'L',0);
+        $this->pdf->Cell(50, 7, iconv('UTF-8', 'cp874', $REPAIR_SUBSELECT_NAME)       ,1,0,'L',0);
+        $this->pdf->Cell(50, 7, iconv('UTF-8', 'cp874', $row->REPAIR_DETAIL)          ,1,0,'L',0);
+        $this->pdf->Cell(25, 7, $INSPECTION_RESULT_TIME                               ,1,0,'C',0);
+        $this->pdf->Cell(25, 7, $SPAREPART_RESULT_TIME                                ,1,0,'C',0);
+        $this->pdf->Cell(20, 7, $WORK_RESULT_TIME                                     ,1,0,'C',0);
         $this->pdf->Cell(20, 7, number_format($row->DOWNTIME)                         ,1,0,'C',0);
         $this->pdf->Cell(30, 7, iconv('UTF-8', 'cp874', $CLOSE_BY)                    ,1,1,'L',0);
 
-        // if ($GET_Y == 198) {
-        //
-        //
-        //   $this->pdf->AddPage(['L','A4',]);
-        //   $this->pdf->Rect(5,5,287,200);
-        //   $this->pdf->header($TYPE);
-        //
-        // }
+        if ($GET_Y == 198) {
+          $this->pdf->AddPage(['L','A4',]);
+          $this->pdf->Rect(5,5,287,200);
+          $this->pdf->header($TYPE);
+        }
       }
       $this->pdf->Output();
       exit;

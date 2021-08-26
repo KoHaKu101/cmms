@@ -239,15 +239,13 @@ class DashboardController extends Controller
   }
   public function MachineRepair(Request $request){
     $MACHINE_LINE   = array('L1','L2','L3','L4','L5','L6',);
-    $COUNT_MACHINE  = MachineRepairREQ::selectraw('MACHINE_CODE,MACHINE_UNID,Count(MACHINE_CODE) as MACHINE_CODE_COUNT')
-                                          ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
-                                          ->whereIn('MACHINE_LINE',$MACHINE_LINE)->groupBy('MACHINE_UNID')
-                                          ->groupBy('MACHINE_CODE')->orderBy('MACHINE_CODE_COUNT','DESC')->get();
 
-    $MACHINE_UNID = array();
-    
-    foreach ($COUNT_MACHINE as $key => $row) {
-      $MACHINE_UNID[$row->MACHINE_UNID] = $row->MACHINE_UNID;
+    $MACHINE_CODE = array();
+    for ($i=1; $i < 7; $i++) {
+      $COUNT_MACHINE  = MachineRepairREQ::selectraw('MACHINE_CODE,MACHINE_UNID,Count(MACHINE_CODE) as MACHINE_CODE_COUNT')
+                                            ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
+                                            ->whereIn('MACHINE_LINE',$MACHINE_LINE)->groupBy('MACHINE_UNID')
+                                            ->groupBy('MACHINE_CODE')->orderBy('MACHINE_CODE_COUNT','DESC')->first();
     }
     $MACHINE        = Machine::select('MACHINE_LINE')->whereIn('UNID',$MACHINE_UNID)->groupBy('MACHINE_LINE')->get();
 
