@@ -45,7 +45,7 @@ class PDFController extends Controller
         $CLOSE_BY               = isset($row->CLOSE_BY) ? $row->CLOSE_BY : '-';
         $this->pdf->setX(5);
         $GET_Y = $this->pdf->getY();
-        dd('DOWNTIME');
+
         $this->pdf->Cell(8,  7, $index                                                ,1,0,'C',0);
         $this->pdf->Cell(20, 7, $row->MACHINE_CODE                                    ,1,0,'L',0);
         $this->pdf->Cell(39, 7, iconv('UTF-8', 'cp874', $row->MACHINE_NAME)           ,1,0,'L',0);
@@ -57,11 +57,13 @@ class PDFController extends Controller
         $this->pdf->Cell(20, 7, $row->DOWNTIME                                        ,1,0,'C',0);
         $this->pdf->Cell(30, 7, iconv('UTF-8', 'cp874', $CLOSE_BY)               ,1,1,'L',0);
         if ($GET_Y == 198) {
+
           $this->pdf->SetFont('THSarabunNew','',14 );
           $this->pdf->AliasNbPages();
           $this->pdf->AddPage(['L','A4',]);
           $this->pdf->Rect(5,5,287,200);
           $this->pdf->header($TYPE);
+          dd('DOWNTIME');
         }
       }
     }elseif ($TYPE == 'SUMDOWNTIME') {
