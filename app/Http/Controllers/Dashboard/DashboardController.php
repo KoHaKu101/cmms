@@ -37,6 +37,7 @@ class DashboardController extends Controller
                                           ->where('CLOSE_STATUS','=',1)->take(7)->get();
     $data_count_repair  = MachineRepairREQ::selectraw('MACHINE_CODE,COUNT(MACHINE_CODE) as MACHINE_CODE_COUNT')
                                           ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
+                                          ->where('MACHINE_LINE','like','L'.'%')
                                           ->groupBy('MACHINE_CODE')->orderBy('MACHINE_CODE_COUNT','DESC')->get();
     $data_repair_detail = MachineRepairREQ::selectraw('REPAIR_SUBSELECT_NAME,COUNT(REPAIR_SUBSELECT_UNID) as REPAIR_SUBSELECT_UNID_COUNT')
                                           ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
@@ -237,7 +238,19 @@ class DashboardController extends Controller
     return view('machine.dashboard.downtime',compact('DATA_REPAIR','array_downtime_count','array_downtime_name','DATA_REPAIR_SUM','DATA_SUM_DOWNTIME'));
   }
   public function MachineRepair(Request $request){
-    return View('machine/dashboard/machinerepair');
+    $MACHINE_LINE   = array('L1','L2','L3','L4','L5','L6',);
+    $COUNT_MACHINE  = MachineRepairREQ::selectraw('Count(MACHINE_CODE) as MACHINE_CODE_COUNT')
+                                          ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
+                                          ->whereIn('MACHINE_LINE',$MACHINE_LINE)
+                                          ->orderBy('MACHINE_CODE_COUNT','DESC')->dd();
+    dd($COUNT_MACHINE);
+    $MACHINE_UNID = array();
+    foreach ($COUNT_MACHINE as $key => $row) {
+      $MACHINE_UNID[$row->MACHINE_UNID] = $row->MACHINE_UNID;
+    }
+    $MACHINE        = Machine::select('MACHINE_CODE','MACHINE_LINE')->whereIn('UNID',$MACHINE_UNID)->orderBy('MACHINE_LINE')->get();
+
+    return View('machine/dashboard/machinerepair',compact('COUNT_MACHINE','MACHINE'));
   }
   public function Notification(Request $request){
     $data = MachineRepairREQ::select('*')->where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(4)->get();

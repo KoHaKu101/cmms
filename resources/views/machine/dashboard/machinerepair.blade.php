@@ -58,8 +58,7 @@
 		$MONTH_NAME_TH = array(0 =>'ALL',1 => "มกราคม",2 => "กุมภาพันธ์",3 =>"มีนาคม",4 => "เมษายน",5 =>"พฤษภาคม",6 =>"มิถุนายน",
 										 7 =>"กรกฎาคม",8 =>"สิงหาคม",9 =>"กันยายน",10 =>"ตุลาคม",11 => "พฤศจิกายน",12 =>"ธันวาคม");
 		$CURRENT_MONTH = $MONTH_NAME_TH[date('n')].' ปี '.date('Y')+543;
-		$BTN_COLOR_LINE = array('1'=>'btn-info','2'=>'btn-warning','3'=>'btn-green'
-													 ,'4'=>'btn-danger','5'=>'btn-pink','6'=>'btn-primary');
+		$MACHINE_LINE  = array('L1'=>'LINE 1','L2'=>'LINE 2','L3'=>'LINE 3','L4'=>'LINE 4','L5'=>'LINE 5','L6'=>'LINE 6',);
 	@endphp
 	<button onclick="topFunction()" id="btntop" title="Go to top"><i class="fas fa-arrow-circle-up fa-lg"></i></button>
 		<div class="content">
@@ -223,7 +222,12 @@
         containLabel: true
     },
 	  xAxis: {
-	    data:['Line 1 : MC-031','Line 2 : MC-032','Line 3 : MC-033','Line 4 : MC-034','Line 5 : MC-035','Line 6 : MC-036'],
+	    data:[
+				@foreach ($MACHINE as $index => $row)
+				'{{$MACHINE_LINE[$row->MACHINE_LINE].' : '.$row->MACHINE_CODE}}',
+				@endforeach
+
+			],
 	    show:true,
 	    axisLabel:{
 	    	fontSize :'10'
