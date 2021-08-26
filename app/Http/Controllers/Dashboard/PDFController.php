@@ -57,14 +57,14 @@ class PDFController extends Controller
         $this->pdf->Cell(20, 7, number_format($row->DOWNTIME)                         ,1,0,'C',0);
         $this->pdf->Cell(30, 7, iconv('UTF-8', 'cp874', $CLOSE_BY)               ,1,1,'L',0);
 
-        if ($GET_Y == 198) {
-
-
-          $this->pdf->AddPage(['L','A4',]);
-          $this->pdf->Rect(5,5,287,200);
-          $this->pdf->header($TYPE);
-
-        }
+        // if ($GET_Y == 198) {
+        //
+        //
+        //   $this->pdf->AddPage(['L','A4',]);
+        //   $this->pdf->Rect(5,5,287,200);
+        //   $this->pdf->header($TYPE);
+        //
+        // }
       }
     }elseif ($TYPE == 'SUMDOWNTIME') {
 
