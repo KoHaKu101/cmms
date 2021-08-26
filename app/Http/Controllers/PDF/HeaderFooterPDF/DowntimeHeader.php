@@ -35,13 +35,13 @@ class DowntimeHeader extends Fpdf
         $this->Cell(8,  7, iconv('UTF-8', 'cp874', 'No.')               ,1,0,'C',1);
         $this->Cell(20, 7, iconv('UTF-8', 'cp874', 'MC-CODE')           ,1,0,'C',1);
         $this->Cell(39, 7, iconv('UTF-8', 'cp874', 'MC-NAME')           ,1,0,'C',1);
-        $this->Cell(50, 7, iconv('UTF-8', 'cp874', 'สาเหตุ / อาการที่เสีย') ,1,0,'C',1);
+        $this->Cell(45, 7, iconv('UTF-8', 'cp874', 'สาเหตุ / อาการที่เสีย') ,1,0,'C',1);
         $this->Cell(50, 7, iconv('UTF-8', 'cp874', 'วิธีแก้ไข')           ,1,0,'C',1);
         $this->Cell(25, 7, iconv('UTF-8', 'cp874', 'ตรวจสอบ (นาที)')    ,1,0,'C',1);
         $this->Cell(25, 7, iconv('UTF-8', 'cp874', 'ซื้ออะไหล่ (นาที)')    ,1,0,'C',1);
         $this->Cell(20, 7, iconv('UTF-8', 'cp874', 'ซ่อม (นาที)')        ,1,0,'C',1);
         $this->Cell(20, 7, iconv('UTF-8', 'cp874', 'รวม (นาที)')         ,1,0,'C',1);
-        $this->Cell(30, 7, iconv('UTF-8', 'cp874', 'ผู้ดำเนินการ')         ,1,1,'C',1);
+        $this->Cell(35, 7, iconv('UTF-8', 'cp874', 'ผู้ดำเนินการ')         ,1,1,'C',1);
      }elseif ($TYPE == 'SUMDOWNTIME') {
        $this->text(278, 12, iconv('UTF-8', 'cp874', 'หน้า'));
        $this->text(279, 20, iconv('UTF-8', 'cp874', $this->PageNo().'/{nb}'));
