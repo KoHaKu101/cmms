@@ -75,7 +75,8 @@ class PerMissionController extends Controller
 
    $DATA_USER = User::orderby('role')->get();
    $MACHINEREPAIRREQ = MachineRepairREQ::orderBy('MACHINE_REPORT_NO')->get();
-   return View('machine.setting.permission.list',compact('DATA_USER','MACHINEREPAIRREQ'));
+   $History          = History::where('REPAIR_DOC_NO','!=','')->get();
+   return View('machine.setting.permission.list',compact('DATA_USER','MACHINEREPAIRREQ','History'));
  }
  public function Store(Request $request){
    $role = $request->role;
