@@ -52,31 +52,34 @@ class PerMissionController extends Controller
  public function Home(Request $request){
 
 
-   $DATA_REAIR = MachineRepairREQ::select('UNID','MACHINE_REPORT_NO','CREATE_TIME','DOC_DATE','MACHINE_REPORT_NO')
+   $DATA_REAIR = MachineRepairREQ::select('UNID','MACHINE_REPORT_NO','CLOSE_DATE','CLOSE_TIME','MACHINE_REPORT_NO')
                                   // ->where('MACHINE_REPORT_NO','like','MRP6408-'.'%')
                                   ->where('CLOSE_DATE','like','2021-08'.'%')->orderBy('CLOSE_DATE')->orderBy('CLOSE_TIME')->get();
     $MACHINE_REPORT_NO = 'MRP'.date('y')+43 .date('m').'-'.sprintf('%04d', 1);
     MachineRepairREQ::where('MACHINE_REPORT_NO','like','MRP6408-'.'%')->update(['MACHINE_REPORT_NO' => $MACHINE_REPORT_NO]);
              History::where('DOC_NO','like','MRP6408-'.'%')->update(['DOC_NO'=>$MACHINE_REPORT_NO]);
+    $UNID = array();
    foreach ($DATA_REAIR as $key => $row) {
+     $REPORT_NO_DATE    = MachineRepairREQ::selectraw('MAX(MACHINE_REPORT_NO) as MACHINE_REPORT_NO')->get();
 
-     if ($row->MACHINE_REPORT_NO == $MACHINE_REPORT_NO) {
-       $REPORT_NO_DATE    = MachineRepairREQ::selectraw('MAX(MACHINE_REPORT_NO) as MACHINE_REPORT_NO')->first();
-       $REPORT_NO         = $REPORT_NO_DATE->MACHINE_REPORT_NO;
-       $EXPLOT            = str_replace('MRP'.date('y')+43 .date('m').'-','',$REPORT_NO)+1;
+
+       $REPORT_NO         = $REPORT_NO_DATE[0]->MACHINE_REPORT_NO;
+       $EXPLOT            = str_replace('MRP'.date('y')+43 .date('m').'-','',$REPORT_NO_DATE[0]->MACHINE_REPORT_NO)+1;
        $MACHINE_REPORT_NO = 'MRP'.date('y')+43 .date('m'). sprintf('-%04d', $EXPLOT);
-     }
 
-     if ($row->UNID != $DATA_REAIR[0]->UNID) {
        MachineRepairREQ::where('UNID','=',$row->UNID)->update(['MACHINE_REPORT_NO' => $MACHINE_REPORT_NO]);
        History::where('REPAIR_REQ_UNID','=',$row->UNID)->update(['DOC_NO'=>$MACHINE_REPORT_NO]);
-     }
+       if ($row->UNID = $DATA_REAIR[0]->UNID) {
+        $MACHINE_REPORT_NO = 'MRP'.date('y')+43 .date('m').'-'.sprintf('%04d', 1);
+        MachineRepairREQ::where('UNID','=',$row->UNID)->update(['MACHINE_REPORT_NO' => $MACHINE_REPORT_NO]);
+        History::where('REPAIR_REQ_UNID','=',$row->UNID)->update(['DOC_NO'=>$MACHINE_REPORT_NO]);
+       }
 
    }
 
    $DATA_USER = User::orderby('role')->get();
    $MACHINEREPAIRREQ = MachineRepairREQ::orderBy('MACHINE_REPORT_NO')->get();
-   $History          = History::where('DOC_NO','!=','')->get();
+   $History          = History::where('DOC_NO','!=','')->orderBy('DOC_NO')->get();
    return View('machine.setting.permission.list',compact('DATA_USER','MACHINEREPAIRREQ','History'));
  }
  public function Store(Request $request){
