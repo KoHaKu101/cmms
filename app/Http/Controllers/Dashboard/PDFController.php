@@ -42,8 +42,10 @@ class PDFController extends Controller
         $SPAREPART_RESULT_TIME  = $row->SPAREPART_RESULT_TIME  > 0 ? $row->SPAREPART_RESULT_TIME : '-';
         $WORK_RESULT_TIME 			= $row->WORKERIN_RESULT_TIME 	 > 0 ? $row->WORKERIN_RESULT_TIME : $row->WORKEROUT_RESULT_TIME;
         $WORK_RESULT_TIME 			= $WORK_RESULT_TIME != 0 ? $WORK_RESULT_TIME : '-';
+        $CLOSE_BY               = isset($row->CLOSE_BY) ? $row->CLOSE_BY : '-';
         $this->pdf->setX(5);
         $GET_Y = $this->pdf->getY();
+        dd('DOWNTIME');
         $this->pdf->Cell(8,  7, $index                                                ,1,0,'C',0);
         $this->pdf->Cell(20, 7, $row->MACHINE_CODE                                    ,1,0,'L',0);
         $this->pdf->Cell(39, 7, iconv('UTF-8', 'cp874', $row->MACHINE_NAME)           ,1,0,'L',0);
@@ -53,10 +55,8 @@ class PDFController extends Controller
         $this->pdf->Cell(25, 7, $SPAREPART_RESULT_TIME                                ,1,0,'C',0);
         $this->pdf->Cell(20, 7, $WORK_RESULT_TIME                                     ,1,0,'C',0);
         $this->pdf->Cell(20, 7, $row->DOWNTIME                                        ,1,0,'C',0);
-        $this->pdf->Cell(30, 7, iconv('UTF-8', 'cp874', $row->CLOSE_BY)               ,1,1,'L',0);
+        $this->pdf->Cell(30, 7, iconv('UTF-8', 'cp874', $CLOSE_BY)               ,1,1,'L',0);
         if ($GET_Y == 198) {
-          $this->pdf->AddFont('THSarabunNew','','THSarabunNew.php');
-          $this->pdf->AddFont('THSarabunNew','B','THSarabunNew_b.php');
           $this->pdf->SetFont('THSarabunNew','',14 );
           $this->pdf->AliasNbPages();
           $this->pdf->AddPage(['L','A4',]);
@@ -65,7 +65,7 @@ class PDFController extends Controller
         }
       }
     }elseif ($TYPE == 'SUMDOWNTIME') {
-      
+
       $DATA_SUM_DOWNTIME  = MachineRepairREQ::select('MACHINE_CODE','MACHINE_UNID','MACHINE_NAME')->selectraw('SUM(DOWNTIME) as DOWNTIME')->where('DOC_YEAR','=',date('Y'))
                                             ->where('DOC_MONTH','=',date('n'))->where('CLOSE_STATUS','=',1)->groupBy('MACHINE_CODE')
                                             ->groupBy('MACHINE_UNID')->groupBy('MACHINE_NAME')
