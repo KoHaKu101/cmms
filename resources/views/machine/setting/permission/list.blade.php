@@ -89,14 +89,19 @@
                   </div>
                 </div>
               </div>
-							<div class="col-md-4">
+							<div class="col-md-8">
 								<div class="card">
 									<div class="card-body">
-										<table>
+										<table class="table table-bordered table-head-bg-info table-bordered-bd-info">
 											<theade>
+												<tr>
+													<th>MACHINE_REPORT_NO</th>
+													<th>DOC_NO</th>
+													<th>CREATE_TIME</th>
+													<th>CLOSE_DATE</th>
+												</tr>
 											</theade>
 											<tbody>
-												<tbody>
 													@foreach ($MACHINEREPAIRREQ as $key => $row)
 														<tr>
 															<td>{{ $row->MACHINE_REPORT_NO }}</td>
@@ -105,7 +110,6 @@
 															<td>{{ $row->CLOSE_DATE.':'.$row->CLOSE_TIME }}</td>
 														</tr>
 													@endforeach
-												</tbody>
 											</tbody>
 										</table>
 									</div>
