@@ -51,7 +51,7 @@ class PDFController extends Controller
 
         $this->pdf->Cell(8,  7, $index                                                ,1,0,'C',0);
         $this->pdf->Cell(20, 7, $row->MACHINE_CODE                                    ,1,0,'L',0);
-        // $this->pdf->Cell(39, 7, iconv('UTF-8', 'cp874', $MACHINE_NAME)                ,1,0,'L',0);
+        $this->pdf->Cell(39, 7, iconv('UTF-8', 'cp874', $MACHINE_NAME)                ,1,0,'L',0);
         // $this->pdf->Cell(50, 7, iconv('UTF-8', 'cp874', $REPAIR_SUBSELECT_NAME)       ,1,0,'L',0);
         // $this->pdf->Cell(50, 7, iconv('UTF-8', 'cp874', $REPAIR_DETAIL)               ,1,0,'L',0);
         $this->pdf->Cell(25, 7, $INSPECTION_RESULT_TIME                               ,1,0,'C',0);
