@@ -20,7 +20,8 @@ class PDFController extends Controller
   }
   public function PDFDowntime(Request $request,DowntimeHeader $DowntimeHeader){
     $TYPE = strtoupper($request->TYPE);
-    $DATA_REPAIR = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(CLOSE_BY) as CLOSE_BY')->where('DOC_YEAR','=',date('Y'))
+    $DATA_REPAIR = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(CLOSE_BY) as CLOSE_BY,dob.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
+                                   ->where('DOC_YEAR','=',date('Y'))
                                    ->where('DOC_MONTH','=',date('n'))->where('CLOSE_STATUS','=',1)->orderBy('DOWNTIME','DESC')->get();
 
     $this->pdf = $DowntimeHeader;
@@ -43,7 +44,7 @@ class PDFController extends Controller
         $WORK_RESULT_TIME 			= $row->WORKERIN_RESULT_TIME 	 > 0 ? number_format($row->WORKERIN_RESULT_TIME)   : number_format($row->WORKEROUT_RESULT_TIME);
         $WORK_RESULT_TIME 			= $WORK_RESULT_TIME != 0           ? $WORK_RESULT_TIME : '-';
         $CLOSE_BY               = isset($row->CLOSE_BY)            ? $row->CLOSE_BY    : '-';
-        $MACHINE_NAME           = isset($row->MACHINE_NAME)        ? $row->MACHINE_NAME : '-';
+        $MACHINE_NAME           = isset($row->MACHINE_NAME_TH)     ? $row->MACHINE_NAME_TH : '-';
         $REPAIR_SUBSELECT_NAME  = isset($row->REPAIR_SUBSELECT_NAME) ? $row->REPAIR_SUBSELECT_NAME : '-';
         $REPAIR_DETAIL          = isset($row->REPAIR_DETAIL)       ? $row->REPAIR_DETAIL : '-';
         $this->pdf->setX(5);
@@ -52,8 +53,8 @@ class PDFController extends Controller
         $this->pdf->Cell(8,  7, $index                                                ,1,0,'C',0);
         $this->pdf->Cell(20, 7, $row->MACHINE_CODE                                    ,1,0,'L',0);
         $this->pdf->Cell(39, 7, iconv('UTF-8', 'cp874', $MACHINE_NAME)                ,1,0,'L',0);
-        // $this->pdf->Cell(50, 7, iconv('UTF-8', 'cp874', $REPAIR_SUBSELECT_NAME)       ,1,0,'L',0);
-        // $this->pdf->Cell(50, 7, iconv('UTF-8', 'cp874', $REPAIR_DETAIL)               ,1,0,'L',0);
+        $this->pdf->Cell(50, 7, iconv('UTF-8', 'cp874', $REPAIR_SUBSELECT_NAME)       ,1,0,'L',0);
+        $this->pdf->Cell(50, 7, iconv('UTF-8', 'cp874', $REPAIR_DETAIL)               ,1,0,'L',0);
         $this->pdf->Cell(25, 7, $INSPECTION_RESULT_TIME                               ,1,0,'C',0);
         $this->pdf->Cell(25, 7, $SPAREPART_RESULT_TIME                                ,1,0,'C',0);
         $this->pdf->Cell(20, 7, $WORK_RESULT_TIME                                     ,1,0,'C',0);
