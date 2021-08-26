@@ -99,7 +99,7 @@
 								</div>
 							</div>
 							<div class="card-body">
-
+								<div id="line_machine_repair" style="width:100%; height:380%;"></div>
 							</div>
 						</div>
 					</div>
@@ -192,20 +192,20 @@
 <script src="{{ asset('assets/js/btntop.js') }}"></script>
 <script src="{{ asset('assets/js/dataTables.rowsGroup.js')}}"></script>
 <script>
-	var DowmTime  = document.getElementById('repair_top5');
-	var myChart 	= echarts.init(DowmTime);
-  var color_rgba = {1:'rgba(255, 45, 45, 1)'
-									 ,2:'rgba(255, 255, 40, 1)'
-									 ,3:'rgba(24, 137, 231, 1)'
-									 ,4:'rgba(49, 249, 58, 1)'
-									 ,5:'rgba(155, 155, 155, 1)'
-								 	 ,6:'rgba(155, 155, 155, 1)'}
-	var color_shadow = {1:"rgba(89, 4, 4, 1)"
-										 ,2:"rgba(134, 134, 0,1)"
-										 ,3:"rgba(9, 90, 158,1)"
-										 ,4:"rgba(1, 171, 9,1)"
-										 ,5:"rgba(55, 55, 55,1)"
-									 	 ,6:"rgba(55, 55, 55,1)"}
+	var count_machine  = document.getElementById('line_machine_repair');
+	var machine_repair_chart 	= echarts.init(count_machine);
+  var color_rgba = {1:'rgba(20, 186, 253)'
+									 ,2:'rgba(255, 148, 79)'
+									 ,3:'rgba(186, 255, 79)'
+									 ,4:'rgba(255, 79, 79	)'
+									 ,5:'rgba(255, 79, 207)'
+								 	 ,6:'rgba(79, 98, 255 )'}
+	var color_shadow = {1:"rgba(8, 61, 82)"
+										 ,2:"rgba(100, 59, 33)"
+										 ,3:"rgba(59, 82, 23)"
+										 ,4:"rgba(102, 27, 27"
+										 ,5:"rgba(113, 37, 92)"
+									 	 ,6:"rgba(29, 37, 96)"}
 	var option;
 	option = {
 	  tooltip: {
@@ -266,7 +266,7 @@
 	  }
 	}
 
-	option && myChart.setOption(option);
+	option && machine_repair_chart.setOption(option);
 
 </script>
 <script>

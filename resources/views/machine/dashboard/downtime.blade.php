@@ -228,7 +228,7 @@
 												@endphp
 												@foreach ($REPAIR_SUM  as $subsub_index => $subsub_row)
 													@php
-														$DOWNTIME = $subsub_row->DOWNTIME == 0 ? '-' : $subsub_row->DOWNTIME;
+														$DOWNTIME = $subsub_row->DOWNTIME == 0 ? '-' : number_format($subsub_row->DOWNTIME);
 													@endphp
 													<tr >
 														<td class="text-center" >{{ $sub_index+1 }}</td>
@@ -236,7 +236,7 @@
 														<td >{{$sub_row->MACHINE_NAME}}</td>
 														<td>{{$NUMBER_SUBSELECT_NAME++ .'. '.$subsub_row->REPAIR_SUBSELECT_NAME."\n"}}</td>
 														<td >{{$NUMBER_REPAIR_DETAIL++ .'. '.$subsub_row->REPAIR_DETAIL."\n"}}</td>
-														<td class="text-center" >{{ number_format($DOWNTIME) }}</td>
+														<td class="text-center" >{{ $DOWNTIME }}</td>
 														<td class="text-center" >{{ number_format($sub_row->DOWNTIME)}}</td>
 													</tr>
 												@endforeach
@@ -308,7 +308,10 @@
 										 ,7:"rgba(55, 55, 55,1)"}
 	var data = [
 							@for ($i=1; $i < 8; $i++)
-							{value:"{{$array_downtime_count[$i]}}",
+							@php
+								$DOWNTIME_COUNT = $array_downtime_count[$i];
+							@endphp
+							{value:"{{	$DOWNTIME_COUNT	}}",
 			        	itemStyle:{
 			            color:color_rgba['{{$i}}'],
 			            shadowColor:color_shadow['{{$i}}'] ,
