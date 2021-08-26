@@ -123,10 +123,10 @@
 										<tbody>
 											@foreach ($DATA_REPAIR as $index => $row)
 												@php
-													$INSPECTION_RESULT_TIME = $row->INSPECTION_RESULT_TIME > 0 ? $row->INSPECTION_RESULT_TIME : '-';
-													$SPAREPART_RESULT_TIME  = $row->SPAREPART_RESULT_TIME  > 0 ? $row->SPAREPART_RESULT_TIME : '-';
-													$WORK_RESULT_TIME 			= $row->WORKERIN_RESULT_TIME 	 > 0 ? $row->WORKERIN_RESULT_TIME : $row->WORKEROUT_RESULT_TIME;
-													$WORK_RESULT_TIME 			= $WORK_RESULT_TIME != 0 ? $WORK_RESULT_TIME : '-';
+													$INSPECTION_RESULT_TIME = $row->INSPECTION_RESULT_TIME > 0 ? number_format($row->INSPECTION_RESULT_TIME) : '-';
+													$SPAREPART_RESULT_TIME  = $row->SPAREPART_RESULT_TIME  > 0 ? number_format($row->SPAREPART_RESULT_TIME) : '-';
+													$WORK_RESULT_TIME 			= $row->WORKERIN_RESULT_TIME 	 > 0 ? $row->WORKERIN_RESULT_TIME  : $row->WORKEROUT_RESULT_TIME;
+													$WORK_RESULT_TIME 			= $WORK_RESULT_TIME != 0 ? number_format($WORK_RESULT_TIME) : '-';
 												@endphp
 												<tr>
 													<td class="text-center">{{$index+1}}</td>
@@ -137,7 +137,7 @@
 													<td class="text-center">{{$INSPECTION_RESULT_TIME}}</td>
 													<td class="text-center">{{$SPAREPART_RESULT_TIME}}</td>
 													<td class="text-center">{{$WORK_RESULT_TIME}}</td>
-													<td class="text-center">{{$row->DOWNTIME}}</td>
+													<td class="text-center">{{number_format($row->DOWNTIME)}}</td>
 													<td >{{$row->CLOSE_BY_TH}}</td>
 												</tr>
 											@endforeach
@@ -236,8 +236,8 @@
 														<td >{{$sub_row->MACHINE_NAME}}</td>
 														<td>{{$NUMBER_SUBSELECT_NAME++ .'. '.$subsub_row->REPAIR_SUBSELECT_NAME."\n"}}</td>
 														<td >{{$NUMBER_REPAIR_DETAIL++ .'. '.$subsub_row->REPAIR_DETAIL."\n"}}</td>
-														<td class="text-center" >{{ $DOWNTIME }}</td>
-														<td class="text-center" >{{$sub_row->DOWNTIME}}</td>
+														<td class="text-center" >{{ number_format($DOWNTIME) }}</td>
+														<td class="text-center" >{{ number_format($sub_row->DOWNTIME)}}</td>
 													</tr>
 												@endforeach
 											@endforeach

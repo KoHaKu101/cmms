@@ -191,7 +191,84 @@
 <script src="{{ asset('../../assets/js/plugin/datatables/datatables.min.js')}}"></script>
 <script src="{{ asset('assets/js/btntop.js') }}"></script>
 <script src="{{ asset('assets/js/dataTables.rowsGroup.js')}}"></script>
+<script>
+	var DowmTime  = document.getElementById('repair_top5');
+	var myChart 	= echarts.init(DowmTime);
+  var color_rgba = {1:'rgba(255, 45, 45, 1)'
+									 ,2:'rgba(255, 255, 40, 1)'
+									 ,3:'rgba(24, 137, 231, 1)'
+									 ,4:'rgba(49, 249, 58, 1)'
+									 ,5:'rgba(155, 155, 155, 1)'
+								 	 ,6:'rgba(155, 155, 155, 1)'}
+	var color_shadow = {1:"rgba(89, 4, 4, 1)"
+										 ,2:"rgba(134, 134, 0,1)"
+										 ,3:"rgba(9, 90, 158,1)"
+										 ,4:"rgba(1, 171, 9,1)"
+										 ,5:"rgba(55, 55, 55,1)"
+									 	 ,6:"rgba(55, 55, 55,1)"}
+	var option;
+	option = {
+	  tooltip: {
+	      show :true,
+		  trigger: 'item',
+	  },
+	  legend: {
+	      show:true,
+	  },
+		grid: {
+        left: '8%',
+        right: '10%',
+        bottom: '0%',
+				top:'6%',
+        containLabel: true
+    },
+	  xAxis: {
+	    data:['Line 1 : MC-031','Line 2 : MC-032','Line 3 : MC-033','Line 4 : MC-034','Line 5 : MC-035','Line 6 : MC-036'],
+	    show:true,
+	    axisLabel:{
+	    	fontSize :'10'
+			},
+	  },
+	  yAxis: {
+	      name:'จำนวน (ครั้ง)',
+	      nameLocation:'center',
+	      nameTextStyle:{
+	          fontSize:'16',
+	          lineHeight: 55
+	      },
 
+ 	     minInterval:1,
+
+	  },
+	  series: [{
+	    type: "bar",
+			barWidth:'30',
+	    data:[
+					@for ($i=1; $i < 7; $i++)
+					{value:"{{$i}}",
+	        	itemStyle:{
+	            color:color_rgba[{{$i}}],
+							shadowBlur:4,
+	            shadowColor:color_shadow[{{$i}}] ,
+	        	}
+					},
+					@endfor
+				],
+	    itemStyle: {
+	      shadowOffsetX: 10,
+
+	    }
+	  }],
+	  label:{
+	      show:true,
+				color:'black',
+	      position:'top',
+	  }
+	}
+
+	option && myChart.setOption(option);
+
+</script>
 <script>
 //
 // $('#table_dowtime').DataTable({
