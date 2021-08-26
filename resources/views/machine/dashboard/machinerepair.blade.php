@@ -142,7 +142,11 @@
 											</tr>
 										</thead>
 										<tbody>
-
+											@foreach ($MACHINEREPAIRREQ as $key => $row)
+												<tr>
+													<td>{{ $row->MACHINE_REPORT_NO }}</td>
+												</tr>
+											@endforeach
 										</tbody>
 									</table>
 								</div>

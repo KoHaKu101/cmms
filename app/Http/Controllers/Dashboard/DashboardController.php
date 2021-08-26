@@ -255,8 +255,8 @@ class DashboardController extends Controller
       $MACHINE_COUNT['L'.$i] = isset($COUNT_MACHINE->MACHINE_CODE_COUNT)  ? $COUNT_MACHINE->MACHINE_CODE_COUNT : '';
     }
 
-
-    return View('machine/dashboard/machinerepair',compact('MACHINE_CODE','MACHINE_COUNT'));
+    $MACHINEREPAIRREQ = MachineRepairREQ::orderBy('MACHINE_REPORT_NO')->get();
+    return View('machine/dashboard/machinerepair',compact('MACHINE_CODE','MACHINE_COUNT','MACHINEREPAIRREQ'));
   }
   public function Notification(Request $request){
     $data = MachineRepairREQ::select('*')->where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(4)->get();
