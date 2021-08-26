@@ -55,7 +55,8 @@ class PerMissionController extends Controller
    $DATA_REAIR = MachineRepairREQ::select('UNID','MACHINE_REPORT_NO','CREATE_TIME','DOC_DATE','MACHINE_REPORT_NO')
                                   ->where('MACHINE_REPORT_NO','like','MRP6408-'.'%')
                                   ->where('CLOSE_DATE','like','2021-08'.'%')->orderBy('CLOSE_DATE')->orderBy('CLOSE_TIME')->get();
-   dd($DATA_REAIR);                                
+   $DATA_HISTORY = History::select('DOC_NO')->where('DOC_TYPE','=','REPAIR')->get();
+   dd($DATA_HISTORY);
    // foreach ($DATA_REAIR as $key => $row) {
    //   $MACHINE_REPORT_NO = 'MRP'.date('y')+43 .date('m').'-'.sprintf('%04d', 1);
    //   if ($row->MACHINE_REPORT_NO == $MACHINE_REPORT_NO) {
