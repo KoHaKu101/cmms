@@ -240,16 +240,23 @@ class DashboardController extends Controller
   public function MachineRepair(Request $request){
     $MACHINE_LINE   = array('L1','L2','L3','L4','L5','L6',);
 
-    $MACHINE_CODE = array();
+    $MACHINE_UNID = array();
+    $MACHINE_COUNT = array();
     for ($i=1; $i < 7; $i++) {
-      $COUNT_MACHINE  = MachineRepairREQ::selectraw('MACHINE_CODE,MACHINE_UNID,Count(MACHINE_CODE) as MACHINE_CODE_COUNT')
+      $COUNT_MACHINE  = MachineRepairREQ::selectraw('MACHINE_UNID,MACHINE_UNID,Count(MACHINE_CODE) as MACHINE_CODE_COUNT')
                                             ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
-                                            ->whereIn('MACHINE_LINE',$MACHINE_LINE)->groupBy('MACHINE_UNID')
-                                            ->groupBy('MACHINE_CODE')->orderBy('MACHINE_CODE_COUNT','DESC')->first();
+                                            ->where('MACHINE_LINE','=','L'.$i)
+                                            ->groupBy('MACHINE_UNID')->orderBy('MACHINE_CODE_COUNT','DESC')->first();
+      $MACHINE = '';
+      if (isset($COUNT_MACHINE->MACHINE_UNID)) {
+        $MACHINE        = Machine::select('MACHINE_CODE','MACHINE_LINE')->where('UNID','=',$COUNT_MACHINE->MACHINE_UNID)->orderBy('MACHINE_LINE')->first();
+      }
+      $MACHINE_CODE['L'.$i]  = isset($MACHINE->MACHINE_CODE)              ? $MACHINE->MACHINE_CODE       : '';
+      $MACHINE_COUNT['L'.$i] = isset($COUNT_MACHINE->MACHINE_CODE_COUNT)  ? $COUNT_MACHINE->MACHINE_CODE_COUNT : '';
     }
-    $MACHINE        = Machine::select('MACHINE_LINE')->whereIn('UNID',$MACHINE_UNID)->groupBy('MACHINE_LINE')->get();
 
-    return View('machine/dashboard/machinerepair',compact('COUNT_MACHINE','MACHINE'));
+
+    return View('machine/dashboard/machinerepair',compact('MACHINE_CODE','MACHINE_COUNT'));
   }
   public function Notification(Request $request){
     $data = MachineRepairREQ::select('*')->where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(4)->get();

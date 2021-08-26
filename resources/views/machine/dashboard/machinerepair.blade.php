@@ -223,9 +223,9 @@
     },
 	  xAxis: {
 	    data:[
-				@foreach ($MACHINE as $index => $row)
-				'{{$MACHINE_LINE[$row->MACHINE_LINE].' : '.$row->MACHINE_CODE}}',
-				@endforeach
+			@for ($i=1; $i < 7; $i++)
+				'{{ $MACHINE_LINE['L'.$i].' : '.$MACHINE_CODE['L'.$i]  }}',
+			@endfor
 
 			],
 	    show:true,
@@ -249,7 +249,7 @@
 			barWidth:'30',
 	    data:[
 					@for ($i=1; $i < 7; $i++)
-					{value:"{{$i}}",
+					{value:"{{$MACHINE_COUNT['L'.$i]}}",
 	        	itemStyle:{
 	            color:color_rgba[{{$i}}],
 							shadowBlur:4,
