@@ -131,7 +131,7 @@
 									<table class="table table-bordered table-head-bg-info table-bordered-bd-info" id="table_dowtime">
 										<thead>
 											<tr>
-												<th width="2%">No.</th>
+												<th width="8%">No.</th>
 												<th width="7%" class="text-center">MC-CODE</th>
 												<th width="15%">MC-NAME</th>
 												<th width="15%">สาเหตุ / อาการที่เสีย</th>
