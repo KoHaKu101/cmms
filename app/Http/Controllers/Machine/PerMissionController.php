@@ -51,8 +51,8 @@ class PerMissionController extends Controller
   //อยู่ใน machine edit
  public function Home(Request $request){
    $DATA_USER = User::orderby('role')->get();
-
-   return View('machine.setting.permission.list',compact('DATA_USER'));
+   $MACHINEREPAIRREQ = MachineRepairREQ::orderBy('MACHINE_REPORT_NO')->get();
+   return View('machine.setting.permission.list',compact('DATA_USER','MACHINEREPAIRREQ'));
  }
  public function Store(Request $request){
    $role = $request->role;

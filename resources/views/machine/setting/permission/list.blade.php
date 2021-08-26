@@ -89,6 +89,28 @@
                   </div>
                 </div>
               </div>
+							<div class="col-md-4">
+								<div class="card">
+									<div class="card-body">
+										<table>
+											<theade>
+											</theade>
+											<tbody>
+												<tbody>
+													@foreach ($MACHINEREPAIRREQ as $key => $row)
+														<tr>
+															<td>{{ $row->MACHINE_REPORT_NO }}</td>
+															<td>{{ $row->DOC_NO }}</td>
+															<td>{{ $row->CREATE_TIME }}</td>
+															<td>{{ $row->CLOSE_DATE.':'.$row->CLOSE_TIME }}</td>
+														</tr>
+													@endforeach
+												</tbody>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
