@@ -31,7 +31,7 @@ class PDFController extends Controller
     $this->pdf->AliasNbPages();
     $this->pdf->AddPage(['L',['220', '300'],]);
     $this->pdf->setAutoPageBreak(false);
-    $this->pdf->Rect(5,5,287,193);
+    // $this->pdf->Rect(5,5,287,193);
     $this->pdf->header($TYPE);
 
     if ($TYPE == 'DOWNTIME') {
@@ -67,7 +67,7 @@ class PDFController extends Controller
         $GET_Y = $this->pdf->getY();
         if ($GET_Y > 180) {
           $this->pdf->AddPage(['L','A4',]);
-          $this->pdf->Rect(5,5,287,193);
+          // $this->pdf->Rect(5,5,287,193);
           $this->pdf->header($TYPE);
         }
       }
@@ -134,7 +134,7 @@ class PDFController extends Controller
               }
               if ($GET_Y > 180) {
                 $this->pdf->AddPage(['L','A4',]);
-                $this->pdf->Rect(5,5,287,193);
+                // $this->pdf->Rect(5,5,287,193);
                 $this->pdf->header($TYPE);
                 $this->pdf->setX(5);
               }
