@@ -122,6 +122,12 @@
 												</div>
 											</div>
 										</div>
+										<div class="col-md-4">
+											<div class="form-inline">
+												<button class="btn btn-secondary btn-sm mx-1 ml-auto"><i class="fas fa-file-excel fa-lg mx-1"></i>Excel</button>
+												<button class="btn btn-secondary btn-sm mx-1 "	onclick="printdowntime(this)" data-type="sumdowntime"><i class="fas fa-print fa-lg mx-1"></i> Print</button>
+											</div>
+										</div>
 
 									</div>
 								</div>
@@ -147,7 +153,7 @@
 													<tr>
 														<td>{{ $index+1 }}</td>
 														<td class="text-center">{{ $subrow->MACHINE_CODE }}</td>
-														<td>{{ $subrow->MACHINE_NAME }}</td>
+														<td>{{ $subrow->MACHINE_NAME_TH }}</td>
 														<td>{{ $subrow->REPAIR_SUBSELECT_NAME }}</td>
 														<td>{{ $subrow->REPAIR_DETAIL }}</td>
 														<td>{{ $row->MACHINE_CODE_COUNT }}</td>

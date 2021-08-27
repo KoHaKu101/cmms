@@ -258,8 +258,8 @@ class DashboardController extends Controller
                                           ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
                                           ->where('MACHINE_LINE','like','L'.'%')
                                           ->groupBy('MACHINE_UNID')->orderBy('MACHINE_CODE_COUNT','DESC')->get();
-    // dd($ORDER_BY_COUNT);                                      
-    $MACHINEREPAIRREQ  = MachineRepairREQ::select('*')
+    // dd($ORDER_BY_COUNT);
+    $MACHINEREPAIRREQ  = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
                                           ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
                                           ->where('MACHINE_LINE','like','L'.'%')->orderBy('MACHINE_CODE','DESC')->get();
 
