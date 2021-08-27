@@ -69,7 +69,12 @@ class DowntimeHeader extends Fpdf
     //end head ****************************************************************
 
 }
-
+function SetType($st){
+  $this->settype = $st;
+}
+function SetBorder($b){
+  $this->border = $b;
+}
 function SetWidths($w)
 {
     //Set the array of column widths
@@ -92,20 +97,43 @@ function Row($data)
     //Issue a page break first if needed
     $this->CheckPageBreak($h);
     //Draw the cells of the row
-    for($i=0;$i<count($data);$i++)
-    {
+    if ($this->settype == 'DOWNTIME') {
+      for($i=0;$i<count($data);$i++){
+          $w=$this->widths[$i];
+          $a=isset($this->aligns[$i]) ? $this->aligns[$i] : 'L';
+          $b=isset($this->border[$i]) ? $this->border[$i] : 0;
+          //Save the current position
+          $x=$this->GetX();
+          $y=$this->GetY();
+          //Draw the border
+          $this->Rect($x,$y,$w,$h);
+          //Print the text
+          $this->MultiCell($w,7,$data[$i],$b,$a);
+          //Put the position to the right of the cell
+          $this->SetXY($x+$w,$y);
+      }
+    }elseif ($this->settype == 'SUMDOWNTIME') {
+      for($i=0;$i<count($data);$i++){
         $w=$this->widths[$i];
         $a=isset($this->aligns[$i]) ? $this->aligns[$i] : 'L';
+        $b=isset($this->border[$i]) ? $this->border[$i] : 0;
         //Save the current position
         $x=$this->GetX();
         $y=$this->GetY();
-        //Draw the border
-        $this->Rect($x,$y,$w,$h);
+        if ($i == 3 || $i == 4 ||$i == 5||$i == 6) {
+          $this->Rect($x,$y,$w,$h);
+          $this->MultiCell($w,7,$data[$i],$b,$a);
+        }elseif ($i == 0 || $i == 1 ||$i == 2||$i == 7) {
+          $this->MultiCell($w,$h,$data[$i],$b,$a);
+        }
+
         //Print the text
-        $this->MultiCell($w,7,$data[$i],0,$a);
+
         //Put the position to the right of the cell
         $this->SetXY($x+$w,$y);
     }
+    }
+
     //Go to the next line
     $this->Ln($h);
 }

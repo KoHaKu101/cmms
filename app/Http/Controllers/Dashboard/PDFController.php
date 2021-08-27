@@ -35,7 +35,7 @@ class PDFController extends Controller
     $this->pdf->header($TYPE);
 
     if ($TYPE == 'DOWNTIME') {
-
+      $this->pdf->SetType($TYPE);
       $index = 1;
       $this->pdf->SetWidths(array(8,20,39,45,50,25,25,20,20,35));
       $this->pdf->SetAligns(array('C','L','L','L','L','C','C','C','C','L'));
@@ -74,14 +74,14 @@ class PDFController extends Controller
 
     }
     elseif ($TYPE == 'SUMDOWNTIME') {
-
+      $this->pdf->SetType($TYPE);
       $DATA_SUM_DOWNTIME  = MachineRepairREQ::select('MACHINE_CODE','MACHINE_UNID','MACHINE_NAME')
                                             ->selectraw('SUM(DOWNTIME) as DOWNTIME,dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
                                             ->where('DOC_YEAR','=',date('Y'))
                                             ->where('DOC_MONTH','=',date('n'))->where('CLOSE_STATUS','=',1)->groupBy('MACHINE_CODE')
                                             ->groupBy('MACHINE_UNID')->groupBy('MACHINE_NAME')
                                             ->orderBy('DOWNTIME','DESC')->get();
-      $this->pdf->SetWidths(array(8,20,39,45,50,25,25,20,20,35));
+      $this->pdf->SetWidths(array(8,20,39,60,65,30,30,35));
       $this->pdf->SetAligns(array('C','L','L','L','L','C','C','C','C','L'));
       foreach ($DATA_SUM_DOWNTIME as $index => $row){
           $REPAIR_SUM   				 = $DATA_REPAIR->where('MACHINE_UNID','=',$row->MACHINE_UNID);
@@ -92,46 +92,87 @@ class PDFController extends Controller
           foreach ($REPAIR_SUM  as $sub_index => $sub_row){
               $DOWNTIME = $sub_row->DOWNTIME == 0 ? '-' : $sub_row->DOWNTIME;
               $this->pdf->setX(5);
+
               $GET_Y = $this->pdf->getY();
               $number_count = $number++;
 
               if($number_count == $ROW_SPAN && $number_count == number_format($ROW_SPAN/2)){
-                $this->pdf->Cell(8,  7, $index+1               ,'BR',0,'C',0);
-                $this->pdf->Cell(20, 7, $sub_row->MACHINE_CODE ,'BR',0,'L',0);
-                $this->pdf->Cell(39, 7, iconv('UTF-8', 'cp874', $sub_row->MACHINE_NAME_TH) ,'BR',0,'L',0);
-
+                // $this->pdf->Cell(8,  7, $index+1               ,'BR',0,'C',0);
+                // $this->pdf->Cell(20, 7, $sub_row->MACHINE_CODE ,'BR',0,'L',0);
+                // $this->pdf->Cell(39, 7, iconv('UTF-8', 'cp874', $sub_row->MACHINE_NAME_TH) ,'BR',0,'L',0);
+                $ONE         = $index+1;
+                $TWO         = $sub_row->MACHINE_CODE;
+                $THREE       = iconv('UTF-8', 'cp874', $sub_row->MACHINE_NAME_TH);
+                $BORDERONE   = 'LBR';
+                $BORDERTWO   = 'LBR';
+                $BORDERTHREE = 'LBR';
               }elseif ($number_count == $ROW_SPAN) {
-                $this->pdf->Cell(8,  7, ''   ,'BR',0,'C',0);
-                $this->pdf->Cell(20, 7, ''   ,'BR',0,'L',0);
-                $this->pdf->Cell(39, 7, ''   ,'BR',0,'L',0);
-
+                $ONE          = '';
+                $TWO          = '';
+                $THREE        = '';
+                $BORDERONE    = 'LBR';
+                $BORDERTWO    = 'LBR';
+                $BORDERTHREE  = 'LBR';
               }elseif ($number_count == number_format($ROW_SPAN/2)) {
-                $this->pdf->Cell(8,  7, $index+1               ,'R',0,'C',0);
-                $this->pdf->Cell(20, 7, $sub_row->MACHINE_CODE ,'R',0,'L',0);
-                $this->pdf->Cell(39, 7, iconv('UTF-8', 'cp874', $sub_row->MACHINE_NAME_TH)  ,'R',0,'L',0);
-
+                $ONE         = $index+1;
+                $TWO         = $sub_row->MACHINE_CODE;
+                $THREE       = iconv('UTF-8', 'cp874', $sub_row->MACHINE_NAME_TH);
+                $BORDERONE   = 'LR';
+                $BORDERTWO   = 'LR';
+                $BORDERTHREE = 'LR';
               }else {
-                $this->pdf->Cell(8,  7, ''  ,'R',0,'C',0);
-                $this->pdf->Cell(20, 7, ''  ,'R',0,'L',0);
-                $this->pdf->Cell(39, 7, ''  ,'R',0,'L',0);
+                $ONE          = '';
+                $TWO          = '';
+                $THREE        = '';
 
+                $BORDERONE    = 'LR';
+                $BORDERTWO    = 'LR';
+                $BORDERTHREE  = 'LR';
               }
-              //
               // .$sub_row->REPAIR_DETAIL
-              $this->pdf->Cell(60, 7, iconv('UTF-8', 'cp874', $NUMBER_SUBSELECT_NAME++ .'. '.$sub_row->REPAIR_SUBSELECT_NAME)  ,1,0,'L',0);
-              $this->pdf->Cell(65, 7, iconv('UTF-8', 'cp874', $NUMBER_REPAIR_DETAIL++ .'. เปลี่ยนสายพาน POLY FLEX : 3/7M-1450 =1 pcs ราคา 1995 บาท')              ,1,0,'L',0);
-              $this->pdf->Cell(30, 7, iconv('UTF-8', 'cp874', $sub_row->CLOSE_BY)          ,1,0,'L',0);
-              $this->pdf->Cell(30, 7, $DOWNTIME     ,1,0,'C',0);
+
+              $FOUR  = iconv('UTF-8', 'cp874', $NUMBER_SUBSELECT_NAME++ .'. '.$sub_row->REPAIR_SUBSELECT_NAME);
+              $FIVE  = iconv('UTF-8', 'cp874', $NUMBER_REPAIR_DETAIL++ .'. '.$sub_row->REPAIR_DETAIL);
+              $SIX   = iconv('UTF-8', 'cp874', $sub_row->CLOSE_BY);
+              $SEVEN = $DOWNTIME;
+              $BORDERFOUR   = 'LR';
+              $BORDERFIVE   = 'LR';
+              $BORDERSIX    = 'LR';
+              $BORDERSEVEN  = 'LR';
 
               if ($number_count == $ROW_SPAN && $number_count == number_format($ROW_SPAN/2)) {
-                $this->pdf->Cell(35, 7, $row->DOWNTIME ,'BR',1,'C',0);
+                $Eigth = $row->DOWNTIME;
+                $BORDEREigth = 'LBR';
               }elseif ($number_count == $ROW_SPAN) {
-                $this->pdf->Cell(35, 7, '' ,'BR',1,'C',0);
+                $Eigth = '';
+                $BORDEREigth = 'LBR';
               }elseif ($number_count == number_format($ROW_SPAN/2)) {
-                $this->pdf->Cell(35, 7, $row->DOWNTIME ,'R',1,'C',0);
+                $Eigth =$row->DOWNTIME ;
+                $BORDEREigth = 'LR';
               }else {
-                $this->pdf->Cell(35, 7, '' ,'R',1,'C',0);
+                $Eigth = '';
+                $BORDEREigth = 'LR';
               }
+              $this->pdf->SetBorder(array(
+                 $BORDERONE
+                ,$BORDERTWO
+                ,$BORDERTHREE
+                ,$BORDERFOUR
+                ,$BORDERFIVE
+                ,$BORDERSIX
+                ,$BORDERSEVEN
+                ,$BORDEREigth
+              ));
+              $this->pdf->Row(array(
+                 $ONE
+                ,$TWO
+                ,$THREE
+                ,$FOUR
+                ,$FIVE
+                ,$SIX
+                ,$SEVEN
+                ,$Eigth
+              ));
               if ($GET_Y > 180) {
                 $this->pdf->AddPage(['L','A4',]);
                 // $this->pdf->Rect(5,5,287,193);
