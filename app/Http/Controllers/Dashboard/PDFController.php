@@ -95,59 +95,41 @@ class PDFController extends Controller
               $GET_Y = $this->pdf->getY();
               $number_count = $number++;
 
-
               if($number_count == $ROW_SPAN && $number_count == number_format($ROW_SPAN/2)){
-                // $this->pdf->Cell(8,  7, $index+1               ,'BR',0,'C',0);
-                // $this->pdf->Cell(20, 7, $sub_row->MACHINE_CODE ,'BR',0,'L',0);
-                // $this->pdf->Cell(39, 7, iconv('UTF-8', 'cp874', $sub_row->MACHINE_NAME_TH) ,'BR',0,'L',0);
-              $ONE    =  $index+1;
-              $TWO    =  $sub_row->MACHINE_CODE;
-              $THREE  =  iconv('UTF-8', 'cp874', $sub_row->MACHINE_NAME_TH);
-              }elseif ($number_count == $ROW_SPAN) {
-                // $this->pdf->Cell(8,  7, ''   ,'BR',0,'C',0);
-                // $this->pdf->Cell(20, 7, ''   ,'BR',0,'L',0);
-                // $this->pdf->Cell(39, 7, ''   ,'BR',0,'L',0);
-              $ONE    =  '';
-              $TWO    =  '';
-              $THREE  =  '';
-              }elseif ($number_count == number_format($ROW_SPAN/2)) {
-                // $this->pdf->Cell(8,  7, $index+1               ,'R',0,'C',0);
-                // $this->pdf->Cell(20, 7, $sub_row->MACHINE_CODE ,'R',0,'L',0);
-                // $this->pdf->Cell(39, 7, iconv('UTF-8', 'cp874', $sub_row->MACHINE_NAME_TH)  ,'R',0,'L',0);
-                $ONE    =  $index+1;
-                $TWO    =  $sub_row->MACHINE_CODE;
-                $THREE  =  iconv('UTF-8', 'cp874', $sub_row->MACHINE_NAME_TH);
-              }else {
-                // $this->pdf->Cell(8,  7, ''  ,'R',0,'C',0);
-                // $this->pdf->Cell(20, 7, ''  ,'R',0,'L',0);
-                // $this->pdf->Cell(39, 7, ''  ,'R',0,'L',0);
-                $ONE    =  '';
-                $TWO    =  '';
-                $THREE  =  '';
-              }
+                $this->pdf->Cell(8,  7, $index+1               ,'BR',0,'C',0);
+                $this->pdf->Cell(20, 7, $sub_row->MACHINE_CODE ,'BR',0,'L',0);
+                $this->pdf->Cell(39, 7, iconv('UTF-8', 'cp874', $sub_row->MACHINE_NAME_TH) ,'BR',0,'L',0);
 
-              // $this->pdf->Cell(60, 7, iconv('UTF-8', 'cp874', $NUMBER_SUBSELECT_NAME++ .'. '.$sub_row->REPAIR_SUBSELECT_NAME)  ,1,0,'L',0);
-              // $this->pdf->Cell(65, 7, iconv('UTF-8', 'cp874', $NUMBER_REPAIR_DETAIL++ .'. '.$sub_row->REPAIR_DETAIL)              ,1,0,'L',0);
-              // $this->pdf->Cell(30, 7, iconv('UTF-8', 'cp874', 'ผู้ดำเนินการ')          ,1,0,'L',0);
-              // $this->pdf->Cell(30, 7, $DOWNTIME     ,1,0,'C',0);
-               $FOUR  = iconv('UTF-8', 'cp874', $NUMBER_SUBSELECT_NAME++ .'. '.$sub_row->REPAIR_SUBSELECT_NAME);
-               $FIVE  = iconv('UTF-8', 'cp874', $NUMBER_REPAIR_DETAIL++ .'. '.$sub_row->REPAIR_DETAIL);
-               $SIX   = iconv('UTF-8', 'cp874', 'ผู้ดำเนินการ');
-               $SEVEN = $DOWNTIME;
-              if ($number_count == $ROW_SPAN && $number_count == number_format($ROW_SPAN/2)) {
-                // $this->pdf->Cell(35, 7, $row->DOWNTIME ,'BR',1,'C',0);
-                $eight = $row->DOWNTIME;
               }elseif ($number_count == $ROW_SPAN) {
-                // $this->pdf->Cell(35, 7, '' ,'BR',1,'C',0);
-                $eight = '';
+                $this->pdf->Cell(8,  7, ''   ,'BR',0,'C',0);
+                $this->pdf->Cell(20, 7, ''   ,'BR',0,'L',0);
+                $this->pdf->Cell(39, 7, ''   ,'BR',0,'L',0);
+
               }elseif ($number_count == number_format($ROW_SPAN/2)) {
-                // $this->pdf->Cell(35, 7, $row->DOWNTIME ,'R',1,'C',0);
-                $eight = $row->DOWNTIME;
+                $this->pdf->Cell(8,  7, $index+1               ,'R',0,'C',0);
+                $this->pdf->Cell(20, 7, $sub_row->MACHINE_CODE ,'R',0,'L',0);
+                $this->pdf->Cell(39, 7, iconv('UTF-8', 'cp874', $sub_row->MACHINE_NAME_TH)  ,'R',0,'L',0);
+
               }else {
-                // $this->pdf->Cell(35, 7, '' ,'R',1,'C',0);
-                $eight = '';
+                $this->pdf->Cell(8,  7, ''  ,'R',0,'C',0);
+                $this->pdf->Cell(20, 7, ''  ,'R',0,'L',0);
+                $this->pdf->Cell(39, 7, ''  ,'R',0,'L',0);
+
               }
-              $this->pdf->Row(array($ONE,$TWO,$THREE,$FOUR,$FIVE,$SIX,$SEVEN,$eight));
+              $this->pdf->Cell(60, 7, iconv('UTF-8', 'cp874', $NUMBER_SUBSELECT_NAME++ .'. '.$sub_row->REPAIR_SUBSELECT_NAME)  ,1,0,'L',0);
+              $this->pdf->Cell(65, 7, iconv('UTF-8', 'cp874', $NUMBER_REPAIR_DETAIL++ .'. '.$sub_row->REPAIR_DETAIL)              ,1,0,'L',0);
+              $this->pdf->Cell(30, 7, iconv('UTF-8', 'cp874', $sub_row->CLOSE_BY)          ,1,0,'L',0);
+              $this->pdf->Cell(30, 7, $DOWNTIME     ,1,0,'C',0);
+
+              if ($number_count == $ROW_SPAN && $number_count == number_format($ROW_SPAN/2)) {
+                $this->pdf->Cell(35, 7, $row->DOWNTIME ,'BR',1,'C',0);
+              }elseif ($number_count == $ROW_SPAN) {
+                $this->pdf->Cell(35, 7, '' ,'BR',1,'C',0);
+              }elseif ($number_count == number_format($ROW_SPAN/2)) {
+                $this->pdf->Cell(35, 7, $row->DOWNTIME ,'R',1,'C',0);
+              }else {
+                $this->pdf->Cell(35, 7, '' ,'R',1,'C',0);
+              }
               if ($GET_Y > 193) {
                 $this->pdf->AddPage(['L','A4',]);
                 $this->pdf->Rect(5,5,287,193);
