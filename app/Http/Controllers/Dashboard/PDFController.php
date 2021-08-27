@@ -148,9 +148,9 @@ class PDFController extends Controller
                 $eight = '';
               }
               $this->pdf->Row(array($ONE,$TWO,$THREE,$FOUR,$FIVE,$SIX,$SEVEN,$eight));
-              if ($GET_Y > 198) {
+              if ($GET_Y > 193) {
                 $this->pdf->AddPage(['L','A4',]);
-                $this->pdf->Rect(5,5,287,200);
+                $this->pdf->Rect(5,5,287,193);
                 $this->pdf->header($TYPE);
                 $this->pdf->setX(5);
               }
