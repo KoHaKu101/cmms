@@ -67,7 +67,6 @@ class PDFController extends Controller
         $GET_Y = $this->pdf->getY();
         if ($GET_Y > 180) {
           $this->pdf->AddPage(['L','A4',]);
-          // $this->pdf->Rect(5,5,287,193);
           $this->pdf->header($TYPE);
         }
       }
@@ -97,9 +96,6 @@ class PDFController extends Controller
               $number_count = $number++;
 
               if($number_count == $ROW_SPAN && $number_count == number_format($ROW_SPAN/2)){
-                // $this->pdf->Cell(8,  7, $index+1               ,'BR',0,'C',0);
-                // $this->pdf->Cell(20, 7, $sub_row->MACHINE_CODE ,'BR',0,'L',0);
-                // $this->pdf->Cell(39, 7, iconv('UTF-8', 'cp874', $sub_row->MACHINE_NAME_TH) ,'BR',0,'L',0);
                 $ONE         = $index+1;
                 $TWO         = $sub_row->MACHINE_CODE;
                 $THREE       = iconv('UTF-8', 'cp874', $sub_row->MACHINE_NAME_TH);
@@ -129,7 +125,6 @@ class PDFController extends Controller
                 $BORDERTWO    = 'LR';
                 $BORDERTHREE  = 'LR';
               }
-              // .$sub_row->REPAIR_DETAIL
 
               $FOUR  = iconv('UTF-8', 'cp874', $NUMBER_SUBSELECT_NAME++ .'. '.$sub_row->REPAIR_SUBSELECT_NAME);
               $FIVE  = iconv('UTF-8', 'cp874', $NUMBER_REPAIR_DETAIL++ .'. '.$sub_row->REPAIR_DETAIL);
