@@ -213,7 +213,6 @@
 												<th width="15%">วิธีแก้ไข</th>
 												<th width="6%">เวลา(นาที)</th>
 												<th width="6%">รวม(นาที)</th>
-
 											</tr>
 										</thead>
 										<tbody>

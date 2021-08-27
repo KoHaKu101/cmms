@@ -128,7 +128,7 @@
 							</div>
 							<div class="card-body">
 								<div class="table">
-									<table class="table table-bordered table-head-bg-info table-bordered-bd-info" id="table_count_repair">
+									<table class="table table-bordered table-head-bg-info table-bordered-bd-info" id="tablecountrepair">
 										<thead>
 											<tr>
 												<th width="2%">No.</th>
@@ -140,13 +140,12 @@
 											</tr>
 										</thead>
 										<tbody>
-											@php
-												$NO = 1;
-											@endphp
-											@foreach ($ORDER_BY_COUNT as $key => $row)
-												@foreach ($MACHINEREPAIRREQ->where('MACHINE_UNID','=',$row->MACHINE_UNID) as $key => $subrow)
+
+											@foreach ($ORDER_BY_COUNT as $index => $row)
+
+												@foreach ($MACHINEREPAIRREQ->where('MACHINE_UNID','=',$row->MACHINE_UNID) as $subindex => $subrow)
 													<tr>
-														<td>{{ $NO++ }}</td>
+														<td>{{ $index+1 }}</td>
 														<td class="text-center">{{ $subrow->MACHINE_CODE }}</td>
 														<td>{{ $subrow->MACHINE_NAME }}</td>
 														<td>{{ $subrow->REPAIR_SUBSELECT_NAME }}</td>
@@ -205,7 +204,7 @@
 <script src="{{ asset('assets/js/dataTables.rowsGroup.js')}}"></script>
 <script>
 //
-$('#table_count_repair').DataTable({
+$('#tablecountrepair').DataTable({
 		'rowsGroup': [0,1,2,5],
 		"pageLength": 20,
 		"bLengthChange": false,
