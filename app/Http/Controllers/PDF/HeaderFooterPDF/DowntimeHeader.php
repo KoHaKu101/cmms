@@ -32,6 +32,7 @@ class DowntimeHeader extends Fpdf
         $this->SetFont('THSarabunNew','',14);
       $this->SetFillColor(206,206,206);
         $this->setX(5);
+
         $this->Cell(8,  7, iconv('UTF-8', 'cp874', 'No.')               ,1,0,'C',1);
         $this->Cell(20, 7, iconv('UTF-8', 'cp874', 'MC-CODE')           ,1,0,'C',1);
         $this->Cell(39, 7, iconv('UTF-8', 'cp874', 'MC-NAME')           ,1,0,'C',1);
@@ -87,7 +88,7 @@ function Row($data)
     $nb=0;
     for($i=0;$i<count($data);$i++)
         $nb=max($nb,$this->NbLines($this->widths[$i],$data[$i]));
-    $h=5*$nb;
+    $h=7*$nb;
     //Issue a page break first if needed
     $this->CheckPageBreak($h);
     //Draw the cells of the row
@@ -101,7 +102,7 @@ function Row($data)
         //Draw the border
         $this->Rect($x,$y,$w,$h);
         //Print the text
-        $this->MultiCell($w,5,$data[$i],0,$a);
+        $this->MultiCell($w,7,$data[$i],0,$a);
         //Put the position to the right of the cell
         $this->SetXY($x+$w,$y);
     }
@@ -116,8 +117,7 @@ function CheckPageBreak($h)
         $this->AddPage($this->CurOrientation);
 }
 
-function NbLines($w,$txt)
-{
+function NbLines($w,$txt){
     //Computes the number of lines a MultiCell of width w will take
     $cw=&$this->CurrentFont['cw'];
     if($w==0)
