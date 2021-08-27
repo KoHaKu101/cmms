@@ -166,7 +166,8 @@ class PDFController extends Controller
                                           ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
                                           ->where('MACHINE_LINE','like','L'.'%')
                                           ->groupBy('MACHINE_UNID')->orderBy('MACHINE_CODE_COUNT','DESC')->get();
-    $MACHINEREPAIRREQ  = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH,dbo.decode_utf8(CLOSE_BY) as CLOSE_BY')
+    $MACHINEREPAIRREQ  = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH
+                                                                  ,dbo.decode_utf8(CLOSE_BY) as CLOSE_BY_TH')
                                           ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
                                           ->where('MACHINE_LINE','like','L'.'%')->orderBy('MACHINE_CODE','DESC')->get();
     $this->pdf->SetWidths(array(8,20,39,80,80,40,20));
@@ -218,10 +219,10 @@ class PDFController extends Controller
         $this->pdf->Row(array(
            $ONE
           ,$TWO
-          ,iconv('UTF-8', 'cp874', $THREE)
+          // ,iconv('UTF-8', 'cp874', $THREE)
           ,iconv('UTF-8', 'cp874', $NUMBER_SUBSELECT_NAME++.'. '.$REPAIR_SUBSELECT_NAME)
           ,iconv('UTF-8', 'cp874', $NUMBER_REPAIR_DETAIL++.'. '.$REPAIR_DETAIL)
-          ,iconv('UTF-8', 'cp874', $subrow->CLOSE_BY)
+          ,iconv('UTF-8', 'cp874', $subrow->CLOSE_BY_TH)
           ,iconv('UTF-8', 'cp874', $FOUR)
         ));
       }
