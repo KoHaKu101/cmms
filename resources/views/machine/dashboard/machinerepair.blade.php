@@ -131,20 +131,29 @@
 									<table class="table table-bordered table-head-bg-info table-bordered-bd-info" id="table_dowtime">
 										<thead>
 											<tr>
-												<th width="8%">No.</th>
-												<th width="7%" class="text-center">MC-CODE</th>
-												<th width="15%">MC-NAME</th>
-												<th width="15%">สาเหตุ / อาการที่เสีย</th>
-												<th width="15%">วิธีแก้ไข</th>
-												<th width="6%">เวลา(นาที)</th>
-												<th width="6%">รวม(นาที)</th>
+												<th width="2%">No.</th>
+												<th width="5%" class="text-center">MC-CODE</th>
+												<th width="8%">MC-NAME</th>
+												<th width="25%">สาเหตุ / อาการที่เสีย</th>
+												<th width="25%">วิธีแก้ไข</th>
+												<th width="6%">รวมจำนวน</th>
+
 
 											</tr>
 										</thead>
 										<tbody>
+											@php
+												$NO = 1;
+											@endphp
 											@foreach ($MACHINEREPAIRREQ as $key => $row)
+												
 												<tr>
-													<td>{{ $row->MACHINE_REPORT_NO }}</td>
+													<td>{{ $NO++ }}</td>
+													<td class="text-center">{{ $row->MACHINE_CODE }}</td>
+													<td>{{ $row->MACHINE_NAME }}</td>
+													<td>{{ $row->REPAIR_SUBSELECT_NAME }}</td>
+													<td>{{ $row->REPAIR_DETAIL }}</td>
+													<td>{{ $row->REPAIR_DETAIL }}</td>
 												</tr>
 											@endforeach
 										</tbody>

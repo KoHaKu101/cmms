@@ -238,24 +238,30 @@ class DashboardController extends Controller
     return view('machine.dashboard.downtime',compact('DATA_REPAIR','array_downtime_count','array_downtime_name','DATA_REPAIR_SUM','DATA_SUM_DOWNTIME'));
   }
   public function MachineRepair(Request $request){
-    $MACHINE_LINE   = array('L1','L2','L3','L4','L5','L6',);
 
     $MACHINE_UNID = array();
     $MACHINE_COUNT = array();
     for ($i=1; $i < 7; $i++) {
-      $COUNT_MACHINE  = MachineRepairREQ::selectraw('MACHINE_UNID,MACHINE_UNID,Count(MACHINE_CODE) as MACHINE_CODE_COUNT')
+      $COUNT_MACHINE  = MachineRepairREQ::selectraw('MACHINE_UNID,Count(MACHINE_CODE) as MACHINE_CODE_COUNT')
                                             ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
                                             ->where('MACHINE_LINE','=','L'.$i)
                                             ->groupBy('MACHINE_UNID')->orderBy('MACHINE_CODE_COUNT','DESC')->first();
       $MACHINE = '';
       if (isset($COUNT_MACHINE->MACHINE_UNID)) {
-        $MACHINE        = Machine::select('MACHINE_CODE','MACHINE_LINE')->where('UNID','=',$COUNT_MACHINE->MACHINE_UNID)->orderBy('MACHINE_LINE')->first();
+        $MACHINE        = Machine::select('MACHINE_CODE','MACHINE_LINE')->where('UNID','=',$COUNT_MACHINE->MACHINE_UNID)
+                                 ->orderBy('MACHINE_LINE')->first();
       }
       $MACHINE_CODE['L'.$i]  = isset($MACHINE->MACHINE_CODE)              ? $MACHINE->MACHINE_CODE       : '';
       $MACHINE_COUNT['L'.$i] = isset($COUNT_MACHINE->MACHINE_CODE_COUNT)  ? $COUNT_MACHINE->MACHINE_CODE_COUNT : '';
     }
+    $ORDER_BY_COUNT    = MachineRepairREQ::selectraw('MACHINE_UNID,Count(MACHINE_CODE) as MACHINE_CODE_COUNT')
+                                          ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
+                                          ->where('MACHINE_LINE','like','L'.'%')
+                                          ->groupBy('MACHINE_UNID')->orderBy('MACHINE_CODE_COUNT','DESC')->get();
+    $MACHINEREPAIRREQ  = MachineRepairREQ::select('*')->selectraw('count(MACHINE_CODE) as MACHINE_CODE_COUNT')
+                                          ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
+                                          ->where('MACHINE_LINE','like','L'.'%')->orderBy('MACHINE_CODE','DESC')->get();
 
-    $MACHINEREPAIRREQ = MachineRepairREQ::orderBy('MACHINE_REPORT_NO')->get();
     return View('machine/dashboard/machinerepair',compact('MACHINE_CODE','MACHINE_COUNT','MACHINEREPAIRREQ'));
   }
   public function Notification(Request $request){

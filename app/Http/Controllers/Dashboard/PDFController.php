@@ -67,6 +67,7 @@ class PDFController extends Controller
         $GET_Y = $this->pdf->getY();
         if ($GET_Y > 180) {
           $this->pdf->AddPage(['L','A4',]);
+          $this->pdf->setX(5);
           $this->pdf->header($TYPE);
         }
       }
@@ -168,9 +169,9 @@ class PDFController extends Controller
                 ,$SEVEN
                 ,$Eigth
               ));
-              if ($GET_Y > 180) {
+              if ($GET_Y > 160) {
                 $this->pdf->AddPage(['L','A4',]);
-                // $this->pdf->Rect(5,5,287,193);
+                
                 $this->pdf->header($TYPE);
                 $this->pdf->setX(5);
               }
