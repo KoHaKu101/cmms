@@ -57,7 +57,7 @@ class PDFController extends Controller
           ,$row->MACHINE_CODE
           ,iconv('UTF-8', 'cp874', $MACHINE_NAME)
           ,iconv('UTF-8', 'cp874', $REPAIR_SUBSELECT_NAME)
-          ,iconv('UTF-8', 'cp874', $REPAIR_DETAIL)
+          ,iconv('UTF-8', 'cp874', $REPAIR_DETAIL.'เปลี่ยนสายพาน POLY FLEX :3/7M-1450 =1 pcs ราคา 1995บาท')
           ,$INSPECTION_RESULT_TIME
           ,$SPAREPART_RESULT_TIME
           ,$WORK_RESULT_TIME
@@ -65,7 +65,7 @@ class PDFController extends Controller
           ,iconv('UTF-8', 'cp874', $CLOSE_BY)
         ));
         $GET_Y = $this->pdf->getY();
-        if ($GET_Y > 193) {
+        if ($GET_Y > 180) {
           $this->pdf->AddPage(['L','A4',]);
           $this->pdf->Rect(5,5,287,193);
           $this->pdf->header($TYPE);
@@ -116,8 +116,10 @@ class PDFController extends Controller
                 $this->pdf->Cell(39, 7, ''  ,'R',0,'L',0);
 
               }
+              //
+              // .$sub_row->REPAIR_DETAIL
               $this->pdf->Cell(60, 7, iconv('UTF-8', 'cp874', $NUMBER_SUBSELECT_NAME++ .'. '.$sub_row->REPAIR_SUBSELECT_NAME)  ,1,0,'L',0);
-              $this->pdf->Cell(65, 7, iconv('UTF-8', 'cp874', $NUMBER_REPAIR_DETAIL++ .'. '.$sub_row->REPAIR_DETAIL)              ,1,0,'L',0);
+              $this->pdf->Cell(65, 7, iconv('UTF-8', 'cp874', $NUMBER_REPAIR_DETAIL++ .'. เปลี่ยนสายพาน POLY FLEX : 3/7M-1450 =1 pcs ราคา 1995 บาท')              ,1,0,'L',0);
               $this->pdf->Cell(30, 7, iconv('UTF-8', 'cp874', $sub_row->CLOSE_BY)          ,1,0,'L',0);
               $this->pdf->Cell(30, 7, $DOWNTIME     ,1,0,'C',0);
 
