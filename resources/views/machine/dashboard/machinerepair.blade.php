@@ -128,7 +128,7 @@
 							</div>
 							<div class="card-body">
 								<div class="table">
-									<table class="table table-bordered table-head-bg-info table-bordered-bd-info" id="table_dowtime">
+									<table class="table table-bordered table-head-bg-info table-bordered-bd-info" id="table_count_repair">
 										<thead>
 											<tr>
 												<th width="2%">No.</th>
@@ -137,25 +137,25 @@
 												<th width="25%">สาเหตุ / อาการที่เสีย</th>
 												<th width="25%">วิธีแก้ไข</th>
 												<th width="6%">รวมจำนวน</th>
-
-
 											</tr>
 										</thead>
 										<tbody>
 											@php
 												$NO = 1;
 											@endphp
-											@foreach ($MACHINEREPAIRREQ as $key => $row)
-												
-												<tr>
-													<td>{{ $NO++ }}</td>
-													<td class="text-center">{{ $row->MACHINE_CODE }}</td>
-													<td>{{ $row->MACHINE_NAME }}</td>
-													<td>{{ $row->REPAIR_SUBSELECT_NAME }}</td>
-													<td>{{ $row->REPAIR_DETAIL }}</td>
-													<td>{{ $row->REPAIR_DETAIL }}</td>
-												</tr>
+											@foreach ($ORDER_BY_COUNT as $key => $row)
+												@foreach ($MACHINEREPAIRREQ->where('MACHINE_UNID','=',$row->MACHINE_UNID) as $key => $subrow)
+													<tr>
+														<td>{{ $NO++ }}</td>
+														<td class="text-center">{{ $subrow->MACHINE_CODE }}</td>
+														<td>{{ $subrow->MACHINE_NAME }}</td>
+														<td>{{ $subrow->REPAIR_SUBSELECT_NAME }}</td>
+														<td>{{ $subrow->REPAIR_DETAIL }}</td>
+														<td>{{ $row->MACHINE_CODE_COUNT }}</td>
+													</tr>
+												@endforeach
 											@endforeach
+
 										</tbody>
 									</table>
 								</div>
@@ -203,6 +203,22 @@
 <script src="{{ asset('../../assets/js/plugin/datatables/datatables.min.js')}}"></script>
 <script src="{{ asset('assets/js/btntop.js') }}"></script>
 <script src="{{ asset('assets/js/dataTables.rowsGroup.js')}}"></script>
+<script>
+//
+$('#table_count_repair').DataTable({
+		'rowsGroup': [0,1,2,5],
+		"pageLength": 20,
+		"bLengthChange": false,
+		"bFilter": true,
+		"bInfo": false,
+		"bAutoWidth": false,
+		searching: false,
+		paging: false,
+		columnDefs: [
+		{ orderable: false, targets:[0,1,2,3,4,5] }
+	]
+	});
+</script>
 <script>
 	var count_machine  = document.getElementById('line_machine_repair');
 	var machine_repair_chart 	= echarts.init(count_machine);
@@ -286,22 +302,7 @@
 	option && machine_repair_chart.setOption(option);
 
 </script>
-<script>
-//
-// $('#table_dowtime').DataTable({
-// 		'rowsGroup': [0,1,2,6],
-// 		"pageLength": 20,
-// 		"bLengthChange": false,
-// 		"bFilter": true,
-// 		"bInfo": false,
-// 		"bAutoWidth": false,
-// 		searching: false,
-// 		paging: false,
-// 		columnDefs: [
-// 		{ orderable: false, targets:[0,1,2,3,4,5,6] }
-// 	]
-// 	});
-</script>
+
 
 
 @stop

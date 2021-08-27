@@ -258,11 +258,12 @@ class DashboardController extends Controller
                                           ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
                                           ->where('MACHINE_LINE','like','L'.'%')
                                           ->groupBy('MACHINE_UNID')->orderBy('MACHINE_CODE_COUNT','DESC')->get();
-    $MACHINEREPAIRREQ  = MachineRepairREQ::select('*')->selectraw('count(MACHINE_CODE) as MACHINE_CODE_COUNT')
+    // dd($ORDER_BY_COUNT);                                      
+    $MACHINEREPAIRREQ  = MachineRepairREQ::select('*')
                                           ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
                                           ->where('MACHINE_LINE','like','L'.'%')->orderBy('MACHINE_CODE','DESC')->get();
 
-    return View('machine/dashboard/machinerepair',compact('MACHINE_CODE','MACHINE_COUNT','MACHINEREPAIRREQ'));
+    return View('machine/dashboard/machinerepair',compact('MACHINE_CODE','MACHINE_COUNT','MACHINEREPAIRREQ','ORDER_BY_COUNT'));
   }
   public function Notification(Request $request){
     $data = MachineRepairREQ::select('*')->where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(4)->get();
