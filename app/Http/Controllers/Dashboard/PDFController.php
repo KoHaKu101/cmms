@@ -130,7 +130,7 @@ class PDFController extends Controller
               }else {
                 $this->pdf->Cell(35, 7, '' ,'R',1,'C',0);
               }
-              if ($GET_Y > 193) {
+              if ($GET_Y > 180) {
                 $this->pdf->AddPage(['L','A4',]);
                 $this->pdf->Rect(5,5,287,193);
                 $this->pdf->header($TYPE);
