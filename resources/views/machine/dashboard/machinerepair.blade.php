@@ -125,7 +125,7 @@
 										<div class="col-md-4">
 											<div class="form-inline">
 												<button class="btn btn-secondary btn-sm mx-1 ml-auto"><i class="fas fa-file-excel fa-lg mx-1"></i>Excel</button>
-												<button class="btn btn-secondary btn-sm mx-1 "	onclick="printdowntime(this)" data-type="sumdowntime"><i class="fas fa-print fa-lg mx-1"></i> Print</button>
+												<button class="btn btn-secondary btn-sm mx-1 "	onclick="printrepairmachine(this)" ><i class="fas fa-print fa-lg mx-1"></i> Print</button>
 											</div>
 										</div>
 
@@ -209,7 +209,11 @@
 <script src="{{ asset('assets/js/btntop.js') }}"></script>
 <script src="{{ asset('assets/js/dataTables.rowsGroup.js')}}"></script>
 <script>
-//
+function printrepairmachine(){
+	// var type = $(thisdata).data('type');
+	var url  = "{{ route('dashboard.machinerepair.print') }}";
+	window.open(url,'PDFMachineRepair','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');
+}
 $('#tablecountrepair').DataTable({
 		'rowsGroup': [0,1,2,5],
 		"pageLength": 20,

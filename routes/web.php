@@ -108,6 +108,7 @@ Route::get('/dashboard/tablepdm'            ,[DashboardController::class,'TableP
 Route::get('/dashboard/downtime'            ,[DashboardController::class,'Downtime']) ->name('dashboard.downtime');
 Route::get('/dashboard/machinerepair'       ,[DashboardController::class,'MachineRepair']) ->name('dashboard.machinerepair');
 Route::get('/dashboard/downtime/print'      ,[PDFController::class,'PDFDowntime']) ->name('dashboard.downtime.print');
+Route::get('/dashboard/machinerepair/print' ,[PDFController::class,'PDFMachineRepair']) ->name('dashboard.machinerepair.print');
 //Cookie
 Route::post('/cookie/set',[CookieController::class,'setCookie'])->name('cookie.set');
 Route::get('/cookie/get' ,[CookieController::class,'getCookie'])->name('cookie.get');
