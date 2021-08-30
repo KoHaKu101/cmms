@@ -53,10 +53,10 @@
 	<button type="button" style="display:none;" id="startbtn"></button>
 		<div class="content">
 			<div class="panel-header bg-primary-gradient">
-				<div class="page-inner py-5">
+				<div class="py-5 page-inner">
 					<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
 						<div>
-							<h2 class="text-white pb-2 fw-bold">Dashboard</h2>
+							<h2 class="pb-2 text-white fw-bold">Dashboard</h2>
 						</div>
 						</div>
 				</div>
@@ -68,7 +68,7 @@
 							<div class="card-body">
 								<div class="row">
 									<div class="col-5">
-										<div class="icon-big text-center">
+										<div class="text-center icon-big">
 											<i class="fas fa-industry"></i>
 										</div>
 									</div>
@@ -87,7 +87,7 @@
 							<div class="card-body">
 								<div class="row">
 									<div class="col-5">
-										<div class="icon-big text-center">
+										<div class="text-center icon-big">
 											<i class="fas fa-user-check"></i>
 										</div>
 									</div>
@@ -107,7 +107,7 @@
 							<div class="card-body">
 								<div class="row">
 									<div class="col-5">
-										<div class="icon-big text-center">
+										<div class="text-center icon-big">
 											<i class="fas fa-user-clock"></i>
 										</div>
 									</div>
@@ -126,7 +126,7 @@
 							<div class="card-body">
 								<div class="row">
 									<div class="col-5">
-										<div class="icon-big text-center">
+										<div class="text-center icon-big">
 											<i class="fas fa-toolbox fa-lg"></i>
 										</div>
 									</div>
@@ -150,30 +150,30 @@
 						<div class="card-body">
 							<div class="card-title">เครื่องจักรในแต่ล่ะ LINE </div>
 
-							<div class="d-flex flex-wrap justify-content-around pb-2 pt-4">
-								<div class="px-2 pb-2 pb-md-0 text-center">
+							<div class="flex-wrap pt-4 pb-2 d-flex justify-content-around">
+								<div class="px-2 pb-2 text-center pb-md-0">
 									<div id="circles-1"></div>
-									<h6 class="fw-bold mt-3 mb-0">Line 1</h6>
+									<h6 class="mt-3 mb-0 fw-bold">Line 1</h6>
 								</div>
-								<div class="px-2 pb-2 pb-md-0 text-center">
+								<div class="px-2 pb-2 text-center pb-md-0">
 									<div id="circles-2"></div>
-									<h6 class="fw-bold mt-3 mb-0">Line 2</h6>
+									<h6 class="mt-3 mb-0 fw-bold">Line 2</h6>
 								</div>
-								<div class="px-2 pb-2 pb-md-0 text-center">
+								<div class="px-2 pb-2 text-center pb-md-0">
 									<div id="circles-3"></div>
-									<h6 class="fw-bold mt-3 mb-0">Line 3</h6>
+									<h6 class="mt-3 mb-0 fw-bold">Line 3</h6>
 								</div>
-								<div class="px-2 pb-2 pb-md-0 text-center">
+								<div class="px-2 pb-2 text-center pb-md-0">
 									<div id="circles-4"></div>
-									<h6 class="fw-bold mt-3 mb-0">Line 4</h6>
+									<h6 class="mt-3 mb-0 fw-bold">Line 4</h6>
 								</div>
-								<div class="px-2 pb-2 pb-md-0 text-center">
+								<div class="px-2 pb-2 text-center pb-md-0">
 									<div id="circles-5"></div>
-									<h6 class="fw-bold mt-3 mb-0">Line 5</h6>
+									<h6 class="mt-3 mb-0 fw-bold">Line 5</h6>
 								</div>
-								<div class="px-2 pb-2 pb-md-0 text-center">
+								<div class="px-2 pb-2 text-center pb-md-0">
 									<div id="circles-6"></div>
-									<h6 class="fw-bold mt-3 mb-0">Line 6</h6>
+									<h6 class="mt-3 mb-0 fw-bold">Line 6</h6>
 								</div>
 
 							</div>
@@ -215,8 +215,8 @@
 														<span class="avatar-title rounded-circle border border-white {{$dataitem->PRIORITY == '9' ? 'bg-danger' : 'bg-warning'}}" style="width:50px"><i class="fa fa-wrench"></i></span>
 													</div>
 												</div>
-												<div class="flex-1 ml-3 pt-1 col-md-6 col-lg-7">
-													<h4 class="text-uppercase fw-bold mb-1 " style="color:#6c757d;">{{$dataitem->MACHINE_CODE}}
+												<div class="flex-1 pt-1 ml-3 col-md-6 col-lg-7">
+													<h4 class="mb-1 text-uppercase fw-bold " style="color:#6c757d;">{{$dataitem->MACHINE_CODE}}
 													<span class="{{$dataitem->MACHINE_STATUS == '1' ? 'text-danger' : 'text-warning'}} pl-3">
 														@if ($dataitem->PRIORITY == '9')
 															<img src="{{asset('assets/css/flame.png')}}" class="mt--2" width="20px" height="20px">
@@ -308,7 +308,7 @@
 							<div class="row">
 								<div class="col-md-9 form-inline">
 									<div class="card-title">Down Time สูงที่สุด </div>
-									<div class="card-title mx-4">เดือน {{ $CURRENT_MONTH  }}</div>
+									<div class="mx-4 card-title">เดือน {{ $CURRENT_MONTH  }}</div>
 								</div>
 								<div class="col-md-3 d-flex justify-content-end">
 									<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
@@ -338,7 +338,7 @@
 								<div class="col-md-9 form-inline">
 									<div class="card-title">เครื่องจักรเสียสูงสุด </div>
 
-									<div class="card-title mx-4">เดือน {{ $CURRENT_MONTH  }}</div>
+									<div class="mx-4 card-title">เดือน {{ $CURRENT_MONTH  }}</div>
 								</div>
 								<div class="col-md-3 d-flex justify-content-end">
 									<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
@@ -360,8 +360,8 @@
 							<div class="row">
 								<div class="col-md-12 form-inline">
 									<div class="card-title">รายการแจ้งซ่อมสูงสุด </div>
-									<div class="card-title mx-4">เดือน {{ $CURRENT_MONTH  }}</div>
-									<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm ml-auto" id="pills-tab" role="tablist">
+									<div class="mx-4 card-title">เดือน {{ $CURRENT_MONTH  }}</div>
+									<ul class="ml-auto nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
 										<li class="nav-item">
 											<a class="nav-link active" id="pills-today" data-toggle="pill" href="#pills-today" role="tab" aria-selected="true">See More...</a>
 										</li>
@@ -397,7 +397,7 @@
 						</li>
 					</ul>
 				</nav>
-				<div class="copyright ml-auto">
+				<div class="ml-auto copyright">
 					2018, made with <i class="fa fa-heart heart text-danger"></i> by <a href="https://www.themekita.com">ThemeKita</a>
 				</div>
 			</div>
@@ -505,7 +505,7 @@
 	      nameLocation:'center',
 	      nameTextStyle:{
 	          fontSize:'16',
-	          lineHeight: 55
+	          lineHeight: 90
 	      },
 
  	     minInterval:1,
