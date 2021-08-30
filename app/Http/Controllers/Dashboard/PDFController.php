@@ -218,7 +218,7 @@ class PDFController extends Controller
           ,iconv('UTF-8', 'cp874', $FOUR)
         ));
         $GET_Y = $this->pdf->getY();
-        if ($GET_Y > 180) {
+        if ($GET_Y > 187) {
           $this->pdf->AddPage(['L','A4',]);
           $this->pdf->setX(5);
           $this->pdf->header();
