@@ -22,8 +22,9 @@ class CalendarController extends Controller
 
   public function Index(){
     $DATA_MACHINEPLANPM = MachinePlanPm::all();
-    $DATA_PMPLANSPAREPART = SparePartPlan::select('PLAN_DATE','MACHINE_CODE','MACHINE_UNID')
+    $DATA_PMPLANSPAREPART = SparePartPlan::select('PLAN_DATE','MACHINE_CODE','MACHINE_UNID','DOC_YEAR','DOC_MONTH')
                                           ->groupBy('PLAN_DATE')->groupBy('MACHINE_CODE')
+                                          ->groupBy('DOC_YEAR')->groupBy('DOC_MONTH')
                                           ->groupBy('MACHINE_UNID')->get();
 
     return View('machine/celendar/celendar',compact('DATA_MACHINEPLANPM','DATA_PMPLANSPAREPART'));
