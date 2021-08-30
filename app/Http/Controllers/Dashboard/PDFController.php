@@ -97,18 +97,22 @@ class PDFController extends Controller
                 $ONE         = $index+1;                                            $BORDERONE   = 'LBR';
                 $TWO         = $sub_row->MACHINE_CODE;                              $BORDERTWO   = 'LBR';
                 $THREE       = iconv('UTF-8', 'cp874', $sub_row->MACHINE_NAME_TH);  $BORDERTHREE = 'LBR';
+                $Eigth       = number_format($row->DOWNTIME);                       $BORDEREigth = 'LBR';
               }elseif ($number_count == $ROW_SPAN) {
                 $ONE         = ''; $BORDERONE    = 'LBR';
                 $TWO         = ''; $BORDERTWO    = 'LBR';
                 $THREE       = ''; $BORDERTHREE  = 'LBR';
+                $Eigth       = ''; $BORDEREigth  = 'LBR';
               }elseif ($number_count == number_format($ROW_SPAN/2)) {
                 $ONE         = $index+1;                                            $BORDERONE   = 'LR';
                 $TWO         = $sub_row->MACHINE_CODE;                              $BORDERTWO   = 'LR';
                 $THREE       = iconv('UTF-8', 'cp874', $sub_row->MACHINE_NAME_TH);  $BORDERTHREE = 'LR';
+                $Eigth       = number_format($row->DOWNTIME);                       $BORDEREigth = 'LR';
               }else {
                 $ONE         = ''; $BORDERONE    = 'LR';
                 $TWO         = ''; $BORDERTWO    = 'LR';
                 $THREE       = ''; $BORDERTHREE  = 'LR';
+                $Eigth       = ''; $BORDEREigth  = 'LR';
               }
               $FOUR         = iconv('UTF-8', 'cp874', $NUMBER_SUBSELECT_NAME++ .'. '.$sub_row->REPAIR_SUBSELECT_NAME);
               $FIVE         = iconv('UTF-8', 'cp874', $NUMBER_REPAIR_DETAIL++ .'. '.$sub_row->REPAIR_DETAIL);
@@ -119,18 +123,6 @@ class PDFController extends Controller
               $BORDERSIX    = 'LR';
               $BORDERSEVEN  = 'LR';
 
-              if ($number_count == $ROW_SPAN && $number_count == number_format($ROW_SPAN/2)) {
-                $Eigth = number_format($row->DOWNTIME);    $BORDEREigth = 'LBR';
-
-              }elseif ($number_count == $ROW_SPAN) {
-                $Eigth = '';                $BORDEREigth = 'LBR';
-
-              }elseif ($number_count == number_format($ROW_SPAN/2)) {
-                $Eigth =  number_format($row->DOWNTIME);   $BORDEREigth = 'LR';
-
-              }else {
-                $Eigth = '';                $BORDEREigth = 'LR';
-              }
               $this->pdf->SetBorder(array(
                  $BORDERONE   ,$BORDERTWO   ,$BORDERTHREE
                 ,$BORDERFOUR  ,$BORDERFIVE  ,$BORDERSIX
@@ -219,7 +211,7 @@ class PDFController extends Controller
         $this->pdf->Row(array(
            $ONE
           ,$TWO
-          // ,iconv('UTF-8', 'cp874', $THREE)
+          ,$THREE
           ,iconv('UTF-8', 'cp874', $NUMBER_SUBSELECT_NAME++.'. '.$REPAIR_SUBSELECT_NAME)
           ,iconv('UTF-8', 'cp874', $NUMBER_REPAIR_DETAIL++.'. '.$REPAIR_DETAIL)
           ,iconv('UTF-8', 'cp874', $subrow->CLOSE_BY_TH)
