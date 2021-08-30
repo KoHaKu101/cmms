@@ -26,10 +26,10 @@
 
 		<div class="content">
 			<div class="panel-header bg-primary-gradient">
-				<div class="page-inner py-3">
+				<div class="py-3 page-inner">
 					<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
 						<div>
-							<h2 class="text-white pb-2 fw-bold">Calendar (ปฏิทิน)</h2>
+							<h2 class="pb-2 text-white fw-bold">Calendar (ปฏิทิน)</h2>
 						</div>
 						</div>
 						<div class="card">
@@ -140,9 +140,9 @@
 					}
 				@endphp
 					{
-						id: '/machine/calendar/modal?PLAN_TYPE=PLAN_PDM&MACHINE_CODE={{ $sub_row->MACHINE_CODE }}&PLAN_DATE={{ $sub_row->PLAN_DATE }}',
+						id: '#',
 						title: '{{ 'เปลี่ยนอะไหล่ : '.$sub_row->MACHINE_CODE }}',
-						url: '#',
+						url: '{{route('SparPart.Report.Index')}}?MACHINE_SEARCH={{ $sub_row->MACHINE_CODE }}',
 						start: '{{ $sub_row->PLAN_DATE }}',
 						color:'{{ $COLOR }}',
 

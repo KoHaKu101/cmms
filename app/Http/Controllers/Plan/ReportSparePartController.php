@@ -48,7 +48,7 @@ class ReportSparePartController extends Controller
     
     $DOC_YEAR  = $request->DOC_YEAR > 0 ? $request->DOC_YEAR : date('Y');
 
-    $SEARCH = $request->SEARCH != '' ? '%'.$request->SEARCH.'%' : '%';
+    $MACHINE_SEARCH = $request->MACHINE_SEARCH != '' ? '%'.$request->MACHINE_SEARCH.'%' : '%';
     $STATUS = $request->STATUS;
 
     $DOC_MONTH = date('n');
@@ -69,10 +69,10 @@ class ReportSparePartController extends Controller
                                         $query->where('DOC_MONTH','=',$DOC_MONTH);
                                       }
                                     })
-                                    ->where(function ($query) use ($SEARCH) {
-                                        $query->where('MACHINE_CODE', 'like' , $SEARCH)
-                                              ->orWhere('SPAREPART_NAME', 'like' , $SEARCH)
-                                              ->orwhere('SPAREPART_CODE', 'like' , $SEARCH);})
+                                    ->where(function ($query) use ($MACHINE_SEARCH) {
+                                        $query->where('MACHINE_CODE', 'like' , $MACHINE_SEARCH)
+                                              ->orWhere('SPAREPART_NAME', 'like' , $MACHINE_SEARCH)
+                                              ->orwhere('SPAREPART_CODE', 'like' , $MACHINE_SEARCH);})
                                        ->where('MACHINE_LINE','like',$MACHINE_LINE)
                                        ->where('STATUS','!=','COMPLETE')
                                        ->where('STATUS_OPEN','=','9')
@@ -93,10 +93,10 @@ class ReportSparePartController extends Controller
                                         $query->where('DOC_MONTH','=',$DOC_MONTH);
                                       }
                                     })
-                                    ->where(function ($query) use ($SEARCH) {
-                                        $query->where('MACHINE_CODE', 'like', $SEARCH)
-                                              ->orWhere('SPAREPART_NAME', 'like', $SEARCH)
-                                              ->orwhere('SPAREPART_CODE','like',$SEARCH);})
+                                    ->where(function ($query) use ($MACHINE_SEARCH) {
+                                        $query->where('MACHINE_CODE', 'like', $MACHINE_SEARCH)
+                                              ->orWhere('SPAREPART_NAME', 'like', $MACHINE_SEARCH)
+                                              ->orwhere('SPAREPART_CODE','like',$MACHINE_SEARCH);})
                                       ->where('MACHINE_LINE','like',$MACHINE_LINE)
                                        ->where('STATUS','=','COMPLETE')
                                        ->where('STATUS_OPEN','=','9')
@@ -116,10 +116,10 @@ class ReportSparePartController extends Controller
                                         $query->where('DOC_MONTH','=',$DOC_MONTH);
                                       }
                                     })
-                                    ->where(function ($query) use ($SEARCH) {
-                                        $query->where('MACHINE_CODE', 'like', $SEARCH)
-                                              ->orWhere('SPAREPART_NAME', 'like', $SEARCH)
-                                              ->orwhere('SPAREPART_CODE','like',$SEARCH);})
+                                    ->where(function ($query) use ($MACHINE_SEARCH) {
+                                        $query->where('MACHINE_CODE', 'like', $MACHINE_SEARCH)
+                                              ->orWhere('SPAREPART_NAME', 'like', $MACHINE_SEARCH)
+                                              ->orwhere('SPAREPART_CODE','like',$MACHINE_SEARCH);})
                                        ->where('MACHINE_LINE','like',$MACHINE_LINE)
                                        ->where('STATUS_OPEN','=','9')
                                        ->orderBy('PLAN_DATE')
@@ -129,9 +129,9 @@ class ReportSparePartController extends Controller
 
       }
 
-      $SEARCH = str_replace('%','',$SEARCH);
+      $MACHINE_SEARCH = str_replace('%','',$MACHINE_SEARCH);
       $STATUS = str_replace('%','',$STATUS);
-    return view('machine.sparepart.report.index',compact('DATA_SPAREPLAN','DOC_YEAR','DOC_MONTH','SEARCH','STATUS','MACHINE_LINE'));
+    return view('machine.sparepart.report.index',compact('DATA_SPAREPLAN','DOC_YEAR','DOC_MONTH','MACHINE_SEARCH','STATUS','MACHINE_LINE'));
 
   }
   public function Form(Request $request){
@@ -160,9 +160,9 @@ class ReportSparePartController extends Controller
     $htmlconform = '
      <div class="input-group">
      											<div class="input-group-prepend">
-     												<span class="input-group-text bg-info text-white" id="basic-addon3" >เลื่อนแผน</span>
+     												<span class="text-white input-group-text bg-info" id="basic-addon3" >เลื่อนแผน</span>
      											</div>
-     											<input type="text" class="col-md-8 form-control form-control-sm bg-bluelight text-black"
+     											<input type="text" class="text-black col-md-8 form-control form-control-sm bg-bluelight"
                           id="PLAN_CHANGE" name="PLAN_CHANGE" autocomplete="off">
      										</div>
     										<button type="button" class="btn btn-warning btn-sm " onclick="btnconfirm()">Confirm</button>';
@@ -178,13 +178,13 @@ class ReportSparePartController extends Controller
       <div class="col-md-4">
         <div class="form-group">
           <label for="SPAREPART_CODE">รหัสอะไหล่</label>
-          <input type="text" class="form-control-sm bg-bluelight text-black form-control-plaintext" value="'.$PLAN->SPAREPART_CODE.'"  readonly>
+          <input type="text" class="text-black form-control-sm bg-bluelight form-control-plaintext" value="'.$PLAN->SPAREPART_CODE.'"  readonly>
         </div>
       </div>
       <div class="col-md-8">
         <div class="form-group">
           <label for="SPAREPART_CODE">รายละเอียด</label>
-          <input type="text" class="form-control-sm bg-bluelight text-black form-control-plaintext" value="'.$PLAN->SPAREPART_NAME.'"  readonly>
+          <input type="text" class="text-black form-control-sm bg-bluelight form-control-plaintext" value="'.$PLAN->SPAREPART_NAME.'"  readonly>
         </div>
       </div>
     </div>
@@ -192,13 +192,13 @@ class ReportSparePartController extends Controller
       <div class="col-md-4">
         <div class="form-group">
           <label for="SPAREPART_CODE">วันที่ตามแผน</label>
-          <input type="text" class="form-control-sm bg-bluelight text-black form-control-plaintext" value="'.date('d/m/Y',strtotime($PLAN->PLAN_DATE)).'" readonly>
+          <input type="text" class="text-black form-control-sm bg-bluelight form-control-plaintext" value="'.date('d/m/Y',strtotime($PLAN->PLAN_DATE)).'" readonly>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group has-error">
           <label for="SPAREPART_CODE">วันที่เปลี่ยน</label>
-          <input type="date" class="form-control form-control-sm bg-bluelight text-black"
+          <input type="date" class="text-black form-control form-control-sm bg-bluelight"
           id="ACT_DATE" name="ACT_DATE" value="'.$COMPLETE_DATE.'"required>
         </div>
       </div>
@@ -206,12 +206,12 @@ class ReportSparePartController extends Controller
         <div class="row">
           <div class="col-md-5 form-group has-error">
             <label for="SPAREPART_CODE">เริ่มเวลา</label>
-            <input type="time" class="form-control form-control-sm bg-bluelight text-black "
+            <input type="time" class="text-black form-control form-control-sm bg-bluelight "
             id="START_TIME" name="START_TIME" value="'.date('H:i').'"required>
           </div>
           <div class="col-md-6 form-group has-error">
             <label for="SPAREPART_CODE">เสร็จ เวลา</label>
-            <input type="time" class="form-control form-control-sm bg-bluelight text-black "
+            <input type="time" class="text-black form-control form-control-sm bg-bluelight "
             id="END_TIME" name="END_TIME" value="'.date('H:i').'"required>
           </div>
         </div>
@@ -221,14 +221,14 @@ class ReportSparePartController extends Controller
       <div class="col-md-4">
         <div class="form-group">
           <label for="SPAREPART_CODE">รุ่น</label>
-          <input type="text" class="form-control-sm bg-bluelight text-black form-control-plaintext"
+          <input type="text" class="text-black form-control-sm bg-bluelight form-control-plaintext"
           value="'.$DETAIL_SPAREPART->SPAREPART_MODEL.'"  readonly>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label for="SPAREPART_CODE">size/ขนาด</label>
-          <input type="text" class="form-control-sm bg-bluelight text-black form-control-plaintext"
+          <input type="text" class="text-black form-control-sm bg-bluelight form-control-plaintext"
           value="'.$DETAIL_SPAREPART->SPAREPART_SIZE.'" readonly>
         </div>
       </div>
@@ -236,12 +236,12 @@ class ReportSparePartController extends Controller
         <div class="row">
         <div class="col-md-5 form-group">
           <label for=" SPAREPART_CODE">จำนวนตามแผน</label>
-          <input type="number" class="form-control-sm bg-bluelight text-black form-control-plaintext"
+          <input type="number" class="text-black form-control-sm bg-bluelight form-control-plaintext"
           value="'.$PLAN->PLAN_QTY.'"  readonly >
         </div>
         <div class="col-md-6 form-group has-error">
           <label for=" SPAREPART_CODE">จำนวนที่เปลี่ยน</label>
-          <input type="number" class="form-control form-control-sm bg-bluelight text-black"
+          <input type="number" class="text-black form-control form-control-sm bg-bluelight"
           id="ACT_QTY" name="ACT_QTY" value="'.$ACT_QTY.'" min=0  required>
         </div>
         </div>
@@ -254,7 +254,7 @@ class ReportSparePartController extends Controller
       <div class="col-md-8">
         <div class="form-group">
           <label for="comment">หมายเหตุ/ข้อเสนอแนะ</label>
-          <textarea class="form-control form-control-sm bg-bluelight text-black" id="REMARK" name="REMARK"
+          <textarea class="text-black form-control form-control-sm bg-bluelight" id="REMARK" name="REMARK"
            rows="2">'.$REMARK.'</textarea>
         </div>
       </div>
@@ -262,12 +262,12 @@ class ReportSparePartController extends Controller
         <div class="row">
           <div class="col-md-5 form-group">
             <label for="SPAREPART_CODE">ราคา</label>
-            <input type="text" class="form-control-sm bg-bluelight text-black form-control-plaintext"
+            <input type="text" class="text-black form-control-sm bg-bluelight form-control-plaintext"
             value="'.number_format($PLAN->COST_STD).'" readonly >
           </div>
           <div class="col-md-6 form-group">
             <label for="SPAREPART_CODE">ราคาทั้งหมด</label>
-            <input type="text" class="form-control-sm bg-bluelight text-black form-control-plaintext"
+            <input type="text" class="text-black form-control-sm bg-bluelight form-control-plaintext"
             value="'.number_format($COST_ACT).'" readonly >
           </div>
         </div>
@@ -286,10 +286,10 @@ class ReportSparePartController extends Controller
     $html = '<div class="row image-gallery">';
     foreach ($DATA_IMG_SPAREPART as $index => $row) {
 
-    $html.='<div class="col-6 col-md-3 mb-4"><a href="#" data-imgunid="'.$row->UNID.'" '.$CHECK_STATUS.'>
+    $html.='<div class="mb-4 col-6 col-md-3"><a href="#" data-imgunid="'.$row->UNID.'" '.$CHECK_STATUS.'>
             <img src="'.asset($row->FILE_PATH).'" class="img-fluid" id="IMGLOCATION'.$row->UNID.'"> </a>';
     if (!isset($BTN_STATUS)) {
-     $html.='<button type="button" class="btn btn-danger btn-sm mx-1 my-1 btn-block" onclick="deleteimg(this)" data-imgunid="'.$row->UNID.'"><i class="fas fa-trash fa-lg"></i></button> </div>';
+     $html.='<button type="button" class="mx-1 my-1 btn btn-danger btn-sm btn-block" onclick="deleteimg(this)" data-imgunid="'.$row->UNID.'"><i class="fas fa-trash fa-lg"></i></button> </div>';
     }
     }
     $html.='</div>' ;
@@ -476,16 +476,16 @@ class ReportSparePartController extends Controller
 
     $DOC_YEAR  = $request->DOC_YEAR > 0 ? $request->DOC_YEAR : date('Y');
     $DOC_MONTH = $request->DOC_MONTH > 0 ? $request->DOC_MONTH : 0;
-    $SEARCH = $request->SEARCH != '' ? '%'.$request->SEARCH.'%' : '%';
+    $MACHINE_SEARCH = $request->MACHINE_SEARCH != '' ? '%'.$request->MACHINE_SEARCH.'%' : '%';
     $where =  [['DOC_YEAR', '=', $DOC_YEAR],['DOC_MONTH','=',$DOC_MONTH]];
     if ($DOC_MONTH == 0) {
       $where =  [['DOC_YEAR', '=', $DOC_YEAR]];
     }
     $DATA_MACHINE_LINE = SparePartPlan::select('MACHINE_LINE')
                                     ->where($where)
-                                    ->where(function ($query) use ($SEARCH) {
-                                        $query->where('MACHINE_CODE', 'like', $SEARCH)
-                                              ->orWhere('SPAREPART_NAME', 'like', $SEARCH);})
+                                    ->where(function ($query) use ($MACHINE_SEARCH) {
+                                        $query->where('MACHINE_CODE', 'like', $MACHINE_SEARCH)
+                                              ->orWhere('SPAREPART_NAME', 'like', $MACHINE_SEARCH);})
                                     ->groupBy('MACHINE_LINE')
                                     ->orderBy('MACHINE_LINE')
                                     ->get();
@@ -514,9 +514,9 @@ class ReportSparePartController extends Controller
       $limit = 31;
       $DETAIL_SPAREPLAN = SparePartPlan::where($where)
                                       ->where('MACHINE_LINE','=',$row->MACHINE_LINE)
-                                      ->where(function ($query) use ($SEARCH) {
-                                          $query->where('MACHINE_CODE', 'like', $SEARCH)
-                                                ->orWhere('SPAREPART_NAME', 'like', $SEARCH);})
+                                      ->where(function ($query) use ($MACHINE_SEARCH) {
+                                          $query->where('MACHINE_CODE', 'like', $MACHINE_SEARCH)
+                                                ->orWhere('SPAREPART_NAME', 'like', $MACHINE_SEARCH);})
                                       ->where('STATUS_OPEN','=',9)
                                       ->orderBy('DOC_YEAR')
                                       ->orderBy('DOC_MONTH')

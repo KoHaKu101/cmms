@@ -93,8 +93,8 @@ button.mfp-close{
 												<div class="row">
 													<div class="col-12 col-md-12 col-lg-9 form-inline">
 													 	<div class="form-group">
-															<h4 class="ml-1 mt-2 " style="color:white;" ><i class="fas fa-clipboard-list fa-lg mr-1"></i> ปี</h4>
-														 	<select class="form-control form-control-sm input-group filled text-info mx-1"
+															<h4 class="mt-2 ml-1 " style="color:white;" ><i class="mr-1 fas fa-clipboard-list fa-lg"></i> ปี</h4>
+														 	<select class="mx-1 form-control form-control-sm input-group filled text-info"
 															 onchange="subminform()" id="DOC_YEAR" name="DOC_YEAR" required>
 															 	@for ($i=2021; $i < date('Y')+3 ; $i++)
 																	<option value="{{ $i }}" {{ $DOC_YEAR == $i ? 'selected' : '' }} >{{$i}}</option>
@@ -102,8 +102,8 @@ button.mfp-close{
 															</select>
 														</div>
 														<div class="form-group">
-															<h4 class="ml-1 mt-2 " style="color:white;" >เดือน</h4>
-															<select class="form-control form-control-sm input-group filled text-info mx-1"
+															<h4 class="mt-2 ml-1 " style="color:white;" >เดือน</h4>
+															<select class="mx-1 form-control form-control-sm input-group filled text-info"
 															onchange="subminform()" id="DOC_MONTH" name="DOC_MONTH" required>
 															<?php
 															// $months = array(0 => 'All',1 => 'มกราคม', 2 => 'กุมภาพันธ์', 3 => 'มีนาคม', 4 => '.', 5 => 'May', 6 => 'Jun.', 7 => 'Jul.', 8 => 'Aug.', 9 => 'Sep.', 10 => 'Oct.', 11 => 'Nov.', 12 => 'Dec.');
@@ -126,8 +126,8 @@ button.mfp-close{
 															</select>
 														</div>
 														<div class="form-group">
-															<h4 class="ml-1 mt-2 " style="color:white;" ><i class="fas fa-clipboard-list fa-lg mr-1"></i> สถานะ</h4>
-														 	<select class="form-control form-control-sm input-group filled text-info mx-1"
+															<h4 class="mt-2 ml-1 " style="color:white;" ><i class="mr-1 fas fa-clipboard-list fa-lg"></i> สถานะ</h4>
+														 	<select class="mx-1 form-control form-control-sm input-group filled text-info"
 															 onchange="subminform()" id="STATUS" name="STATUS">
 																	<option value="" 					{{ $STATUS == "" ? 'selected' : '' }} >All</option>
 																	<option value="NEW" 			{{ $STATUS == 'NEW' ? 'selected' : '' }} >UNCHECK</option>
@@ -135,8 +135,8 @@ button.mfp-close{
 															</select>
 														</div>
 														<div class="form-group">
-															<h4 class="ml-1 mt-2 " style="color:white;" ><i class="fas fa-clipboard-list fa-lg mr-1"></i> LINE</h4>
-														 	<select class="form-control form-control-sm input-group filled text-info mx-1"
+															<h4 class="mt-2 ml-1 " style="color:white;" ><i class="mr-1 fas fa-clipboard-list fa-lg"></i> LINE</h4>
+														 	<select class="mx-1 form-control form-control-sm input-group filled text-info"
 															 onchange="subminform()" id="MACHINE_LINE" name="MACHINE_LINE">
 															 <option value=""> All </option>
 															 	@for ($i=1; $i < 7; $i++)
@@ -148,10 +148,10 @@ button.mfp-close{
 
 													<div class="col-lg-3">
 														<div class="input-group">
-															<input type="text" id="SEARCH" name="SEARCH" class="form-control form-control-sm mt-3"
-															 placeholder="ค้นหา รหัสเครื่องจักร"value="{{ isset($SEARCH) ? $SEARCH : '' }}">
+															<input type="text" id="MACHINE_SEARCH" name="MACHINE_SEARCH" class="mt-3 form-control form-control-sm"
+															 placeholder="ค้นหา รหัสเครื่องจักร"value="{{ isset($MACHINE_SEARCH) ? $MACHINE_SEARCH : '' }}">
 															<div class="input-group-append">
-																<button type="submit" class="btn btn-search pr-1 btn-xs	mt-3">
+																<button type="submit" class="pr-1 mt-3 btn btn-search btn-xs">
 																	<i class="fa fa-search search-icon"></i>
 																</button>
 															</div>
@@ -164,16 +164,16 @@ button.mfp-close{
 												@if (count($DATA_SPAREPLAN) > 0)
 													<div class="row">
 														<div class="col-md-12">
-															<button type="button" class="btn btn-primary btn-sm my-1 float-right"
-															 onclick="positionedPopup('{{ route('SparPart.Report.planmonthprint').'?DOC_YEAR='.$DOC_YEAR.'&DOC_MONTH='.$DOC_MONTH.'&SEARCH='.$SEARCH}}','myWindow');return false"
-															><i class="fas fa-print fa-lg mr-1"></i>รายงานประจำเดือน</button>
+															<button type="button" class="float-right my-1 btn btn-primary btn-sm"
+															 onclick="positionedPopup('{{ route('SparPart.Report.planmonthprint').'?DOC_YEAR='.$DOC_YEAR.'&DOC_MONTH='.$DOC_MONTH.'&MACHINE_SEARCH='.$MACHINE_SEARCH}}','myWindow');return false"
+															><i class="mr-1 fas fa-print fa-lg"></i>รายงานประจำเดือน</button>
 														</div>
 													</div>
 												@endif
 
 												<div class="row">
 													<div class="col-md-12 table-responsive">
-														<table class="table  table-bordered table-head-bg-info table-bordered-bd-info table-striped table-hover">
+														<table class="table table-bordered table-head-bg-info table-bordered-bd-info table-striped table-hover">
 															<thead>
 																<tr>
 																	<th scope="col">#</th>
@@ -208,30 +208,30 @@ button.mfp-close{
 																		<td class="text-right">{{ number_format($row->COST_ACT,0)}} </td>
 																		<td>{{ $row->STATUS == 'COMPLETE' ? date("d-m-Y", strtotime($row->COMPLETE_DATE)) : ''}}</td>
 																		<td>
-																			<button type="button" class="btn btn-primary btn-sm mx-1 my-1 "
+																			<button type="button" class="mx-1 my-1 btn btn-primary btn-sm "
 																			data-planunid="{{ $row->UNID }}"
 																			data-machine_code = "{{$row->MACHINE_CODE}}"
 																			data-planusercheck = "{{$row->USER_CHECK}}"
 																			data-btn_status="VIEW"
 																			onclick="viewform(this)">
-																				<i class="fas fa-eye fa-lg mr-1"></i>View</button>
+																				<i class="mr-1 fas fa-eye fa-lg"></i>View</button>
 																		@if ($row->classtext == 'TRUE')
 																			@if ($row->STATUS == 'COMPLETE')
-																				<button type="button" class="btn btn-danger btn-sm mx-1 my-1"
+																				<button type="button" class="mx-1 my-1 btn btn-danger btn-sm"
 																				data-planunid="{{ $row->UNID }}"
 																				data-machine_code = "{{$row->MACHINE_CODE}}"
 																				data-planusercheck = "{{$row->USER_CHECK}}"
 																				data-btn_status="VOID"
 																				onclick="voidform(this)">
-																					<i class="fas fa-retweet fa-lg mr-1"></i>Void</button>
+																					<i class="mr-1 fas fa-retweet fa-lg"></i>Void</button>
 																			@else
-																				<button type="button" class="btn btn-secondary btn-sm mx-1 my-1"
+																				<button type="button" class="mx-1 my-1 btn btn-secondary btn-sm"
 																				data-planunid="{{ $row->UNID }}"
 																				data-machine_code = "{{$row->MACHINE_CODE}}"
 																				data-planusercheck = "{{$row->USER_CHECK}}"
 																				data-btn_status="CHANGE"
 																				onclick="checkplansparepart(this)">
-																					<i class="fas fa-edit fa-lg mr-1"></i>Change</button>
+																					<i class="mr-1 fas fa-edit fa-lg"></i>Change</button>
 																			@endif
 
 																		@endif
@@ -241,7 +241,7 @@ button.mfp-close{
 																@endforeach
 															</tbody>
 														</table>
-														{{ $DATA_SPAREPLAN->appends(['DOC_YEAR'=>$DOC_YEAR,'DOC_MONTH'=>$DOC_MONTH,'SEARCH'=>$SEARCH,'STATUS' => $STATUS,'MACHINE_LINE'=>$MACHINE_LINE])->links('pagination.default') }}
+														{{ $DATA_SPAREPLAN->appends(['DOC_YEAR'=>$DOC_YEAR,'DOC_MONTH'=>$DOC_MONTH,'MACHINE_SEARCH'=>$MACHINE_SEARCH,'STATUS' => $STATUS,'MACHINE_LINE'=>$MACHINE_LINE])->links('pagination.default') }}
 													</div>
 												</div>
 											</div>
@@ -269,23 +269,23 @@ button.mfp-close{
 
 							 <div class="modal-body">
 								 <div class="row">
- 									<div class="col-md-6 my-2 form-inline" id="BTN_CONFIRM">
+ 									<div class="my-2 col-md-6 form-inline" id="BTN_CONFIRM">
 										<div class="input-group">
 								   <div class="input-group-prepend">
-								   	<span class="input-group-text bg-info text-white" id="basic-addon3">เลื่อนแผน</span>
+								   	<span class="text-white input-group-text bg-info" id="basic-addon3">เลื่อนแผน</span>
 								  	</div>
-								  	<input type="text" class="col-md-8 form-control form-control-sm bg-bluelight text-black" id="PLAN_CHANGE" name="PLAN_CHANGE">
+								  	<input type="text" class="text-black col-md-8 form-control form-control-sm bg-bluelight" id="PLAN_CHANGE" name="PLAN_CHANGE">
 								  </div>
 								 <button type="button" class="btn btn-warning btn-sm btn-confirm">Confirm</button>
  									</div>
 
 
- 									<div class="col-md-6 my-2">
+ 									<div class="my-2 col-md-6">
  										<div class="input-group has-error">
  											<div class="input-group-prepend">
- 												<span class="input-group-text bg-info text-white" id="basic-addon3">ผู้ทำการเปลี่ยน</span>
+ 												<span class="text-white input-group-text bg-info" id="basic-addon3">ผู้ทำการเปลี่ยน</span>
  											</div>
- 											<input type="text" class="form-control form-control-sm bg-bluelight text-black"
+ 											<input type="text" class="text-black form-control form-control-sm bg-bluelight"
  											 id="USER_CHECK" name="USER_CHECK" required>
  										</div>
  									</div>
@@ -314,9 +314,9 @@ button.mfp-close{
 						</div>
 						<div class="modal-body">
 							<div class="col col-lg-12 form-inline">
-								<div class="form-group mx-1">
+								<div class="mx-1 form-group">
 									<label for="exampleFormControlFile1">แนบรูปภาพปฏิบัติงาน</label>
-									<input type="file" class="form-control-file my-1" id="IMG_SPAREPART_FILE_NAME"
+									<input type="file" class="my-1 form-control-file" id="IMG_SPAREPART_FILE_NAME"
 									name="IMG_SPAREPART_FILE_NAME" accept="image/*" required>
 									<input type="hidden" id="IMG_SPAREPART_UNID"name="IMG_SPAREPART_UNID"value="">
 								</div>
