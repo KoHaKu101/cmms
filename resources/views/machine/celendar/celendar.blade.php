@@ -106,7 +106,6 @@
             eventClick: function(info) {
                 var eventObj = info.event;
                 if (eventObj.id) {
-
                     var url = eventObj.id;
                     $.ajax({
                         type: "GET",

@@ -151,30 +151,14 @@
 							<div class="card-title">เครื่องจักรในแต่ล่ะ LINE </div>
 
 							<div class="flex-wrap pt-4 pb-2 d-flex justify-content-around">
-								<div class="px-2 pb-2 text-center pb-md-0">
-									<div id="circles-1"></div>
-									<h6 class="mt-3 mb-0 fw-bold">Line 1</h6>
-								</div>
-								<div class="px-2 pb-2 text-center pb-md-0">
-									<div id="circles-2"></div>
-									<h6 class="mt-3 mb-0 fw-bold">Line 2</h6>
-								</div>
-								<div class="px-2 pb-2 text-center pb-md-0">
-									<div id="circles-3"></div>
-									<h6 class="mt-3 mb-0 fw-bold">Line 3</h6>
-								</div>
-								<div class="px-2 pb-2 text-center pb-md-0">
-									<div id="circles-4"></div>
-									<h6 class="mt-3 mb-0 fw-bold">Line 4</h6>
-								</div>
-								<div class="px-2 pb-2 text-center pb-md-0">
-									<div id="circles-5"></div>
-									<h6 class="mt-3 mb-0 fw-bold">Line 5</h6>
-								</div>
-								<div class="px-2 pb-2 text-center pb-md-0">
-									<div id="circles-6"></div>
-									<h6 class="mt-3 mb-0 fw-bold">Line 6</h6>
-								</div>
+								@for ($i=1; $i < 7; $i++)
+									<div class="px-2 pb-2 text-center pb-md-0">
+										<div id="circles-{{$i}}"></div>
+										<h6 class="mt-3 mb-0 fw-bold">Line {{$i}}</h6>
+									</div>
+								@endfor
+
+
 
 							</div>
 						</div>
@@ -307,7 +291,9 @@
 							<div class="row">
 								<div class="col-md-9 form-inline">
 									<div class="card-title">Down Time สูงที่สุด </div>
-									<div class="mx-4 card-title">เดือน {{ $CURRENT_MONTH  }}</div>
+									<div class="mx-4 card-title" id="MONTH_DOWNTIME">
+										เดือน {{ $CURRENT_MONTH  }}
+									</div>
 								</div>
 								<div class="col-md-3 d-flex justify-content-end">
 									<ul class="nav nav-pills nav-secondary nav-pills-no-bd nav-sm" id="pills-tab" role="tablist">
@@ -355,7 +341,7 @@
 								<div class="col-md-12 form-inline">
 									<div class="card-title">รายการแจ้งซ่อมสูงสุด </div>
 									<div class="mx-4 card-title">เดือน {{ $CURRENT_MONTH  }}</div>
-									
+
 								</div>
 							</div>
 						</div>
