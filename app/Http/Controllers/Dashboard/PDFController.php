@@ -92,7 +92,7 @@ class PDFController extends Controller
 
               $GET_Y = $this->pdf->getY();
               $number_count = $number++;
-              $
+              $CHECK_GET_Y =  ;
               if () {
               if($number_count == $ROW_SPAN && $number_count == number_format($ROW_SPAN/2)){
                 $ONE         = $index+1;                                            $BORDERONE   = 'LBR';
@@ -105,24 +105,24 @@ class PDFController extends Controller
                 $THREE       = ''; $BORDERTHREE  = 'LBR';
                 $Eigth       = ''; $BORDEREigth  = 'LBR';
               }elseif ($number_count == number_format($ROW_SPAN/2)) {
-                $ONE         = $index+1;                                            $BORDERONE   = 'LR';
-                $TWO         = $sub_row->MACHINE_CODE;                              $BORDERTWO   = 'LR';
-                $THREE       = iconv('UTF-8', 'cp874', $sub_row->MACHINE_NAME_TH);  $BORDERTHREE = 'LR';
-                $Eigth       = number_format($row->DOWNTIME);                       $BORDEREigth = 'LR';
+                $ONE         = $index+1;                                            $BORDERONE   = $GET_Y > 160 ? 'LBR' : 'LR';
+                $TWO         = $sub_row->MACHINE_CODE;                              $BORDERTWO   = $GET_Y > 160 ? 'LBR' : 'LR';
+                $THREE       = iconv('UTF-8', 'cp874', $sub_row->MACHINE_NAME_TH);  $BORDERTHREE = $GET_Y > 160 ? 'LBR' : 'LR';
+                $Eigth       = number_format($row->DOWNTIME);                       $BORDEREigth = $GET_Y > 160 ? 'LBR' : 'LR';
               }else {
-                $ONE         = ''; $BORDERONE    = 'LR';
-                $TWO         = ''; $BORDERTWO    = 'LR';
-                $THREE       = ''; $BORDERTHREE  = 'LR';
-                $Eigth       = ''; $BORDEREigth  = 'LR';
+                $ONE         = ''; $BORDERONE    = $GET_Y > 160 ? 'LBR' : 'LR';
+                $TWO         = ''; $BORDERTWO    = $GET_Y > 160 ? 'LBR' : 'LR';
+                $THREE       = ''; $BORDERTHREE  = $GET_Y > 160 ? 'LBR' : 'LR';
+                $Eigth       = ''; $BORDEREigth  = $GET_Y > 160 ? 'LBR' : 'LR';
               }
               $FOUR         = iconv('UTF-8', 'cp874', $NUMBER_SUBSELECT_NAME++ .'. '.$sub_row->REPAIR_SUBSELECT_NAME);
               $FIVE         = iconv('UTF-8', 'cp874', $NUMBER_REPAIR_DETAIL++ .'. '.$sub_row->REPAIR_DETAIL);
               $SIX          = iconv('UTF-8', 'cp874', $sub_row->CLOSE_BY);
               $SEVEN        = $DOWNTIME;
-              $BORDERFOUR   = 'LR';
-              $BORDERFIVE   = 'LR';
-              $BORDERSIX    = 'LR';
-              $BORDERSEVEN  = 'LR';
+              $BORDERFOUR   = $GET_Y > 160 ? 'LBR' : 'LR';
+              $BORDERFIVE   = $GET_Y > 160 ? 'LBR' : 'LR';
+              $BORDERSIX    = $GET_Y > 160 ? 'LBR' : 'LR';
+              $BORDERSEVEN  = $GET_Y > 160 ? 'LBR' : 'LR';
 
               $this->pdf->SetBorder(array(
                  $BORDERONE   ,$BORDERTWO   ,$BORDERTHREE
