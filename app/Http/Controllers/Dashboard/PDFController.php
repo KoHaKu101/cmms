@@ -119,10 +119,10 @@ class PDFController extends Controller
               $FIVE         = iconv('UTF-8', 'cp874', $NUMBER_REPAIR_DETAIL++ .'. '.$sub_row->REPAIR_DETAIL);
               $SIX          = iconv('UTF-8', 'cp874', $sub_row->CLOSE_BY);
               $SEVEN        = $DOWNTIME;
-              $BORDERFOUR   = $GET_Y > 160 ? 'LBR' : 'LR';
+              $BORDERFOUR   = 'LR';
               $BORDERFIVE   = $GET_Y > 160 ? 'LBR' : 'LR';
-              $BORDERSIX    = $GET_Y > 160 ? 'LBR' : 'LR';
-              $BORDERSEVEN  = $GET_Y > 160 ? 'LBR' : 'LR';
+              $BORDERSIX    = 'LR';
+              $BORDERSEVEN  = 'LR';
 
               $this->pdf->SetBorder(array(
                  $BORDERONE   ,$BORDERTWO   ,$BORDERTHREE
