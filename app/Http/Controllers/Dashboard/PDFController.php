@@ -222,7 +222,7 @@ class PDFController extends Controller
         if ($GET_Y > 187) {
           $this->pdf->AddPage(['L','A4',]);
           $this->pdf->setX(5);
-          $this->pdf->header();
+          
         }
       }
     }
