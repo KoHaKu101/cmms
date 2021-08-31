@@ -93,7 +93,7 @@ class PDFController extends Controller
               $GET_Y = $this->pdf->getY();
               $number_count = $number++;
 
-              
+
               if($number_count == $ROW_SPAN && $number_count == number_format($ROW_SPAN/2)){
                 $ONE         = $index+1;                                            $BORDERONE   = 'LBR';
                 $TWO         = $sub_row->MACHINE_CODE;                              $BORDERTWO   = 'LBR';
