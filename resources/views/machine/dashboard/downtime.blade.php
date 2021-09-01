@@ -97,7 +97,7 @@
 									</div>
 									<div class="col-md-4">
 										<div class="form-inline">
-											<button class="btn btn-secondary btn-sm mx-1 ml-auto"><i class="fas fa-file-excel fa-lg mx-1"></i>Excel</button>
+											<button class="btn btn-secondary btn-sm mx-1 ml-auto" onclick="exportdowntime()"><i class="fas fa-file-excel fa-lg mx-1"></i>Excel</button>
 											<button class="btn btn-secondary btn-sm mx-1 " onclick="printdowntime(this)" data-type="downtime"><i class="fas fa-print fa-lg mx-1"></i> Print</button>
 										</div>
 									</div>
@@ -378,6 +378,9 @@
 		option && downtime_sum_chart.setOption(option);
 </script>
 <script>
+function exportdowntime(){
+	window.location.href = "{{ url('downtime/export') }}";
+}
 function printdowntime(thisdata){
 	var type = $(thisdata).data('type');
 	var url  = "{{ route('dashboard.downtime.print') }}?TYPE="+type;

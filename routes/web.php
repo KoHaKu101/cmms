@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 //exprotcontroller
 use App\Http\Controllers\Export\MachineExportController;
+use App\Http\Controllers\Dashboard\DowtimeexportController;
 //ImprotController
 use App\Http\Controllers\Import\MachineImportController;
 
@@ -182,6 +183,7 @@ Route::get('machine/repair/notificaiton' ,[DashboardController::class,'Notificat
   Route::get('machine/repair/notificaitoncount' ,[DashboardController::class,'NotificationCount'])  ->name('repair.notificaitoncount');
 //Export and import
 Route::get('machine/export', [MachineExportController::class,'export']);
+Route::get('downtime/export', [DowtimeexportController::class,'Dowtimeexport']);
 
 //assets
 Route::get('machine/assets/machinelist'     ,[MachineController::class,'All'])  ->name('machine.list');

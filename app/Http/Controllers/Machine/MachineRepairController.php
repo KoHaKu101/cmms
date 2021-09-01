@@ -375,13 +375,11 @@ class MachineRepairController extends Controller
       //******************* docno *******************//
       $DATA_MACHINEREPAIRREQ = MachineRepairREQ::selectraw('max(DOC_NO)DOC_NO,max(DOC_DATE)DOC_DATE')->first();
       $DATE_DOCNO            = Carbon::now()->addyears('543');
-      $DOC_NO = 'RE' . $DATE_DOCNO->format('ym') . sprintf('-%04d', 1);
-      if ($DATA_MACHINEREPAIRREQ->DOC_DATE != NULL) {
-        $DATE_RESET_DOCNO      = Carbon::parse($DATA_MACHINEREPAIRREQ->DOC_DATE);
-        if ($DATE_RESET_DOCNO->format('m') == Carbon::now()->format('m') ) {
+      $DOC_NO                = 'RE' . $DATE_DOCNO->format('ym') . sprintf('-%04d', 1);
+      $DATE_RESET_DOCNO      = Carbon::parse($DATA_MACHINEREPAIRREQ->DOC_DATE);
+      if ($DATA_MACHINEREPAIRREQ->DOC_DATE != NULL && $DATE_RESET_DOCNO->format('m') == Carbon::now()->format('m') ) {
           $EXPLOT = str_replace('RE'.$DATE_RESET_DOCNO->addyears('543')->format('ym').'-','',$DATA_MACHINEREPAIRREQ->DOC_NO)+1;
           $DOC_NO = 'RE' . $DATE_RESET_DOCNO->format('ym'). sprintf('-%04d', $EXPLOT);
-        }
       }
       //******************* insert *******************//
       MachineRepairREQ::insert([

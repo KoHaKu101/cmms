@@ -22,26 +22,5 @@ class MachineExport implements FromView
       $data_set = Machine::all();
       return view('machine.export.machine',compact(['data_set']));
   }
-  // public function viewline($MACHINE_): View
-  // {
-  //     $data_set = Machine::all();
-  //     return view('machine.export.machine',compact(['data_set']));
-  // }
-}
 
-// class MachineLineExport extends FromView
-// {
-//   use Exportable;
-//   /**
-//     *@return \Illuminate\Support\Collection
-//     */
-//
-//     public function view(): View
-//   {
-//     public function view($LINE_CODE): View
-//     {
-//         $data_set = Machine::where('MACHINE_LINE','=',$LINE_CODE);
-//         return view('machine.export.machine',compact(['data_set']));
-//     }
-//   }
-// }
+}
