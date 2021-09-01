@@ -41,7 +41,7 @@
 								<a href="{{ route('machine.form') }}"><button class="btn btn-primary  btn-xs">
 									<span class="fas fa-file fa-lg">	New	</span>
 								</button></a>
-								<a href="{{ url('machine/export/') }}">
+								<a href="{{ url('machine/export/').'?LINE_CODE='.$MACHINE_LINE }}">
 								<button class="btn btn-primary  btn-xs">
 									<span class="fas fa-file-export fa-lg">	ExportAll	</span>
 								</button>

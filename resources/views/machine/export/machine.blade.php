@@ -1,11 +1,7 @@
 <table >
   <thead>
-    <tr><th colspan="8" style="text-align:center">ข้อมูลเครื่องจักรทั้งหมด</th></tr>
-    <tr><th colspan="2">จำนวนเครื่องจักร</th></tr>
-    <tr><td colspan="2">Total : {{ $data_set->count() }} เครื่อง</td></tr>
-    <tr></tr>
+    <tr><th colspan="8" style="text-align:center">รายละเอียด เครื่องจักร DownTime</th></tr>
     <tr>
-
       <th >Line</th>
       <th >ชื่อเครื่อง</th>
       <th >รหัสเครื่อง</th>
@@ -13,11 +9,9 @@
       <th >เริ่มใช้งาน</th>
       <th >ซื้อจากบริษัท</th>
       <th >ประเภทเครื่องจักร</th>
-
     </tr>
   </thead>
   <tbody>
-
 
     @foreach ($data_set as $row)
 

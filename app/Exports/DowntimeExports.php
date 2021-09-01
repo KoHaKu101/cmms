@@ -3,16 +3,31 @@
 namespace App\Exports;
 
 use App\Models\Machine\MachineRepairREQ;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\Exportable;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
 
 
-class DowntimeExports implements FromCollection
+
+class DowntimeExports implements WithMultipleSheets,ShouldAutoSize
 {
-    public function collection(){
-    return new Collection([
-        [1, 2, 3],
-        [4, 5, 6]
-    ]);
-}
+  use Exportable;
+
+  private $year;
+  private $type;
+  public function __construct(int $year){
+    $this->year = $year;
+  }
+  public function sheets(): array{
+    $year = $this->year;
+    $sheets = [];
+    for($month = 1 ; $month <= 12; $month++){
+      $sheets[]= new SubDowntimeExports($year,$month);
+    }
+    return $sheets;
+  }
+
 }

@@ -55,7 +55,7 @@ class PDFController extends Controller
           ,$row->MACHINE_CODE
           ,iconv('UTF-8', 'cp874', $MACHINE_NAME)
           ,iconv('UTF-8', 'cp874', $REPAIR_SUBSELECT_NAME)
-          ,iconv('UTF-8', 'cp874', $REPAIR_DETAIL.'เปลี่ยนสายพาน POLY FLEX :3/7M-1450 =1 pcs ราคา 1995บาท')
+          ,iconv('UTF-8', 'cp874', $REPAIR_DETAIL)
           ,$INSPECTION_RESULT_TIME
           ,$SPAREPART_RESULT_TIME
           ,$WORK_RESULT_TIME
@@ -222,7 +222,7 @@ class PDFController extends Controller
         if ($GET_Y > 187) {
           $this->pdf->AddPage(['L','A4',]);
           $this->pdf->setX(5);
-          
+
         }
       }
     }

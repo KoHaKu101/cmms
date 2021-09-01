@@ -57,6 +57,7 @@ class MachineController extends Controller
     return View('machine/assets/machinemenu',compact(['dataset']),['dataset' => $dataset]);
   }
   public function All(Request $request) {
+
     $COOKIE_PAGE_TYPE     = $request->cookie('PAGE_TYPE');
     if ($COOKIE_PAGE_TYPE != 'MACHINE_LIST') {
       $COOKIE_PAGE_TYPE   = $request->cookie();
@@ -371,7 +372,7 @@ class MachineController extends Controller
 
   public function UserHomePage(Request $request){
     $ROLE = $request->role;
-  
+
     if (Gate::allows('isManager_Ma')) {
       return View('machine.userpage.userhomepageforma');
     }elseif(Gate::allows('isManager_Pd')) {

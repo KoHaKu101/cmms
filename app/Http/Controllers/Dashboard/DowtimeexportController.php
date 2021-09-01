@@ -20,7 +20,7 @@ class DowtimeexportController extends Controller
   public function __construct(){
     $this->middleware('auth');
   }
-  public function Dowtimeexport(){
-    return Excel::download(new DowntimeExports, 'users.xlsx');
+  public function Dowtimeexport(Request $request){
+    return Excel::download(new DowntimeExports(date('Y')), 'downtime.xlsx');
   }
 }

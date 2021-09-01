@@ -14,14 +14,13 @@ use App\Models\Machine\Machine;
 class MachineExportController extends Controller
 {
 
-  public function export()
+  public function export(Request $request)
     {
+        $LINE_CODE = $request->LINE_CODE;
+        $MACHINE_EXPORT = new MachineExport($LINE_CODE);
+        
 
-        return Excel::download(new MachineExport, 'Machinelist.xlsx');
+        return Excel::download($MACHINE_EXPORT, 'Machinelist.xlsx');
     }
-    public function exportline($LINE_CODE)
-      {
 
-          return Excel::download(new MachineLineExport, 'Machinelinelist.xlsx');
-      }
   }
