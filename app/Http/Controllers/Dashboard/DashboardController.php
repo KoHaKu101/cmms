@@ -81,7 +81,7 @@ class DashboardController extends Controller
     $array_repair     = array();
     for ($i=1; $i < 7 ; $i++) {
       $data_line            = Machine::select('MACHINE_LINE')->where('MACHINE_LINE','=','L'.$i)->count();
-      $data_repair          = MachineRepairREQ::select('MACHINE_LINE')->where('MACHINE_LINE','=','L'.$i)->count();
+      $data_repair          = MachineRepairREQ::select('MACHINE_LINE')->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))->where('MACHINE_LINE','=','L'.$i)->count();
       $array_line['L'.$i]   = $data_line;
       $array_repair['L'.$i] = $data_repair;
     }
