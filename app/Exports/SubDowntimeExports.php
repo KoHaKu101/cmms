@@ -21,7 +21,7 @@ class SubDowntimeExports implements FromQuery,WithHeadings,WithTitle,ShouldAutoS
     */
   private $year;
   private $month;
-  public function __construct(int $year,int $month,string $type){
+  public function __construct(int $year,int $month){
     $this->year = $year;
     $this->month = $month;
   }

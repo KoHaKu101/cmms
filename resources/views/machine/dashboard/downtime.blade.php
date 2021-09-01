@@ -194,8 +194,7 @@
 										</div>
 										<div class="col-md-4">
 											<div class="form-inline">
-												<button class="btn btn-secondary btn-sm mx-1 ml-auto"><i class="fas fa-file-excel fa-lg mx-1"></i>Excel</button>
-												<button class="btn btn-secondary btn-sm mx-1 "	onclick="printdowntime(this)" data-type="sumdowntime"><i class="fas fa-print fa-lg mx-1"></i> Print</button>
+												<button class="btn btn-secondary btn-sm mx-1 ml-auto"	onclick="printdowntime(this)" data-type="sumdowntime"><i class="fas fa-print fa-lg mx-1"></i> Print</button>
 											</div>
 										</div>
 									</div>
