@@ -46,7 +46,7 @@ class SubDowntimeExports implements FromQuery,WithHeadings,WithTitle,ShouldAutoS
                                    ,dbo.decode_utf8(CLOSE_BY) as CLOSE_BY')
                                    ->where('DOC_YEAR','=',$year)
                                    ->where('DOC_MONTH','=',$month)->where('CLOSE_STATUS','=',1)->orderBy('DOWNTIME','DESC');
-      // return view('machine.export.downtime',compact(['DATA_REPAIR']));
+
 
       return $DATA_REPAIR;
   }
