@@ -546,22 +546,29 @@ class RepairCloseFormController extends Controller
     $RESULT_WORKEROUT       = $DATA_REPAIR_FIRST->WORKEROUT_RESULT_TIME;
     $DOWNTIME               = ($RESULT_INSPECTION + $RESULT_SPAREPART + $RESULT_WORKERIN + $RESULT_WORKEROUT);
 
-    $DATA_MACHINEREPAIRREQ = MachineRepairREQ::select('DOC_DATE','MACHINE_REPORT_NO','CLOSE_DATE')
-                                              ->whereRaw('MACHINE_REPORT_NO = (SELECT MAX(MACHINE_REPORT_NO) FROM [PMCS_CMMS_REPAIR_REQ]) ')
-                                              ->where('DOC_YEAR',date('Y'))->where('DOC_MONTH',date('m'))->first();
-    $MACHINE_REPORT_NO = $DATA_REPAIR_FIRST->MACHINE_REPORT_NO;
-    
-    if ($DATA_REPAIR_FIRST->MACHINE_REPORT_NO == '') {
-
-      $MACHINE_REPORT_NO = 'MRP'.Carbon::now()->addyears(543)->isoFormat('YYMM').'-'.sprintf('%04d', 1);
-
-      if (isset($DATA_MACHINEREPAIRREQ->MACHINE_REPORT_NO) && date('Y-m',strtotime($DATA_MACHINEREPAIRREQ->CLOSE_DATE)) == date('Y-m')) {
-          $REPORT_NO         = $DATA_MACHINEREPAIRREQ->MACHINE_REPORT_NO;
-          $EXPLOT            = str_replace('MRP'.Carbon::now()->addyears(543)->format('ym').'-','',$REPORT_NO)+1;
-          $MACHINE_REPORT_NO = 'MRP' . Carbon::now()->addyears(543)->format('ym'). sprintf('-%04d', $EXPLOT);
-      }
+    // $DATA_MACHINEREPAIRREQ = MachineRepairREQ::select('DOC_DATE','MACHINE_REPORT_NO','CLOSE_DATE')
+    //                                           ->whereRaw('MACHINE_REPORT_NO = (SELECT MAX(MACHINE_REPORT_NO) FROM [PMCS_CMMS_REPAIR_REQ]) ')
+    //                                           ->where('DOC_YEAR',date('Y'))->where('DOC_MONTH',date('m'))->first();
+    // $MACHINE_REPORT_NO = $DATA_REPAIR_FIRST->MACHINE_REPORT_NO;
+    //
+    // if ($DATA_REPAIR_FIRST->MACHINE_REPORT_NO == '') {
+    //
+    //   $MACHINE_REPORT_NO = 'MRP'.Carbon::now()->addyears(543)->isoFormat('YYMM').'-'.sprintf('%04d', 1);
+    //
+    //   if (isset($DATA_MACHINEREPAIRREQ->MACHINE_REPORT_NO) && date('Y-m',strtotime($DATA_MACHINEREPAIRREQ->CLOSE_DATE)) == date('Y-m')) {
+    //       $REPORT_NO         = $DATA_MACHINEREPAIRREQ->MACHINE_REPORT_NO;
+    //       $EXPLOT            = str_replace('MRP'.Carbon::now()->addyears(543)->format('ym').'-','',$REPORT_NO)+1;
+    //       $MACHINE_REPORT_NO = 'MRP' . Carbon::now()->addyears(543)->format('ym'). sprintf('-%04d', $EXPLOT);
+    //   }
+    // }
+    $DATA_MACHINEREPAIRREQ = MachineRepairREQ::selectraw('max(MACHINE_REPORT_NO)MACHINE_REPORT_NO,max(CLOSE_DATE)CLOSE_DATE')->first();
+    $DATE_DOCNO            = Carbon::now()->addyears('543');
+    $MACHINE_REPORT_NO     = 'MRP' . $DATE_DOCNO->format('ym') . sprintf('-%04d', 1);
+    $DATE_RESET_DOCNO      = Carbon::parse($DATA_MACHINEREPAIRREQ->CLOSE_DATE);
+    if ($DATA_MACHINEREPAIRREQ->DOC_DATE != NULL && $DATE_RESET_DOCNO->format('m') == Carbon::now()->format('m') ) {
+        $EXPLOT = str_replace('MRP'.$DATE_RESET_DOCNO->addyears('543')->format('ym').'-','',$DATA_MACHINEREPAIRREQ->MACHINE_REPORT_NO)+1;
+        $MACHINE_REPORT_NO = 'MRP' . $DATE_RESET_DOCNO->format('ym'). sprintf('-%04d', $EXPLOT);
     }
-
 
     $INSPECTION_NAME = $DATA_REPAIR_FIRST->INSPECTION_NAME;
     $DATA_REPAIR->update([
