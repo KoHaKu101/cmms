@@ -113,14 +113,16 @@ class RepairSaveFormPDFController extends Controller
     //   $this->pdf->text(162,168,iconv('UTF-8', 'cp874', $WORKERIN_DIFF));
     //******************************* Box RepairBy Ane ReportBy ********************************************
     $this->pdf->Rect(148,199,52,35);
+
       $WORK_1 = isset($DATA_WORKER[0]->WORKER_NAME_TH) ? $DATA_WORKER[0]->WORKER_NAME_TH : '';
+
       $WORK_2 = isset($DATA_WORKER[1]->WORKER_NAME_TH) ? $DATA_WORKER[1]->WORKER_NAME_TH : '';
       $WORK_3 = isset($DATA_WORKER[2]->WORKER_NAME_TH) ? $DATA_WORKER[2]->WORKER_NAME_TH : '';
       $this->pdf->Rect(148,199,52,7);
         $this->pdf->text(161,204,iconv('UTF-8', 'cp874', 'ช่างผู้ดำเนินการซ่อม'));
-      $this->pdf->text(154,212,iconv('UTF-8', 'cp874', '1  '.($TYPE_WORKER == 'IN' ? $WORK_1 : '')));
-      $this->pdf->text(154,220,iconv('UTF-8', 'cp874', '2  '.($TYPE_WORKER == 'IN' ? $WORK_2 : '')));
-      $this->pdf->text(154,228,iconv('UTF-8', 'cp874', '3  '.($TYPE_WORKER == 'IN' ? $WORK_3 : '')));
+      $this->pdf->text(154,212,iconv('UTF-8', 'cp874', '1  '.($TYPE_WORKER == 'IN' ? $WORK_1 : ($WORK_1 != '' ? 'บริษัท '.$WORK_1 : ''))));
+      $this->pdf->text(154,220,iconv('UTF-8', 'cp874', '2  '.($TYPE_WORKER == 'IN' ? $WORK_2 : ($WORK_2 != '' ? 'บริษัท '.$WORK_2 : ''))));
+      $this->pdf->text(154,228,iconv('UTF-8', 'cp874', '3  '.($TYPE_WORKER == 'IN' ? $WORK_3 : ($WORK_3 != '' ? 'บริษัท '.$WORK_3 : ''))));
       $this->pdf->text(158,212,iconv('UTF-8', 'cp874', '_____________________'));
       $this->pdf->text(158,220,iconv('UTF-8', 'cp874', '_____________________'));
       $this->pdf->text(158,228,iconv('UTF-8', 'cp874', '_____________________'));
