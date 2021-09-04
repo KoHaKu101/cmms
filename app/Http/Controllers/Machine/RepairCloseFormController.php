@@ -243,7 +243,7 @@ class RepairCloseFormController extends Controller
       if ($RepairWorker->count() > 0) {
         $RepairWorker->delete();
       }
-      if ($request->WORKER_UNID == null) {
+      if ($request->WORKER_UNID == null && $WORKER_TYPE != 'OUT') {
         return Response()->json(['pass' => 'false','text' => 'กรุณาลองใหม่']);
       }
       $DATA_EMP_NAME = isset($request->WORKOUT_NAME) ? $request->WORKOUT_NAME : EMPName::whereIn('UNID',$request->WORKER_UNID)->get();
@@ -550,7 +550,7 @@ class RepairCloseFormController extends Controller
     $DATE_DOCNO            = Carbon::now()->addyears('543');
     $MACHINE_REPORT_NO     = 'MRP' . $DATE_DOCNO->format('ym') . sprintf('-%04d', 1);
     $DATE_RESET_DOCNO      = Carbon::parse($DATA_MACHINEREPAIRREQ->CLOSE_DATE);
-    
+
     if ($DATA_MACHINEREPAIRREQ->CLOSE_DATE != NULL && $DATE_RESET_DOCNO->format('m') == Carbon::now()->format('m') ) {
         $EXPLOT = str_replace('MRP'.$DATE_RESET_DOCNO->addyears('543')->format('ym').'-','',$DATA_MACHINEREPAIRREQ->MACHINE_REPORT_NO)+1;
         $MACHINE_REPORT_NO = 'MRP' . $DATE_RESET_DOCNO->format('ym'). sprintf('-%04d', $EXPLOT);

@@ -1,5 +1,17 @@
 <?php
 
+//********************************************  มาจาก Stack Overflowe ***************************************
+// return [
+//     'driver' => env('MAIL_DRIVER', 'smtp'),
+//     'host' => env('MAIL_HOST', 'smtp.gmail.com'),
+//     'port' => env('MAIL_PORT', 587),
+//     'from' => ['address' => 'poou8558@gmail.com', 'name' => 'poou8558@gmail.com'],
+//     'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+//     'username' => env('MAIL_USERNAME'),
+//     'password' => env('MAIL_PASSWORD'),
+//     'sendmail' => '/usr/sbin/sendmail -bs',
+//     'pretend' => false,];
+//********************************************  default ของ laravel ***************************************
 return [
 
     /*
@@ -35,14 +47,15 @@ return [
 
     'mailers' => [
         'smtp' => [
-            'transport' => 'smtp',
-            'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
-            'port' => env('MAIL_PORT', 587),
-            'encryption' => env('MAIL_ENCRYPTION', 'tls'),
-            'username' => env('MAIL_USERNAME'),
-            'password' => env('MAIL_PASSWORD'),
-            'timeout' => null,
-            'auth_mode' => null,
+            'transport'  => 'smtp',
+            'host'       => env('MAIL_HOST', 'mail.p-quality.com'),
+            'port'       => env('MAIL_PORT', 25 ),
+            'encryption' => env('MAIL_ENCRYPTION', null),
+            'username'   => env('MAIL_USERNAME'),
+            'password'   => env('MAIL_PASSWORD'),
+            'timeout'    => null,
+            'auth_mode'  => null,
+
         ],
 
         'ses' => [
@@ -84,8 +97,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-        'name' => env('MAIL_FROM_NAME', 'Example'),
+        'address' => env('MAIL_FROM_ADDRESS', 'qc_mgr@p-quality.com'),
+        'name' => env('MAIL_FROM_NAME', 'PD PLANING'),
     ],
 
     /*
@@ -105,6 +118,4 @@ return [
         'paths' => [
             resource_path('views/vendor/mail'),
         ],
-    ],
-
-];
+    ],];

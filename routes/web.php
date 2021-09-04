@@ -59,6 +59,7 @@ use App\Http\Controllers\PDF\MachineHistoryRepairPDFController;
 use App\Http\Controllers\Machine\PRController;
 use App\Http\Controllers\Machine\ReportPRController;
 
+use App\http\controllers\MailSend;
 //Model
 // use App\Models\Machine\Machine;
 // use App\Models\SettingMenu\Mainmenu;
@@ -90,7 +91,7 @@ if (Gate::allows('isManager_Ma')) {
       return redirect('/dashboard');
   })->middleware('auth');
 }
-
+Route::get('/mail/send/',[MailSend::class,'mailsend'])->name('mail.send');
 //Logout
 Route::get('/user/logout/',[MenuController::class,'Logout'])->name('user.logout');
 Route::middleware(['auth:sanctum', 'verified']);
