@@ -531,7 +531,7 @@ class RepairCloseFormController extends Controller
     $DATA_REPAIR =  MachineRepairREQ::where('UNID','=',$UNID_REPAIR);
 
     $CHECK_WORKER = RepairWorker::select('WORKER_TYPE')->where('REPAIR_REQ_UNID','=',$UNID_REPAIR)->get();
-    if (!isset($CHECK_WORKER[0]->WORKER_TYPE)) {
+    if (Count($CHECK_WORKER) == 0) {
       return Response()->json(['pass'=>'false']);
     }
     $DATA_REPAIR_FIRST      = $DATA_REPAIR->first();
