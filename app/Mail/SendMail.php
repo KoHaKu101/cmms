@@ -30,45 +30,13 @@ class SendMail extends Mailable
      *
      * @return $this
      */
-    private function setMailConfig(){
-         $existing = config('mail');
-         $host = MailSetup::select('*')->first();
-         $new =array_merge(
-             $existing, [
-             'host' => $host->MAIL_HOST,
-             'port' => $host->MAIL_PORT,
-             'from' => [
-                 'address' => $host->EMAILADDRESS,
-                 'name' => $host->EMAILADDRESS,
-                 ],
-             'encryption' => null,
-             'username' => $host->EMAILADDRESS,
-             'password' => $host->MAIL_PASSWORD,
-             ]);
-          dd($new);
-         config(['mail'=>$new]);
-     }
 
-    // private function setMailFromSupport()
-    // {
-    //     $existing = config('mail');
-    //     $new =array_merge(
-    //         $existing, [
-    //         'from' => [
-    //             'address' => 'support@example.com',
-    //             'name' => 'Support Services',
-    //             ],
-    //         ]);
-    //
-    //     config(['mail'=>$new]);
-    // }
     public function build()
       {
         $DATA_PM  =  MachinePlanPm::select('MACHINE_CODE','MACHINE_LINE','PLAN_DATE','PM_MASTER_NAME')
                                   ->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
                                   ->where('PLAN_YEAR','=',date('Y'))->where('PLAN_MONTH','=',date('n'))->where('PLAN_STATUS','!=','COMPLETE')
                                   ->orderBy('MACHINE_LINE')->orderby('PLAN_DATE')->get();
-
 
         $DATA_PDM =  SparePartPlan::select('MACHINE_CODE','MACHINE_LINE','SPAREPART_NAME','PLAN_DATE')
                                    ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))->where('STATUS','!=','COMPLETE')

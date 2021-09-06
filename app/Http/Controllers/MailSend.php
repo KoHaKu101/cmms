@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use \App\Mail\SendMail;
 use App\Models\SettingMenu\MailSetup;
+use App\Models\SettingMenu\MailAlert;
 
 class MailSend extends Controller
 {
@@ -13,10 +14,17 @@ class MailSend extends Controller
 
   $existing = config('mail');
   $host = MailSetup::select('*')->first();
-
   $new =array_merge(
       $existing, [
-      
+      'mailers' => [
+        'smtp'=>[
+          'transport' => 'smtp',
+          'host' => $host->MAILHOST,
+          'port' => $host->MAILPORT,
+          'username' => $host->EMAILADDRESS,
+          'password' => $host->MAILPASSWORD,
+        ],
+      ],
       'host' => $host->MAILHOST,
       'port' => $host->MAILPORT,
       'from' => [
@@ -27,11 +35,24 @@ class MailSend extends Controller
       'username' => $host->EMAILADDRESS,
       'password' => $host->MAILPASSWORD,
       ]);
-    dd($new);
   config(['mail'=>$new]);
 
-  \Mail::to('poou8558@gmail.com')->send(new SendMail());
+  $send_mail  = MailAlert::select('EMAILADDRESS1','EMAILADDRESS2','EMAILADDRESS3','EMAILADDRESS4','EMAILADDRESS5')->get();
+  $mail_array =[ $send_mail[0]->EMAILADDRESS1,
+                 $send_mail[0]->EMAILADDRESS2,
+                 $send_mail[0]->EMAILADDRESS3,
+                 $send_mail[0]->EMAILADDRESS4,
+                 $send_mail[0]->EMAILADDRESS5
+               ];
 
+  $mail = array();
+  foreach ($mail_array as $key => $row) {
+    if($row != ''){
+      $mail[$key] = $row;
+    }
+
+  }
+  \Mail::to($mail)->send(new SendMail());
   return view('emails.thanks');
 }
 }

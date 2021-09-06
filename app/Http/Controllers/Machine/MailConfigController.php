@@ -102,12 +102,14 @@ class MailConfigController extends Controller
       'EMAILADDRESS4.email'  => 'กรุณากรอกเป็น Email',
       'EMAILADDRESS5.email'  => 'กรุณากรอกเป็น Email',
     ]);
-    $MAILALEAT1 = $request->MAILALEAT1;
-    $MAILALEAT2 = $request->MAILALEAT2;
-    $MAILALEAT3 = $request->MAILALEAT3;
-    $MAILALEAT4 = $request->MAILALEAT4;
-    $MAILALEAT5 = $request->MAILALEAT5;
+    $MAILALEAT1 = isset($request->MAILALEAT1) ? $request->MAILALEAT1 : '';
+    $MAILALEAT2 = isset($request->MAILALEAT2) ? $request->MAILALEAT2 : '';
+    $MAILALEAT3 = isset($request->MAILALEAT3) ? $request->MAILALEAT3 : '';
+    $MAILALEAT4 = isset($request->MAILALEAT4) ? $request->MAILALEAT4 : '';
+    $MAILALEAT5 = isset($request->MAILALEAT5) ? $request->MAILALEAT5 : '';
+
     if (MailAlert::count() == 0) {
+
       MailAlert::insert([
         'UNID'            => $this->randUNID('PMCS_CMMS_SETUP_MAIL_ALERT'),
         'EMAILADDRESS1'   => $MAILALEAT1,
@@ -119,7 +121,9 @@ class MailConfigController extends Controller
         'CREATE_TIME'     => Carbon::now(),
       ]);
     }elseif (MailSetup::count() == 1) {
-      MailAlert::where('UNID')->update([
+
+
+      MailAlert::where('UNID','=',MailAlert::select('UNID')->first()->UNID)->update([
         'EMAILADDRESS1'   => $MAILALEAT1,
         'EMAILADDRESS2'   => $MAILALEAT2,
         'EMAILADDRESS3'   => $MAILALEAT3,

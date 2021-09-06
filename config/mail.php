@@ -97,7 +97,7 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'qc_mgr@p-quality.com'),
+          'address' => env('MAIL_FROM_ADDRESS', 'qc_mgr@p-quality.com'),
         'name' => env('MAIL_FROM_NAME', 'PD PLANING'),
     ],
 
