@@ -30,9 +30,37 @@ class SendMail extends Mailable
      *
      * @return $this
      */
-
+    public function SettingEmail(){
+      $existing = config('mail');
+      $host = MailSetup::select('*')->first();
+      $new =array_merge(
+          $existing, [
+          'mailers' => [
+            'smtp'=>[
+              'transport' => 'smtp',
+              'host' => $host->MAILHOST,
+              'port' => $host->MAILPORT,
+              'username' => $host->EMAILADDRESS,
+              'password' => $host->MAILPASSWORD,
+            ],
+          ],
+          'host' => $host->MAILHOST,
+          'port' => $host->MAILPORT,
+          'from' => [
+              'address' => $host->EMAILADDRESS,
+              'name' => $host->EMAILADDRESS,
+              ],
+          'encryption' => null,
+          'username' => $host->EMAILADDRESS,
+          'password' => $host->MAILPASSWORD,
+          ]);
+      config(['mail'=>$new]);
+    }
     public function build()
       {
+
+
+
         $DATA_PM  =  MachinePlanPm::select('MACHINE_CODE','MACHINE_LINE','PLAN_DATE','PM_MASTER_NAME')
                                   ->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
                                   ->where('PLAN_YEAR','=',date('Y'))->where('PLAN_MONTH','=',date('n'))->where('PLAN_STATUS','!=','COMPLETE')
