@@ -22,6 +22,7 @@ class DashboardController extends Controller
     return View('machine/dashboard/sumaryline');
   }
   public function Dashboard(){
+
     $machine_all        = Machine::select('MACHINE_CHECK')->where('MACHINE_CHECK','!=','4')->count();
     $machine_ready      = Machine::select('MACHINE_CHECK')->where('MACHINE_CHECK','=','2')->count();
     $machine_wait       = Machine::select('MACHINE_CHECK')->where('MACHINE_CHECK','!=','2')->where('MACHINE_CHECK','!=','4')->count();
@@ -29,20 +30,23 @@ class DashboardController extends Controller
     $datarepair         = MachineRepairREQ::select('CLOSE_STATUS')->where('CLOSE_STATUS','=','9')->count();
 
     $datarepairlist     = MachineRepairREQ::select('STATUS_NOTIFY','PRIORITY','MACHINE_CODE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME','DOC_DATE','DOC_NO')
-                                        ->where('CLOSE_STATUS','=','9')->orderBy('DOC_DATE','DESC')->orderBy("REPAIR_REQ_TIME",'DESC')
-                                        ->orderBy('PRIORITY','ASC')->take(4)->get();
+                                          ->where('CLOSE_STATUS','=','9')->orderBy('DOC_DATE','DESC')->orderBy("REPAIR_REQ_TIME",'DESC')
+                                          ->orderBy('PRIORITY','ASC')->take(4)->get();
     $data_downtime      = MachineRepairREQ::select('MACHINE_CODE')->selectraw('MAX(DOWNTIME) as DOWNTIME')
                                           ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
                                           ->groupBy('MACHINE_CODE')->orderBy('DOWNTIME','DESC')
                                           ->where('CLOSE_STATUS','=',1)->take(7)->get();
+
     $data_count_repair  = MachineRepairREQ::selectraw('MACHINE_CODE,COUNT(MACHINE_CODE) as MACHINE_CODE_COUNT')
                                           ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
                                           ->where('MACHINE_LINE','like','L'.'%')
                                           ->groupBy('MACHINE_CODE')->orderBy('MACHINE_CODE_COUNT','DESC')->get();
+
     $data_repair_detail = MachineRepairREQ::selectraw('REPAIR_SUBSELECT_NAME,COUNT(REPAIR_SUBSELECT_UNID) as REPAIR_SUBSELECT_UNID_COUNT')
                                           ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
                                           ->groupBy('REPAIR_SUBSELECT_UNID')->groupBy('REPAIR_SUBSELECT_NAME')
                                           ->orderBy('REPAIR_SUBSELECT_UNID_COUNT','DESC')->get();
+
     $count_pdm           = SparePartPlan::selectraw("sum(CASE WHEN STATUS = 'COMPLETE' THEN 1 ELSE 0 END) as COMPLETE,
 	                                               sum(CASE WHEN STATUS != 'COMPLETE' THEN 1 ELSE 0 END) as NOCOMPLETE")
                                        ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))->first();
@@ -110,6 +114,7 @@ class DashboardController extends Controller
     return view('machine.dashboard.pmandpdm',compact('PM_BAR_CHART','PDM_BAR_CHART','DATA_PM_TABLE','PM_USER_CHECK'));
   }
   public function TablePM(Request $request){
+    
     $LINE = $request->LINE;
     $ARRAY_LINE = array('L1'=>'LINE 1','L2'=>'LINE 2','L3'=>'LINE 3','L4'=>'LINE 4','L5'=>'LINE 5','L6'=>'LINE 6',);
     $DATA_PM_TABLE = MachinePlanPM::where('MACHINE_LINE','=',$LINE)->where('PLAN_YEAR','=',date('Y'))->where('PLAN_MONTH','=',date('n'))

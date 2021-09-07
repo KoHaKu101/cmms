@@ -181,7 +181,7 @@ class MachineRepairController extends Controller
       }
       $html.= '<tr>
                 <td>'.$dataset->firstItem() + $key .'</td>
-                <td width="8%">'.date('d-m-Y',strtotime($row->DOC_DATE)).'</td>
+                <td width="10%">'.date('d-m-Y',strtotime($row->DOC_DATE)).'</td>
                 <td width="10%">'.$row->DOC_NO.'</td>
                 <td width="4%">'.$row->MACHINE_LINE.'</td>
                 <td width="8%">'.$row->MACHINE_CODE.'</td>

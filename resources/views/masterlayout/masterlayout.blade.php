@@ -104,8 +104,26 @@
 	<script type="text/javascript" src="{{ asset('/assets/js/plugin/sweetalert/sweetalert2.js') }}"></script>
 	@can('isAdmin')
 		<script type="text/javascript" src="{{ asset('assets/js/useinproject/dashboard/notifity.js') }}"></script>
+		<script>
+			$(document).ready(function(){
+				var url = "{{route('machine.config.send')}}";
+				$.ajax({
+					 type: "GET",
+					 url: url,
+					});
+			})
+		</script>
 	@elsecan('isManager_Ma')
 		<script type="text/javascript" src="{{ asset('assets/js/useinproject/dashboard/notifity.js') }}"></script>
+		<script>
+			$(document).ready(function(){
+				var url = "{{route('machine.send')}}";
+				$.ajax({
+					 type: "GET",
+					 url: url,
+					});
+			})
+		</script>
 	@else
 
 	@endcan

@@ -18,8 +18,8 @@ class MailSetup extends Model
 
     protected $fillable = [
          'UNID', 'MAILHOST', 'EMAILADDRESS', 'MAILPASSWORD', 'MAILPORT', 'MAILPROTOCOL'
-         , 'AUTOMAIL', 'AUTOPLAN','PLAN_CHECK',
-          'CREATE_BY', 'CREATE_TIME', 'MODIFY_BY', 'MODIFY_TIME'
+         , 'AUTOMAIL', 'AUTOPLAN','PLAN_CHECK','DATESEND_MAIL','DATESEND_SET','STATUS_SEND'
+          ,'CREATE_BY', 'CREATE_TIME', 'MODIFY_BY', 'MODIFY_TIME'
     ];
 
 }

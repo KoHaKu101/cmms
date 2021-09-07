@@ -240,7 +240,7 @@
 														@endphp
 								            <tr >
 															<td>{{ $dataset->firstItem() + $key }}</td>
-															<td width="9%">{{ date('d-m-Y',strtotime($sub_row->DOC_DATE)) }}</td>
+															<td width="10%">{{ date('d-m-Y',strtotime($sub_row->DOC_DATE)) }}</td>
 								              <td width="11%">{{ $sub_row->DOC_NO }}</td>
 															<td width="4%">{{ $sub_row->MACHINE_LINE }}</td>
 								              <td width="8%">{{ $sub_row->MACHINE_CODE }}</td>

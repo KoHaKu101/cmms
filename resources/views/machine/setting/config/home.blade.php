@@ -33,78 +33,51 @@
 									<div class="card-body">
 										<form action="{{ url('machine/config/save') }}" method="POST" id="FRM_MAILSETUP" name="FRM_MAILSETUP" >
 											@csrf
-											@if(count($datamail) == 1 )
-												@foreach ($datamail as $key => $dataset)
-														<div class="form-group form-inline">
-															<label for="MAILHOST" class="col-md-3 col-form-label">Host Name</label>
-															<div class="col-md-9 p-0">
-																<input type="hidden" id="UNID" name="UNID" value="{{ $dataset->UNID}}">
-																<input type="text" class="form-control form-control-sm input-full" id="MAILHOST" name="MAILHOST" placeholder="Enter Input" value="{{ $dataset->MAILHOST}}" autocomplete="off">
-															</div>
-														</div>
-														<div class="form-group form-inline">
-															<label for="MAILPORT" class="col-md-3 col-form-label">Port</label>
-															<div class="col-md-9 p-0">
-																<input type="text" class="form-control form-control-sm input-full" id="MAILPORT" name="MAILPORT" value="{{ $dataset->MAILPORT }}" >
-															</div>
-														</div>
-														<div class="form-group form-inline">
-															<label for="EMAILADDRESS" class="col-md-3 col-form-label">Email Admin</label>
-															<div class="col-md-9 p-0">
-																<input type="email" class="form-control form-control-sm input-full" id="EMAILADDRESS" name="EMAILADDRESS" value="{{ $dataset->EMAILADDRESS }}" >
-															</div>
-														</div>
-														<div class="form-group form-inline">
-															<label for="MAILPASSWORD" class="col-md-3 col-form-label">Password</label>
-															<div class="col-md-9 p-0">
-																<input type="password" class="form-control form-control-sm input-full" id="MAILPASSWORD" name="MAILPASSWORD" value="{{ $dataset->MAILPASSWORD }}" autocomplete="off">
-															</div>
-														</div>
-														<div class="form-group form-inline">
-															<label for="MAILPROTOCOL" class="col-md-3 col-form-label">Security Protocol</label>
-															<div class="col-md-9 p-0">
-																<input type="text" class="form-control form-control-sm input-full" id="MAILPROTOCOL" name="MAILPROTOCOL"value="{{ $dataset->MAILPROTOCOL }}" >
-															</div>
-															</div>
-														<div class="form-group text-center">
-															<button class="btn btn-success btn-sm ">Save</button>
-														</div>
-												@endforeach
-											@else
 													<div class="form-group form-inline">
 														<label for="MAILHOST" class="col-md-3 col-form-label">Host Name</label>
 														<div class="col-md-9 p-0">
-															<input type="text" class="form-control form-control-sm input-full" id="MAILHOST" name="MAILHOST"placeholder="Enter Input" value=""required>
+															<input type="hidden" id="UNID" name="UNID" value="{{ isset($datamail[0]->UNID) ? $datamail[0]->UNID : ''}}">
+															<input type="text" class="form-control form-control-sm input-full" id="MAILHOST" name="MAILHOST"
+																placeholder="Enter Input" value="{{isset( $datamail[0]->MAILHOST) ?  $datamail[0]->MAILHOST : ''}}" autocomplete="off">
 														</div>
 													</div>
 													<div class="form-group form-inline">
 														<label for="MAILPORT" class="col-md-3 col-form-label">Port</label>
-														<div class="col-md-9 p-0">
-															<input type="text" class="form-control form-control-sm input-full" id="MAILPORT" name="MAILPORT" placeholder="Enter Input" required>
+														<div class="col-md-2 p-0">
+															<input type="text" class="form-control form-control-sm input-full" id="MAILPORT" name="MAILPORT"
+															value="{{ isset( $datamail[0]->MAILPORT) ?  $datamail[0]->MAILPORT : '' }}" >
+														</div>
+														<label class="col-md-3 col-form-label">วันที่่ส่งเมล</label>
+														<div class="col-md-4 p-0">
+															<input type="date" class="form-control form-control-sm input-full" id="DATESEND_MAIL" name="DATESEND_MAIL"
+															value="{{ isset( $datamail[0]->DATESEND_MAIL) ?  $datamail[0]->DATESEND_MAIL : '' }}">
 														</div>
 													</div>
+
 													<div class="form-group form-inline">
 														<label for="EMAILADDRESS" class="col-md-3 col-form-label">Email Admin</label>
 														<div class="col-md-9 p-0">
-															<input type="email" class="form-control form-control-sm input-full" id="EMAILADDRESS" name="EMAILADDRESS" placeholder="Email" required>
+															<input type="email" class="form-control form-control-sm input-full" id="EMAILADDRESS" name="EMAILADDRESS"
+															 value="{{ isset( $datamail[0]->EMAILADDRESS) ?  $datamail[0]->EMAILADDRESS : '' }}" >
 														</div>
 													</div>
 													<div class="form-group form-inline">
 														<label for="MAILPASSWORD" class="col-md-3 col-form-label">Password</label>
 														<div class="col-md-9 p-0">
-															<input type="password" class="form-control form-control-sm input-full" id="MAILPASSWORD" name="MAILPASSWORD" placeholder="Password" required>
+															<input type="password" class="form-control form-control-sm input-full" id="MAILPASSWORD" name="MAILPASSWORD"
+															 value="{{ isset( $datamail[0]->MAILPASSWORD) ?  $datamail[0]->MAILPASSWORD : '' }}" autocomplete="off">
 														</div>
 													</div>
 													<div class="form-group form-inline">
 														<label for="MAILPROTOCOL" class="col-md-3 col-form-label">Security Protocol</label>
 														<div class="col-md-9 p-0">
-															<input type="text" class="form-control form-control-sm input-full" id="MAILPROTOCOL" name="MAILPROTOCOL"placeholder="Enter Input" required>
+															<input type="text" class="form-control form-control-sm input-full" id="MAILPROTOCOL" name="MAILPROTOCOL"
+															value="{{ isset($datamail[0]->MAILPROTOCOL) ?  $datamail[0]->MAILPROTOCOL : '' }}" >
 														</div>
-													</div>
+														</div>
 													<div class="form-group text-center">
 														<button class="btn btn-success btn-sm ">Save</button>
 													</div>
-											@endif
 										</form>
 									</div>
 								</div>
@@ -116,7 +89,7 @@
 									</div>
 									<div class="card-body">
 										@if (count($dataalertmail) == 1 )
-												<form action="{{ route('machine.savealert') }}" method="POST" id="FRM_ALERTMAIL" name="FRM_ALERTMAIL">
+												<form action="{{ route('machine.config.savealert') }}" method="POST" id="FRM_ALERTMAIL" name="FRM_ALERTMAIL">
 													@csrf
 													<div class="form-group form-inline">
 															<label for="MAILALEAT1" class="col-md-3 col-form-label">Email Aleart 1</label>
@@ -155,7 +128,7 @@
 
 												</form>
 										@else
-											<form action="{{ route('machine.savealert') }}" method="POST" id="FRM_ALERTMAIL" name="FRM_ALERTMAIL">
+											<form action="{{ route('machine.config.savealert') }}" method="POST" id="FRM_ALERTMAIL" name="FRM_ALERTMAIL">
 												@csrf
 												<div class="form-group form-inline">
 														<label for="MAILALEAT1" class="col-md-3 col-form-label">Email Aleart 1</label>
@@ -209,16 +182,25 @@
 										<form action="{{ url('machine/config/update') }}" method="POST" id="ALERTNADPLND" name="ALERTNADPLND" >
 											@csrf
 											<div class="row">
-												<div class="col-md-6 col-lg-6">
+												<div class="col-md-4 col-lg-4">
 													<div class="form-group">
-															<label for="AUTOMAIL" class="col-md-3 col-form-label">Auto Mail Alert(day/วัน)</label>
+															<label for="AUTOPLAN" class="col-md-3 col-form-label">Auto Mail Alert(day/วัน)</label>
+															<div class="col-md-9 p-0">
+																<input type="number" class="form-control form-control-sm input-full"
+																  id="DATESEND_SET" name="DATESEND_SET" value="{{ isset($datamail[0]->DATESEND_SET)  ? $datamail[0]->DATESEND_SET : "" }}">
+															</div>
+														</div>
+												</div>
+												<div class="col-md-4 col-lg-4">
+													<div class="form-group">
+															<label for="AUTOMAIL" class="col-md-3 col-form-label">Auto Plan Alert(day/วัน)</label>
 															<div class="col-md-9 p-0">
 																<input type="hidden" id="UNID" name="UNID" value="{{ isset($datamail[0]) ? $datamail[0]->UNID : '' }}">
 																<input type="number" class="form-control form-control-sm input-full"  id="AUTOMAIL" name="AUTOMAIL" value="{{ isset($datamail[0]->AUTOMAIL)  ? $datamail[0]->AUTOMAIL : "" }}" min="1" max="90">
 															</div>
 														</div>
 												</div>
-												<div class="col-md-6 col-lg-6">
+												<div class="col-md-4 col-lg-4">
 													<div class="form-group">
 															<label for="AUTOPLAN" class="col-md-3 col-form-label">Auto Plan(month/เดือน)</label>
 															<div class="col-md-9 p-0">
@@ -228,6 +210,8 @@
 															</div>
 														</div>
 												</div>
+
+
 											</div>
 
 											@if (count($datamail) > 0)

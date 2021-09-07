@@ -53,12 +53,20 @@ class MailConfigController extends Controller
         'MAILPASSWORD.regex'     => 'กรุณาใส่รหัสผ่าน อย่างหน่อย 4 ตัว ประกอบด้วยตัวอักษรและตัวเลข',
         'MAILPORT.numeric' => 'กรุณากรอกตามตัวอย่าง 25, 586 ,456',
         'MAILPROTOCOL'     => 'กรุณากรอกช่อง MAILPROTOCOL',
-    ]);
+     ]);
+    $MAILSETUP      =  MailSetup::select('DATESEND_MAIL','DATESEND_SET')->get();
     $MAILHOST      =  $request->MAILHOST;
     $EMAILADDRESS  =  $request->EMAILADDRESS;
     $MAILPASSWORD  =  $request->MAILPASSWORD;
     $MAILPORT      =  $request->MAILPORT;
     $MAILPROTOCOL  =  $request->MAILPROTOCOL;
+
+    if ($request->DATESEND_MAIL != $MAILSETUP[0]->DATESEND_MAIL) {
+      $DATEMAIL_SET  =  isset($MAILSETUP[0]->DATESEND_SET) ? $MAILSETUP[0]->DATESEND_SET : 7;
+      $DATESEND_MAIL =  Carbon::parse($request->DATESEND_MAIL)->addDays($DATEMAIL_SET);
+    }else {
+      $DATESEND_MAIL = $request->DATESEND_MAIL;
+    }
     if (MailSetup::count() == 0) {
       MailSetup::insert([
         'UNID'            =>  $this->randUNID('PMCS_CMMS_SETUP_MAIL_ALERT'),
@@ -68,11 +76,11 @@ class MailConfigController extends Controller
         'MAILPORT'        =>  $MAILPORT,
         'MAILPROTOCOL'    =>  $MAILPROTOCOL,
         'AUTOPLAN'        =>  24,
+        'DATESEND_MAIL'   =>  $DATESEND_MAIL,
+        'STATUS_SEND'     =>  0,
         'CREATE_BY'       =>  Auth::user()->name,
         'CREATE_TIME'     =>  Carbon::now(),
       ]);
-      alert()->success('บันทึกข้อมูลสำเร็จ')->autoclose('1500');
-      return Redirect()->back();
     }elseif (MailSetup::count() == 1) {
       MailSetup::where('UNID',$request->UNID)->Update([
         'MAILHOST'        =>  $MAILHOST,
@@ -80,12 +88,14 @@ class MailConfigController extends Controller
         'MAILPASSWORD'    =>  $MAILPASSWORD,
         'MAILPORT'        =>  $MAILPORT,
         'MAILPROTOCOL'    =>  $MAILPROTOCOL,
+        'DATESEND_MAIL'   =>  $DATESEND_MAIL,
+        'STATUS_SEND'     =>  0,
         'MODIFY_BY'       =>  Auth::user()->name,
         'MODIFY_TIME'     =>  Carbon::now(),
       ]);
-      alert()->success('บันทึกข้อมูลสำเร็จ')->autoclose('1500');
-      return Redirect()->back();
     }
+    alert()->success('บันทึกข้อมูลสำเร็จ')->autoclose('1500');
+    return Redirect()->back();
   }
   public function SaveAlert(Request $request){
     $validated = $request->validate([
@@ -137,17 +147,31 @@ class MailConfigController extends Controller
     return Redirect()->back();
   }
   public function Update(Request $request){
-    $AUTOMAIL = $request->AUTOMAIL;
-    $AUTOPLAN = $request->AUTOPLAN;
+    $CHECK_DATE   =  MailSetup::select('DATESEND_SET','DATESEND_MAIL')->get();
+
+    $AUTOMAIL     = $request->AUTOMAIL;
+    $AUTOPLAN     = $request->AUTOPLAN;
+    $DATESEND_SET = $request->DATESEND_SET;
+
+    if ($CHECK_DATE[0]->DATESEND_SET != $DATESEND_SET) {
+      $DATESEND_MAIL =  Carbon::parse($CHECK_DATE[0]->DATESEND_MAIL)->subDays($CHECK_DATE[0]->DATESEND_SET);
+      $DATESEND_MAIL =  Carbon::parse($DATESEND_MAIL)->addDays($DATESEND_SET);
+    }else {
+      $DATESEND_MAIL = $CHECK_DATE[0]->DATESEND_MAIL;
+    }
     if (MailSetup::count() == 0) {
       MailSetup::Insert([
         'AUTOMAIL'     => $AUTOMAIL,
         'AUTOPLAN'     => $AUTOPLAN,
+        'DATESEND_SET' => $DATESEND_SET,
+        'DATESEND_MAIL'=> $DATESEND_MAIL,
           ]);
     }elseif (MailSetup::count() == 1) {
       MailSetup::where('UNID',$request->UNID)->Update([
         'AUTOMAIL'     => $AUTOMAIL,
         'AUTOPLAN'     => $AUTOPLAN,
+        'DATESEND_SET' => $DATESEND_SET,
+        'DATESEND_MAIL'=> $DATESEND_MAIL,
         'MODIFY_BY'    => Auth::user()->name,
         'MODIFY_TIME'  => Carbon::now(),
         ]);
@@ -155,5 +179,16 @@ class MailConfigController extends Controller
     alert()->success('บันทึกข้อมูลสำเร็จ')->autoclose('1500');
     return Redirect()->back();
   }
-
+  public function Send(){
+    $DATENOW = date('Y-m-d');
+    $DATESEND = MailSetup::select('UNID','DATESEND_MAIL','DATESEND_SET')->get();
+    
+    if ($DATENOW >= $DATESEND[0]->DATESEND_MAIL) {
+      $DATESEND_MAIL = Carbon::parse($DATESEND[0]->DATESEND_MAIL)->addDays($DATESEND[0]->DATESEND_SET);
+      MailSetup::where('UNID','=',$DATESEND[0]->UNID)->update([
+        'DATESEND_MAIL' => $DATESEND_MAIL
+      ]);
+      \Artisan::call('mail:send');
+    }
+  }
 }
