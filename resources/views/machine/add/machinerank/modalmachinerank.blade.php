@@ -17,16 +17,14 @@
         @csrf
         <div class="modal-body">
           <div class="card-body ml-2">
-            <div class="row ">
+            <div class="row">
               <div class="col-md-6 col-lg-12">  รายการ Rank  </div>
               <div class="col-md-6 col-lg-12 mt-2 has-error">
                 <input type="text" class="form-control" id="MACHINE_RANK_CODE" name="MACHINE_RANK_CODE" placeholder="กรุณาใส่ชื่อ Rank" required>
               </div>
             </div>
             <div class="row mt-4">
-
               <div class="col-md-6 col-lg-12">  ระยะเวลา (เดือน)  </div>
-
               <div class="col-md-6 col-lg-12 mt-2 has-error">
                 <input type="number" class="form-control" id="MACHINE_RANK_MONTH" name="MACHINE_RANK_MONTH" min="1" value="1" required>
               </div>

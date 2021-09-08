@@ -370,24 +370,7 @@ class MachineController extends Controller
 
   }
 
-  public function UserHomePage(Request $request){
-    $ROLE = $request->role;
 
-    if (Gate::allows('isManager_Ma')) {
-      return View('machine.userpage.userhomepageforma');
-    }elseif(Gate::allows('isManager_Pd')) {
-      return View('machine.userpage.userhomepageforpd');
-    }elseif (Gate::allows('isAdmin')) {
-
-        if ($ROLE == 'MA') {
-          return View('machine.userpage.userhomepageforma');
-        }elseif ($ROLE == 'PD') {
-          return View('machine.userpage.userhomepageforpd');
-        }else {
-          return Redirect(route('dashboard'));
-        }
-    }
-  }
 
   public function SaveImg($image = NULL,$new_name = NULL,$MACHINE_LINE = NULL){
     $img_ext = $image->getClientOriginalExtension();

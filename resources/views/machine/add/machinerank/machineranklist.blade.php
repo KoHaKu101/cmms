@@ -45,21 +45,22 @@
 													@foreach ($datarank as $key => $dataset)
 														<li>
 															<a href="{{ url('machine/machinerank/list/'.$dataset->UNID) }}"  class="btn btn-primary btn-sm my-2" style="width:190px" >
-																	<div class="form-inline">
-																		<div class="col-md-4 col-lg-4">
-																			Rank : {{ $dataset->MACHINE_RANK_CODE }}
-																		</div>
-																		<div class="col-md-6 col-lg-6">
-																			ระยะเวลา : {{ $dataset->MACHINE_RANK_MONTH }} เดือน
-																		</div>
+																<div class="form-inline">
+																	<div class="col-md-4 col-lg-4">
+																		Rank : {{ $dataset->MACHINE_RANK_CODE }}
 																	</div>
-															</a>
+																	<div class="col-md-6 col-lg-6">
+																		ระยะเวลา : {{ $dataset->MACHINE_RANK_MONTH }} เดือน
+																	</div>
+																</div>
+															 </a>
 															<button  id="popup" type="button" class="btn btn-primary btn-link btn-sm" data-toggle="modal" data-target="#EditRank"
-															 onclick="datarank('{{ $dataset->UNID}}','{{ $dataset->MACHINE_RANK_CODE }}','{{ $dataset->MACHINE_RANK_MONTH }}')">
-																<i class="fas fa-edit fa-2x"> </i>
-															</button>
+																 onclick="datarank('{{ $dataset->UNID}}','{{ $dataset->MACHINE_RANK_CODE }}','{{ $dataset->MACHINE_RANK_MONTH }}')">
+																	<i class="fas fa-edit fa-2x"> </i>
+															 </button>
 															<a href="{{ url('machine/machinerank/delete/'.$dataset->UNID) }}" class="btn btn-danger btn-link btn-sm" >
-															<i class="fas fa-trash" style="font-size:20px"></i> </a>
+																<i class="fas fa-trash" style="font-size:20px"></i>
+															 </a>
 														</li>
 													@endforeach
 						        		</ul>

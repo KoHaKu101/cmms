@@ -33,9 +33,9 @@ class MachineStatusTableController extends Controller
   }
 
   public function Index(){
-   
-    $dataset = MachineStatusTable::orderBy('STATUS_CODE')->paginate(10);
-    $datacount = MachineStatusTable::selectraw('max(STATUS_CODE)count')->first();
+
+    $dataset    = MachineStatusTable::orderBy('STATUS_CODE')->paginate(10);
+    $datacount  = MachineStatusTable::selectraw('max(STATUS_CODE)count')->first();
     return View('machine/add/machinestatus/machinestatuslist',compact('dataset','datacount'));
   }
 
@@ -51,18 +51,17 @@ class MachineStatusTableController extends Controller
       'STATUS_NAME.required'  => 'กรุณาใส่สถานะเครื่องจักร',
       'STATUS_NAME.unique'    => 'มีสถานะเครื่องจักรนี้แล้ว'
       ]);
-    $STATUS = isset($request->STATUS) ? '9' : '1' ;
-    $datacount = MachineStatusTable::selectraw('max(STATUS_CODE)count')->first();
-    // $STATUS_CODE = ($datacount->count)+1;
-    $STATUS_CODE = $request->STATUS_CODE;
+    $STATUS       = isset($request->STATUS) ? '9' : '1' ;
+    $datacount    = MachineStatusTable::selectraw('max(STATUS_CODE)count')->first();
+    $STATUS_CODE  = $request->STATUS_CODE;
     MachineStatusTable::insert([
       'STATUS_CODE'     => $STATUS_CODE,
       'STATUS_NAME'     => $request->STATUS_NAME,
       'STATUS'          => $STATUS,
       'CREATE_BY'       => Auth::user()->name,
       'CREATE_TIME'     => Carbon::now(),
-      'MODIFY_BY'         => Auth::user()->name,
-      'MODIFY_TIME'       => Carbon::now(),
+      'MODIFY_BY'       => Auth::user()->name,
+      'MODIFY_TIME'     => Carbon::now(),
       'UNID'            => $this->randUNID('PMCS_CMMS_MACHINE_STATUS'),
     ]);
     alert()->success('ลงทะเบียน สำเร็จ')->autoclose('1500');
@@ -75,20 +74,14 @@ public function Update(Request $request,$UNID) {
     'STATUS_CODE'     => $request->STATUS_CODE,
     'STATUS_NAME'     => $request->STATUS_NAME,
     'STATUS'          => $STATUS,
-    'MODIFY_BY'         => Auth::user()->name,
-    'MODIFY_TIME'       => Carbon::now(),
-
+    'MODIFY_BY'       => Auth::user()->name,
+    'MODIFY_TIME'     => Carbon::now(),
   ]);
   alert()->success('อัพเดทรายการสำเร็จ')->autoclose('1500');
-
   return Redirect()->back();
-
-}  public function Delete($UNID) {
-
-
-    $dataset = MachineStatusTable::where('UNID','=',$UNID)->delete();
-    alert()->success('ลบสำเร็จ สำเร็จ')->autoclose('1500');
-
-    return Redirect()->back();
 }
+  public function Delete($UNID) {
+    $dataset = MachineStatusTable::where('UNID','=',$UNID)->delete();
+    return Response()->Json(['pass' => 'true']);
+  }
 }

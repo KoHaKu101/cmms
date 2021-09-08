@@ -114,7 +114,7 @@ class DashboardController extends Controller
     return view('machine.dashboard.pmandpdm',compact('PM_BAR_CHART','PDM_BAR_CHART','DATA_PM_TABLE','PM_USER_CHECK'));
   }
   public function TablePM(Request $request){
-    
+
     $LINE = $request->LINE;
     $ARRAY_LINE = array('L1'=>'LINE 1','L2'=>'LINE 2','L3'=>'LINE 3','L4'=>'LINE 4','L5'=>'LINE 5','L6'=>'LINE 6',);
     $DATA_PM_TABLE = MachinePlanPM::where('MACHINE_LINE','=',$LINE)->where('PLAN_YEAR','=',date('Y'))->where('PLAN_MONTH','=',date('n'))
@@ -324,7 +324,24 @@ class DashboardController extends Controller
     }
     return Response()->json(['html'=>$html,'newrepair' => $newrepair,'UNID' => $UNID,'number' => $NUMBER]);
   }
+  public function UserHomePage(Request $request){
+    $ROLE = $request->role;
 
+    if (Gate::allows('isManager_Ma')) {
+      return View('machine.userpage.userhomepageforma');
+    }elseif(Gate::allows('isManager_Pd')) {
+      return View('machine.userpage.userhomepageforpd');
+    }elseif (Gate::allows('isAdmin')) {
+
+        if ($ROLE == 'MA') {
+          return View('machine.userpage.userhomepageforma');
+        }elseif ($ROLE == 'PD') {
+          return View('machine.userpage.userhomepageforpd');
+        }else {
+          return Redirect(route('dashboard'));
+        }
+    }
+  }
 
   //**********************************************************************************************************//
   public function Logout(){

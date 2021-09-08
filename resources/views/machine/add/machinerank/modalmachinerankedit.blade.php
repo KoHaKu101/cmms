@@ -16,9 +16,7 @@
       <form action="{{ url('machine/machinerank/update') }}" method="post" enctype="multipart/form-data">
         @csrf
         <div class="modal-body">
-          <div class="card-body ml-2" id='datarank'>
-
-          </div>
+          <div class="card-body ml-2" id='datarank'></div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

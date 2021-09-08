@@ -96,7 +96,6 @@
 				<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
           <div class="container">
 						<div class="row">
-
 						</div>
           </div>
 				</div>
@@ -110,7 +109,6 @@
 												<div class="col-8 col-lg-6">
 													<h4 class="ml-3 my-2" style="color:white;" ><i class="fas fa-toolbox fa-lg mr-1"></i> รายการบริษัท </h4>
 												</div>
-
 											</div>
 										 </div>
 									<div id="result"class="card-body mt--3">
@@ -127,7 +125,6 @@
 													</tr>
 												</thead>
 												<tbody>
-
 													@foreach ($DATA_COMPANY as $index => $row)
 														<tr>
 															<td> {{ $index+1 }} </td>
@@ -141,18 +138,24 @@
 																	<span class="slider round"></span>
 																</label>
 															</td>
-															<td><button type="button" class="btn btn-warning btn-sm btn-block my-1"
-																onclick="editcompany(this)"
-																data-unid="{{ $row->UNID}}"
-																data-companycode="{{ $row->COMPANY_CODE}}"
-																data-companyname="{{ $row->COMPANY_NAME}}"
-																data-note="{{ $row->NOTE}}"
-																data-status="{{ $row->STATUS}}">
-																<i class="fas fa-edit mx-1"></i>Edit</button></td>
-															<td><button type="button" class="btn btn-danger btn-sm btn-block my-1"
-																onclick="deletecompany(this)"
-																data-unid="{{ $row->UNID }}">
-																<i class="fas fa-trash mx-1"></i>Delete</button></td>
+															<td>
+																<button type="button" class="btn btn-warning btn-sm btn-block my-1"
+																	onclick						=	"editcompany(this)"
+																	data-unid					=	"{{ $row->UNID}}"
+																	data-companycode	=	"{{ $row->COMPANY_CODE}}"
+																	data-companyname	=	"{{ $row->COMPANY_NAME}}"
+																	data-note  			  =	"{{ $row->NOTE}}"
+																	data-status			  =	"{{ $row->STATUS}}">
+																	<i class="fas fa-edit mx-1"></i>Edit
+																</button>
+															</td>
+															<td>
+																<button type="button" class="btn btn-danger btn-sm btn-block my-1"
+																	onclick		=	"deletecompany(this)"
+																	data-unid	=	"{{ $row->UNID }}">
+																	<i class="fas fa-trash mx-1"></i>Delete
+																</button>
+															</td>
 														</tr>
 													@endforeach
 												</tbody>

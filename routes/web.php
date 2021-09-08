@@ -117,6 +117,7 @@ Route::middleware('can:isAdminandManager')->group(function () {
     Route::get('/machine/dashboard/notificationrepair' ,[DashboardController::class,'NotificationRepair']) ->name('dashboard.notificationrepair');
     Route::get('machine/repair/notificaitoncount'      ,[DashboardController::class,'NotificationCount'])  ->name('repair.notificaitoncount');
     Route::get('machine/repair/notificaiton'           ,[DashboardController::class,'Notification']);
+    Route::get('/machine/user/homepage'                     ,[DashboardController::class,'UserHomePage'])             ->name('user.homepage');
   //*****************************************  CalendarController  *********************************************************
    Route::get('/machine/calendar'                      ,[CalendarController::class,'Index']);
    Route::get('/machine/calendar/modal'                ,[CalendarController::class,'ShowModal']);
@@ -178,7 +179,7 @@ Route::middleware('can:isAdminandMA')->group(function () {
     Route::get('machine/assets/edit/{UNID}'                 ,[MachineController::class,'Edit'])                       ->name('machine.edit');
     Route::post('machine/assets/update/{UNID}'              ,[MachineController::class,'Update'])                     ->name('machine.update');
     Route::get('machine/assets/delete/{UNID}'               ,[MachineController::class,'Delete'])                     ->name('machine.delete');
-    Route::get('/machine/user/homepage'                     ,[MachineController::class,'UserHomePage'])               ->name('user.homepage');
+
   //*****************************************  MachineManualController  *********************************************************
   Route::get('machine/manual/manuallist'                    ,[MachineManualController::class,'Index'])                ->name('manual.list');
     Route::get('machine/manual/show/{UNID}'                 ,[MachineManualController::class,'Show'])                 ->name('manual.Show');
@@ -224,7 +225,7 @@ Route::middleware('can:isAdminandMA')->group(function () {
   Route::get('machine/machinestatustable/list'              ,[MachineStatusTableController::class,'Index'])           ->name('machinestatustable.list');
     Route::post('machine/machinestatustable/store'          ,[MachineStatusTableController::class,'Store'])           ->name('machinestatustable.store');
     Route::post('machine/machinestatustable/update/{UNID}'  ,[MachineStatusTableController::class,'Update'])          ->name('machinestatustable.update');
-    Route::get('machine/machinestatustable/delete/{UNID}'   ,[MachineStatusTableController::class,'Delete'])          ->name('machinestatustable.delete');
+    Route::post('machine/machinestatustable/delete/{UNID}'   ,[MachineStatusTableController::class,'Delete'])          ->name('machinestatustable.delete');
   //*****************************************  MachineRankTableController  *********************************************************
   Route::get('machine/machinerank/list/{UNID?}'             ,[MachineRankTableController::class,'Index'])             ->name('machinerank.list');
     Route::post('machine/machinerank/store'                 ,[MachineRankTableController::class,'Store'])             ->name('machinerank.store');

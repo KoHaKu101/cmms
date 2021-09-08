@@ -1,6 +1,7 @@
 @extends('masterlayout.masterlayout')
 @section('tittle','homepage')
 @section('css')
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 {{-- ส่วนหัว --}}
 @section('Logoandnavbar')
@@ -92,7 +93,6 @@
           <div class="container">
 						<div class="row">
 							<div class="col-md-12 gx-4">
-
 							</div>
 						</div>
           </div>
@@ -105,108 +105,108 @@
 									<div class="card-header bg-primary">
 										<h4 class="ml-3 mt-2" style="color:white;" ><i class="fas fa-toolbox fa-lg mr-1"></i> เพิ่มสถานะเครื่องจักร </h4>
 									 </div>
-
 									<div id="result"class="card-body">
 										<div class="table-responsive mt--4">
 											<table class="table table-bordered table-head-bg-info table-bordered-bd-info mt-4">
-										<thead>
-											<tr>
-												<th scope="col">CODE</th>
-												<th scope="col">สถานะ</th>
-												<th scope="col">เปิด/ปิด</th>
-												<th scope="col">action</th>
-											</tr>
-										</thead>
-										<tbody>
-											<style>
-											.btn-mute {
-												background: #a2a2a2!important;
-												border-color: #a2a2a2!important;
-											}
-											</style>
-											@foreach ($dataset as $key => $dataitem)
-												@php
-													$HTML_ONCLICK = 'onclick=editstatus(this)
-																						data-unid='.$dataitem->UNID.'
-																						data-name='.$dataitem->STATUS_NAME.'
-																						data-code='.$dataitem->STATUS_CODE.'
-																						data-status='.$dataitem->STATUS.''
-												@endphp
-											<tr>
-												<td>{{$dataitem->STATUS_CODE}}</td>
-												<td style="width:200px">
-														<button class="btn btn-primary btn-block btn-sm my-1 mx--2 "
-														{{ $HTML_ONCLICK }}>
-															<span class="btn-label float-left">
-																<i class="fa fa-eye mx-1 "></i>
-																{{ $dataitem->STATUS_NAME }}
-															</span>
-														</button>
-													</td>
-												<td><button type="button" class="btn {{ $dataitem->STATUS == "9" ? 'btn-success' : 'btn-mute' }}
-													btn-block btn-sm my-1"
-													{{ $HTML_ONCLICK }}>{{ $dataitem->STATUS == "9" ? 'เปิด' : 'ปิด' }}</button></td>
-												<td>
-													<button type="button" class="btn btn-danger btn-block btn-sm my-1" style="width:40px"
-													onclick="deletestatus(this)"
-													data-unid="{{ $dataitem->UNID }}">
-														<i class="fas fa-trash fa-lg">	</i>
-													</button>
-												</td>
-											</tr>
-											@endforeach
-										</tbody>
-									</table>
-									</div>
-										</div>
-								</div>
-								</div>
-								<div class="col-md-4">
-									<div class="card">
-										<div class="card-header bg-primary">
-											<h4 class="ml-3 mt-2" style="color:white;" ><i class="fas fa-toolbox fa-lg mr-1"></i> เพิ่มสถานะเครื่องจักร </h4>
-										 </div>
-										<div class="card-body">
-											<form action="{{ route('machinestatustable.store') }}" method="POST" id="FRM_MACHINE_STATUS" name="FRM_MACHINE_STATUS">
-												@csrf
-
-												<div class="form-group has-error">
-													<label for="STATUS_CODE">CODE</label>
-													<input type="text"  class="form-control" id="STATUS_CODE" name="STATUS_CODE" placeholder="CODE" readonly value="{{ ($datacount->count)+1 }}">
-												</div>
-												<div class="form-group has-error">
-													<label for="STATUS_NAME">สถานะเครื่องจักร</label>
-													<input type="text"  class="form-control" id="STATUS_NAME" name="STATUS_NAME" placeholder="สถานะ" required >
-
-												</div>
-												<div class="form-group has-error">
-
-							              <label for="comment" class="mr-2">Status</label>
-							              <!-- Rounded switch -->
-							              <label class="switch">
-							                <input type="checkbox" id="STATUS" name="STATUS" value="9" checked>
-							                <span class="slider round"></span>
-							              </label>
-							            </div>
-												<button tpye="submit" class="btn btn-primary">Save</button>
-												<button tpye="button" class="btn btn-danger float-right" hidden="TRUE" id="BTN_CANCEL">cancel</button>
-											</form>
+												<thead>
+													<tr>
+														<th scope="col">CODE</th>
+														<th scope="col">สถานะ</th>
+														<th scope="col">เปิด/ปิด</th>
+														<th scope="col">action</th>
+													</tr>
+												</thead>
+												<tbody>
+													<style>
+													.btn-mute {
+														background: #a2a2a2!important;
+														border-color: #a2a2a2!important;
+													}
+													</style>
+													@foreach ($dataset as $key => $dataitem)
+														@php
+															$HTML_ONCLICK = 'onclick=editstatus(this)
+																								data-unid='.$dataitem->UNID.'
+																								data-name='.$dataitem->STATUS_NAME.'
+																								data-code='.$dataitem->STATUS_CODE.'
+																								data-status='.$dataitem->STATUS.''
+														@endphp
+													<tr>
+														<td>{{$dataitem->STATUS_CODE}}</td>
+														<td style="width:200px">
+															<button class="btn btn-primary btn-block btn-sm my-1 mx--2 "
+															{{ $HTML_ONCLICK }}>
+																<span class="btn-label float-left">
+																	<i class="fa fa-eye mx-1 "></i>
+																	{{ $dataitem->STATUS_NAME }}
+																</span>
+															</button>
+														 </td>
+														<td>
+															<button type="button" class="btn {{ $dataitem->STATUS == "9" ? 'btn-success' : 'btn-mute' }}
+																btn-block btn-sm my-1"
+																{{ $HTML_ONCLICK }}>{{ $dataitem->STATUS == "9" ? 'เปิด' : 'ปิด' }}
+															</button>
+														 </td>
+														<td>
+															<button type="button" class="btn btn-danger btn-block btn-sm my-1" style="width:40px"
+															onclick="deletestatus(this)"
+															data-unid="{{ $dataitem->UNID }}">
+																<i class="fas fa-trash fa-lg">	</i>
+															</button>
+														 </td>
+													</tr>
+													@endforeach
+												</tbody>
+											</table>
 										</div>
 									</div>
 								</div>
-              </div>
-
-						</div>
+							</div>
+							<div class="col-md-4">
+								<div class="card">
+									<div class="card-header bg-primary">
+										<h4 class="ml-3 mt-2" style="color:white;" ><i class="fas fa-toolbox fa-lg mr-1"></i> เพิ่มสถานะเครื่องจักร </h4>
+									 </div>
+									<div class="card-body">
+										<form action="{{ route('machinestatustable.store') }}" method="POST" id="FRM_MACHINE_STATUS" name="FRM_MACHINE_STATUS">
+											@csrf
+											<div class="form-group has-error">
+												<label for="STATUS_CODE">CODE</label>
+												<input type="text"  class="form-control" id="STATUS_CODE" name="STATUS_CODE" placeholder="CODE" readonly value="{{ ($datacount->count)+1 }}">
+											</div>
+											<div class="form-group has-error">
+												<label for="STATUS_NAME">สถานะเครื่องจักร</label>
+												<input type="text"  class="form-control" id="STATUS_NAME" name="STATUS_NAME" placeholder="สถานะ" required >
+											</div>
+											<div class="form-group has-error">
+					              <label for="comment" class="mr-2">Status</label>
+					              <!-- Rounded switch -->
+					              <label class="switch">
+					                <input type="checkbox" id="STATUS" name="STATUS" value="9" checked>
+					                <span class="slider round"></span>
+					              </label>
+						           </div>
+											<button tpye="submit" class="btn btn-primary">Save</button>
+											<button tpye="button" class="btn btn-danger float-right" hidden="TRUE" id="BTN_CANCEL">cancel</button>
+										</form>
+									</div>
+								</div>
+							</div>
+            </div>
 					</div>
-  			</div>
-			</div>
+				</div>
+  		</div>
 		</div>
 
+
 @stop
-{{-- ปิดส่วนเนื้อหาและส่วนท้า --}}
+{{-- ปิดส่วนเนื้อหาและส่วนท้า --}
+}
 
 {{-- ส่วนjava --}}
 @section('javascript')
+	<script src={{ asset('assets/js/ajax/ajax-csrf.js') }}></script>
 	<script>
 	function editstatus(thisdata){
 		var unid = $(thisdata).data('unid');
@@ -215,7 +215,6 @@
 		var status = $(thisdata).data('status');
 		var check_status = status == '9' ? true : false ;
 		var url = '/machine/machinestatustable/update/'+unid;
-
 		$('#FRM_MACHINE_STATUS').attr('action',url);
 		$('#STATUS_CODE').val(code);
 		$('#STATUS_NAME').val(name);
@@ -240,7 +239,24 @@
 				confirmButtonText: 'ใช่!'
 			}).then((result) => {
 				if (result.isConfirmed) {
-					window.location.href = url;
+					$.ajax({
+						type:'POST',
+						url: url,
+						datatype: 'json',
+						data: {"_token": "{{ csrf_token() }}",},
+						success:function(data){
+							if (data.pass == 'true') {
+								Swal.fire({
+										title: 'ลบรายการสำเร็จ',
+										icon: 'success',
+										timer:'1500',
+									}).then((result) => {
+										location.reload()
+									})
+							}
+
+						}
+					});
 				}
 			});
 	}
