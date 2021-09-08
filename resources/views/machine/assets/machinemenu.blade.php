@@ -40,21 +40,21 @@
               <div id="js-grid-juicy-projects" class="cbp">
                 <div class="row">
                   <div class="cbp-item movie" style="width:250px">
-                      <div class="cbp-item-wrap" style="background-color: #aedee8b8;">
-                          <div class="cbp-caption">
-                              <div class="cbp-caption-defaultWrap">
-                                <a href="{{url('machine/assets/machinelist/?LINE=0')}}">
-                                  <img src="{{asset('assets/img/bg-404.jpg')}}" alt="img3">
-                                </a> </div>
-                              <div class="cbp-caption-activeWrap">
-                                  <a href="{{url('machine/assets/machinelist/?LINE=0')}}" style="width:254px" class=" btn" rel="nofollow" data-cbp-singlePage="projects">ทะเบียนเครื่องจักร</a>
-                              </div>
+                    <div class="cbp-item-wrap" style="background-color: #aedee8b8;">
+                        <div class="cbp-caption">
+                          <div class="cbp-caption-defaultWrap">
+                            <a href="{{url('machine/assets/machinelist/?LINE=0')}}">
+                              <img src="{{asset('assets/img/bg-404.jpg')}}" alt="img3">
+                            </a> </div>
+                          <div class="cbp-caption-activeWrap">
+                              <a href="{{url('machine/assets/machinelist/?LINE=0')}}" style="width:254px" class=" btn" rel="nofollow" data-cbp-singlePage="projects">ทะเบียนเครื่องจักร</a>
                           </div>
-                          <a href="{{url('machine/assets/machinelist/?LINE=0')}}" style="color:black">
+                        </div>
+                        <a href="{{url('machine/assets/machinelist/?LINE=0')}}" style="color:black">
                           <div class="cbp-l-grid-projects-title uppercase text-center uppercase text-center">เครื่องจักรทั้งหมด</div>
                           <div class="cbp-l-grid-projects-desc uppercase text-center uppercase text-center"></div>
-                          </a>
-                      </div>
+                        </a>
+                    </div>
                   </div>
                   @foreach ($dataset as $key => $dataitem)
                     @php
@@ -62,23 +62,23 @@
                     @endphp
                     <!--portfolio 1-->
                     <div class="cbp-item movie">
-                        <div class="cbp-item-wrap" style="background-color: #aedee8b8;">
-                            <div class="cbp-caption">
-                                <div class="cbp-caption-defaultWrap">
-                                  <a href="{{ $URL }}">
-                                    <img src="{{asset('assets/img/bg-404.jpg')}}" alt="img3">
-                                  </a>
-                                  </div>
-                                  <div class="cbp-caption-activeWrap">
-                                      <a href="{{ $URL }}" style="width:254px" class=" btn" rel="nofollow" data-cbp-singlePage="projects">ทะเบียนเครื่องจักร</a>
-                                  </div>
-                            </div>
-                            <a href="{{ $URL }}" style="color:black">
-                            <div class="cbp-l-grid-projects-title uppercase text-center uppercase text-center">
-                              เครื่องจักร {{ $dataitem->LINE_NAME }}</div>
-                            <div class="cbp-l-grid-projects-desc uppercase text-center uppercase text-center"></div>
+                      <div class="cbp-item-wrap" style="background-color: #aedee8b8;">
+                        <div class="cbp-caption">
+                          <div class="cbp-caption-defaultWrap">
+                            <a href="{{ $URL }}">
+                              <img src="{{asset('assets/img/bg-404.jpg')}}" alt="img3">
                             </a>
+                            </div>
+                            <div class="cbp-caption-activeWrap">
+                                <a href="{{ $URL }}" style="width:254px" class=" btn" rel="nofollow" data-cbp-singlePage="projects">ทะเบียนเครื่องจักร</a>
+                            </div>
                         </div>
+                        <a href="{{ $URL }}" style="color:black">
+                        <div class="cbp-l-grid-projects-title uppercase text-center uppercase text-center">
+                          เครื่องจักร {{ $dataitem->LINE_NAME }}</div>
+                        <div class="cbp-l-grid-projects-desc uppercase text-center uppercase text-center"></div>
+                        </a>
+                      </div>
                     </div>
                     @endforeach
                 </div>

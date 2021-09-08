@@ -18,15 +18,12 @@
                   <tr>
                     <th >NO.</th>
                     <th>Docno</th>
-                    <th>  Docdate</th>
-                    <th>  User Name</th>
-                    <th>  เวลา</th>
-                    <th>  อาการเสีย</th>
+                    <th>Docdate</th>
+                    <th>User Name</th>
+                    <th>เวลา</th>
+                    <th>อาการเสีย</th>
                   </tr>
                 </thead>
-                <tbody>
-
-                </tbody>
               </table>
             </div>
           </div>

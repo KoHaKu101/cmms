@@ -35,7 +35,6 @@
                 </thead>
                 <tbody>
                   @foreach ($machinerepair as $key => $rowrepair)
-
                     <tr>
                       <td class="text-center"> {{ $key+1 }} </td>
                       <td > {{ $rowrepair->DOC_NO != '' ? $rowrepair->DOC_NO : '-' }} </td>

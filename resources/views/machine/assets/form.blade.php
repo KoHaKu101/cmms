@@ -85,7 +85,6 @@
 																	<option value="{{ $srow->STATUS_CODE }}">{{$srow->STATUS_NAME}}</option>
 																@endforeach
 															</select>
-															
 														</div>
 														<div class="col-6 col-sm-6 col-lg-6">
 															<label>ตำแหน่งเครื่อง</label>
@@ -161,7 +160,6 @@
 									<div class="col-md-12 mt-2">
 										<div class="card-body">
 											@include('machine.assets.tab.styletab')
-
 											<ul class="nav nav-pills justify-content-center mt--4">
   											<li>
     											<a id="home-tab" data-toggle="tab" href="#home" class="active" >ข้อมูลทั่วไป</a>

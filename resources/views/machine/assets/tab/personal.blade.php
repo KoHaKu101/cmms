@@ -25,9 +25,7 @@
                   <th>ประเภทพนักงาน</th>
                   </tr>
               </thead>
-              <tbody>
-                
-              </tbody>
+
             </table>
           </div>
         </div>

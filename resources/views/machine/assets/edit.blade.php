@@ -102,9 +102,10 @@
 								</a>
 							</div>
 							<div class="form-group gx-4">
-								<form action="{{ url('machine/assets/update/'.$dataset->UNID) }}" method="POST" enctype="multipart/form-data">
+								{{-- <form action="{{ url('machine/assets/update/'.$dataset->UNID) }}" method="POST" enctype="multipart/form-data">machine.update --}}
+								<form action="{{ route('machine.update',['UNID'=>$dataset->UNID]) }}" method="POST" enctype="multipart/form-data" id="FRM_MACHINE_SAVE">
 									@csrf
-									<button class="btn btn-primary btn-xs" type="submit">
+									<button class="btn btn-primary btn-xs" type="submit" id="BTN_SUBMIT">
 										<span class="fas fa-save fa-lg">	save	</span>
 									</button>
 							</div>
@@ -329,18 +330,18 @@
 	<script src="{{ asset('assets/js/useinproject/machine/editmachine.js') }}"></script>
 	 <script src="{{ asset('assets/js/ajax/ajax-csrf.js') }}"></script>
 	 <script>
+	 $('#FRM_MACHINE_SAVE').submit(function(){
+	 		$("#BTN_SUBMIT", this)
+	 			.html("Please Wait...")
+	 			.attr('disabled', 'disabled');
+	 		return true;
+	 });
+	 </script>
+	 <script>
 	 $(document).ready(function(){
-			$('#machinespartelist').DataTable({
-				 "pageLength": 10,
-				 "bLengthChange": false,
-				 "bFilter": true,
-				 "bInfo": false,
-				 "bAutoWidth": false,
-				 'bSort': false,
 
-			 });
-			 $('#addpmmachine').DataTable({
-					"pageLength": 10,
+			 $('#machinespartelist,#addpmmachine').DataTable({
+					"pageLength": 6,
 					"bLengthChange": false,
 					"bFilter": true,
 					"bInfo": false,
@@ -370,8 +371,8 @@
 	 });
 	 function edituploadfile(thisdata){
 		 var uploadtopicname = $(thisdata).data('uploadtopicname');
-		 var uploadunid = $(thisdata).data('uploadunid');
-		 var url = '/machine/upload/update';
+		 var uploadunid 		 = $(thisdata).data('uploadunid');
+		 var url 						 = "{{ route('upload.update') }}";
 		 $('#FRM_UPLOAD_MANUAL').attr('action',url);
 		 $('#FILE_UPLOAD').attr('required',false);
 		 $('#TOPIC_NAME').val(uploadtopicname);

@@ -18,14 +18,13 @@
 					@csrf
           <div class="card-body">
             <div class="row">
-
               <div class="card-body">
                 <div class="row">
                   <div class="col-md-12 col-lg-12 ml-2">
                     <table class="table table-bordered table-head-bg-info table-bordered-bd-info" id="removepmmachine" >
                         <thead>
                           <tr>
-                            <th scope="col" width="">#</th>
+                            <th scope="col">#</th>
                             <th scope="col">รายการ</th>
                           </tr>
                         </thead>
@@ -35,35 +34,30 @@
                             $UNID = $datapmremove->UNID;
                            @endphp
                            <tr>
+                             <td>{{ $index+1  }}</td>
                              <td>
-                               {{ $index+1  }}
+                               <div class="form-check">
+                                 <label class="form-check-label">
+                                   <input class="form-check-input add-machine PM_TEMPLATE_UNID_REFREMOVE" type="checkbox" value="{{ $UNID }}"
+                                   id="PM_TEMPLATE_UNID_REFREMOVE{{ $UNID }}" name="PM_TEMPLATE_UNID_REFREMOVE{{ $UNID }}">
+                                   <span class="form-check-sign">{{$datapmremove->PM_TEMPLATE_NAME}}</span>
+                                 </label>
+                               </div>
                              </td>
-                             <td><div class="form-check">
-                             <label class="form-check-label">
-                               <input class="form-check-input add-machine PM_TEMPLATE_UNID_REFREMOVE" type="checkbox" value="{{ $UNID }}"
-                               id="PM_TEMPLATE_UNID_REFREMOVE{{ $UNID }}" name="PM_TEMPLATE_UNID_REFREMOVE{{ $UNID }}"
-                               >
-                               <span class="form-check-sign">{{$datapmremove->PM_TEMPLATE_NAME}}</span>
-                             </label>
-                           </div></td>
                            </tr>
-
-
                          @endforeach
                        </tbody>
                      </table>
                   </div>
+                </div>
               </div>
-
-              </div>
-
-          </div>
-          </div>
             </div>
-		        <div class="modal-footer">
-  	           <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
-	              <input type="button" class="btn btn-danger delete-confirm" value="ลบ"></input>
-            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+         <button type="button" class="btn btn-secondary" data-dismiss="modal">ยกเลิก</button>
+          <input type="button" class="btn btn-danger delete-confirm" value="ลบ"></input>
+      </div>
 	      </form>
       </div>
 </div>

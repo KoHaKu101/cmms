@@ -61,57 +61,56 @@
 								<div class="card ">
 								  <div class="card-header bg-primary  ">
 										<form action="{{ route('machine.list',$MACHINE_LINE) }}" method="POST" enctype="multipart/form-data" id="FRM_SEARCH">
-											@method('GET')
-											@csrf
-								    <div class="row ">
-											<div class="col-md-8 form-inline ">
-												<label class="text-white">Line : </label>
-												 <select class="form-control form-control-sm mt-1 mx-1" id="LINE" name="LINE" onchange="changeline()">
-													 <option value="0">ทั้งหมด</option>
-													 @foreach ($LINE as $index => $row_line)
-														 <option value="{{ $row_line->LINE_CODE }}" {{ $MACHINE_LINE == $row_line->LINE_CODE ? 'selected' : '' }}>{{ $row_line->LINE_NAME }}</option>
-													 @endforeach
-												 </select>
-												<label class="text-white mx-2">Rank : </label>
-												 <select class="form-control form-control-sm mt-1 mx-1" id="MACHINE_RANK_CODE" name="MACHINE_RANK_CODE" onchange="changerank()">
-													 <option value="0" >ทั้งหมด</option>
-													 @foreach ($RANK as $index => $row_rank)
-														 <option value="{{ $row_rank->MACHINE_RANK_CODE }}" {{ $MACHINE_RANK_CODE == $row_rank->MACHINE_RANK_CODE ? 'selected' : '' }}>{{ $row_rank->MACHINE_RANK_CODE }}</option>
-													 @endforeach
-												 </select>
-												<label class='text-white mx-2'>สถานะการใช้งาน : </label>
-												<select class="form-control form-control-sm mt-1 mx-1" name="MACHINE_CHECK" id="MACHINE_CHECK" onchange="changerank()">
+												@method('GET')
+												@csrf
+									    <div class="row ">
+												<div class="col-md-8 form-inline ">
+													<label class="text-white">Line : </label>
+													 <select class="form-control form-control-sm mt-1 mx-1" id="LINE" name="LINE" onchange="select()">
+														 <option value="0">ทั้งหมด</option>
+														 @foreach ($LINE as $index => $row_line)
+															 <option value="{{ $row_line->LINE_CODE }}" {{ $MACHINE_LINE == $row_line->LINE_CODE ? 'selected' : '' }}>{{ $row_line->LINE_NAME }}</option>
+														 @endforeach
+													 </select>
+													<label class="text-white mx-2">Rank : </label>
+													 <select class="form-control form-control-sm mt-1 mx-1" id="MACHINE_RANK_CODE" name="MACHINE_RANK_CODE" onchange="select()">
+														 <option value="0" >ทั้งหมด</option>
+														 @foreach ($RANK as $index => $row_rank)
+															 <option value="{{ $row_rank->MACHINE_RANK_CODE }}" {{ $MACHINE_RANK_CODE == $row_rank->MACHINE_RANK_CODE ? 'selected' : '' }}>{{ $row_rank->MACHINE_RANK_CODE }}</option>
+														 @endforeach
+													 </select>
+													<label class='text-white mx-2'>สถานะการใช้งาน : </label>
+													<select class="form-control form-control-sm mt-1 mx-1" name="MACHINE_CHECK" id="MACHINE_CHECK" onchange="select()">
 														<option value="0">ทั้งหมด</option>
 														<option value="1" {{ $MACHINE_CHECK == "1" ? 'selected': '' }}>หยุด/เสีย</option>
 														<option value="2" {{ $MACHINE_CHECK == "2" ? 'selected': '' }}>ทำงาน</option>
 														<option value="3" {{ $MACHINE_CHECK == "3" ? 'selected': '' }}>รอผลิต</option>
 														<option value="4" {{ $MACHINE_CHECK == "4" ? 'selected': '' }}>แผนผลิต</option>
 													</select>
-														<label class="text-white mx-2">สถานะ : </label>
-														<select class="form-control form-control-sm mt-1 mx-1" id="MACHINE_STATUS" name="MACHINE_STATUS" onchange="changerank()" >
-															<option value="9" {{ $MACHINE_STATUS == "9" ? 'selected' : "" }}>แสดง</option>
-															<option value="1" {{ $MACHINE_STATUS == "1" ? 'selected' : "" }}>ซ่อน</option>
-														</select>
-											</div>
-								      <div class="col-md-4 form-inline">
-												<label class="text-white mx-2">SEARCH : </label>
-								          <div class="input-group mt-1">
-								            <input type="search" id="SEARCH"  name="SEARCH" class="form-control form-control-sm"
-														value="{{ isset($SEARCH) ? $SEARCH : '' }}">
-								            <div class="input-group-prepend">
-								              <button type="submit" class="btn btn-search pr-1 btn-xs	SEARCH">
-								                <i class="fa fa-search search-icon"></i>
-								              </button>
-								            </div>
-								          </div>
-								      </div>
-								    </div>
-									</form>
-
+													<label class="text-white mx-2">สถานะ : </label>
+													<select class="form-control form-control-sm mt-1 mx-1" id="MACHINE_STATUS" name="MACHINE_STATUS" onchange="select()" >
+														<option value="9" {{ $MACHINE_STATUS == "9" ? 'selected' : "" }}>แสดง</option>
+														<option value="1" {{ $MACHINE_STATUS == "1" ? 'selected' : "" }}>ซ่อน</option>
+													</select>
+												</div>
+									      <div class="col-md-4 form-inline">
+													<label class="text-white mx-2">SEARCH : </label>
+									          <div class="input-group mt-1">
+									            <input type="search" id="SEARCH"  name="SEARCH" class="form-control form-control-sm"
+															value="{{ isset($SEARCH) ? $SEARCH : '' }}">
+									            <div class="input-group-prepend">
+									              <button type="submit" class="btn btn-search pr-1 btn-xs	SEARCH">
+									                <i class="fa fa-search search-icon"></i>
+									              </button>
+									            </div>
+									          </div>
+									      </div>
+									    </div>
+										</form>
 								  </div>
 								  <div id="result"class="card-body">
 								    <div class="table-responsive">
-									      <table class=" table table-bordered table-head-bg-info table-bordered-bd-info  table-hover ">
+									    <table class=" table table-bordered table-head-bg-info table-bordered-bd-info  table-hover ">
 								        <thead class="thead-light">
 								          <tr>
 								            <th width="2%">ลำดับ</th>
@@ -129,15 +128,13 @@
 								        <tbody >
 								          @foreach ($machine as $key => $row)
 														@php
-														$PLAN_LAST_DATE = isset($row->PLAN_LAST_DATE) ? ($row->PLAN_LAST_DATE == '1900-01-01' ? '' : $row->PLAN_LAST_DATE) : '' ;
+														$PLAN_LAST_DATE 	= isset($row->PLAN_LAST_DATE) 	? ($row->PLAN_LAST_DATE 	== '1900-01-01' ? '' : $row->PLAN_LAST_DATE) 	 : '' ;
 														$REPAIR_LAST_DATE = isset($row->REPAIR_LAST_DATE) ? ($row->REPAIR_LAST_DATE == '1900-01-01' ? '' : $row->REPAIR_LAST_DATE) : '' ;
 														@endphp
 								            <tr class="mt-4">
-								              <td >
-								                <center>{{ $machine->firstItem() + $key }}</center>
-								              </td>
-															<td >  {{ $row->MACHINE_LINE }}  </td>
-								                <td >
+								              <td class="text-center">{{ $machine->firstItem() + $key }}</td>
+															<td>  {{ $row->MACHINE_LINE }}  </td>
+								              <td>
 								                <a href="{{ url('machine/assets/edit/'.$row->UNID) }}">
 								                  <button type="button" class="btn btn-secondary btn-sm btn-block my-1" style="width:130px">
 								                    <span class="float-left">
@@ -149,16 +146,16 @@
 								              <td> {{ $row->MACHINE_NAME_TH }}  </td>
 															<td> {{ $row->MACHINE_TYPE_TH }}  </td>
 															<td class="text-center"> {{ $row->MACHINE_RANK_CODE }}  </td>
-															<td class="text-center"> {{ $PLAN_LAST_DATE != '' ? date('d-m-Y',strtotime($PLAN_LAST_DATE))  : '-'}}  </td>
+															<td class="text-center"> {{ $PLAN_LAST_DATE 	!= '' ? date('d-m-Y',strtotime($PLAN_LAST_DATE))  	: '-'}}  </td>
 															<td class="text-center"> {{ $REPAIR_LAST_DATE != '' ? date('d-m-Y',strtotime($REPAIR_LAST_DATE))  : '-'}}  </td>
 								              <td>
-								                  <button type="button" class="btn btn-secondary btn-sm btn-block my-1"
-								                  onclick="window.open('/machine/history/repairpdf/{{$row->UNID}}','RepairSaveprint','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes')" id="button" style="width:80px">
-								                    <span class="float-left">
-								                      <i  style="font-size:17px"class="icon-printer mx-1 mt-1"></i>
-								                      Print
-								                    </span>
-								                  </button>
+							                  <button type="button" class="btn btn-secondary btn-sm btn-block my-1"
+							                  onclick="window.open('/machine/history/repairpdf/{{$row->UNID}}','RepairSaveprint','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes')" id="button" style="width:80px">
+							                    <span class="float-left">
+							                      <i  style="font-size:17px"class="icon-printer mx-1 mt-1"></i>
+							                      Print
+							                    </span>
+							                  </button>
 								              </td>
 								              <td>
 								                <a href="{{ url('machine/repair/form/'.$row->UNID) }}">
@@ -169,24 +166,19 @@
 								                  </button>
 								                </a>
 								              </td>
-								              </tr>
+								            </tr>
 								          @endforeach
-
 								        </tbody>
-
-								    </table>
-								    {{ $machine->appends( ['SEARCH' => $SEARCH])->links('pagination.default') }}
-
-								  </div>
-								    </div>
+								    	</table>
+								    	{{ $machine->appends( ['SEARCH' => $SEARCH])->links('pagination.default') }}
+								  	</div>
+								 	</div>
 								</div>
-								</div>
+							 </div>
               </div>
-
-						</div>
 					</div>
-  			</div>
-			</div>
+				</div>
+  		</div>
 		</div>
 
 @stop
@@ -199,12 +191,10 @@
 
 	</script>
 	<script>
-		function changeline(){
+		function select(){
 			$('.SEARCH').click();
 		}
-		function changerank(){
-			$('.SEARCH').click();
-		}
+
 	</script>
 
 

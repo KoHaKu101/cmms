@@ -38,7 +38,7 @@
                       @foreach ($machineupload as $key =>$uploaditem)
                   <tr>
                     <td>  {{$key=1 , $key++}} </td>
-                    <td>  <h5>{{ $uploaditem->TOPIC_NAME }}</h5>  </td>
+                    <td>  <h5>{{ $uploaditem->TOPIC_NAME }}    </h5>      </td>
                     <td>  <h5>{{ $uploaditem->FILE_EXTENSION }}</h5>  </td>
                     <td>  <i class="fas fa-file-word "></i>  </td>
                     <td>

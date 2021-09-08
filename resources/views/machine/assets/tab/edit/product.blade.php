@@ -29,14 +29,13 @@
                 @foreach ($DATA_PRODUCT as $key => $row)
                   <tr>
                     <td>{{ $key+1 }}</td>
-                      <td class="text-center">{{ $row->FORMULA_CODE }}</td>
+                    <td class="text-center">{{ $row->FORMULA_CODE }}</td>
                     <td>{{ $row->PRODUCT_NAME_TH }}</td>
                     <td>{{ $row->PROCESS_NAME }}</td>
                     <td class="text-center">{{ $row->ON_CT }} </td>
                     <td class="text-center">{{ $row->ON_CT_DAY }}</td>
                   </tr>
                 @endforeach
-
               </tbody>
             </table>
           </div>

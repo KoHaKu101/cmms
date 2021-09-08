@@ -252,10 +252,10 @@ class MachineController extends Controller
 
     $machinepmtemplateremove     = MachinePmTemplate::select('UNID','PM_TEMPLATE_NAME')->whereIn('UNID',$MasterIMPS_SELECT)
                                                     ->orderBy('CREATE_TIME','ASC')
-                                                    ->paginate(6);
+                                                    ->get();
     $machinepmtemplate           = MachinePmTemplate::select('UNID','PM_TEMPLATE_NAME')->whereNotIn('UNID',$MasterIMPS_SELECT)
                                                     ->orderBy('CREATE_TIME','ASC')
-                                                    ->paginate(6);
+                                                    ->get();
     $DATA_PRODUCT                = BomMachine::select('MACHINE_CODE','MACHINE_NAME','PDCS_BOM_MACHINE.PRODUCT_CODE','PDCS_BOM_MACHINE.FORMULA_CODE'
                                                       ,'BASE_PRODUCTS.PRODUCT_NAME_TH','PROCESS_NO','PROCESS_CODE'
                                                       ,'ON_CT','ON_CT_HR','ON_CT_DAY','ON_PLAN_STATUS','WORKING_HR')

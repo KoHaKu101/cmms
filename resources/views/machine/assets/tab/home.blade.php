@@ -36,11 +36,11 @@
               <input type="text" class="form-control" id="MACHINE_MODEL" name="MACHINE_MODEL" placeholder="Model">
             </div>
             <div class="form-group">
-              <label for="MACHINE_MA_COST">ค่าใช้จ่ายซ่อมบำรุง	</label>
+              <label for="MACHINE_MA_COST">ค่าใช้จ่ายซ่อมบำรุง</label>
               <input type="text" class="form-control" id="MACHINE_MA_COST" name="MACHINE_MA_COST" placeholder="ค่าใช้จ่ายซ่อมบำรุง">
             </div>
             <div class="form-group">
-              <label for="MACHINE_WEIGHT">Weight	</label>
+              <label for="MACHINE_WEIGHT">Weight</label>
               <input type="text" class="form-control" id="MACHINE_WEIGHT" name="MACHINE_WEIGHT" placeholder="Weight">
             </div>
           </div>
