@@ -185,8 +185,6 @@
 														<option value>กรุณาเลือก</option>
 														@foreach ($role as $key => $value)
 															<option value="{{$key}}">{{$value}}</option>
-	                            {{-- <option value="{{$key}}">{{$value}}</option> --}}
-	                            {{-- <option value="{{$key}}">{{$value}}</option> --}}
 														@endforeach
 
                           </select>
