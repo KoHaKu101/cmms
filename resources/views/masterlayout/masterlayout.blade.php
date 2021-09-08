@@ -46,13 +46,7 @@
 		@endif
 		<div class="main-header">
 
-			@can('isAdmin')
-				@include('masterlayout.logomaster')
-				@include('masterlayout.navbar.navbarmaster')
-			@elsecan('isManager_Ma')
-				@include('masterlayout.logomaster')
-				@include('masterlayout.navbar.navbarmaster')
-			@elsecan('isManager_Pd')
+			@can('isAdminandManager')
 				@include('masterlayout.logomaster')
 				@include('masterlayout.navbar.navbarmaster')
 			@else
@@ -62,19 +56,11 @@
 
 		</div>
 		@yield('sidebar')
-		@can('isAdmin')
-			@include('masterlayout.sidebar.sidebarmaster')
-	  @elsecan('isManager_Pd')
-			@include('masterlayout.sidebar.sidebarmaster')
-		@elsecan('isManager_Ma')
+		@can('isAdminandManager')
 			@include('masterlayout.sidebar.sidebarmaster')
 	  @else
-
 	  @endcan
-
-
     <div class="main-panel">
-
     @yield('contentandfooter')
 
     </div>
@@ -84,20 +70,13 @@
 	<script type="text/javascript" src="{{ asset('/assets/js/core/jquery.3.2.1.min.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('/assets/js/core/popper.min.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('/assets/js/core/bootstrap.min.js') }}"></script>
-
 	<!-- jQuery UI -->
 	<script type="text/javascript" src="{{ asset('/assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('/assets/js/plugin/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js') }}"></script>
-
 	<!-- jQuery Scrollbar -->
 	<script type="text/javascript" src="{{ asset('/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js') }}"></script>
-
-
 	<!-- jQuery Sparkline -->
 	<script type="text/javascript" src="{{ asset('/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js') }}"></script>
-
-
-
 	<!-- Datatables -->
 	<script type="text/javascript" src="{{ asset('/assets/js/plugin/datatables/datatables.min.js') }}"></script>
 

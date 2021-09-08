@@ -21,18 +21,15 @@
           <i class="fa fa-search"></i>
         </a>
       </li>
-      @can('isAdmin','isManager_Ma')
+      @can('isAdminandMA')
       <li class="nav-item dropdown hidden-caret">
         <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fa fa-bell" id="count"></i>
-
         </a>
         <ul class="dropdown-menu notif-box animated fadeIn" aria-labelledby="notifDropdown">
-
           <li>
             <div class="notif-scroll scrollbar-outer">
               <div class="notif-center" id="loaddatacode">
-
               </div>
             </div>
           </li>
@@ -42,7 +39,6 @@
         </ul>
       </li>
       @else
-
       @endcan
       {{-- Monthly Check Notifity --}}
       <li class="nav-item dropdown hidden-caret">
