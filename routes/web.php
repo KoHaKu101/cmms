@@ -105,7 +105,7 @@ Route::post('/cookie/set',[CookieController::class,'setCookie'])->name('cookie.s
 Route::get('/cookie/get' ,[CookieController::class,'getCookie'])->name('cookie.get');
 Route::middleware('can:isAdminandManager')->group(function () {
   //*****************************************  CookieController  *********************************************************
-  Route::get('/machine/dashboard/dashboard'            ,[CookieController::class,'Dashboard']);
+  Route::get('/machine/dashboard/dashboard'            ,[DashboardController::class,'Dashboard']);
     Route::get('/machine/dashboard'                    ,[DashboardController::class,'Dashboard'])          ->name('dashboard.dashboard');
     Route::get('/dashboard'                            ,[DashboardController::class,'Dashboard'])          ->name('dashboard');
     Route::get('/dashboard/pm'                         ,[DashboardController::class,'PM'])                 ->name('dashboard.pm');

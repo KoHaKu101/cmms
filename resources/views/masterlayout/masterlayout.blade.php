@@ -96,7 +96,7 @@
 		<script type="text/javascript" src="{{ asset('assets/js/useinproject/dashboard/notifity.js') }}"></script>
 		<script>
 			$(document).ready(function(){
-				var url = "{{route('machine.send')}}";
+				var url = "{{route('machine.config.send')}}";
 				$.ajax({
 					 type: "GET",
 					 url: url,
