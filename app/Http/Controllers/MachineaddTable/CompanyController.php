@@ -57,7 +57,7 @@ class CompanyController extends Controller
   public function Update(Request $request){
     $STATUS = $request->STATUS != '' ? 9 : 1;
     Company::where('UNID','=',$request->UNID)->update([
-      'COMPANY_CODE'   => $request->COMPANY_CODE
+      'COMPANY_CODE'    => $request->COMPANY_CODE
       ,'COMPANY_NAME'   => $request->COMPANY_NAME
       ,'NOTE'           => $request->NOTE
       ,'STATUS'         => $STATUS
@@ -75,14 +75,10 @@ class CompanyController extends Controller
   }
   public function SwitchStatus(Request $request){
     $COMPANY = Company::where('UNID','=',$request->UNID)->first();
-    if ($COMPANY->STATUS == 9) {
+    if ($COMPANY->STATUS == 9 || $COMPANY->STATUS == 1) {
+      $STATUS = $COMPANY->STATUS == 9 ? 1 : 9;
       Company::where('UNID','=',$request->UNID)->update([
-        'STATUS'         => 1
-      ]);
-      return Response()->json(['result' => 'true']);
-    }elseif ($COMPANY->STATUS == 1) {
-      Company::where('UNID','=',$request->UNID)->update([
-        'STATUS'         => 9
+        'STATUS'         => $STATUS
       ]);
       return Response()->json(['result' => 'true']);
     }else {

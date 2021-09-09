@@ -36,10 +36,9 @@ class MachineRankTableController extends Controller
   }
 
   public function Index($UNID = NULL){
-    $open = '0';
-    $datafirst = NULL;
+    $open        = '0';
+    $datafirst   = NULL;
     $datamachine = NULL;
-
     if ($UNID != NULL) {
       $datafirst   = MachineRankTable::select('MACHINE_RANK_CODE')->where('UNID',$UNID)->first();
       $datamachine = Machine::select('MACHINE_CODE')->where('MACHINE_RANK_CODE',$datafirst->MACHINE_RANK_CODE )
@@ -88,7 +87,7 @@ class MachineRankTableController extends Controller
       'MACHINE_RANK_MONTH.min'  => 'ใส่จำนวนเดือนต่ำสุดได้ 1',
       'MACHINE_RANK_MONTH.max'  => 'ใส่จำนวนเดือนมากสุดได้ 12',
       ]);
-      $MACHINE_RANK_CODE = $request->MACHINE_RANK_CODE;
+      $MACHINE_RANK_CODE  = $request->MACHINE_RANK_CODE;
       $MACHINE_RANK_MONTH = $request->MACHINE_RANK_MONTH;
       MachineRankTable::where('UNID',$request->UNID)->update([
         'MACHINE_RANK_CODE'    => $MACHINE_RANK_CODE,
@@ -107,8 +106,9 @@ class MachineRankTableController extends Controller
    return Redirect()->back();
   }
   public function Delete($UNID) {
-      $data = MachineRankTable::where('UNID',$UNID)->first();
-      if (Machine::where('MACHINE_RANK_CODE',$data->MACHINE_RANK_CODE)->first() != NULL) {
+      $data    = MachineRankTable::where('UNID',$UNID)->first();
+      $machine = Machine::where('MACHINE_RANK_CODE',$data->MACHINE_RANK_CODE)->count();
+      if ($machine > 0) {
         alert()->error('ลบไม่สำเร็จมีรายการเชื่อมต่ออยู่')->autoclose('1500');
         return Redirect()->back();
       }else {

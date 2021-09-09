@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Auth;
+use App\Http\Controllers\Export\PMExportController;
+use App\Http\Controllers\Export\PDMExportController;
 //******************** model ***********************
 use App\Models\SettingMenu\MailAlert;
 use App\Models\SettingMenu\MailSetup;
@@ -180,14 +182,17 @@ class MailConfigController extends Controller
     return Redirect()->back();
   }
   public function Send(){
-    $DATENOW = date('Y-m-d');
+    $DATENOW  = date('Y-m-d');
     $DATESEND = MailSetup::select('UNID','DATESEND_MAIL','DATESEND_SET')->get();
-    
     if ($DATENOW >= $DATESEND[0]->DATESEND_MAIL) {
       $DATESEND_MAIL = Carbon::parse($DATESEND[0]->DATESEND_MAIL)->addDays($DATESEND[0]->DATESEND_SET);
       MailSetup::where('UNID','=',$DATESEND[0]->UNID)->update([
         'DATESEND_MAIL' => $DATESEND_MAIL
       ]);
+      $Excel_PDM   = new PDMExportController();
+      $Excel_PM    = new PMExportController();
+      $Excel_PM->export();
+      $Excel_PDM->export();
       \Artisan::call('mail:send');
     }
   }

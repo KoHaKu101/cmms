@@ -69,7 +69,7 @@ class MachineStatusTableController extends Controller
   }
 
 public function Update(Request $request,$UNID) {
-  $STATUS = isset($request->STATUS) ? '9' : '1' ;
+  $STATUS   = isset($request->STATUS) ? '9' : '1' ;
   $data_set = MachineStatusTable::where('UNID',$UNID)->update([
     'STATUS_CODE'     => $request->STATUS_CODE,
     'STATUS_NAME'     => $request->STATUS_NAME,

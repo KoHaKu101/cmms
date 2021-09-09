@@ -11,6 +11,7 @@ use App\Models\Machine\SparePartPlan;
 use App\Models\Machine\Pmplanresult;
 use Carbon\Carbon;
 use Auth;
+use Gate;
 use Illuminate\Support\Facades\DB;
 class DashboardController extends Controller
 {
@@ -26,9 +27,7 @@ class DashboardController extends Controller
     $machine_all        = Machine::select('MACHINE_CHECK')->where('MACHINE_CHECK','!=','4')->count();
     $machine_ready      = Machine::select('MACHINE_CHECK')->where('MACHINE_CHECK','=','2')->count();
     $machine_wait       = Machine::select('MACHINE_CHECK')->where('MACHINE_CHECK','!=','2')->where('MACHINE_CHECK','!=','4')->count();
-
     $datarepair         = MachineRepairREQ::select('CLOSE_STATUS')->where('CLOSE_STATUS','=','9')->count();
-
     $datarepairlist     = MachineRepairREQ::select('STATUS_NOTIFY','PRIORITY','MACHINE_CODE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME','DOC_DATE','DOC_NO')
                                           ->where('CLOSE_STATUS','=','9')->orderBy('DOC_DATE','DESC')->orderBy("REPAIR_REQ_TIME",'DESC')
                                           ->orderBy('PRIORITY','ASC')->take(4)->get();
@@ -36,17 +35,14 @@ class DashboardController extends Controller
                                           ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
                                           ->groupBy('MACHINE_CODE')->orderBy('DOWNTIME','DESC')
                                           ->where('CLOSE_STATUS','=',1)->take(7)->get();
-
     $data_count_repair  = MachineRepairREQ::selectraw('MACHINE_CODE,COUNT(MACHINE_CODE) as MACHINE_CODE_COUNT')
                                           ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
                                           ->where('MACHINE_LINE','like','L'.'%')
                                           ->groupBy('MACHINE_CODE')->orderBy('MACHINE_CODE_COUNT','DESC')->get();
-
     $data_repair_detail = MachineRepairREQ::selectraw('REPAIR_SUBSELECT_NAME,COUNT(REPAIR_SUBSELECT_UNID) as REPAIR_SUBSELECT_UNID_COUNT')
                                           ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
                                           ->groupBy('REPAIR_SUBSELECT_UNID')->groupBy('REPAIR_SUBSELECT_NAME')
                                           ->orderBy('REPAIR_SUBSELECT_UNID_COUNT','DESC')->get();
-
     $count_pdm           = SparePartPlan::selectraw("sum(CASE WHEN STATUS = 'COMPLETE' THEN 1 ELSE 0 END) as COMPLETE,
 	                                               sum(CASE WHEN STATUS != 'COMPLETE' THEN 1 ELSE 0 END) as NOCOMPLETE")
                                        ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))->first();
@@ -326,13 +322,11 @@ class DashboardController extends Controller
   }
   public function UserHomePage(Request $request){
     $ROLE = $request->role;
-
     if (Gate::allows('isManager_Ma')) {
       return View('machine.userpage.userhomepageforma');
     }elseif(Gate::allows('isManager_Pd')) {
       return View('machine.userpage.userhomepageforpd');
     }elseif (Gate::allows('isAdmin')) {
-
         if ($ROLE == 'MA') {
           return View('machine.userpage.userhomepageforma');
         }elseif ($ROLE == 'PD') {

@@ -3,7 +3,7 @@
 <table>
   <theade></theade>
   <tbody>
-    @foreach ($DATA_PM as $key => $row_pm)
+    {{-- @foreach ($DATA_PM as $key => $row_pm)
       <tr>
         <td>{{ $key+1 }}.-></td>
         <td>LINE : {{ $row_pm->MACHINE_LINE }},</td>
@@ -12,7 +12,7 @@
         <td>ตรวจเช็คระบบ : {{ $row_pm->PM_MASTER_NAME }},</td>
         <td>วันที่ตามแผน : {{ date('d-m-Y',strtotime($row_pm->PLAN_DATE)) }}</td>
       </tr>
-    @endforeach
+    @endforeach --}}
 
   </tbody>
 </table>
@@ -21,7 +21,7 @@
 <table>
   <theade></theade>
   <tbody>
-    @php
+    {{-- @php
     $CHECK_MACHINE_CODE = '';
     $number       = 0;
 
@@ -50,7 +50,7 @@
         <td>ตรวจเช็คระบบ : {{ $row_pdm->SPAREPART_NAME }},</td>
         <td>วันที่ตามแผน : {{ date('d-m-Y',strtotime($row_pdm->PLAN_DATE)) }}</td>
       </tr>
-    @endforeach
+    @endforeach --}}
 
   </tbody>
 </table>

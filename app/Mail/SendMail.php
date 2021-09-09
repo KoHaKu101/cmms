@@ -60,22 +60,9 @@ class SendMail extends Mailable
       {
 
 
-
-        $DATA_PM  =  MachinePlanPm::select('MACHINE_CODE','MACHINE_LINE','PLAN_DATE','PM_MASTER_NAME')
-                                  ->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
-                                  ->where('PLAN_YEAR','=',date('Y'))->where('PLAN_MONTH','=',date('n'))->where('PLAN_STATUS','!=','COMPLETE')
-                                  ->orderBy('MACHINE_LINE')->orderby('PLAN_DATE')->get();
-
-        $DATA_PDM =  SparePartPlan::select('MACHINE_CODE','MACHINE_LINE','SPAREPART_NAME','PLAN_DATE')
-                                   ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))->where('STATUS','!=','COMPLETE')
-                                   ->orderBy('PLAN_DATE')->orderBy('MACHINE_LINE')->orderBy('MACHINE_CODE')->get();
-        $MACHINE_ARRAY = array();
-        foreach($DATA_PDM as $key => $row){
-          $MACHINE_ARRAY[$row->MACHINE_CODE] = Machine::selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
-                                              ->where('MACHINE_CODE','=',$row->MACHINE_CODE)->first();
-        }
-
+        $path_file_pdm = public_path('upload/mail/PlanPdm.xlsx');
+        $path_file_pm = public_path('upload/mail/PlanPm.xlsx');
       return $this->subject('ตรวจเช็คเครื่องจักรประจำเดือน')
-          ->view('emails.sendmail',compact('DATA_PM','DATA_PDM','MACHINE_ARRAY'));
+          ->view('emails.sendmail')->attach($path_file_pm)->attach($path_file_pdm);
     }
 }

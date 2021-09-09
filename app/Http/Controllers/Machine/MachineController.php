@@ -370,8 +370,6 @@ class MachineController extends Controller
 
   }
 
-
-
   public function SaveImg($image = NULL,$new_name = NULL,$MACHINE_LINE = NULL){
     $img_ext = $image->getClientOriginalExtension();
     $width = 450;
