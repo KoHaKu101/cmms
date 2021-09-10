@@ -88,38 +88,38 @@
 										<h4>Alert Mail</h4>
 									</div>
 									<div class="card-body">
-										@if (count($dataalertmail) == 1 )
+
 												<form action="{{ route('machine.config.savealert') }}" method="POST" id="FRM_ALERTMAIL" name="FRM_ALERTMAIL">
 													@csrf
 													<div class="form-group form-inline">
 															<label for="MAILALEAT1" class="col-md-3 col-form-label">Email Aleart 1</label>
 															<div class="col-md-9 p-0">
-																<input type="hidden" class="form-control form-control-sm input-full" id="UNID" name="UNID" value="{{ $dataalertmail[0]->EMAILADDRESS1 }}">
-																<input type="text" class="form-control form-control-sm input-full" id="MAILALEAT1" name="MAILALEAT1" value="{{ $dataalertmail[0]->EMAILADDRESS1 }}">
+																<input type="hidden" class="form-control form-control-sm input-full" id="UNID" name="UNID" value="{{ isset($datamail[0]->UNID) ? $datamail[0]->UNID : '' }}">
+																<input type="text" class="form-control form-control-sm input-full" id="MAILALEAT1" name="MAILALEAT1" value="{{ isset($dataalertmail[0]) ? $dataalertmail[0]->EMAILADDRESS1 : '' }}">
 															</div>
 														</div>
 														<div class="form-group form-inline">
 																<label for="MAILALEAT2" class="col-md-3 col-form-label">Email Aleart 2</label>
 																<div class="col-md-9 p-0">
-																	<input type="text" class="form-control form-control-sm input-full" id="MAILALEAT2" name="MAILALEAT2" value="{{ $dataalertmail[0]->EMAILADDRESS2 }}">
+																	<input type="text" class="form-control form-control-sm input-full" id="MAILALEAT2" name="MAILALEAT2" value="{{ isset($dataalertmail[0]) ? $dataalertmail[0]->EMAILADDRESS2 : '' }}">
 																</div>
 															</div>
 															<div class="form-group form-inline">
 																	<label for="MAILALEAT3" class="col-md-3 col-form-label">Email Aleart 3</label>
 																	<div class="col-md-9 p-0">
-																		<input type="email" class="form-control form-control-sm input-full" id="MAILALEAT3" name="MAILALEAT3" value="{{ $dataalertmail[0]->EMAILADDRESS3 }}">
+																		<input type="email" class="form-control form-control-sm input-full" id="MAILALEAT3" name="MAILALEAT3" value="{{ isset($dataalertmail[0]) ? $dataalertmail[0]->EMAILADDRESS3 : '' }}">
 																	</div>
 																</div>
 																<div class="form-group form-inline">
 																		<label for="MAILALEAT4" class="col-md-3 col-form-label">Email Aleart 4</label>
 																		<div class="col-md-9 p-0">
-																			<input type="text" class="form-control form-control-sm input-full" id="MAILALEAT4" name="MAILALEAT4" value="{{ $dataalertmail[0]->EMAILADDRESS4 }}">
+																			<input type="text" class="form-control form-control-sm input-full" id="MAILALEAT4" name="MAILALEAT4" value="{{ isset($dataalertmail[0]) ? $dataalertmail[0]->EMAILADDRESS4 : '' }}">
 																		</div>
 																	</div>
 																	<div class="form-group form-inline">
 																			<label for="MAILALEAT5" class="col-md-3 col-form-label">Email Aleart 5</label>
 																			<div class="col-md-9 p-0">
-																				<input type="text" class="form-control form-control-sm input-full" id="MAILALEAT5" name="MAILALEAT5" value="{{ $dataalertmail[0]->EMAILADDRESS5 }}">
+																				<input type="text" class="form-control form-control-sm input-full" id="MAILALEAT5" name="MAILALEAT5" value="{{ isset($dataalertmail[0]) ? $dataalertmail[0]->EMAILADDRESS5 : '' }}">
 																			</div>
 																		</div>
 																		<div class="form-group text-center">
@@ -127,46 +127,6 @@
 																			</div>
 
 												</form>
-										@else
-											<form action="{{ route('machine.config.savealert') }}" method="POST" id="FRM_ALERTMAIL" name="FRM_ALERTMAIL">
-												@csrf
-												<div class="form-group form-inline">
-														<label for="MAILALEAT1" class="col-md-3 col-form-label">Email Aleart 1</label>
-														<div class="col-md-9 p-0">
-															<input type="text" class="form-control form-control-sm input-full" id="MAILALEAT1" name="MAILALEAT1"	placeholder="Email">
-														</div>
-													</div>
-													<div class="form-group form-inline">
-															<label for="MAILALEAT2" class="col-md-3 col-form-label">Email Aleart 2</label>
-															<div class="col-md-9 p-0">
-																<input type="text" class="form-control form-control-sm input-full" id="MAILALEAT2" name="MAILALEAT2"	placeholder="Email">
-															</div>
-														</div>
-														<div class="form-group form-inline">
-																<label for="MAILALEAT3" class="col-md-3 col-form-label">Email Aleart 3</label>
-																<div class="col-md-9 p-0">
-																	<input type="email" class="form-control form-control-sm input-full" id="MAILALEAT3" name="MAILALEAT3"	placeholder="Email">
-																</div>
-															</div>
-															<div class="form-group form-inline">
-																	<label for="MAILALEAT4" class="col-md-3 col-form-label">Email Aleart 4</label>
-																	<div class="col-md-9 p-0">
-																		<input type="text" class="form-control form-control-sm input-full" id="MAILALEAT4" name="MAILALEAT4"	placeholder="Email">
-																	</div>
-																</div>
-																<div class="form-group form-inline">
-																		<label for="MAILALEAT5" class="col-md-3 col-form-label">Email Aleart 5</label>
-																		<div class="col-md-9 p-0">
-																			<input type="text" class="form-control form-control-sm input-full" id="MAILALEAT5" name="MAILALEAT5"	placeholder="Email">
-																		</div>
-																	</div>
-																	<div class="form-group text-center">
-																			<button class="btn btn-success btn-sm ">Save</button>
-																		</div>
-
-											</form>
-										@endif
-
 									</div>
 								</div>
               </div>
@@ -211,7 +171,6 @@
 														</div>
 												</div>
 
-
 											</div>
 
 											@if (count($datamail) > 0)
@@ -226,6 +185,40 @@
 								</div>
 							</div>
 						</div>
+						@can ('isAdmin')
+							<div class="row">
+								<div class="col-md-12">
+									<div class="card">
+										<div class="card-header bg-primary">
+											<div class="row text-white">
+												<h4> Line Token Notify</h4>
+											</div>
+										</div>
+										<form action="{{ route('machine.config.savetokenline') }}" method="POST" enctype="multipart/form-data">
+											@csrf
+											<input type="hidden" id="UNID" name="UNID" value="{{ isset($datamail[0]) ? $datamail[0]->UNID : '' }}">
+											<div class="card-body">
+												<div class="row">
+													<div class="col-md-6">
+														<label>Token Line </label>
+														<input type="text" class="form-control form-control-sm bg-info" id="TOKEN_LINENOTIFY" name="TOKEN_LINENOTIFY" >
+													</div>
+												</div>
+												@if (count($datamail) > 0)
+													<div class="form-group text-right">
+															<button class="btn btn-success btn-sm ">Save</button>
+														</div>
+
+												@endif
+
+											</div>
+										</form>
+
+									</div>
+								</div>
+							</div>
+						@endcan
+
 					</div>
   			</div>
 			</div>

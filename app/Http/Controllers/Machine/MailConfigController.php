@@ -8,13 +8,20 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Auth;
+use File;
 use App\Http\Controllers\Export\PMExportController;
 use App\Http\Controllers\Export\PDMExportController;
+use App\Models\Machine\MachineRepairREQ;
 //******************** model ***********************
 use App\Models\SettingMenu\MailAlert;
 use App\Models\SettingMenu\MailSetup;
+
+
+
+
 //************** Package form github ***************
 use RealRashid\SweetAlert\Facades\Alert;
+use Phattarachai\LineNotify\Facade\Line;
 
 class MailConfigController extends Controller
 {
@@ -184,6 +191,13 @@ class MailConfigController extends Controller
   public function Send(){
     $DATENOW  = date('Y-m-d');
     $DATESEND = MailSetup::select('UNID','DATESEND_MAIL','DATESEND_SET')->get();
+    $pathfile_storeage = storage_path('framework/laravel-excel/');
+    if (File::isDirectory($pathfile_storeage)) {
+
+      $pathfile = Storage::allFiles(storage_path('framework/laravel-excel'));
+      dd($pathfile);
+      Storage::deleteDirectory($pathfile_storeage);
+    }
     if ($DATENOW >= $DATESEND[0]->DATESEND_MAIL) {
       $DATESEND_MAIL = Carbon::parse($DATESEND[0]->DATESEND_MAIL)->addDays($DATESEND[0]->DATESEND_SET);
       MailSetup::where('UNID','=',$DATESEND[0]->UNID)->update([
@@ -195,5 +209,54 @@ class MailConfigController extends Controller
       $Excel_PDM->export();
       \Artisan::call('mail:send');
     }
+  }
+  public function SaveTokenLine(Request $request){
+    $UNID             = $request->UNID;
+    $TOKEN_LINENOTIFY = $request->TOKEN_LINENOTIFY;
+    if ($TOKEN_LINENOTIFY != '') {
+      MailSetup::where('UNID','=',$UNID)->update([
+          'TOKEN_LINENOTIFY' => $TOKEN_LINENOTIFY
+      ]);
+      alert()->success('บันทึกสำเร็จ')->autoClose(1500);
+      return Redirect()->back();
+    }else {
+      alert()->warning('กรุณากรอกข้อมูล')->autoClose(1500);
+      return Redirect()->back();
+    }
+
+  }
+  public function LineNotify(){
+
+    $DATA_MAIL = MailSetup::select('*')->first();
+    if (isset($DATA_MAIL->TOKEN_LINENOTIFY)) {
+      $existing = config('line-notify');
+      $new =array_merge(
+          $existing, [
+          'access_token' => $DATA_MAIL->TOKEN_LINENOTIFY,
+
+          ]);
+      config(['line-notify'=>$new]);
+      $DATA_REPAIR  = MachineRepairREQ::select('UNID','MACHINE_CODE','MACHINE_LINE','REPAIR_MAINSELECT_NAME','REPAIR_SUBSELECT_NAME')
+                                      ->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
+                                      ->where('STATUS_LINE_NOTIFY','=',9)->get();
+      if (count($DATA_REPAIR) > 0) {
+        foreach ($DATA_REPAIR as $index => $row) {
+          $MACHINE_LINE = $row->MACHINE_LINE;
+          $MACHINE_CODE = $row->MACHINE_CODE;
+          $MACHINE_NAME = $row->MACHINE_NAME_TH;
+          $REPAIR_MAINSELECT_NAME = $row->REPAIR_MAINSELECT_NAME;
+          $REPAIR_SUBSELECT_NAME  = $row->REPAIR_SUBSELECT_NAME;
+          $UNID = $row->UNID;
+          Line::send("\n".'Line : '.$MACHINE_LINE."\n".'MC-CODE : '.$MACHINE_CODE."\n".'MC-NAME : '.$MACHINE_NAME."\n".'จุดที่เสีย : '.$REPAIR_MAINSELECT_NAME."\n".'รายการอะเอียด : '.$REPAIR_SUBSELECT_NAME."\n");
+          MachineRepairREQ::where('UNID','=',$UNID)->update([
+            'STATUS_LINE_NOTIFY' => 1,
+          ]);
+        }
+      }
+    }
+
+
+
+
   }
 }

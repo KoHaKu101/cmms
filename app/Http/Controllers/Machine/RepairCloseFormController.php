@@ -555,7 +555,7 @@ class RepairCloseFormController extends Controller
         $EXPLOT = str_replace('MRP'.$DATE_RESET_DOCNO->addyears('543')->format('ym').'-','',$DATA_MACHINEREPAIRREQ->MACHINE_REPORT_NO)+1;
         $MACHINE_REPORT_NO = 'MRP' . $DATE_RESET_DOCNO->format('ym'). sprintf('-%04d', $EXPLOT);
     }
-
+  
     $INSPECTION_NAME = $DATA_REPAIR_FIRST->INSPECTION_NAME;
     $DATA_REPAIR->update([
       'DOWNTIME'              =>  $DOWNTIME

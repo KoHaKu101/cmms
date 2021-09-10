@@ -279,9 +279,11 @@ class MachineRepairController extends Controller
     $data_count = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->whereRaw('DOC_NO = (SELECT MAX(DOC_NO)FROM [PMCS_CMMS_REPAIR_REQ])')->count();
     $newrepair = false;
     $UNID = '';
-    if (isset($last_data[0]->STATUS_NOTIFY)) {
-      $newrepair  = $last_data[0]->STATUS_NOTIFY == 9 ? true : false;
-      $UNID       = $last_data[0]->STATUS_NOTIFY == 9 ? $last_data[0]->UNID : '';
+    if (isset($last_data[0]->STATUS_NOTIFY) && $last_data[0]->STATUS_NOTIFY == 9) {
+      // $newrepair  = $last_data[0]->STATUS_NOTIFY == 9 ? true : false;
+      // $UNID       = $last_data[0]->STATUS_NOTIFY == 9 ? $last_data[0]->UNID : '';
+      $newrepair  = true;
+      $UNID       = $last_data[0]->UNID;
     }
     $NUMBER     = $data_count;
     return Response()->json(['html'=>$html,'html_style' => $html_style,'newrepair' => $newrepair,'UNID' => $UNID,'number' => $NUMBER]);
@@ -403,6 +405,7 @@ class MachineRepairController extends Controller
         ,'DOC_MONTH'             => date('m')
         ,'REPAIR_REQ_TIME'       => $DATE_DOCNO->format('H:i:s')
         ,'CLOSE_STATUS'          => $CLOSE_STATUS
+        ,'STATUS_LINE_NOTIFY'    => 9
         ,'CLOSE_BY'              => ''
         ,'CREATE_BY'             =>Auth::user()->name
         ,'CREATE_TIME'           =>Carbon::now()

@@ -81,7 +81,7 @@
 	<script type="text/javascript" src="{{ asset('/assets/js/plugin/datatables/datatables.min.js') }}"></script>
 
 	<script type="text/javascript" src="{{ asset('/assets/js/plugin/sweetalert/sweetalert2.js') }}"></script>
-	@can('isAdmin')
+	@can('isAdminandMA')
 		<script type="text/javascript" src="{{ asset('assets/js/useinproject/dashboard/notifity.js') }}"></script>
 		<script>
 			$(document).ready(function(){
@@ -92,19 +92,24 @@
 					});
 			})
 		</script>
-	@elsecan('isManager_Ma')
-		<script type="text/javascript" src="{{ asset('assets/js/useinproject/dashboard/notifity.js') }}"></script>
 		<script>
 			$(document).ready(function(){
-				var url = "{{route('machine.config.send')}}";
-				$.ajax({
-					 type: "GET",
-					 url: url,
-					});
-			})
+					var url = "{{ route('machine.config.linenotify') }}";
+					var send_masseng_line = function send_masseng_line(){
+						$.ajax({
+									 type:'GET',
+									 url: url,
+									 datatype: 'json',
+									 success:function(data){
+									 }
+								 });
+							 }
+					setInterval(send_masseng_line,10000);
+				send_masseng_line();
+			});
 		</script>
 	@else
-
+		{{--  --}}
 	@endcan
 
 	@include('/errorsweetalert/errormessed')

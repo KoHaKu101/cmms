@@ -301,6 +301,8 @@ Route::middleware('can:isAdminandMA')->group(function () {
     Route::post('machine/config/save'                       ,[MailConfigController::class,'Save'])            ->name('machine.config.save');
     Route::post('machine/config/savealert'                  ,[MailConfigController::class,'SaveAlert'])       ->name('machine.config.savealert');
     Route::post('machine/config/update'                     ,[MailConfigController::class,'Update'])          ->name('machine.config.update');
+    Route::post('machine/config/savetokenline'              ,[MailConfigController::class,'SaveTokenLine'])   ->name('machine.config.savetokenline');
+    Route::get('machine/config/LineNotify'                  ,[MailConfigController::class,'LineNotify'])      ->name('machine.config.linenotify');
   //*****************************************  MenuController  *********************************************************
   Route::get('machine/setting/menu/home'                    ,[MenuController::class,'Home'])                  ->name('menu.home');
     Route::post('machine/setting/menu/add'                  ,[MenuController::class,'AddMenu'])               ->name('menu.store');
