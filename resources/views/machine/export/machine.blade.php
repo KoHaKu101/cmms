@@ -1,6 +1,6 @@
 <table >
   <thead>
-    <tr><th colspan="8" style="text-align:center">รายละเอียด เครื่องจักร DownTime</th></tr>
+    <tr><th colspan="8" style="text-align:center">รายการเครื่องจักร</th></tr>
     <tr>
       <th >Line</th>
       <th >ชื่อเครื่อง</th>

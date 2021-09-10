@@ -26,8 +26,8 @@ class MachinePDFController extends Controller
     {
       $LINE = $request->LINE;
       $group_LINE = Machine::select('MACHINE_LINE')->where('MACHINE_STATUS','=',9)->groupBy('MACHINE_LINE')->orderBy('MACHINE_LINE')->get();
-
-      if ($LINE != NULL) {
+      
+      if ($LINE > 0) {
         $group_LINE = Machine::select('MACHINE_LINE')->where('MACHINE_STATUS','=',9)->where('MACHINE_LINE',$LINE)->groupBy('MACHINE_LINE')->orderBy('MACHINE_LINE')->get();
       }
       // font
