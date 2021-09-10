@@ -51,7 +51,6 @@ class PerMissionController extends Controller
   //อยู่ใน machine edit
  public function Home(Request $request){
 
-
    $DATA_REAIR = MachineRepairREQ::select('UNID','MACHINE_REPORT_NO','CLOSE_DATE','CLOSE_TIME','MACHINE_REPORT_NO')
                                   ->where('CLOSE_DATE','like','2021-09'.'%')->orderBy('CLOSE_DATE')->orderBy('CLOSE_TIME')->get();
     $MACHINE_REPORT_NO = 'MRP'.date('y')+43 .date('m').'-'.sprintf('%04d', 1);
@@ -75,7 +74,6 @@ class PerMissionController extends Controller
        }
 
    }
-
    $DATA_USER = User::orderby('role')->get();
    $MACHINEREPAIRREQ = MachineRepairREQ::orderBy('MACHINE_REPORT_NO')->get();
    return View('machine.setting.permission.list',compact('DATA_USER','MACHINEREPAIRREQ'));
