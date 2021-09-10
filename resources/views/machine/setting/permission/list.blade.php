@@ -115,28 +115,6 @@
 									</div>
 								</div>
 							</div>
-							<div class="col-md-8">
-								<div class="card">
-									<div class="card-body">
-										<table class="table table-bordered table-head-bg-info table-bordered-bd-info">
-											<theade>
-												<tr>
-													<th>MACHINE_REPORT_NO</th>
-
-												</tr>
-											</theade>
-											<tbody>
-													@foreach ($History as $key => $row)
-														<tr>
-															<td>{{ $row->DOC_NO }}</td>
-
-														</tr>
-													@endforeach
-											</tbody>
-										</table>
-									</div>
-								</div>
-							</div>
 						</div>
 					</div>
 				</div>
