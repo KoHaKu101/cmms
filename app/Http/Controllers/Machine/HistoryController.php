@@ -81,7 +81,7 @@ class HistoryController extends Controller
     if ($DOC_TYPE == 'REPAIR') {
       $DATA_REPAIR        = History::select('*')->selectraw('dbo.decode_utf8(INSPECTION_BY) as INSPECTION_BY_TH')
                                           ->where('DOC_TYPE','=','REPAIR')
-                                          ->orderBy('MACHINE_CODE')->get();
+                                          ->orderBy('MACHINE_CODE')->orderBy('DOC_DATE')->get();
       $DATA_SPAREPART     = RepairSparepart::orderBy('SPAREPART_NAME')->get();
       $COMPACT_NAME = compact('DOC_TYPE','DATA_REPAIR_HEADER','DOC_YEAR','DOC_MONTH','SEARCH','DATA_SPAREPART','DATA_REPAIR');
 

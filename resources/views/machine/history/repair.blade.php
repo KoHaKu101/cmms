@@ -39,9 +39,9 @@
               @php
                 $i = 1 ;
                 $i_sub = 1 ;
+                $DATA_REPAIR = $DATA_REPAIR->where('MACHINE_UNID','=',$row->MACHINE_UNID);
               @endphp
-              
-            @foreach ($DATA_REPAIR->where('MACHINE_UNID','=',$row->MACHINE_UNID) as $index => $sub_row)
+            @foreach ($DATA_REPAIR as $index => $sub_row)
               <tr>
                 <td class="text-aliginup">{{$i++}}</td>
                 <td class="text-aliginup">{{date('d-m-Y',strtotime($sub_row->DOC_DATE))}}</td>
