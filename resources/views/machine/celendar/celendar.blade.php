@@ -128,7 +128,7 @@
                 }
                 @endphp{
                     title: '{{ 'ตรวจเช็คเครื่อง: '.$row->MACHINE_CODE }}',
-                    url: '{{ url(' /machine/pm/plancheck/'.$row->UNID) }}',
+                    url: '{{ url('machine/pm/plancheck/'.$row->UNID) }}',
                     start: '{{ $row->PLAN_DATE }}',
                     color: '{{ $COLOR }}',
                 },
@@ -154,12 +154,9 @@
         var cookie_style = '{{ Cookie::get('
         style_calendar ') }}';
         if (cookie_style == '2') {
-            console.log($('.fc-listYear-button'));
             $('.fc-listYear-button').trigger('click');
-            console.log($('.fc-listYear-button').click());
 
         } else {
-            console.log($('.fc-dayGridMonth-button'));
             $('.fc-dayGridMonth-button').click();
 
         }
@@ -170,7 +167,6 @@
         $('.fc-listYear-button').on('click', function(event) {
             event.preventDefault();
             setcookie('style_calendar', '2');
-            console.log('1');
         });
     });
 </script>
