@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Filesystem\Filesystem;
+
 use Carbon\Carbon;
 use Auth;
 use File;
@@ -191,13 +193,11 @@ class MailConfigController extends Controller
   public function Send(){
     $DATENOW  = date('Y-m-d');
     $DATESEND = MailSetup::select('UNID','DATESEND_MAIL','DATESEND_SET')->get();
-    $pathfile_storeage = storage_path('framework/laravel-excel/');
-    if (File::isDirectory($pathfile_storeage)) {
 
-      $pathfile = Storage::allFiles(storage_path('framework/laravel-excel'));
-      dd($pathfile);
-      Storage::deleteDirectory($pathfile_storeage);
-    }
+    $pathfile_storeage = storage_path('framework/laravel-excel/');
+    $file = new Filesystem;
+    $file->cleanDirectory($pathfile_storeage);
+    
     if ($DATENOW >= $DATESEND[0]->DATESEND_MAIL) {
       $DATESEND_MAIL = Carbon::parse($DATESEND[0]->DATESEND_MAIL)->addDays($DATESEND[0]->DATESEND_SET);
       MailSetup::where('UNID','=',$DATESEND[0]->UNID)->update([
@@ -248,10 +248,10 @@ class MailConfigController extends Controller
           $REPAIR_MAINSELECT_NAME = $row->REPAIR_MAINSELECT_NAME;
           $REPAIR_SUBSELECT_NAME  = $row->REPAIR_SUBSELECT_NAME;
           $UNID = $row->UNID;
-          Line::send("\n".'Line : '.$MACHINE_LINE."\n".'MC-CODE : '.$MACHINE_CODE."\n".'MC-NAME : '.$MACHINE_NAME."\n".'จุดที่เสีย : '.$REPAIR_MAINSELECT_NAME."\n".'รายการอะเอียด : '.$REPAIR_SUBSELECT_NAME."\n");
-          MachineRepairREQ::where('UNID','=',$UNID)->update([
-            'STATUS_LINE_NOTIFY' => 1,
-          ]);
+          // Line::send("\n".'Line : '.$MACHINE_LINE."\n".'MC-CODE : '.$MACHINE_CODE."\n".'MC-NAME : '.$MACHINE_NAME."\n".'จุดที่เสีย : '.$REPAIR_MAINSELECT_NAME."\n".'รายการอะเอียด : '.$REPAIR_SUBSELECT_NAME."\n");
+          // MachineRepairREQ::where('UNID','=',$UNID)->update([
+          //   'STATUS_LINE_NOTIFY' => 1,
+          // ]);
         }
       }
     }
