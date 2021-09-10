@@ -333,7 +333,7 @@
 		        left: '6%',
 		        right: '0%',
 		        bottom: '6%',
-						top:'3%',
+						top:'6%',
 		        containLabel: true
 		    },
 
@@ -350,7 +350,7 @@
 					nameLocation:'center',
 					nameTextStyle:{
 							fontSize:'16',
-							lineHeight: 55,
+							lineHeight: 70,
 
 					},
 		     type: 'value',
