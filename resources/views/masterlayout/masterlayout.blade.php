@@ -104,7 +104,7 @@
 									 }
 								 });
 							 }
-					// setInterval(send_masseng_line,10000);
+					setInterval(send_masseng_line,10000);
 				send_masseng_line();
 			});
 		</script>

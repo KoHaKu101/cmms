@@ -238,8 +238,8 @@ class MailConfigController extends Controller
       config(['line-notify'=>$new]);
       $DATA_REPAIR  = MachineRepairREQ::select('UNID','MACHINE_CODE','MACHINE_LINE','REPAIR_MAINSELECT_NAME','REPAIR_SUBSELECT_NAME')
                                       ->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
-                                      // ->where('STATUS_LINE_NOTIFY','=',9)->get();
-                                      ->where('CLOSE_STATUS','=',9)->get();
+                                      ->where('STATUS_LINE_NOTIFY','=',9)->get();
+                                      // ->where('CLOSE_STATUS','=',9)->get();
       if (count($DATA_REPAIR) > 0) {
         foreach ($DATA_REPAIR as $index => $row) {
           $MACHINE_LINE = $row->MACHINE_LINE;
@@ -249,9 +249,9 @@ class MailConfigController extends Controller
           $REPAIR_SUBSELECT_NAME  = $row->REPAIR_SUBSELECT_NAME;
           $UNID = $row->UNID;
           Line::send("\n".'Line : '.$MACHINE_LINE."\n".'MC-CODE : '.$MACHINE_CODE."\n".'MC-NAME : '.$MACHINE_NAME."\n".'จุดที่เสีย : '.$REPAIR_MAINSELECT_NAME."\n".'รายการอะเอียด : '.$REPAIR_SUBSELECT_NAME."\n");
-          // MachineRepairREQ::where('UNID','=',$UNID)->update([
-          //   'STATUS_LINE_NOTIFY' => 1,
-          // ]);
+          MachineRepairREQ::where('UNID','=',$UNID)->update([
+            'STATUS_LINE_NOTIFY' => 1,
+          ]);
         }
       }
     }
