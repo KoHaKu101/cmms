@@ -23,7 +23,7 @@ use App\Models\SettingMenu\MailSetup;
 
 //************** Package form github ***************
 use RealRashid\SweetAlert\Facades\Alert;
-use Phattarachai\LineNotify\Facade\Line;
+
 
 class MailConfigController extends Controller
 {
@@ -223,41 +223,6 @@ class MailConfigController extends Controller
       alert()->warning('กรุณากรอกข้อมูล')->autoClose(1500);
       return Redirect()->back();
     }
-
   }
-  public function LineNotify(){
 
-    $DATA_MAIL = MailSetup::select('*')->first();
-    if (isset($DATA_MAIL->TOKEN_LINENOTIFY)) {
-      $existing = config('line-notify');
-      $new =array_merge(
-          $existing, [
-          'access_token' => $DATA_MAIL->TOKEN_LINENOTIFY,
-
-          ]);
-      config(['line-notify'=>$new]);
-      $DATA_REPAIR  = MachineRepairREQ::select('UNID','MACHINE_CODE','MACHINE_LINE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME')
-                                      ->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
-                                      ->where('STATUS_LINE_NOTIFY','=',9)->get();
-                                      // ->where('CLOSE_STATUS','=',9)->get();
-      if (count($DATA_REPAIR) > 0) {
-        foreach ($DATA_REPAIR as $index => $row) {
-          $MACHINE_LINE = $row->MACHINE_LINE;
-          $MACHINE_CODE = $row->MACHINE_CODE;
-          $MACHINE_NAME = $row->MACHINE_NAME_TH;
-          $MACHINE_STATUS = $row->MACHINE_STATUS == '1' ? 'หยุดการทำงาน' : 'ทำงานต่อได้';
-          $REPAIR_SUBSELECT_NAME  = $row->REPAIR_SUBSELECT_NAME;
-          $UNID = $row->UNID;
-          Line::send("\n".'Line : '.$MACHINE_LINE."\n".'MC-CODE : '.$MACHINE_CODE."\n".'MC-NAME : '.$MACHINE_NAME."\n".'อาการเสีย : '.$REPAIR_SUBSELECT_NAME."\n".'สถานะ : '.$MACHINE_STATUS."\n");
-          MachineRepairREQ::where('UNID','=',$UNID)->update([
-            'STATUS_LINE_NOTIFY' => 1,
-          ]);
-        }
-      }
-    }
-
-
-
-
-  }
 }

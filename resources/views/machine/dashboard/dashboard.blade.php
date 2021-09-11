@@ -385,7 +385,6 @@
 {{-- ส่วนjava --}}
 @section('javascript')
 
-{{-- <script type="text/javascript" src="{{asset('/echart/echarts-en.common.min.js')}}"></script> --}}
 <script src="{{asset('/assets/js/plugin/chart.js/echarts.js')}}"></script>
 <script src="{{asset('/assets/js/plugin/chart-circle/circles.min.js')}}"></script>
 <script>
