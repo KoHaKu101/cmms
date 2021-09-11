@@ -7,7 +7,6 @@ $(document).ready(function(){
       success:function(res){
         if (res != null) {
           var _html='';
-
           $.each(res.datarepair,function(notificaiton,datarepair){
             var url = '/machine/repair/edit/'+datarepair.UNID;
             _html += '<a href="'+url+'">'+
@@ -18,7 +17,6 @@ $(document).ready(function(){
                 '</div>'+
               '</a>';
           });
-
         }else {
           var _html='';
            _html +=

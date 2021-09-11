@@ -59,6 +59,8 @@ use App\Http\Controllers\PDF\RepairSaveFormPDFController;
 use App\Http\Controllers\Machine\PRController;
 use App\Http\Controllers\Machine\ReportPRController;
 use App\http\controllers\MailSend;
+
+use App\http\Controllers\Machine\ConfirmPageController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -116,10 +118,10 @@ Route::middleware('can:isAdminandManager')->group(function () {
     Route::get('/machine/dashboard/sumaryline'         ,[DashboardController::class,'Sumaryline'])         ->name('dashboard.sumaryline');
     Route::get('/machine/dashboard/notificationrepair' ,[DashboardController::class,'NotificationRepair']) ->name('dashboard.notificationrepair');
     Route::get('machine/repair/notificaiton'           ,[DashboardController::class,'Notification']);
-    Route::get('/machine/user/homepage'                ,[DashboardController::class,'UserHomePage'])             ->name('user.homepage');
+    Route::get('/machine/user/homepage'                ,[DashboardController::class,'UserHomePage'])       ->name('user.homepage');
   //*****************************************  CalendarController  *********************************************************
    Route::get('/machine/calendar'                      ,[CalendarController::class,'Index']);
-   
+   Route::get('/confirm/repair'                        ,[ConfirmPageController::class,'Repair'])           ->name('confirm.repair');
 });
 
 

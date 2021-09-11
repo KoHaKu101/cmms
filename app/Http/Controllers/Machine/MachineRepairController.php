@@ -19,7 +19,7 @@ use App\Models\Machine\Machine;
 use App\Models\Machine\MachineEMP;
 use App\Models\Machine\EMPName;
 use App\Models\Machine\MachineLine;
-
+use App\Models\SettingMenu\MailSetup;
 use App\Models\Machine\MachineRepairREQ;
 //************** Package form github ***************
 use App\Exports\MachineExport;
@@ -508,22 +508,27 @@ class MachineRepairController extends Controller
       config(['line-notify'=>$new]);
       $DATA_REPAIR  = MachineRepairREQ::select('UNID','MACHINE_CODE','MACHINE_LINE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME')
                                       ->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
-                                      ->where('STATUS_LINE_NOTIFY','=',9)->get();
-                                      // ->where('CLOSE_STATUS','=',9)->get();
-      if (count($DATA_REPAIR) > 0) {
-        foreach ($DATA_REPAIR as $index => $row) {
-          $MACHINE_LINE = $row->MACHINE_LINE;
-          $MACHINE_CODE = $row->MACHINE_CODE;
-          $MACHINE_NAME = $row->MACHINE_NAME_TH;
-          $MACHINE_STATUS = $row->MACHINE_STATUS == '1' ? 'หยุดการทำงาน' : 'ทำงานต่อได้';
-          $REPAIR_SUBSELECT_NAME  = $row->REPAIR_SUBSELECT_NAME;
-          $UNID = $row->UNID;
-          Line::send("\n".'Line : '.$MACHINE_LINE."\n".'MC-CODE : '.$MACHINE_CODE."\n".'MC-NAME : '.$MACHINE_NAME."\n".'อาการเสีย : '.$REPAIR_SUBSELECT_NAME."\n".'สถานะ : '.$MACHINE_STATUS."\n");
+                                      ->where('STATUS_LINE_NOTIFY','=',9)->first();
+
+          $MACHINE_LINE = $DATA_REPAIR->MACHINE_LINE;
+          $MACHINE_CODE = $DATA_REPAIR->MACHINE_CODE;
+          $MACHINE_NAME = $DATA_REPAIR->MACHINE_NAME_TH;
+          $MACHINE_STATUS = $DATA_REPAIR->MACHINE_STATUS == '1' ? 'หยุดการทำงาน' : 'ทำงานต่อได้';
+          $REPAIR_SUBSELECT_NAME  = $DATA_REPAIR->REPAIR_SUBSELECT_NAME;
+          $UNID = $DATA_REPAIR->UNID;
+          $MESSEN = "\n".'Line : '.$MACHINE_LINE;
+          $MESSEN .="\n".'MC-CODE : '.$MACHINE_CODE;
+          $MESSEN .= "\n".'MC-NAME : '.$MACHINE_NAME;
+          $MESSEN .= "\n".'อาการเสีย : '.$REPAIR_SUBSELECT_NAME;
+          $MESSEN .= "\n".'สถานะ : '.$MACHINE_STATUS;
+          $MESSEN .= "\n".'รับงาน :'route('confirm.repair');
+          if (Line::send($MESSEN)) {
           MachineRepairREQ::where('UNID','=',$UNID)->update([
             'STATUS_LINE_NOTIFY' => 1,
           ]);
         }
-      }
+
     }
+
   }
 }
