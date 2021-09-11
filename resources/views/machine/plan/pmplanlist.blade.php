@@ -212,7 +212,7 @@
 {{-- ส่วนjava --}}
 @section('javascript')
 	<script src="{{ asset('assets/js/ajax/ajax-csrf.js') }}"></script>
-		<script src="{{asset('assets/js/useinproject/html5-qrcode.min.js')}}">
+
 
 		</script>
 <script>

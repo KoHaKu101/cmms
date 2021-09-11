@@ -30,7 +30,7 @@
 					<div class="container">
 						<div class="row">
 							<div class="col-md-1 mt-2">
-								<a href="{{ url('machine/manual/manuallist') }}">
+								<a href="{{ route('manual.list') }}">
 									<button class="btn btn-warning  btn-sm ">
 										<span class="fas fa-arrow-left ">Back </span>
 									</button>
@@ -87,10 +87,10 @@
 		                    </td>
 		                    <td>
 		                      <button type="button" class="btn btn-primary btn-sm mx-2"
-														onclick="window.open('{{ url('machine/upload/view/'.$row->UNID) }}', '_blank', 'width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');">
+														onclick="window.open('{{ route('upload.view',$row->UNID) }}', '_blank', 'width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');">
 		                        <i class="fas fa-eye fa-lg "></i>
 		                      </button>
-		                      <a href="{{ url('machine/upload/download/'.$row->UNID) }}">
+		                      <a href="{{ route('upload.download',$row->UNID) }}">
 		                        <button type="button"class="btn btn-success btn-sm mx-2"><i class="fas fa-download fa-lg"></i>	</button>
 		                      </a>
 		                        <button type="button" class="btn btn-warning  btn-sm mx-2" onclick="edituploadfile(this)"
@@ -131,35 +131,7 @@
 {{-- ส่วนjava --}}
 @section('javascript')
 	<script>
-	$(document).ready(function(){
-		 $('#machinespartelist').DataTable({
-				"pageLength": 10,
-				"bLengthChange": false,
-				"bFilter": true,
-				"bInfo": false,
-				"bAutoWidth": false,
-				'bSort': false,
 
-			});
-			$('#addpmmachine').DataTable({
-				 "pageLength": 10,
-				 "bLengthChange": false,
-				 "bFilter": true,
-				 "bInfo": false,
-				 "bAutoWidth": false,
-				 'bSort': false,
-
-			 });
-			 $('#removepmmachine').DataTable({
-					"pageLength": 10,
-					"bLengthChange": false,
-					"bFilter": true,
-					"bInfo": false,
-					"bAutoWidth": false,
-					'bSort': false,
-
-				});
-	});
 	function edituploadfile(thisdata){
 		var uploadtopicname = $(thisdata).data('uploadtopicname');
 		var uploadunid = $(thisdata).data('uploadunid');

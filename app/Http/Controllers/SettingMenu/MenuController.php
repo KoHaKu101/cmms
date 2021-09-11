@@ -44,7 +44,7 @@ class MenuController extends Controller
         Mainmenu::insert([
             'MENU_NAME'   => $request->MENU_NAME,
             'MENU_EN'     => $request->MENU_EN,
-            'MENU_INDEX'  =>  $request->MENU_INDEX,
+            'MENU_INDEX'  => $request->MENU_INDEX,
             'MENU_STATUS' => $request->MENU_STATUS,
             'MENU_ICON'   => $request->MENU_ICON,
             'MENU_CLASS'  => $request->MENU_CLASS,
@@ -72,7 +72,7 @@ class MenuController extends Controller
       $dataunid = Mainmenu::find($UNID)->update([
         'MENU_NAME'   => $request->MENU_NAME,
         'MENU_EN'     => $request->MENU_EN,
-        'MENU_INDEX'  =>    $request->MENU_INDEX,
+        'MENU_INDEX'  => $request->MENU_INDEX,
         'MENU_STATUS' => $request->MENU_STATUS,
         'MENU_ICON'   => $request->MENU_ICON,
         'MENU_CLASS'  => $request->MENU_CLASS,
@@ -84,16 +84,12 @@ class MenuController extends Controller
       ]);
       alert()->success('Update Success')->autoclose('1500');
       return Redirect()->route('menu.home');
-
     }
-
-
       public function Delete($UNID){
           $delete = Mainmenu::where('UNID','=',$UNID)->delete();
           alert()->success('Confirm Delete Success')->autoclose('1500');
           return Redirect()->back();
       }
-
 
       public function Logout(){
           Auth::logout();

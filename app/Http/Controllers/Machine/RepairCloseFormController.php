@@ -18,7 +18,6 @@ use App\Models\Machine\EMPName;
 use App\Models\Machine\SparePart;
 use App\Models\Machine\RepairWorker;
 use App\Models\Machine\RepairSparepart;
-use App\Models\Machine\HistoryRepair;
 use App\Models\Machine\MachineRepairREQ;
 use App\Models\Machine\Machine;
 //************** Package form github ***************
@@ -555,7 +554,7 @@ class RepairCloseFormController extends Controller
         $EXPLOT = str_replace('MRP'.$DATE_RESET_DOCNO->addyears('543')->format('ym').'-','',$DATA_MACHINEREPAIRREQ->MACHINE_REPORT_NO)+1;
         $MACHINE_REPORT_NO = 'MRP' . $DATE_RESET_DOCNO->format('ym'). sprintf('-%04d', $EXPLOT);
     }
-  
+
     $INSPECTION_NAME = $DATA_REPAIR_FIRST->INSPECTION_NAME;
     $DATA_REPAIR->update([
       'DOWNTIME'              =>  $DOWNTIME

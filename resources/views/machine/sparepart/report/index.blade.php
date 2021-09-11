@@ -78,7 +78,6 @@ button.mfp-close{
 					<div class="d-flex align-items-left align-items-md-center flex-column flex-md-row">
 	          <div class="container">
 							<div class="row">
-
 							</div>
 	          </div>
 					</div>
@@ -176,31 +175,33 @@ button.mfp-close{
 														<table class="table table-bordered table-head-bg-info table-bordered-bd-info table-striped table-hover">
 															<thead>
 																<tr>
-																	<th scope="col">#</th>
-																	<th scope="col">Plan Date</th>
-																	<th scope="col">LINE</th>
-																	<th scope="col">Machine</th>
-																	<th scope="col">SparPartName</th>
-																	<th scope="col">Plan</th>
-																	<th scope="col">Actual</th>
-																	<th scope="col">Unit</th>
-																	<th scope="col">Plan Cost</th>
-																	<th scope="col">Actual Cost</th>
-																	<th scope="col">Complete Date</th>
-																	<th scope="col">Action</th>
-
-
+																	<th>#</th>
+																	<th>Plan Date</th>
+																	<th>LINE</th>
+																	<th>Machine</th>
+																	<th>SparPartName</th>
+																	<th>Plan</th>
+																	<th>Actual</th>
+																	<th>Unit</th>
+																	<th>Plan Cost</th>
+																	<th>Actual Cost</th>
+																	<th>Complete Date</th>
+																	<th>Action</th>
 																</tr>
 															</thead>
 															<tbody>
 																@foreach ($DATA_SPAREPLAN as $index => $row)
+																	@php
+																		$UNID = $row->UNID;
+																		$MACHINE_CODE = $row->MACHINE_CODE;
+																		$USER_CHECK   = $row->USER_CHECK;
+																	@endphp
 																	<tr>
 																		<td>{{ $DATA_SPAREPLAN->firstItem() + $index }}</td>
 																		<td>{{ date("d-m-Y", strtotime($row->PLAN_DATE))}}</td>
 																		<td>{{ $row->MACHINE_LINE}}</td>
-																		<td>{{ $row->MACHINE_CODE}}</td>
+																		<td>{{ $MACHINE_CODE}}</td>
 																		<td>{{ $row->SPAREPART_NAME}}</td>
-
 																		<td class="text-center">{{ $row->PLAN_QTY}} </td>
 																		<td class="text-center">{{ $row->ACT_QTY}} </td>
 																		<td>{{ $row->UNIT}}</td>
@@ -209,26 +210,26 @@ button.mfp-close{
 																		<td>{{ $row->STATUS == 'COMPLETE' ? date("d-m-Y", strtotime($row->COMPLETE_DATE)) : ''}}</td>
 																		<td>
 																			<button type="button" class="mx-1 my-1 btn btn-primary btn-sm "
-																			data-planunid="{{ $row->UNID }}"
-																			data-machine_code = "{{$row->MACHINE_CODE}}"
-																			data-planusercheck = "{{$row->USER_CHECK}}"
+																			data-planunid				 ="{{ $UNID }}"
+																			data-machine_code 	 = "{{$MACHINE_CODE}}"
+																			data-planusercheck 	 = "{{$USER_CHECK}}"
 																			data-btn_status="VIEW"
 																			onclick="viewform(this)">
 																				<i class="mr-1 fas fa-eye fa-lg"></i>View</button>
 																		@if ($row->classtext == 'TRUE')
 																			@if ($row->STATUS == 'COMPLETE')
 																				<button type="button" class="mx-1 my-1 btn btn-danger btn-sm"
-																				data-planunid="{{ $row->UNID }}"
-																				data-machine_code = "{{$row->MACHINE_CODE}}"
-																				data-planusercheck = "{{$row->USER_CHECK}}"
+																				data-planunid				="{{ $UNID }}"
+																				data-machine_code 	= "{{$MACHINE_CODE}}"
+																				data-planusercheck 	= "{{$USER_CHECK}}"
 																				data-btn_status="VOID"
 																				onclick="voidform(this)">
 																					<i class="mr-1 fas fa-retweet fa-lg"></i>Void</button>
 																			@else
 																				<button type="button" class="mx-1 my-1 btn btn-secondary btn-sm"
-																				data-planunid="{{ $row->UNID }}"
-																				data-machine_code = "{{$row->MACHINE_CODE}}"
-																				data-planusercheck = "{{$row->USER_CHECK}}"
+																				data-planunid				="{{ $UNID }}"
+																				data-machine_code 	= "{{$MACHINE_CODE}}"
+																				data-planusercheck 	= "{{$USER_CHECK}}"
 																				data-btn_status="CHANGE"
 																				onclick="checkplansparepart(this)">
 																					<i class="mr-1 fas fa-edit fa-lg"></i>Change</button>
@@ -254,91 +255,10 @@ button.mfp-close{
   			</div>
 			</div>
 {{-- modal plancheck --}}
-			<div class="modal fade" id="modal-plansparepartcheck" tabindex="-1" role="dialog" aria-labelledby="exampleModalLalavel" aria-hidden="true">
-				<div class="modal-dialog modal-lg" role="document">
-					<div class="modal-content">
-						<div class="modal-content">
-							<form action="{{ route('SparPart.Report.Save')}}" method="POST" id="FRM_CHECKSPAREPART" name="FRM_CHECKSPAREPART">
-								@csrf
-							<div class="modal-header bg-primary">
-								<h5 class="modal-title" id="Title_plansparepartcheck">Machine Code :</h5>
-							</div>
-							<div class="modal-body modal-planform">
-
-							 </div>
-
-							 <div class="modal-body">
-								 <div class="row">
- 									<div class="my-2 col-md-6 form-inline" id="BTN_CONFIRM">
-										<div class="input-group">
-								   <div class="input-group-prepend">
-								   	<span class="text-white input-group-text bg-info" id="basic-addon3">เลื่อนแผน</span>
-								  	</div>
-								  	<input type="text" class="text-black col-md-8 form-control form-control-sm bg-bluelight" id="PLAN_CHANGE" name="PLAN_CHANGE">
-								  </div>
-								 <button type="button" class="btn btn-warning btn-sm btn-confirm">Confirm</button>
- 									</div>
-
-
- 									<div class="my-2 col-md-6">
- 										<div class="input-group has-error">
- 											<div class="input-group-prepend">
- 												<span class="text-white input-group-text bg-info" id="basic-addon3">ผู้ทำการเปลี่ยน</span>
- 											</div>
- 											<input type="text" class="text-black form-control form-control-sm bg-bluelight"
- 											 id="USER_CHECK" name="USER_CHECK" required>
- 										</div>
- 									</div>
- 								</div>
-							 </div>
-							<div class="modal-footer" id="FOOTER" name="FOOTER">
-								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-						      <button type="button" class="btn btn-primary btn-saveform" id="BTN_SAVEFORM" name="BTN_SAVEFORM">Save</button>
-							</div>
-						</form>
-						</div>
-					</div>
-				</div>
-			</div>
+			@include('machine.sparepart.report.modalplancheck')
 
 	{{-- modal img --}}
-	<div class="modal fade" id="modal-plansparepartcheck-img" tabindex="-1" role="dialog" aria-labelledby="exampleModalLalavel" aria-hidden="true">
-		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content">
-				<div class="modal-content">
-					<form action="{{ route('SparPart.Report.SaveImg') }}" id="FRM_SPAREPART_UPLOAD" name="FRM_SPAREPART_UPLOAD" method="POST" enctype="multipart/form-data">
-						@csrf
-						<div class="modal-header">
-								<h5 class="modal-title" id="Title_IMG">Machine Code :</h5>
-								<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
-						</div>
-						<div class="modal-body">
-							<div class="col col-lg-12 form-inline">
-								<div class="mx-1 form-group">
-									<label for="exampleFormControlFile1">แนบรูปภาพปฏิบัติงาน</label>
-									<input type="file" class="my-1 form-control-file" id="IMG_SPAREPART_FILE_NAME"
-									name="IMG_SPAREPART_FILE_NAME" accept="image/*" required>
-									<input type="hidden" id="IMG_SPAREPART_UNID"name="IMG_SPAREPART_UNID"value="">
-								</div>
-							</div>
-						</div>
-
-						<div class="modal-footer">
-							<div class="col col-lg-12">
-								<button class="btn btn-primary btn-block" id="BTN_UPLOAD" name="BTN_UPLOAD"
-								type="submit">Upload</button>
-							</div>
-						</div>
-						<div class="card-body" id="IMG_SHOW" name="IMG_SHOW">
-
-								</div>
-					</form>
-
-
-				</div>
-			</div>
-		</div>
-	</div>
+			@include('machine.sparepart.report.modalimg')
 @stop
 {{-- ปิดส่วนเนื้อหาและส่วนท้า --}}
 
@@ -357,7 +277,6 @@ button.mfp-close{
 
 
 	function image_gallery(thisdata){
-
 		var imgunid = $(thisdata).data("imgunid");
 		var file = $('#IMGLOCATION'+imgunid).attr("src");
 			$.magnificPopup.open({
@@ -385,7 +304,7 @@ button.mfp-close{
 	}
 	function closeimg(){
 			var plan_sparepartunid = $('#IMG_SPAREPART_UNID').val();
-			var url = '/machine/spart/report/planmonth/formimg'
+			var url = "{{route('SparPart.Report.FormImg')}}";
 			var data = { SPAREPART_PLAN_UNID:plan_sparepartunid}
 			$.ajax({
 				type: "GET",
@@ -402,7 +321,7 @@ button.mfp-close{
 	function closeimg_view(thisdata){
 		  var btn_status = $(thisdata).data('btn_status');
 			var plan_sparepartunid = $('#IMG_SPAREPART_UNID').val();
-			var url = '/machine/spart/report/planmonth/formimg'
+			var url = "{{route('SparPart.Report.FormImg')}}";
 			var data = { SPAREPART_PLAN_UNID:plan_sparepartunid,
 									BTN_STATUS : btn_status}
 			$.ajax({

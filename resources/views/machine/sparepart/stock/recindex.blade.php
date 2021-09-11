@@ -7,9 +7,6 @@
 {{-- ส่วนหัว --}}
 @section('Logoandnavbar')
 
-		{{-- @include('masterlayout.logomaster') --}}
-		{{--  @include('masterlayout.navbar.navbarmaster')  --}}
-
 @stop
 {{-- ปิดท้ายส่วนหัว --}}
 
@@ -129,8 +126,6 @@
 
 
 
-
-
 @stop
 {{-- ปิดส่วนเนื้อหาและส่วนท้า --}}
 
@@ -154,14 +149,14 @@
  					return data;
  	 			},
  				processResults: function (data) {
-                 return {
-                     results: $.map(data, function (data) {
-                         return {
-                             text: data.SPAREPART_CODE+' : '+data.SPAREPART_NAME,
-                             id: data.UNID
-                         }
-                     })
-                 };
+               return {
+                   results: $.map(data, function (data) {
+                       return {
+                           text: data.SPAREPART_CODE+' : '+data.SPAREPART_NAME,
+                           id: data.UNID
+                       }
+                   })
+               };
              },
  		  },
  			containerCssClass: "mt-2",
@@ -202,7 +197,6 @@
 
 			});
 		function deleterecsparepart(thisdate){
-
 			Swal.fire({
 				  title: 'คุณต้องการลบรายการรับนี้นี้ใช่มั้ย?',
 				  text: "หากรับแล้วอาจจะเกิดข้อผิดพลาดต่างๆได้!",

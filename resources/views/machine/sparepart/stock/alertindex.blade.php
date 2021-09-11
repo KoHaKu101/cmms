@@ -81,13 +81,13 @@
 													@foreach ($DATA_SPAREPART as $key => $row)
 														<tr>
 															<td  class="text-center">{{$DATA_SPAREPART->firstItem() + $key}}</td>
-															<td >{{$row->SPAREPART_CODE}}</td>
-															<td >{{$row->SPAREPART_NAME}}</td>
-															<td >{{$row->SPAREPART_MODEL}}</td>
-															<td >{{$row->SPAREPART_SIZE}}</td>
-															<td >{{$row->STOCK_MIN}}</td>
-															<td >{{$row->LAST_STOCK}}</td>
-															<td >{{$row->UNIT}}</td>
+															<td>	{{$row->SPAREPART_CODE}}</td>
+															<td>	{{$row->SPAREPART_NAME}}</td>
+															<td>	{{$row->SPAREPART_MODEL}}</td>
+															<td>	{{$row->SPAREPART_SIZE}}</td>
+															<td>	{{$row->STOCK_MIN}}</td>
+															<td>	{{$row->LAST_STOCK}}</td>
+															<td>	{{$row->UNIT}}</td>
 
 														</tr>
 													@endforeach
@@ -102,21 +102,14 @@
 					</div>
 				</div>
       </div>
-		</div>
 
 		{{-- เพิ่มเครื่องจักร --}}
-
-
-
-
 
 @stop
 {{-- ปิดส่วนเนื้อหาและส่วนท้า --}}
 
 {{-- ส่วนjava --}}
 @section('javascript')
-	<script src={{ asset('assets/js/ajax/ajax-csrf.js') }}></script>
-	<script src="{{ asset('assets/js/ajax/appcommon.js') }}"></script>
 	<script>
 		function submit_btn(){
 			$('#BTN_SUBMIT').click();

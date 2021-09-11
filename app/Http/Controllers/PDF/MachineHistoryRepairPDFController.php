@@ -59,19 +59,19 @@ class MachineHistoryRepairPDFController extends Fpdf
      //secondary
      $pdf->SetFont('THSarabunNew','B',16 );
      $pdf->Cell(40,6,iconv('UTF-8', 'cp874', 'รหัสเอกสาร'),1,0);
-     $pdf->Cell(32,6,iconv('UTF-8//IGNORE', 'cp874//IGNORE', 'วันที่แจ้ง'),1,0,'');
-     $pdf->Cell(78,6,iconv('UTF-8//IGNORE', 'cp874//IGNORE', 'อาการเสีย'),1,0,'');
-     $pdf->Cell(44,6,iconv('UTF-8//IGNORE', 'cp874//IGNORE', 'สถานะ'),1,0,'');
+     $pdf->Cell(32,6,iconv('UTF-8', 'cp874', 'วันที่แจ้ง'),1,0,'');
+     $pdf->Cell(78,6,iconv('UTF-8', 'cp874', 'อาการเสีย'),1,0,'');
+     $pdf->Cell(44,6,iconv('UTF-8', 'cp874', 'สถานะ'),1,0,'');
      $pdf->Ln();
      $pdf->SetFont('THSarabunNew','',14 );
      foreach ($machinerepair as $row) {
-       $pdf->Cell(40,6,iconv('UTF-8', 'cp874', $row->DOC_NO),1,0,'');
-       $pdf->Cell(32,6,iconv('UTF-8//IGNORE', 'cp874//IGNORE', $row->DOC_DATE),1,0,'');
+       $pdf->Cell(40,6,$row->DOC_NO,1,0,'');
+       $pdf->Cell(32,6,$row->DOC_DATE,1,0,'');
 
 
 
-       $pdf->Cell(78,6,iconv('UTF-8//IGNORE', 'cp874//IGNORE', $row->REPAIR_SUBSELECT_NAME),1,0,'');
-       $pdf->Cell(44,6,iconv('UTF-8//IGNORE', 'cp874//IGNORE', ($row->CLOSE_STATUS == '9')? 'ดำเนินการสำเร็จ' : 'กำลังดำเนินการ'),1,0,'');
+       $pdf->Cell(78,6,iconv('UTF-8', 'cp874', $row->REPAIR_SUBSELECT_NAME),1,0,'');
+       $pdf->Cell(44,6,iconv('UTF-8', 'cp874', ($row->CLOSE_STATUS == '9')? 'ดำเนินการสำเร็จ' : 'กำลังดำเนินการ'),1,0,'');
 
        $pdf->Ln();
      }

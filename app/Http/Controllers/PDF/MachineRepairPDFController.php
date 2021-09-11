@@ -37,12 +37,12 @@ class MachineRepairPDFController extends Controller
      $this->fpdf->SetTitle('รายการแจ้งซ่อมเครื่องจักร','isUTF8');
      //data header
      $this->fpdf->SetFont('THSarabunNew','',13 );
-      $this->fpdf->Text(158.5,16,iconv('UTF-8', 'cp874', $dataset->DOC_NO  ));
-      $this->fpdf->Text(158.5,22,iconv('UTF-8', 'cp874', $dataset->DOC_DATE  ));
-      $this->fpdf->Text(158.5,28,iconv('UTF-8', 'cp874', $dataset->REPAIR_REQ_TIME  ));
+      $this->fpdf->Text(158.5,16,$dataset->DOC_NO );
+      $this->fpdf->Text(158.5,22,$dataset->DOC_DATE );
+      $this->fpdf->Text(158.5,28,$dataset->REPAIR_REQ_TIME );
      //ช่องกรอกข้อมูล 1
      $this->fpdf->SetFont('THSarabunNew','',13);
-      $this->fpdf->Cell(190, 37, iconv('UTF-8', 'cp874', ''),1,0,'C');
+      $this->fpdf->Cell(190, 37, '',1,0,'C');
       $this->fpdf->Text(15,43,iconv('UTF-8', 'cp874','หมายเลขเครื่องจักร :'));
       $this->fpdf->Text(100,43,iconv('UTF-8', 'cp874','ชื่อเครื่องจักร :'));
       $this->fpdf->Text(23.6,48,iconv('UTF-8', 'cp874','สถานที่ติดตั้ง :'));
@@ -70,9 +70,9 @@ class MachineRepairPDFController extends Controller
       $this->fpdf->Cell(80, 5.8  , iconv('UTF-8', 'cp874', 'วัน / เวลาที่จะตรวจสอบเบื้องต้น'),1,0,'C');
       $this->fpdf->Ln(6);
      $this->fpdf->SetX(22);
-      $this->fpdf->Cell(40, 5.8  , iconv('UTF-8', 'cp874', ''),1,0,'C');//ผู้แจ้งซ่อม
-      $this->fpdf->Cell(40, 5.8  , iconv('UTF-8', 'cp874', ''),1,0,'C');//ผู้รับแจ้งซ่อม
-      $this->fpdf->Cell(80, 5.8  , iconv('UTF-8', 'cp874', ''),1,0,'C');//วัน / เวลาที่จะตรวจสอบเบื้องต้น
+      $this->fpdf->Cell(40, 5.8  , '',1,0,'C');//ผู้แจ้งซ่อม
+      $this->fpdf->Cell(40, 5.8  , '',1,0,'C');//ผู้รับแจ้งซ่อม
+      $this->fpdf->Cell(80, 5.8  , '',1,0,'C');//วัน / เวลาที่จะตรวจสอบเบื้องต้น
       $this->fpdf->Text(103,72,iconv('UTF-8', 'cp874','วันที่ :'));
       $this->fpdf->Text(143,72,iconv('UTF-8', 'cp874','เวลา :'));
       $this->fpdf->Text(111,72,'....................................');//วัน
@@ -85,7 +85,7 @@ class MachineRepairPDFController extends Controller
      $this->fpdf->Ln(6);
 
      $this->fpdf->SetFont('THSarabunNew','b',14);
-      $this->fpdf->Cell(190, 26, iconv('UTF-8', 'cp874', ''),1,0,'C');
+      $this->fpdf->Cell(190, 26, '',1,0,'C');
       $this->fpdf->SetFont('THSarabunNew','',13);
       $this->fpdf->Text(15,87,iconv('UTF-8', 'cp874','รายละเอียดสาเหตุ : '));
       $this->fpdf->Text(14.6,97,iconv('UTF-8', 'cp874','ดำเนินการซ่อมโดย : '));
@@ -108,7 +108,7 @@ class MachineRepairPDFController extends Controller
      $this->fpdf->Ln(19);
 
      $this->fpdf->SetFont('THSarabunNew','b',14);
-      $this->fpdf->Cell(110, 20, iconv('UTF-8', 'cp874', ''),1,0,'C');
+      $this->fpdf->Cell(110, 20, '',1,0,'C');
       $this->fpdf->Text(15,111.2,iconv('UTF-8', 'cp874','รายละเอียดสาเหตุ'));
       $this->fpdf->SetFont('THSarabunNew','',13);
       $this->fpdf->Rect(25,113,4,4,'');
@@ -116,24 +116,24 @@ class MachineRepairPDFController extends Controller
       $this->fpdf->Rect(25,118,4,4,'');
       $this->fpdf->Text(38,120.8,iconv('UTF-8', 'cp874','ไม่สามารถใช้งานได้ตามปกติ '));
       $this->fpdf->Text(40,125.2,iconv('UTF-8', 'cp874','เพราะ : '));
-      $this->fpdf->Text(50,125,iconv('UTF-8', 'cp874',' '));
+      $this->fpdf->Text(50,125,'');
       $this->fpdf->SetFont('THSarabunNew','b',14);
       $this->fpdf->Text(50,125,'___________________________');
       //ช่างซ่อมบำรุง
      $this->fpdf->SetFont('THSarabunNew','b',14);
-      $this->fpdf->Cell(80, 10, iconv('UTF-8', 'cp874', ''),1,0,'C');
+      $this->fpdf->Cell(80, 10, '',1,0,'C');
       $this->fpdf->Text(150,111.2,iconv('UTF-8', 'cp874','ช่างซ่อมบำรุง'));
       $this->fpdf->Text(120,111.8,'___________________________________________');
      $this->fpdf->Ln(10);
 
      $this->fpdf->SetX(120);
      $this->fpdf->SetFont('THSarabunNew','',13);
-     $this->fpdf->Cell(80, 10, iconv('UTF-8', 'cp874', ''),1,0,'C');
+     $this->fpdf->Cell(80, 10, '',1,0,'C');
      $this->fpdf->Text(122,121,iconv('UTF-8', 'cp874','วันที่ : '));
-     $this->fpdf->Text(130,120.2,iconv('UTF-8', 'cp874',''));
+     $this->fpdf->Text(130,120.2,'');
      $this->fpdf->Text(130,121,'....................................................................');
      $this->fpdf->Text(122,125.2,iconv('UTF-8', 'cp874','เวลา : '));
-     $this->fpdf->Text(130,125,iconv('UTF-8', 'cp874',''));
+     $this->fpdf->Text(130,125,'');
      $this->fpdf->Text(130,125.5,'....................................................................');
      $this->fpdf->Output();
 

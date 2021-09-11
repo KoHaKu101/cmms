@@ -31,7 +31,7 @@
 										<h4>Mail Server Setup</h4>
 									</div>
 									<div class="card-body">
-										<form action="{{ url('machine/config/save') }}" method="POST" id="FRM_MAILSETUP" name="FRM_MAILSETUP" >
+										<form action="{{ route('machine.config.save') }}" method="POST" id="FRM_MAILSETUP" name="FRM_MAILSETUP" >
 											@csrf
 													<div class="form-group form-inline">
 														<label for="MAILHOST" class="col-md-3 col-form-label">Host Name</label>
@@ -88,44 +88,42 @@
 										<h4>Alert Mail</h4>
 									</div>
 									<div class="card-body">
-
 												<form action="{{ route('machine.config.savealert') }}" method="POST" id="FRM_ALERTMAIL" name="FRM_ALERTMAIL">
 													@csrf
 													<div class="form-group form-inline">
-															<label for="MAILALEAT1" class="col-md-3 col-form-label">Email Aleart 1</label>
-															<div class="col-md-9 p-0">
-																<input type="hidden" class="form-control form-control-sm input-full" id="UNID" name="UNID" value="{{ isset($datamail[0]->UNID) ? $datamail[0]->UNID : '' }}">
-																<input type="text" class="form-control form-control-sm input-full" id="MAILALEAT1" name="MAILALEAT1" value="{{ isset($dataalertmail[0]) ? $dataalertmail[0]->EMAILADDRESS1 : '' }}">
-															</div>
+														<label for="MAILALEAT1" class="col-md-3 col-form-label">Email Aleart 1</label>
+														<div class="col-md-9 p-0">
+															<input type="hidden" class="form-control form-control-sm input-full" id="UNID" name="UNID" value="{{ isset($datamail[0]->UNID) ? $datamail[0]->UNID : '' }}">
+															<input type="text" class="form-control form-control-sm input-full" id="MAILALEAT1" name="MAILALEAT1" value="{{ isset($dataalertmail[0]) ? $dataalertmail[0]->EMAILADDRESS1 : '' }}">
 														</div>
-														<div class="form-group form-inline">
-																<label for="MAILALEAT2" class="col-md-3 col-form-label">Email Aleart 2</label>
-																<div class="col-md-9 p-0">
-																	<input type="text" class="form-control form-control-sm input-full" id="MAILALEAT2" name="MAILALEAT2" value="{{ isset($dataalertmail[0]) ? $dataalertmail[0]->EMAILADDRESS2 : '' }}">
-																</div>
-															</div>
-															<div class="form-group form-inline">
-																	<label for="MAILALEAT3" class="col-md-3 col-form-label">Email Aleart 3</label>
-																	<div class="col-md-9 p-0">
-																		<input type="email" class="form-control form-control-sm input-full" id="MAILALEAT3" name="MAILALEAT3" value="{{ isset($dataalertmail[0]) ? $dataalertmail[0]->EMAILADDRESS3 : '' }}">
-																	</div>
-																</div>
-																<div class="form-group form-inline">
-																		<label for="MAILALEAT4" class="col-md-3 col-form-label">Email Aleart 4</label>
-																		<div class="col-md-9 p-0">
-																			<input type="text" class="form-control form-control-sm input-full" id="MAILALEAT4" name="MAILALEAT4" value="{{ isset($dataalertmail[0]) ? $dataalertmail[0]->EMAILADDRESS4 : '' }}">
-																		</div>
-																	</div>
-																	<div class="form-group form-inline">
-																			<label for="MAILALEAT5" class="col-md-3 col-form-label">Email Aleart 5</label>
-																			<div class="col-md-9 p-0">
-																				<input type="text" class="form-control form-control-sm input-full" id="MAILALEAT5" name="MAILALEAT5" value="{{ isset($dataalertmail[0]) ? $dataalertmail[0]->EMAILADDRESS5 : '' }}">
-																			</div>
-																		</div>
-																		<div class="form-group text-center">
-																				<button class="btn btn-success btn-sm ">Save</button>
-																			</div>
-
+													</div>
+													<div class="form-group form-inline">
+														<label for="MAILALEAT2" class="col-md-3 col-form-label">Email Aleart 2</label>
+														<div class="col-md-9 p-0">
+															<input type="text" class="form-control form-control-sm input-full" id="MAILALEAT2" name="MAILALEAT2" value="{{ isset($dataalertmail[0]) ? $dataalertmail[0]->EMAILADDRESS2 : '' }}">
+														</div>
+													</div>
+													<div class="form-group form-inline">
+														<label for="MAILALEAT3" class="col-md-3 col-form-label">Email Aleart 3</label>
+														<div class="col-md-9 p-0">
+															<input type="email" class="form-control form-control-sm input-full" id="MAILALEAT3" name="MAILALEAT3" value="{{ isset($dataalertmail[0]) ? $dataalertmail[0]->EMAILADDRESS3 : '' }}">
+														</div>
+													</div>
+													<div class="form-group form-inline">
+														<label for="MAILALEAT4" class="col-md-3 col-form-label">Email Aleart 4</label>
+														<div class="col-md-9 p-0">
+															<input type="text" class="form-control form-control-sm input-full" id="MAILALEAT4" name="MAILALEAT4" value="{{ isset($dataalertmail[0]) ? $dataalertmail[0]->EMAILADDRESS4 : '' }}">
+														</div>
+													</div>
+													<div class="form-group form-inline">
+														<label for="MAILALEAT5" class="col-md-3 col-form-label">Email Aleart 5</label>
+														<div class="col-md-9 p-0">
+															<input type="text" class="form-control form-control-sm input-full" id="MAILALEAT5" name="MAILALEAT5" value="{{ isset($dataalertmail[0]) ? $dataalertmail[0]->EMAILADDRESS5 : '' }}">
+														</div>
+													</div>
+													<div class="form-group text-center">
+															<button class="btn btn-success btn-sm ">Save</button>
+													</div>
 												</form>
 									</div>
 								</div>
@@ -139,7 +137,7 @@
 										<h4>Alert Mail</h4>
 									</div>
 									<div class="card-body">
-										<form action="{{ url('machine/config/update') }}" method="POST" id="ALERTNADPLND" name="ALERTNADPLND" >
+										<form action="{{ route('machine.config.update') }}" method="POST" id="ALERTNADPLND" name="ALERTNADPLND" >
 											@csrf
 											<div class="row">
 												<div class="col-md-4 col-lg-4">

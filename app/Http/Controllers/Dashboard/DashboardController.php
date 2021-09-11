@@ -19,9 +19,6 @@ class DashboardController extends Controller
     $this->middleware('auth');
 
   }
-  public function Sumaryline(){
-    return View('machine/dashboard/sumaryline');
-  }
   public function Dashboard(){
 
     $machine_all        = Machine::select('MACHINE_CHECK')->where('MACHINE_CHECK','!=','4')->count();
@@ -266,13 +263,11 @@ class DashboardController extends Controller
     return View('machine/dashboard/machinerepair',compact('MACHINE_CODE','MACHINE_COUNT','MACHINEREPAIRREQ','ORDER_BY_COUNT'));
   }
   public function Notification(Request $request){
-    $data = MachineRepairREQ::select('*')->where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(4)->get();
-    return response()->json(['datarepair' => $data]);
+    $datarepair = MachineRepairREQ::select('*')->where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(4)->get();
+    $datacount  = MachineRepairREQ::where('CLOSE_STATUS','9')->get()->count();
+    return response()->json(['datarepair' => $datarepair,'datacount' => $datacount]);
   }
-  public function NotificationCount(Request $request){
-    $data = MachineRepairREQ::where('CLOSE_STATUS','9')->take(4)->get()->count();
-    return response()->json(['datacount' => $data]);
-  }
+  
 
   public function NotificationRepair(){
     $datarepairlist   = MachineRepairREQ::select('STATUS_NOTIFY','PRIORITY','MACHINE_CODE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME','DOC_DATE','DOC_NO')
@@ -338,8 +333,5 @@ class DashboardController extends Controller
   }
 
   //**********************************************************************************************************//
-  public function Logout(){
-      Auth::logout();
-      return Redirect()->route('login')->with('success','User Logout');
-  }
+
 }

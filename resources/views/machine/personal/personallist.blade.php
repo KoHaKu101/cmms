@@ -74,7 +74,7 @@
 
 											@php
 												$EMP_POSITION = array();
-												$EMP_PAY_TYPE =array();
+												$EMP_PAY_TYPE = array();
 												foreach ($data_emppostion as  $row_position){
 													$EMP_POSITION[$row_position->POSITION_CODE] = $row_position->POSITION_NAME;
 												}

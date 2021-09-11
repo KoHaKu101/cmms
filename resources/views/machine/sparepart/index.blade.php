@@ -302,7 +302,6 @@ function savemachine(machine_unid,spartpart_unid,spartpart_code,period,datestart
 		data: data,
 		dataType: 'JSON',
 		success: function (data) {
-
 			if (data.res == false) {
 			Swal.fire({
 			  title: 'กรุณาระบุระยะเวลา แผน',
@@ -408,7 +407,7 @@ $(document).ready(function() {
  });
 
  $('.btn-machine').on('click',function(){
-	 var	spcode		= $(this).data('spcode');
+	 var	spcode	= $(this).data('spcode');
 	 var spunid		= $(this).data('spunid');
 	 $('#SPARPART_CODE').val(spcode);
 	 $('#SPARPART_UNID').val(spunid);

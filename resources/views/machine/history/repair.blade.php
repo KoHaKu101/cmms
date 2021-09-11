@@ -25,16 +25,16 @@
               </tr>
 
               <tr class="bg-secondary text-white">
-                <td scope="col">#</td>
-                <td scope="col">วันที่แจ้ง</td>
-                <td scope="col">เอกสาร</td>
-                <td scope="col">อาการเสีย</td>
-                <td scope="col">วันที่ซ่อม</td>
-                <td scope="col">วิธีการแก้ไข</td>
-                <td scope="col">อะไหล่</td>
-                <td scope="col">ราคา</td>
-                <td scope="col">DownTime</td>
-                <td scope="col">ผู้รายงาน</td>
+                <td >#</td>
+                <td >วันที่แจ้ง</td>
+                <td >เอกสาร</td>
+                <td >อาการเสีย</td>
+                <td >วันที่ซ่อม</td>
+                <td >วิธีการแก้ไข</td>
+                <td >อะไหล่</td>
+                <td >ราคา</td>
+                <td >DownTime</td>
+                <td >ผู้รายงาน</td>
               </tr>
               @php
                 $i = 1 ;

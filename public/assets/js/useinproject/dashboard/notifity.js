@@ -29,28 +29,10 @@ $(document).ready(function(){
             '<span class="block" >' +'0 รายการ'+ '</span>' +
             '</div> </center>';  }
         $("#loaddatacode").html(_html);
-     // Ask for new notifications every second
+        var datacount = '<span class="notification">' +res.datacount+ '</span>';
+        $("#count").html(datacount);
       }
       });
     }
-    setInterval(notifity,50000);
-
-    var count = function (){
-      $.ajax({
-        url:'/machine/repair/notificaitoncount',
-        method:'GET',
-        dataType:'json',
-
-        success:function(data){
-
-            var datacount = '<span class="notification">' +data.datacount+ '</span>';
-            $("#count").html(datacount);
-
-
-
-
-        }
-        });
-      }
-      setInterval(count,50000);
+    setInterval(notifity,10000);
   });

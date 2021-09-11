@@ -115,12 +115,11 @@ Route::middleware('can:isAdminandManager')->group(function () {
     Route::get('/dashboard/machinerepair'              ,[DashboardController::class,'MachineRepair'])      ->name('dashboard.machinerepair');
     Route::get('/machine/dashboard/sumaryline'         ,[DashboardController::class,'Sumaryline'])         ->name('dashboard.sumaryline');
     Route::get('/machine/dashboard/notificationrepair' ,[DashboardController::class,'NotificationRepair']) ->name('dashboard.notificationrepair');
-    Route::get('machine/repair/notificaitoncount'      ,[DashboardController::class,'NotificationCount'])  ->name('repair.notificaitoncount');
     Route::get('machine/repair/notificaiton'           ,[DashboardController::class,'Notification']);
     Route::get('/machine/user/homepage'                ,[DashboardController::class,'UserHomePage'])             ->name('user.homepage');
   //*****************************************  CalendarController  *********************************************************
    Route::get('/machine/calendar'                      ,[CalendarController::class,'Index']);
-   Route::get('/machine/calendar/modal'                ,[CalendarController::class,'ShowModal']);
+   
 });
 
 

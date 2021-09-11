@@ -14,15 +14,14 @@
             <table class="table table-bordered table-head-bg-info table-bordered-bd-info" id="machine_list" name="machine_list">
                 <thead>
                   <tr>
-                    <th scope="col">Machine</th>
-                    <th scope="col">LINE</th>
-                    <th scope="col">วาระการเปลี่ยน (เดือน)</th>
-                    <th scope="col">วันที่เริ่ม</th>
-                    <th scope="col">จำนวน</th>
+                    <th>Machine</th>
+                    <th>LINE</th>
+                    <th>วาระการเปลี่ยน (เดือน)</th>
+                    <th>วันที่เริ่ม</th>
+                    <th>จำนวน</th>
                   </tr>
                 </thead>
                <tbody class="data-machine">
-
                </tbody>
              </table>
         </div>

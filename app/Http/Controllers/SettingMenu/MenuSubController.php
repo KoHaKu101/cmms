@@ -41,32 +41,27 @@ class MenuSubController extends Controller
       'SUBMENU_NAME.max' => 'ใส่ได้ไม่เกิน 255'
       ]);
       Menusubitem::insert([
-          'SUBMENU_NAME'=> $request->SUBMENU_NAME,
-          'SUBMENU_EN'=> $request->SUBMENU_EN,
-          'SUBUNID_REF'=> $request->SUBUNID_REF,
-          'SUBMENU_INDEX' =>  $request->SUBMENU_INDEX,
-          'SUBMENU_STATUS' => $request->SUBMENU_STATUS,
-          'SUBMENU_ICON' => $request->SUBMENU_ICON,
-          'SUBMENU_CLASS' => $request->SUBMENU_CLASS,
-          'SUBMENU_LINK' => $request->SUBMENU_LINK,
-          'UNID'=>$this->randUNID('PMCS_CMMS_MENUSUBITEM'),
-          'CREATE_BY'=>Auth::user()->name,
-          'CREATE_TIME'=> Carbon::now(),
-          'MODIFY_BY' =>Auth::user()->name,
-          'MODIFY_TIME' => Carbon::now(),
+          'SUBMENU_NAME'    => $request->SUBMENU_NAME,
+          'SUBMENU_EN'      => $request->SUBMENU_EN,
+          'SUBUNID_REF'     => $request->SUBUNID_REF,
+          'SUBMENU_INDEX'   => $request->SUBMENU_INDEX,
+          'SUBMENU_STATUS'  => $request->SUBMENU_STATUS,
+          'SUBMENU_ICON'    => $request->SUBMENU_ICON,
+          'SUBMENU_CLASS'   => $request->SUBMENU_CLASS,
+          'SUBMENU_LINK'    => $request->SUBMENU_LINK,
+          'UNID'            => $this->randUNID('PMCS_CMMS_MENUSUBITEM'),
+          'CREATE_BY'       => Auth::user()->name,
+          'CREATE_TIME'     => Carbon::now(),
+          'MODIFY_BY'       => Auth::user()->name,
+          'MODIFY_TIME'     => Carbon::now(),
       ]);
       alert()->success('insert success')->autoclose('1500');
     return Redirect()->back();
-
-
   }
-
-
   public function Subhome($UNID){
-      $mainmenu=array();
-      $mainmenu["UNID"]=$UNID;
+    $MAINMENU_UNID = $UNID;
     $datasubmenu = Menusubitem::where('SUBUNID_REF','=',$UNID)->orderby('SUBMENU_INDEX','ASC')->get();
-  return View('machine.setting.submenu.home',compact('datasubmenu','mainmenu'));
+  return View('machine.setting.submenu.home',compact('datasubmenu','MAINMENU_UNID'));
 }
   public function Edit($UNID){
     $data_set = Menusubitem::find($UNID);
@@ -76,31 +71,23 @@ class MenuSubController extends Controller
 
   public function Update(Request $request,$UNID){
 
-
-    $datasubunid = Menusubitem::find($UNID)->update([
+    Menusubitem::where('UNID','=',$UNID)->update([
       'SUBMENU_NAME'  => $request->SUBMENU_NAME,
       'SUBMENU_EN'    => $request->SUBMENU_EN,
-      'SUBMENU_INDEX' =>  $request->SUBMENU_INDEX,
-      'SUBMENU_STATUS' => $request->SUBMENU_STATUS,
-      'SUBMENU_ICON' => $request->SUBMENU_ICON,
+      'SUBMENU_INDEX' => $request->SUBMENU_INDEX,
+      'SUBMENU_STATUS'=> $request->SUBMENU_STATUS,
+      'SUBMENU_ICON'  => $request->SUBMENU_ICON,
       'SUBMENU_CLASS' => $request->SUBMENU_CLASS,
-      'SUBMENU_LINK' => $request->SUBMENU_LINK,
-      'MODIFY_BY' =>Auth::user()->name,
-      'MODIFY_TIME' => Carbon::now(),
+      'SUBMENU_LINK'  => $request->SUBMENU_LINK,
+      'MODIFY_BY'     =>Auth::user()->name,
+      'MODIFY_TIME'   => Carbon::now(),
     ]);
-    $SUBUNID_REF=$request->SUBUNID_REF;
-    $datasubmenu = Menusubitem::where('SUBUNID_REF','=',$SUBUNID_REF)->get();
-    return Redirect()->route('submenu.home',[$SUBUNID_REF]);
-
+    $SUBMENU_UNID = Menusubitem::where('UNID','=',$UNID)->first();
+    return Redirect()->route('submenu.home',[$SUBMENU_UNID->SUBUNID_REF]);
   }
-  // ส่วนลบ
     public function Delete($UNID){
       $delete = Menusubitem::where('UNID','=',$UNID)->delete();
       alert()->success('Confirm Delete Success')->autoclose('1500');
       return Redirect()->back();
-
-
     }
-    // ส่วนลบ
-
 }

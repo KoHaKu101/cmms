@@ -59,7 +59,7 @@
 												<div class="col-md-4 form-inline">
 													<label class="text-white mx-3">SEARCH : </label>
 													<div class="input-group ">
-														<input type="text" id="SEARCH"  name="SEARCH" class="form-control form-control-sm" value="{{ $SEARCH }}">
+														<input type="text" id="SEARCH_MANUAL"  name="SEARCH_MANUAL" class="form-control form-control-sm" value="{{ $SEARCH }}">
 														<div class="input-group-prepend">
 															<button type="submit" class="btn btn-search pr-1 btn-xs SEARCH">
 																<i class="fa fa-search search-icon"></i>
@@ -89,7 +89,7 @@
                         		<tr>
 															<td width="50px">{{ $row->MACHINE_LINE }}</td>
 															<td width="100px">
-																<a href="{{ url('machine/manual/show/'.$row->UNID) }}"
+															<a href="{{ route('manual.Show',$row->UNID) }}"
 																	class="btn btn-secondary btn-block btn-sm mx-1 my-1 text-left">
 																	<i class="fas fa-eye fa-lg mr-1"></i>{{ $row->MACHINE_CODE }}</a>  </td>
 															<td >{{ $row->MACHINE_NAME_TH }}  </td>
@@ -101,7 +101,7 @@
                     </table>
 									</div>
 										</div>
-										{{ $dataset->appends(['SEARCH' => $SEARCH,'MACHINE_LINE' => $MACHINE_LINE])->links('pagination.default') }}
+										{{ $dataset->appends(['SEARCH_MANUAL' => $SEARCH,'MACHINE_LINE' => $MACHINE_LINE])->links('pagination.default') }}
 
 								</div>
 

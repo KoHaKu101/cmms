@@ -19,8 +19,6 @@ class MachineSystemCheckPDFController extends Fpdf
 {
 
 
-
-
   public function SystemCheckPdf($UNID)
     {
 

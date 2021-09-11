@@ -96,7 +96,7 @@
 									      <div class="col-md-4 form-inline">
 													<label class="text-white mx-2">SEARCH : </label>
 									          <div class="input-group mt-1">
-									            <input type="search" id="SEARCH"  name="SEARCH" class="form-control form-control-sm"
+									            <input type="search" id="SEARCH_MACHINE"  name="SEARCH_MACHINE" class="form-control form-control-sm"
 															value="{{ isset($SEARCH) ? $SEARCH : '' }}">
 									            <div class="input-group-prepend">
 									              <button type="submit" class="btn btn-search pr-1 btn-xs	SEARCH">
@@ -170,7 +170,7 @@
 								          @endforeach
 								        </tbody>
 								    	</table>
-								    	{{ $machine->appends( ['SEARCH' => $SEARCH])->links('pagination.default') }}
+								    	{{ $machine->appends( ['SEARCH_MACHINE' => $SEARCH])->links('pagination.default') }}
 								  	</div>
 								 	</div>
 								</div>

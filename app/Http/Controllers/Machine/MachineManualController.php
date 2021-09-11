@@ -40,7 +40,7 @@ class MachineManualController extends Controller
   public function Index(Request $request){
     $LINE         = MachineLine::select('LINE_NAME','LINE_CODE')->where('LINE_NAME','like','Line'.'%')->where('LINE_STATUS','=','9')->orderBy('LINE_NAME')->get();
     $MACHINE_LINE = isset($request->MACHINE_LINE) ? $request->MACHINE_LINE : '';
-    $SEARCH       = isset($request->SEARCH) ? $request->SEARCH : '';
+    $SEARCH       = isset($request->SEARCH_MANUAL) ? $request->SEARCH_MANUAL : '';
     $dataset      = Machine::select('MACHINE_LINE','UNID','MACHINE_CODE','MACHINE_TYPE')
                             ->selectRaw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
                             ->where(function ($query) use ($MACHINE_LINE) {

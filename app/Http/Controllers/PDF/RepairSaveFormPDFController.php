@@ -90,27 +90,22 @@ class RepairSaveFormPDFController extends Controller
     //********************************  box A ************************************************************
     $this->pdf->Rect(150,69,54,14);
       $this->pdf->Rect(150,69,6,6);
-      $this->pdf->text(152,73,iconv('UTF-8', 'cp874', 'A'));
+      $this->pdf->text(152,73,'A');
       $this->pdf->text(164,74,iconv('UTF-8', 'cp874', 'รวมระยะเวลาที่ใช้'));
-      $this->pdf->text(162,80,iconv('UTF-8', 'cp874', $INSPECTION_DIFF));
+      $this->pdf->text(162,80,$INSPECTION_DIFF);
     //********************************  box B ************************************************************
     $this->pdf->Rect(150,118,54,14);
       $this->pdf->Rect(150,118,6,6);
-      $this->pdf->text(152,122,iconv('UTF-8', 'cp874', 'B'));
+      $this->pdf->text(152,122,'B');
       $this->pdf->text(164,123,iconv('UTF-8', 'cp874', 'รวมระยะเวลาที่ใช้'));
-      $this->pdf->text(162,130,iconv('UTF-8', 'cp874',  ($TYPE_WORKER == 'IN' ? $WORKERIN_DIFF : $WORKEROUT_DIFF) ));
+      $this->pdf->text(162,130,($TYPE_WORKER == 'IN' ? $WORKERIN_DIFF : $WORKEROUT_DIFF) );
     //********************************  box C ************************************************************
     $this->pdf->Rect(150,152,54,14);
       $this->pdf->Rect(150,152,6,6);
-      $this->pdf->text(152,156,iconv('UTF-8', 'cp874', 'C'));
+      $this->pdf->text(152,156,'C');
       $this->pdf->text(164,157,iconv('UTF-8', 'cp874', 'รวมระยะเวลาที่ใช้'));
-      $this->pdf->text(162,163,iconv('UTF-8', 'cp874', $SPAREPART_DIFF));
-    //********************************  box D ************************************************************
-    // $this->pdf->Rect(150,157,54,14);
-    //   $this->pdf->Rect(150,157,6,6);
-    //   $this->pdf->text(152,161,iconv('UTF-8', 'cp874', 'D'));
-    //   $this->pdf->text(164,162,iconv('UTF-8', 'cp874', 'รวมระยะเวลาที่ใช้'));
-    //   $this->pdf->text(162,168,iconv('UTF-8', 'cp874', $WORKERIN_DIFF));
+      $this->pdf->text(162,163,$SPAREPART_DIFF);
+
     //******************************* Box RepairBy Ane ReportBy ********************************************
     $this->pdf->Rect(148,199,52,35);
 
@@ -123,16 +118,16 @@ class RepairSaveFormPDFController extends Controller
       $this->pdf->text(154,212,iconv('UTF-8', 'cp874', '1  '.($TYPE_WORKER == 'IN' ? $WORK_1 : ($WORK_1 != '' ? 'บริษัท '.$WORK_1 : ''))));
       $this->pdf->text(154,220,iconv('UTF-8', 'cp874', '2  '.($TYPE_WORKER == 'IN' ? $WORK_2 : ($WORK_2 != '' ? 'บริษัท '.$WORK_2 : ''))));
       $this->pdf->text(154,228,iconv('UTF-8', 'cp874', '3  '.($TYPE_WORKER == 'IN' ? $WORK_3 : ($WORK_3 != '' ? 'บริษัท '.$WORK_3 : ''))));
-      $this->pdf->text(158,212,iconv('UTF-8', 'cp874', '_____________________'));
-      $this->pdf->text(158,220,iconv('UTF-8', 'cp874', '_____________________'));
-      $this->pdf->text(158,228,iconv('UTF-8', 'cp874', '_____________________'));
+      $this->pdf->text(158,212,'_____________________');
+      $this->pdf->text(158,220,'_____________________');
+      $this->pdf->text(158,228,'_____________________');
       $this->pdf->Rect(148,234,52,25);
       $this->pdf->text(150,240,iconv('UTF-8', 'cp874', 'ผู้รายงาน : '.$DATA_REPAIR_REQ->INSPECTION_NAME ));
       $this->pdf->text(150,248,iconv('UTF-8', 'cp874', 'วันที่รายงาน : '.($TYPE_WORKER == 'IN' ? date('d-m-Y',strtotime($DATA_REPAIR_REQ->WORKERIN_END_DATE)) : date('d-m-Y',strtotime($DATA_REPAIR_REQ->WORKEROUT_END_DATE)))));
       $this->pdf->text(150,256,iconv('UTF-8', 'cp874', 'วันที่ส่งคืนผลิต : '.($TYPE_WORKER == 'IN' ? date('d-m-Y',strtotime($DATA_REPAIR_REQ->WORKERIN_END_DATE)) : date('d-m-Y',strtotime($DATA_REPAIR_REQ->WORKEROUT_END_DATE)))));
-      $this->pdf->text(165,240,iconv('UTF-8', 'cp874', '___________________'));
-      $this->pdf->text(169,248,iconv('UTF-8', 'cp874', '_________________'));
-      $this->pdf->text(171,256,iconv('UTF-8', 'cp874', '________________'));
+      $this->pdf->text(165,240,'___________________');
+      $this->pdf->text(169,248,'_________________');
+      $this->pdf->text(171,256,'________________');
     //******************************** Round Two ****************************************
 
       //******************************** line 1 ********************************************
@@ -235,25 +230,25 @@ class RepairSaveFormPDFController extends Controller
     $this->pdf->SetFont('THSarabunNew','',12 );
     $this->pdf->Cell(130,$height[0],iconv('UTF-8', 'cp874', 'รายการอะไหล่ที่ใช้ '),1,1,'C',1);
 
-    $this->pdf->Cell(2,$height[0],iconv('UTF-8', 'cp874', ' '),0,0,'C',0);
+    $this->pdf->Cell(2,$height[0],' ',0,0,'C',0);
     $this->pdf->Cell(10,$height[0],iconv('UTF-8', 'cp874', 'ลำดับ '),1,0,'C',1);
     $this->pdf->Cell(50,$height[0],iconv('UTF-8', 'cp874', 'ชื่ออะไหล่/อุปกรณ์ '),1,0,'C',1);
     $this->pdf->Cell(15,$height[0],iconv('UTF-8', 'cp874', 'หน่วย'),1,0,'C',1);
     $this->pdf->Cell(15,$height[0],iconv('UTF-8', 'cp874', 'จำนวน'),1,0,'C',1);
     $this->pdf->Cell(20,$height[0],iconv('UTF-8', 'cp874', 'ราคา'),1,0,'C',1);
     $this->pdf->Cell(20,$height[0],iconv('UTF-8', 'cp874', 'จำนวนเงิน'),1,1,'C',1);
-    $this->pdf->Cell(2,$height[0],iconv('UTF-8', 'cp874', ' '),0,0,'C',0);
+    $this->pdf->Cell(2,$height[0],' ',0,0,'C',0);
     if ($DATA_SPAREPART->count() < 1) {
-      $this->pdf->Cell(10,$height[0],iconv('UTF-8', 'cp874', '-' ),1,0,'C',0);
-      $this->pdf->Cell(50,$height[0],iconv('UTF-8', 'cp874', '-'),1,0,'C',0);
-      $this->pdf->Cell(20,$height[0],iconv('UTF-8', 'cp874', '-'),1,0,'C',0);
-      $this->pdf->Cell(10,$height[0],iconv('UTF-8', 'cp874', '-'),1,0,'C',0);
-      $this->pdf->Cell(20,$height[0],iconv('UTF-8', 'cp874', '-'),1,0,'C',0);
-      $this->pdf->Cell(20,$height[0],iconv('UTF-8', 'cp874', '-'),1,1,'C',0);
-      $this->pdf->Cell(2,$height[0],iconv('UTF-8', 'cp874', ''),0,0,'C',0);
+      $this->pdf->Cell(10,$height[0],'-'),1,0,'C',0);
+      $this->pdf->Cell(50,$height[0],'-',1,0,'C',0);
+      $this->pdf->Cell(20,$height[0],'-',1,0,'C',0);
+      $this->pdf->Cell(10,$height[0],'-',1,0,'C',0);
+      $this->pdf->Cell(20,$height[0],'-',1,0,'C',0);
+      $this->pdf->Cell(20,$height[0],'-',1,1,'C',0);
+      $this->pdf->Cell(2,$height[0],'',0,0,'C',0);
     }
     foreach ($DATA_SPAREPART as $key => $row){
-      $this->pdf->Cell(10,$height[0],iconv('UTF-8', 'cp874', $key+1 ),1,0,'C',0);
+      $this->pdf->Cell(10,$height[0],$key+1,1,0,'C',0);
       $this->pdf->Cell(50,$height[0],iconv('UTF-8', 'cp874', $row->SPAREPART_NAME),1,0,'L',0);
       $this->pdf->Cell(15,$height[0],iconv('UTF-8', 'cp874', $row->SPAREPART_UNIT),1,0,'C',0);
       $this->pdf->Cell(15,$height[0],iconv('UTF-8', 'cp874', $row->SPAREPART_TOTAL_OUT),1,0,'C',0);
@@ -271,9 +266,9 @@ class RepairSaveFormPDFController extends Controller
     $this->pdf->Cell(80,$height[0],iconv('UTF-8', 'cp874', 'สรุประยะเวลาการซ่อมเครื่องจักร (A+B+C)'),1,0,'C',0);
     $this->pdf->Cell(60,$height[0],iconv('UTF-8', 'cp874', 'ฝ่ายผลิตลงชื่อรับ '),1,0,'C',0);
     $this->pdf->Cell(54,$height[0],iconv('UTF-8', 'cp874', 'วันที่ตรวจสอบ '),1,1,'C',0);
-    $this->pdf->Cell(80,10,iconv('UTF-8', 'cp874', ''),1,0,'C',0);
-    $this->pdf->Cell(60,10,iconv('UTF-8', 'cp874', ''),1,0,'C',0);
-    $this->pdf->Cell(54,10,iconv('UTF-8', 'cp874', ''),1,1,'C',0);
+    $this->pdf->Cell(80,10,'',1,0,'C',0);
+    $this->pdf->Cell(60,10,'',1,0,'C',0);
+    $this->pdf->Cell(54,10,'',1,1,'C',0);
     $this->pdf->Text(10,292,iconv('UTF-8', 'cp874', 'อายุการจัดเก็บ 1 ปี'));
     $this->pdf->Text(170,292,iconv('UTF-8', 'cp874', 'FM-MA-08 REV.3 :15 Oct 09'));
 

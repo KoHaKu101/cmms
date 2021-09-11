@@ -26,7 +26,7 @@ class MachinePDFController extends Controller
     {
       $LINE = $request->LINE;
       $group_LINE = Machine::select('MACHINE_LINE')->where('MACHINE_STATUS','=',9)->groupBy('MACHINE_LINE')->orderBy('MACHINE_LINE')->get();
-      
+
       if ($LINE > 0) {
         $group_LINE = Machine::select('MACHINE_LINE')->where('MACHINE_STATUS','=',9)->where('MACHINE_LINE',$LINE)->groupBy('MACHINE_LINE')->orderBy('MACHINE_LINE')->get();
       }
@@ -50,19 +50,19 @@ class MachinePDFController extends Controller
         $limit = 40;
         $i = 1;
           foreach($dataset as $index => $row){
-            $this->pdf->Cell(16,6,iconv('UTF-8', 'cp874', $row->MACHINE_CODE),1,0,'');
-            $this->pdf->Cell(34,6,iconv('UTF-8//IGNORE', 'cp874//IGNORE', $row->MACHINE_NAME),1,0,'');
+            $this->pdf->Cell(16,6,$row->MACHINE_CODE,1,0,'');
+            $this->pdf->Cell(34,6,iconv('UTF-8', 'cp874', $row->MACHINE_NAME),1,0,'');
             $this->pdf->Cell(10,6,iconv('UTF-8', 'cp874', $row->MACHINE_LINE),1,0,'C');
             $this->pdf->Cell(25,6,iconv('UTF-8', 'cp874', ($row->MACHINE_CHECK == '1' ? 'หยุดทำงาน'
                                           :( $row->MACHINE_CHECK == '2' ? 'เครื่องทำงาน'
                                           :( $row->MACHINE_CHECK == '3' ? 'เครื่องกำลังซ่อม'
                                           :( $row->MACHINE_CHECK == '4' ? 'เครื่องจำหน่าย' : 'สถานะไม่แน่ชัด' ))))
                                   ),1,0,'C');
-            $this->pdf->Cell(22,6,iconv('UTF-8', 'cp874', $row->MACHINE_STARTDATE),1,0,'');
+            $this->pdf->Cell(22,6, $row->MACHINE_STARTDATE,1,0,'');
             $this->pdf->SetFont('THSarabunNew','',11);
-            $this->pdf->Cell(53,6,iconv('UTF-8//IGNORE', 'cp874//IGNORE', $row->PURCHASE_FORM),1,0,'');
+            $this->pdf->Cell(53,6,iconv('UTF-8', 'cp874', $row->PURCHASE_FORM),1,0,'');
             $this->pdf->SetFont('THSarabunNew','',12);
-            $this->pdf->Cell(34,6,iconv('UTF-8//IGNORE', 'cp874//IGNORE', $row->MACHINE_TYPE),1,0,'');
+            $this->pdf->Cell(34,6,iconv('UTF-8', 'cp874', $row->MACHINE_TYPE),1,0,'');
             $this->pdf->Ln();
           if ($i == $limit) {
             $limit = $limit+39;
@@ -71,11 +71,6 @@ class MachinePDFController extends Controller
           }
         }
     }
-    //end body ****************************************************************
-
-    // footer  ****************************************************************
-
-   //end footer  **************************************************************
 
       $this->pdf->Output();
 

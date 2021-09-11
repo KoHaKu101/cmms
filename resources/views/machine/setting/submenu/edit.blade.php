@@ -28,56 +28,54 @@
 				<div class="py-12">
 	        <div class="container">
 						<div class="row">
-                    <div class="col-md-8">
-        							<div class="card">
-        								<div class="card-header"> Edit </div>
-                        <div class="card-body">
-
-                          <form action="{{ url('machine/setting/submenu/update/'.$data_set->UNID) }}" method="POST">
-                            @csrf
-                            <div class="form-group">
-                          		<label for="SUBMENU_NAME">SUBMENU Thai</label>
-                          		<input type="text"  class="form-control" id="SUBMENU_NAME" name="SUBMENU_NAME" placeholder="SUBMENU Thai" value="{{ $data_set->SUBMENU_NAME }}">
-                              <input type="hidden" id="UNIDE" name="UNID"  value="{{ $data_set->UNID }}">
-															<input type="hidden" id="SUBUNID_REF" name="SUBUNID_REF"  value="{{ $data_set->SUBUNID_REF}}">
-                        		</div>
-														<div class="form-group">
-															<label for="SUBMENU_EN">SUBMENU English</label>
-															<input type="text"  class="form-control" id="SUBMENU_EN" name="SUBMENU_EN" placeholder="SUBMENU English" value="{{ $data_set->SUBMENU_EN }}">
-														</div>
-														<div class="form-group">
-															<label for="SUBMENU_INDEX">SUBMENU Index</label>
-															<input type="number" min="1" class="form-control" id="SUBMENU_INDEX" name="SUBMENU_INDEX" placeholder="SUBMENU Index" value="{{ $data_set->SUBMENU_INDEX }}">
-														</div>
-														<div class="form-group">
-															<label for="SUBMENU_STATUS">SUBMENU Status</label>
-															<input type="text"  class="form-control" id="SUBMENU_STATUS" name="SUBMENU_STATUS" placeholder="SUBMENU Status" value="{{ $data_set->SUBMENU_STATUS }}">
-														</div>
-														<div class="form-group">
-															<label for="SUBMENU_CLASS">SUBMENU Class</label>
-															<input type="text"  class="form-control" id="SUBMENU_CLASS" name="SUBMENU_CLASS" placeholder="SUBMENU Class" value="{{ $data_set->SUBMENU_CLASS }}">
-														</div>
-														<div class="form-group">
-															<label for="SUBMENU_LINK">SUBMENU Link</label>
-															<input type="text"  class="form-control" id="SUBMENU_LINK" name="SUBMENU_LINK" placeholder="SUBMENU Link" value="{{ $data_set->SUBMENU_LINK }}">
-														</div>
-                      			<div class="form-group">
-															<label for="SUBMENU_ICON">SUBMENU Icon</label>
-															<input type="text" class="form-control" id="SUBMENU_ICON" name="SUBMENU_ICON"  placeholder="SUBMENU Icon" value="{{ $data_set->SUBMENU_ICON }}">
-
-														</div>
-
-
-
-														<a href="{{ url()->previous() }}" class="btn btn-danger">Cancel</a>
-														<button tpye="submit" class="btn btn-success">Update</button>
-
-
-              						</form>
-
-												</div>
+              <div class="col-md-8">
+  							<div class="card">
+  								<div class="card-header"> Edit </div>
+                  <div class="card-body">
+                    <form action="{{ route('submenu.update',$data_set->UNID) }}" method="POST">
+                      @csrf
+                      <div class="form-group">
+                    		<label for="SUBMENU_NAME">SUBMENU Thai</label>
+                    		<input type="text"  class="form-control" id="SUBMENU_NAME" name="SUBMENU_NAME" placeholder="SUBMENU Thai" value="{{ $data_set->SUBMENU_NAME }}">
+												<input type="hidden" id="SUBUNID_REF" name="SUBUNID_REF"  value="{{ $data_set->SUBUNID_REF}}">
+                  		</div>
+											<div class="form-group">
+												<label for="SUBMENU_EN">SUBMENU English</label>
+												<input type="text"  class="form-control" id="SUBMENU_EN" name="SUBMENU_EN" placeholder="SUBMENU English" value="{{ $data_set->SUBMENU_EN }}">
 											</div>
-										</div>
+											<div class="form-group">
+												<label for="SUBMENU_INDEX">SUBMENU Index</label>
+												<input type="number" min="1" class="form-control" id="SUBMENU_INDEX" name="SUBMENU_INDEX" placeholder="SUBMENU Index" value="{{ $data_set->SUBMENU_INDEX }}">
+											</div>
+											<div class="form-group">
+												<label for="SUBMENU_STATUS">SUBMENU Status</label>
+												<input type="text"  class="form-control" id="SUBMENU_STATUS" name="SUBMENU_STATUS" placeholder="SUBMENU Status" value="{{ $data_set->SUBMENU_STATUS }}">
+											</div>
+											<div class="form-group">
+												<label for="SUBMENU_CLASS">SUBMENU Class</label>
+												<input type="text"  class="form-control" id="SUBMENU_CLASS" name="SUBMENU_CLASS" placeholder="SUBMENU Class" value="{{ $data_set->SUBMENU_CLASS }}">
+											</div>
+											<div class="form-group">
+												<label for="SUBMENU_LINK">SUBMENU Link</label>
+												<input type="text"  class="form-control" id="SUBMENU_LINK" name="SUBMENU_LINK" placeholder="SUBMENU Link" value="{{ $data_set->SUBMENU_LINK }}">
+											</div>
+                			<div class="form-group">
+												<label for="SUBMENU_ICON">SUBMENU Icon</label>
+												<input type="text" class="form-control" id="SUBMENU_ICON" name="SUBMENU_ICON"  placeholder="SUBMENU Icon" value="{{ $data_set->SUBMENU_ICON }}">
+
+											</div>
+
+
+
+											<a href="{{ url()->previous() }}" class="btn btn-danger">Cancel</a>
+											<button tpye="submit" class="btn btn-success">Update</button>
+
+
+        						</form>
+
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
   			</div>

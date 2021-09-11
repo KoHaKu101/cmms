@@ -86,7 +86,7 @@ class MachineController extends Controller
     $MACHINE_LINE       = $COOKIE_LINE;
     $MACHINE_RANK_CODE  = $COOKIE_MACHINE_RANK_CODE;
     $MACHINE_STATUS     = $COOKIE_MACHINE_STATUS;
-    $SEARCH             = $request->SEARCH ;
+    $SEARCH             = $request->SEARCH_MACHINE ;
       $machine = Machine::select('PLAN_LAST_DATE','REPAIR_LAST_DATE','MACHINE_LINE','UNID','MACHINE_CODE','MACHINE_RANK_CODE')
                         ->selectRaw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH,dbo.decode_utf8(MACHINE_TYPE) as MACHINE_TYPE_TH')
                         ->where(function ($query) use ($MACHINE_LINE) {

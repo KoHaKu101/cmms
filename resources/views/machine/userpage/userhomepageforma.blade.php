@@ -1,13 +1,9 @@
 @extends('masterlayout.masterlayout')
 @section('tittle','homepage')
 @section('css')
-	<link href={{ asset('/assets/fullcalendar/main.css') }} rel='stylesheet' />
-
-{{-- <link rel="stylesheet" href="{{ asset('assets/icofont/icofont.min.css') }}"> --}}
 @endsection
 {{-- ส่วนหัว --}}
 @section('Logoandnavbar')
-
 		{{-- @include('masterlayout.logomaster') --}}
 		{{--  @include('masterlayout.navbar.navbarmaster')  --}}
 
@@ -30,7 +26,6 @@
 			<div class="panel-header bg-gradient">
 				<div class="page-inner py-4 my-4">
 					<div class="card">
-
 						<div class="row">
 							<div class="col-md-6 text-black text-center">
 								<div class="card">
@@ -71,12 +66,5 @@
 
 {{-- ส่วนjava --}}
 @section('javascript')
-<script>
-	$(document).on('click','#reportpm',function(){
-		alert('1');
-		window.open('/machine/pdf/plan/planpm','PdfPlanPm','width=1000,height=1000,resizable=yes,top=100,left=100,menubar=yes,toolbar=yes,scroll=yes');
-	});
-</script>
-
 @stop
 {{-- ปิดส่วนjava --}}
