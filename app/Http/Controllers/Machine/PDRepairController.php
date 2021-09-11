@@ -528,6 +528,7 @@ class PDRepairController extends Controller
       ,'STATUS_NOTIFY'   => 9
       ,'STATUS'          => 1
       ,'PD_CHECK_STATUS' => 9
+      ,'STATUS_LINE_NOTIFY' => 9
       ,'WORK_STEP'       => ''
     ]);
 
