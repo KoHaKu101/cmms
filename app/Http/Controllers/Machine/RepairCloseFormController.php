@@ -550,12 +550,14 @@ class RepairCloseFormController extends Controller
     $MACHINE_REPORT_NO     = 'MRP' . $DATE_DOCNO->format('ym') . sprintf('-%04d', 1);
     $DATE_RESET_DOCNO      = Carbon::parse($DATA_MACHINEREPAIRREQ->CLOSE_DATE);
 
-    if ($DATA_MACHINEREPAIRREQ->CLOSE_DATE != NULL && $DATE_RESET_DOCNO->format('m') == Carbon::now()->format('m') ) {
+    if ($DATA_REPAIR_FIRST->MACHINE_REPORT_NO != '') {
+      $MACHINE_REPORT_NO = $DATA_REPAIR_FIRST->MACHINE_REPORT_NO != '' ? $DATA_REPAIR_FIRST->MACHINE_REPORT_NO : $MACHINE_REPORT_NO ;
+    }elseif ($DATA_MACHINEREPAIRREQ->CLOSE_DATE != NULL && $DATE_RESET_DOCNO->format('m') == Carbon::now()->format('m') ) {
         $EXPLOT = str_replace('MRP'.$DATE_RESET_DOCNO->addyears('543')->format('ym').'-','',$DATA_MACHINEREPAIRREQ->MACHINE_REPORT_NO)+1;
         $MACHINE_REPORT_NO = 'MRP' . $DATE_RESET_DOCNO->format('ym'). sprintf('-%04d', $EXPLOT);
     }
-
     $INSPECTION_NAME = $DATA_REPAIR_FIRST->INSPECTION_NAME;
+
     $DATA_REPAIR->update([
       'DOWNTIME'              =>  $DOWNTIME
       ,'TOTAL_COST_SPAREPART' => $TOTAL_COST_SPAREPART
