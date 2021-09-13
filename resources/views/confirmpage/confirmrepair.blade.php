@@ -20,7 +20,7 @@
 		}
 	});
 	</script>
-
+  <link href="{{asset('assets/css/select2.min.css')}}" rel="stylesheet" />
 	<!-- CSS Files -->
 	<link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
 	<link rel="stylesheet" href="{{ asset('assets/css/atlantis.min.css') }}">
@@ -29,23 +29,87 @@
 	<div class="wrapper sidebar_minimize">
     <div class="card">
       <div class="card-header bg-primary text-center text-white">
-        <h4>รับงาน</h4>
+        <h3>รับงาน</h3>
       </div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-6 ml-auto mr-auto">
-            <label>ผู้รับงาน</label>
-            <select class="form-control form-contron-sm col-md-8">
-              @for ($i=1; $i < 10; $i++)
-                <option>{{ $i }}</option>
-              @endfor
 
-            </select>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6 ml-auto mr-auto">
+              <table class="table table-bordered table-head-bg-info table-bordered-bd-info">
+                <thead>
+                  <tr>
+                    <th colspan="4">รายละเอียดแจ้งซ่อม</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td width="25%" style="background:#aab7c1;color:black;">MC-Code</td>
+                    <td>{{ $REPAIR->MACHINE_CODE }}</td>
+                    <td width="15%" style="background:#aab7c1;color:black;">LINE</td>
+                    <td width="18%">{{ $REPAIR->MACHINE_LINE}}</td>
+                  </tr>
+                  <tr>
+                    <td width="25%" style="background:#aab7c1;color:black;">MC-Name</td>
+                    <td colspan="3">SUSUKI</td>
+                  </tr>
+                  <tr>
+                    <td width="25%" style="background:#aab7c1;color:black;">อาการ</td>
+                    <td colspan="3">{{$REPAIR->MACHINE_NAME_TH}}</td>
+                  </tr>
+                  <tr>
+                    <td width="25%" style="background:#aab7c1;color:black;">พนักงานแจ้ง</td>
+                    <td >{{$REPAIR->EMP_NAME_TH}}</td>
+                    <td width="15%" style="background:#aab7c1;color:black;">ระดับ</td>
+                    <td width="18%">{{$REPAIR->PRIORITY == 9 ? 'เร่งด่วน' : 'ปกติ'}}</td>
+                  </tr>
+                  <tr>
+                    <td width="25%" style="background:#aab7c1;color:black;">เวลาแจ้งซ่อม</td>
+                    <td colspan="3">วันที่ : {{ date('d-m-Y',strtotime($REPAIR->DOC_DATE)) }} เวลา : {{$REPAIR->REPAIR_REQ_TIME}}</td>
+                  </tr>
+                  @if (isset($REPAIR->NOTE_RENEW))
+                    <tr>
+                      <td width="25%" style="background:#aab7c1;color:black;">แจ้งใหม่</td>
+                      <td colspan="3">{{$REPAIR->NOTE_RENEW}}</td>
+                    </tr>
+                  @endif
+
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-      </div>
-    </div>
+          <form action="{{ route('confirm.save') }}" method="post" enctype="multipart/form-data">
+            @csrf
+            <div class="row">
+              <div class="col-md-6 ml-auto mr-auto">
+                <input type="hidden" id="UNID" name="UNID" value="{{ $REPAIR->UNID}}">
+                <label>ผู้รับงาน</label>
+                <div class="row mt-2">
+                  <div class="col-8 col-md-8">
+                    @if (isset($REPAIR->INSPECTION_CODE))
+                      <input type="text" class="form-control form-control-sm" disabled value="{{ $REPAIR->INSPECTION_NAME_TH }}">
+                    @else
+                      <select class="form-control form-contron-sm " id="EMP_UNID" name="EMP_UNID" required>
+                          <option value>กรุณาเลือก</option>
+                        @foreach ($DATA_EMPNAME as $key => $row_emp)
+                          <option value="{{ $row_emp->UNID }}">
+                            {{ $row_emp->EMP_CODE.' : '.$row_emp->EMP_NAME_TH }}
+                          </option>
+                        @endforeach
+                      </select>
+                    @endif
 
+                  </div>
+                  @if (Session::get('closewindow') != true)
+                    <div class="col col-md-4 text-right">
+                      <button type="submit" class="btn btn-primary btn-sm "><i class="fas fa-save mr-1"></i> Save</button>
+                    </div>
+                  @endif
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
   </div>
 	<!--   Core JS Files   -->
 	<script type="text/javascript" src="{{ asset('/assets/js/core/jquery.3.2.1.min.js') }}"></script>
@@ -66,7 +130,25 @@
 	@include('/errorsweetalert/errormessed')
 
 	<script type="text/javascript" src="{{ asset('assets/js/atlantis.min.js') }}"></script>
+  <script src="{{ asset('assets/js/select2.min.js') }}"></script>
+
 		@include('sweetalert::alert')
+  <script>
+    $(document).ready(function(){
+      @if (Session::get('closewindow'))
+      Swal.fire({
+          icon:'{{ $ICON }}',
+          title: '{{$TEXT}}',
+          timer:'3000',
+        }).then(() => {
+          window.close();
+      });
+      @endif
+     $('#INSPECTION_NAME').select2({
+       width:'100%'
+     });
+   })
+  </script>
 
 </body>
 </html>

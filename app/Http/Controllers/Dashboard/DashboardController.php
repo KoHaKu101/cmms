@@ -267,19 +267,12 @@ class DashboardController extends Controller
     $datacount  = MachineRepairREQ::where('CLOSE_STATUS','9')->get()->count();
     return response()->json(['datarepair' => $datarepair,'datacount' => $datacount]);
   }
-  
+
 
   public function NotificationRepair(){
     $datarepairlist   = MachineRepairREQ::select('STATUS_NOTIFY','PRIORITY','MACHINE_CODE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME','DOC_DATE','DOC_NO')
                                         ->where('CLOSE_STATUS','=','9')->orderBy('DOC_DATE','DESC')->orderBy("REPAIR_REQ_TIME",'DESC')->orderBy('PRIORITY','ASC')->take(4)->get();
-    $last_data  = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->whereRaw('DOC_NO = (SELECT MAX(DOC_NO)FROM [PMCS_CMMS_REPAIR_REQ])')->first();
-    $data_count = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->whereRaw('DOC_NO = (SELECT MAX(DOC_NO)FROM [PMCS_CMMS_REPAIR_REQ])')->count();
-
-    $newrepair = $last_data->STATUS_NOTIFY == 9 ? true : false;
-    $UNID      = $last_data->STATUS_NOTIFY == 9 ? $last_data->UNID : '';
-    $NUMBER    = $data_count;
-    $html      = '';
-
+    $html       = '';
     foreach ($datarepairlist as $key => $row) {
       $TEXT                  = $row->MACHINE_STATUS == 1 ? 'หยุดทำงาน' : 'ทำงานปกติ' ;
       $COLOR_PRIORITY        = $row->PRIORITY       == 9 ? 'bg-danger' : 'bg-warning';
@@ -300,20 +293,21 @@ class DashboardController extends Controller
                     $html.='<img src="'.asset('assets/css/flame.png').'" class="mt--2" width="20px" height="20px">';
                   }
                     $html.= $TEXT.''.$NEW_IMG.'';
-
                   $html.= '</span></h4>
                 <span class="text-muted" >' .$row->REPAIR_SUBSELECT_NAME  .'</span>
               </div>
               <div class="float-right pt-1 col-md-6 col-lg-3">
                 <h5 class="text-muted">'.$row->DOC_DATE .'</h5>
-
               </div>
             </div>
             <hr>
             </a>
             ';
     }
-    return Response()->json(['html'=>$html,'newrepair' => $newrepair,'UNID' => $UNID,'number' => $NUMBER]);
+    $last_data  = MachineRepairREQ::select('*')->where('STATUS_NOTIFY','=',9)->get();
+    $NUMBER     = MachineRepairREQ::where('CLOSE_STATUS','=',9)->count();
+    $newrepair  = $last_data == '' ? true : false;
+    return Response()->json(['html'=>$html,'newrepair' => $newrepair,'number' => $NUMBER,'datarepair'=>$last_data]);
   }
   public function UserHomePage(Request $request){
     $ROLE = $request->role;

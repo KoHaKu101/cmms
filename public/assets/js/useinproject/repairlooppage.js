@@ -1,10 +1,21 @@
-
 $('#startbtn').on('click',function(){
-  const  music = document.getElementById("music");
-  var playedPromise = music.play();
+	const  music = document.getElementById("music");
+	music.play();
 });
+function loaddata_table(){
+  $.ajax({
+         type:'GET',
+         url: url,
+         data: data,
+         datatype: 'json',
+         success:function(data){
+           $('#result').html(data.html);
+           $('#table_style').html(data.html_style);
+         }
+       });
+     }
 $(document).ready(function(){
-var title = document.title;
+    var title = document.title;
     function changeTitle(number) {
         var number = number
         var newTitle = title;
@@ -13,20 +24,19 @@ var title = document.title;
         }
         document.title = newTitle;
     }
-var loaddata_table_all = function loaddata_table(){
+    var loaddata_table_all = function loaddata_table(){
       $.ajax({
              type:'GET',
-             url: urldashboard,
+             url: url,
+             data: data,
              datatype: 'json',
              success:function(data){
-               if ($('#NEW_REPAIR').length == '1') {
-                 $('#NEW_REPAIR').html(data.html);
-               }
-               notifityicon(data.datarepair);
+               $('#result').html(data.html);
+               $('#table_style').html(data.html_style);
                changeTitle(data.number);
+               notifityicon(data.datarepair);
                var datacount = '<span class="notification">' +data.number+ '</span>';
                $("#count").html(datacount);
-
                if (data.newrepair) {
                  $('#startbtn').trigger('click');
                     Swal.fire({
@@ -40,7 +50,7 @@ var loaddata_table_all = function loaddata_table(){
                       if (result.isConfirmed) {
                         $.ajax({
                           type:'GET',
-                           url: urlnotify,
+                           url: url_readenotify,
                            data: {STATUS:'1'
                                   ,UNID:data.UNID},
                            datatype: 'json',
@@ -51,7 +61,8 @@ var loaddata_table_all = function loaddata_table(){
              }
            });
          }
-      setInterval(loaddata_table_all,10000);
+    setInterval(loaddata_table_all,10000);
+  loaddata_table();
 });
 function notifityicon(datarepair){
   if (datarepair != null) {

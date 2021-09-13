@@ -79,20 +79,23 @@
 	<script type="text/javascript" src="{{ asset('/assets/js/plugin/datatables/datatables.min.js') }}"></script>
 
 	<script type="text/javascript" src="{{ asset('/assets/js/plugin/sweetalert/sweetalert2.js') }}"></script>
-	@can('isAdminandMA')
-		<script type="text/javascript" src="{{ asset('assets/js/useinproject/dashboard/notifity.js') }}"></script>
-		<script>
-			$(document).ready(function(){
-				var url = "{{route('machine.config.send')}}";
-				$.ajax({
-					 type: "GET",
-					 url: url,
-					});
-			})
-		</script>
-	@else
-		{{--  --}}
-	@endcan
+	@if (!isset($CHECK_URL))
+		@can('isAdminandMA')
+			<script>
+			var urldashboard = "{{ route('dashboard.notificationrepair') }}";
+			var urlnotify = "{{ route('repair.readnotify')}}";
+				$(document).ready(function(){
+					var url = "{{route('machine.config.send')}}";
+					$.ajax({
+						 type: "GET",
+						 url: url,
+						});
+				})
+			</script>
+			<script src="{{ asset('/assets/js/useinproject/dashboard/looprepair.js') }}"></script>
+		@endcan
+	@endif
+
 
 	@include('/errorsweetalert/errormessed')
 

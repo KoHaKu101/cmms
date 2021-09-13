@@ -32,6 +32,7 @@
 	@php
 	$months=array(0 =>'ALL',1 => "มกราคม",2 => "กุมภาพันธ์",3 =>"มีนาคม",4 => "เมษายน",5 =>"พฤษภาคม",6 =>"มิถุนายน",
 									 7 =>"กรกฎาคม",8 =>"สิงหาคม",9 =>"กันยายน",10 =>"ตุลาคม",11 => "พฤศจิกายน",12 =>"ธันวาคม");
+	$CHECK_URL = route('repair.list');
 
 	@endphp
 	<audio id="music" src="{{asset('assets/sound/mixkit-arabian-mystery-harp-notification-2489.wav')}}" ></audio>
@@ -304,101 +305,35 @@
 </script>
 {{-- common script--}}
 <script>
-function styletable(table_style){
-	if (table_style == '1') {
-		$('#table_style').attr('hidden',false);
-		$('#list_table').attr('hidden',true);
-		 setcookie('table_style','1');
-	}else {
-		$('#table_style').attr('hidden',true);
-		$('#list_table').attr('hidden',false);
-		 setcookie('table_style','2');
+	function styletable(table_style){
+		if (table_style == '1') {
+			$('#table_style').attr('hidden',false);
+			$('#list_table').attr('hidden',true);
+			 setcookie('table_style','1');
+		}else {
+			$('#table_style').attr('hidden',true);
+			$('#list_table').attr('hidden',false);
+			 setcookie('table_style','2');
+		}
 	}
-}
-function sweetalertnoinput(){
-	Swal.fire({
-	  icon: 'error',
-	  title: 'ไม่สามารถไปขั้นตอนถัดไปได้',
-	  text: 'กรุณากรอกข้อมูลให้ครบถ้วน!',
-		timer: 1500
-	});
-}
+	function sweetalertnoinput(){
+		Swal.fire({
+		  icon: 'error',
+		  title: 'ไม่สามารถไปขั้นตอนถัดไปได้',
+		  text: 'กรุณากรอกข้อมูลให้ครบถ้วน!',
+			timer: 1500
+		});
+	}
 </script>
-{{-- Loop function --}}
 <script>
-
-$('#startbtn').on('click',function(){
-	const  music = document.getElementById("music");
-	music.play();
-});
 	var page = $('#PAGE').val();
 	var url = "{{ route('repair.fetchdata') }}?page="+page;
+	var url_readenotify = "{{ route('repair.readnotify')}}";
 	var data = $('#FRM_SEARCH').serialize();
-	// 1. Loop page and alert new repair
-	$(document).ready(function(){
-			var title = document.title;
-			function changeTitle(number) {
-					var number = number
-					var newTitle = title;
-					if (number > '0') {
-						var newTitle = '(' + number + ') ' + title;
-					}
-			    document.title = newTitle;
-			}
-			var loaddata_table_all = function loaddata_table(){
-				$.ajax({
-							 type:'GET',
-							 url: url,
-							 data: data,
-							 datatype: 'json',
-							 success:function(data){
-								 $('#result').html(data.html);
-								 $('#table_style').html(data.html_style);
-								 changeTitle('0');
-								 if (data.newrepair) {
-									 changeTitle(data.number);
-									 $('#startbtn').trigger('click');
-
-									var url = "{{ route('repair.readnotify')}}";
-											Swal.fire({
-												icon : 'error',
-												title: '!! มีรายการแจ้งซ่อมใหม่ !!',
-												showCloseButton: false,
-												showCancelButton: false,
-												showconfirmButton: true,
-												confirmButtonText: 'ตกลง',
-											}).then((result) => {
-												if (result.isConfirmed) {
-													$.ajax({
-														type:'GET',
-														 url: url,
-														 data: {STATUS:'1'
-																		,UNID:data.UNID},
-														 datatype: 'json',
-													});
-												}
-											})
-								 }
-							 }
-						 });
-					 }
-			setInterval(loaddata_table_all,10000);
-		loaddata_table();
-	});
-	// 2. Loop page
-	function loaddata_table(){
-		$.ajax({
-					 type:'GET',
-					 url: url,
-					 data: data,
-					 datatype: 'json',
-					 success:function(data){
-						 $('#result').html(data.html);
-						 $('#table_style').html(data.html_style);
-					 }
-				 });
-			 }
-	// 3. loop table worker in step close repair
+</script>
+<script src="{{ asset('assets/js/useinproject/repairlooppage.js') }}"></script>
+<script>
+	// 1. loop table worker in step close repair
 	function loop_tabel_worker(array_emp_unid){
 	 var url = "{{ route('repair.addtableworker') }}";
 	 	$.ajax({
@@ -414,7 +349,7 @@ $('#startbtn').on('click',function(){
 	 			 }
 	 		 });
 	 };
-	// 4. Loop table sparepart in step close repair
+	// 2. Loop table sparepart in step close repair
 	function loop_tabel_sparepart(unid,total,type,cost){
 	 	//********************* input array ***********************
 	 	arr_spare_total.push({unid:unid,total:total});
@@ -443,14 +378,14 @@ $('#startbtn').on('click',function(){
 	 			 }
 	 		 });
 	 	 };
-	// 5. Loop removeclass active
+	// 3. Loop removeclass active
 	function loop_removeclass(){
 		for (var i = 1; i < 6; i++) {
 			$('.WORK_STEP_'+i).removeClass('badge-primary badge-success fw-bold');
 			$('#WORK_STEP_'+i).removeClass('active show');
 		}
 	}
-	// 6. Loop add class step active
+	// 4. Loop add class step active
 	function loop_addclass(step_number){
 		for (var i = 1; i < step_number ; i++) {
 			$('.WORK_STEP_'+i).addClass('badge-success fw-bold');

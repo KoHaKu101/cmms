@@ -84,6 +84,10 @@ if (Gate::allows('isManager_Ma')) {
       return redirect('/dashboard');
   })->middleware('auth');
 }
+Route::get('500',function(){
+  alert('กรุณาลองใหม่');
+  return redirect()->back();
+});
 Route::middleware(['auth:sanctum', 'verified']);
 Route::get('/mail/send/',[MailSend::class,'mailsend'])->name('mail.send');
 
@@ -122,6 +126,8 @@ Route::middleware('can:isAdminandManager')->group(function () {
   //*****************************************  CalendarController  *********************************************************
    Route::get('/machine/calendar'                      ,[CalendarController::class,'Index']);
    Route::get('/confirm/repair'                        ,[ConfirmPageController::class,'Repair'])           ->name('confirm.repair');
+   Route::post('/confirm/save'                         ,[ConfirmPageController::class,'SaveConfirm'])             ->name('confirm.save');
+
 });
 
 

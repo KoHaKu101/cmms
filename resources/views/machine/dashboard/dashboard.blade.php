@@ -418,19 +418,7 @@
 		}
 	});
 </script>
-<script>
-	{{--  Use In looprepair--}}
-	var urldashboard = "{{ route('dashboard.notificationrepair') }}";
-	var urlnotify = "{{ route('repair.readnotify')}}";
-	{{--  Use In pmplanchart--}}
-</script>
 
-@can('isAdmin')
-	<script src="{{ asset('/assets/js/useinproject/dashboard/looprepair.js') }}"></script>
-@elsecan('isManager_Ma')
-	<script src="{{ asset('/assets/js/useinproject/dashboard/looprepair.js') }}"></script>
-@elsecan('isManager_Pd')
-@endcan
 {{-- PLan PM ในแต่ละเดือน --}}
 <script src="{{ asset('/assets/js/useinproject/dashboard/pmplanchart.js') }}"></script>
 <script src="{{ asset('/assets/js/useinproject/dashboard/pdmplanchart.js') }}"></script>

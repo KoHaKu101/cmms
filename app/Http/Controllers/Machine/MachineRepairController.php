@@ -12,6 +12,8 @@ use Auth;
 use Cookie;
 use Gate;
 use File;
+use App\Exceptions\InvalidOrderException;
+
 //******************** model ***********************
 use App\Models\MachineAddTable\SelectMainRepair;
 use App\Models\MachineAddTable\SelectSubRepair;
@@ -171,7 +173,6 @@ class MachineRepairController extends Controller
       $INSPECTION_CODE  = $row->INSPECTION_CODE;
       $CLOSE_STATUS     = $row->CLOSE_STATUS;
       $PD_CHECK_STATUS  = $row->PD_CHECK_STATUS;
-
       $REC_WORK_STATUS  = isset($INSPECTION_CODE) ? '<i class="fas fa-wrench fa-lg mx-1"></i>'.$row->INSPECTION_NAME_TH : 'รอรับงาน';
       $BTN_COLOR_STATUS = $PD_CHECK_STATUS == '1' ? 'btn-success' : ($CLOSE_STATUS == '1' ? 'btn-primary': (isset($INSPECTION_CODE) ? 'btn-warning' : 'btn-danger text-center'));
       if ($PD_CHECK_STATUS == '1') {
@@ -204,7 +205,6 @@ class MachineRepairController extends Controller
     foreach ($dataset->items($page) as $index => $sub_row) {
       $INSPECTION_CODE= $sub_row->INSPECTION_CODE;
       $SUBROW_UNID    = $sub_row->UNID;
-
       $EMP_NAME       = EMPName::select('EMP_ICON')->where('EMP_CODE','=',$INSPECTION_CODE)->first();
       $BG_COLOR    		= $INSPECTION_CODE ? 'bg-warning text-white' : 'bg-danger text-white';
       $IMG_PRIORITY		= $sub_row->PRIORITY == '9' ? '<img src="'.asset('assets/css/flame.png').'" class="mt--2" width="20px" height="20px">' : '';
@@ -262,7 +262,6 @@ class MachineRepairController extends Controller
                   <div class="status" >'.$sub_row->REPAIR_SUBSELECT_NAME.'</div>
                    '.$HTML_STATUS.'
                 </div>
-
               </div>
             </div>
             <div class="row ">
@@ -275,18 +274,10 @@ class MachineRepairController extends Controller
       </div>';
       }
 
-    $last_data  = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->where('STATUS_NOTIFY','=',9)->get();
-    $data_count = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->whereRaw('DOC_NO = (SELECT MAX(DOC_NO)FROM [PMCS_CMMS_REPAIR_REQ])')->count();
-    $newrepair = false;
-    $UNID = '';
-    if (isset($last_data[0]->STATUS_NOTIFY) && $last_data[0]->STATUS_NOTIFY == 9) {
-      // $newrepair  = $last_data[0]->STATUS_NOTIFY == 9 ? true : false;
-      // $UNID       = $last_data[0]->STATUS_NOTIFY == 9 ? $last_data[0]->UNID : '';
-      $newrepair  = true;
-      $UNID       = $last_data[0]->UNID;
-    }
-    $NUMBER     = $data_count;
-    return Response()->json(['html'=>$html,'html_style' => $html_style,'newrepair' => $newrepair,'UNID' => $UNID,'number' => $NUMBER]);
+    $last_data  = MachineRepairREQ::select('*')->where('STATUS_NOTIFY','=',9)->get();
+    $newrepair  = $last_data == '' ? true : false;
+    $NUMBER     = MachineRepairREQ::where('CLOSE_STATUS','=',9)->count();
+    return Response()->json(['html'=>$html,'html_style' => $html_style,'newrepair' => $newrepair,'number' => $NUMBER,'datarepair'=>$last_data]);
   }
   public function PrepareSearch(Request $request){
     $qrcode_text = '';
@@ -489,8 +480,7 @@ class MachineRepairController extends Controller
           }
   public function ReadNotify(Request $request){
     $STATUS = $request->STATUS;
-    $UNID   = $request->UNID;
-    MachineRepairREQ::where('UNID','=',$UNID)->update([
+    MachineRepairREQ::where('STATUS_NOTIFY','=',9)->update([
       'STATUS_NOTIFY' => $STATUS,
     ]);
   }
@@ -509,22 +499,25 @@ class MachineRepairController extends Controller
       $DATA_REPAIR  = MachineRepairREQ::select('UNID','MACHINE_CODE','MACHINE_LINE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME')
                                       ->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
                                       ->where('STATUS_LINE_NOTIFY','=',9)->first();
-          $MACHINE_LINE = $DATA_REPAIR->MACHINE_LINE;
-          $MACHINE_CODE = $DATA_REPAIR->MACHINE_CODE;
-          $MACHINE_NAME = $DATA_REPAIR->MACHINE_NAME_TH;
+          $MACHINE_LINE   = $DATA_REPAIR->MACHINE_LINE;
+          $MACHINE_CODE   = $DATA_REPAIR->MACHINE_CODE;
+          $MACHINE_NAME   = $DATA_REPAIR->MACHINE_NAME_TH;
           $MACHINE_STATUS = $DATA_REPAIR->MACHINE_STATUS == '1' ? 'หยุดการทำงาน' : 'ทำงานต่อได้';
           $REPAIR_SUBSELECT_NAME  = $DATA_REPAIR->REPAIR_SUBSELECT_NAME;
-          $UNID = $DATA_REPAIR->UNID;
-          $MESSEN = "\n".'Line : '.$MACHINE_LINE;
-          $MESSEN .="\n".'MC-CODE : '.$MACHINE_CODE;
+          $UNID    = $DATA_REPAIR->UNID;
+          $MESSEN  = "\n".'Line : '.$MACHINE_LINE;
+          $MESSEN .= "\n".'MC-CODE : '.$MACHINE_CODE;
           $MESSEN .= "\n".'MC-NAME : '.$MACHINE_NAME;
           $MESSEN .= "\n".'อาการเสีย : '.$REPAIR_SUBSELECT_NAME;
           $MESSEN .= "\n".'สถานะ : '.$MACHINE_STATUS;
-          $MESSEN .= "\n".'รับงาน :'.route('confirm.repair');
+          $MESSEN .= "\n".'รับงาน :'.route('confirm.repair').'?REPAIR_UNID='.$UNID;
           if (Line::send($MESSEN)) {
           MachineRepairREQ::where('UNID','=',$UNID)->update([
             'STATUS_LINE_NOTIFY' => 1,
           ]);
+        }else {
+          $MESSEN = 'มีรายการแจ้งซ่อมมาใหม่';
+          Line::send($MESSEN);
         }
 
     }
