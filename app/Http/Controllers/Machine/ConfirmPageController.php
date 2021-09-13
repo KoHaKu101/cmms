@@ -39,7 +39,7 @@ class ConfirmPageController extends Controller
                                     ->where('UNID','=',$UNID)->first();
     $DATA_EMPNAME = EMPName::select('UNID','EMP_CODE')->selectraw("dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH")
                             ->where('EMP_STATUS','=','9')->orderBy('EMP_CODE')->get();
-    if (isset($REPAIR->INSPECTION_CODE)) {
+    if (isset($REPAIR->INSPECTION_CODE) && $REPAIR->INSPECTION_CODE != '') {
       $ICON = $request->STATUS == 'SUCCESS' ? 'success'   : 'warning';
       $TEXT = $request->STATUS == 'SUCCESS' ? 'บันทึกสำเร็จ' : 'มีผู้รับงานแล้ว';
       $request->session()->put('closewindow',true);

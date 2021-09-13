@@ -485,20 +485,24 @@ class MachineRepairController extends Controller
     ]);
   }
 
-  public function LineNotify(){
-
+  public function LineNotify($UNID_REPAIR = null){
     $DATA_MAIL = MailSetup::select('*')->first();
     if (isset($DATA_MAIL->TOKEN_LINENOTIFY)) {
       $existing = config('line-notify');
       $new =array_merge(
           $existing, [
           'access_token' => $DATA_MAIL->TOKEN_LINENOTIFY,
-
           ]);
       config(['line-notify'=>$new]);
-      $DATA_REPAIR  = MachineRepairREQ::select('UNID','MACHINE_CODE','MACHINE_LINE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME')
-                                      ->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
-                                      ->where('STATUS_LINE_NOTIFY','=',9)->first();
+      if ($UNID_REPAIR != null) {
+        $DATA_REPAIR  = MachineRepairREQ::select('UNID','MACHINE_CODE','MACHINE_LINE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME')
+                                        ->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
+                                        ->where('UNID','=',$UNID_REPAIR)->first();
+      }else {
+        $DATA_REPAIR  = MachineRepairREQ::select('UNID','MACHINE_CODE','MACHINE_LINE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME')
+                                        ->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
+                                        ->where('STATUS_LINE_NOTIFY','=',9)->first();
+      }
           $MACHINE_LINE   = $DATA_REPAIR->MACHINE_LINE;
           $MACHINE_CODE   = $DATA_REPAIR->MACHINE_CODE;
           $MACHINE_NAME   = $DATA_REPAIR->MACHINE_NAME_TH;

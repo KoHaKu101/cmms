@@ -85,7 +85,7 @@
                 <label>ผู้รับงาน</label>
                 <div class="row mt-2">
                   <div class="col-8 col-md-8">
-                    @if (isset($REPAIR->INSPECTION_CODE))
+                    @if (isset($REPAIR->INSPECTION_CODE) && $REPAIR->INSPECTION_CODE != '')
                       <input type="text" class="form-control form-control-sm" disabled value="{{ $REPAIR->INSPECTION_NAME_TH }}">
                     @else
                       <select class="form-control form-contron-sm " id="EMP_UNID" name="EMP_UNID" required>

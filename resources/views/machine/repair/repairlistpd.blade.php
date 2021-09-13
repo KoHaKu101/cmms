@@ -31,6 +31,7 @@
 	@php
 	$months=array(0 =>'ALL',1 => "มกราคม",2 => "กุมภาพันธ์",3 =>"มีนาคม",4 => "เมษายน",5 =>"พฤษภาคม",6 =>"มิถุนายน",
 									 7 =>"กรกฎาคม",8 =>"สิงหาคม",9 =>"กันยายน",10 =>"ตุลาคม",11 => "พฤศจิกายน",12 =>"ธันวาคม");
+	$CHECK_URL = route('pd.repairlist');
 
 	@endphp
 		<audio id="music" src="{{asset('assets/sound/mixkit-arabian-mystery-harp-notification-2489.wav')}}" ></audio>
@@ -135,9 +136,9 @@
 										<div class="row" id="table_style" {{ Cookie::get('table_style_pd') == '1' ? '' : 'hidden'}} >
  		                  @foreach ($dataset as $key => $row)
  												@php
- 													$BG_COLOR    		= $row->INSPECTION_CODE ? 'bg-warning text-white' : 'bg-danger text-white';
+ 													$BG_COLOR    		= $row->INSPECTION_CODE != '' ? 'bg-warning text-white' : 'bg-danger text-white';
  													$IMG_PRIORITY		= $row->PRIORITY == '9' ? '<img src="'.asset('assets/css/flame.png').'" class="mt--2" width="20px" height="20px">' : '';
- 													$WORK_STATUS 		= isset($row->INSPECTION_CODE) ? $array_EMP[$row->INSPECTION_CODE] : 'รอรับงาน';
+ 													$WORK_STATUS 		= $row->INSPECTION_CODE != '' ? $array_EMP[$row->INSPECTION_CODE] : 'รอรับงาน';
  													$TEXT_STATUS    = $row->PD_CHECK_STATUS == '1' ? 'จัดเก็บเอกสารเรียบร้อย' : ($row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ' : (isset($row->INSPECTION_CODE) ? 'กำลังดำเนินการ' : 'รอรับงาน' ));
  													$IMG         	  = isset($array_IMG[$row->INSPECTION_CODE]) ? asset('image/emp/'.$array_IMG[$row->INSPECTION_CODE]) : asset('../assets/img/noemp.png');
  													$DATE_DIFF   	  = $row->REC_WORK_DATE != '1900-01-01 00:00:00.000'? 'รับเมื่อ:'.Carbon\Carbon::parse($row->REC_WORK_DATE)->diffForHumans() : 'แจ้งเมื่อ:'.Carbon\Carbon::parse($row->CREATE_TIME)->diffForHumans();
@@ -340,85 +341,14 @@ function styletable(table_style){
 </script>
 {{-- function loop --}}
 <script>
-
-$(document).ready(function(){
-
-	$('#startbtn').on('click',function(){
-		const  music = document.getElementById("music");
-		music.play();
-	});
-		var title = document.title;
-		function changeTitle(number) {
-				var number = number
-				var newTitle = title;
-				if (number > '0') {
-					var newTitle = '(' + number + ') ' + title;
-				}
-				document.title = newTitle;
-		}
-		var loaddata_table_all = function loopdata_table(){
-			var page = $('#PAGE').val();
-			var url = "{{ route('pd.fetchdata') }}?page="+page;
-			var data = $('#FRM_SEARCH').serialize();
-			$.ajax({
-						 type:'GET',
-						 url: url,
-						 data: data,
-						 datatype: 'json',
-						 success:function(data){
-							 $('#result').html(data.html);
-							 $('#table_style').html(data.html_style);
-							 changeTitle('0');
-							 if (data.newrepair) {
-								 changeTitle(data.number);
-								 $('#startbtn').trigger('click');
-								var url = "{{ route('repair.readnotify.pd')}}";
-									  Swal.fire({
-											icon : 'error',
-									    title: '!! มีรายการแจ้งซ่อมรอยืนยัน !!',
-											showCloseButton: false,
-            					showCancelButton: false,
-											showconfirmButton: true,
-										  confirmButtonText: 'ตกลง',
-									  }).then((result) => {
-										  if (result.isConfirmed) {
-										    $.ajax({
-													type:'GET',
-							 						 url: url,
-							 						 data: {STATUS:'1'
-												 					,UNID:data.UNID},
-							 						 datatype: 'json',
-												});
-										  }
-										})
-							 }
-						 }
-					 });
-				 }
-	setInterval(loaddata_table_all,10000);
-	loopdata_table();
-});
-
-function loopdata_table(){
 	var page = $('#PAGE').val();
 	var url = "{{ route('pd.fetchdata') }}?page="+page;
 	var data = $('#FRM_SEARCH').serialize();
-
-	$.ajax({
-				 type:'GET',
-				 url: url,
-				 data: data,
-				 datatype: 'json',
-				 success:function(data){
-					 $('#result').html(data.html);
-					 $('#table_style').html(data.html_style);
-				 }
-			 });
-		 }
+	var url_confirmpd = "{{ route('repair.readnotify.pd')}}";
 </script>
+<script src="{{ asset('assets/js/useinproject/pdlooppage.js') }}"></script>
 {{-- function common  --}}
 <script>
-
 	function ConFirmForm(thisdata){
 		$("#overlayinpage").fadeIn(300);　
 		var repair_unid = $(thisdata).data('unid');

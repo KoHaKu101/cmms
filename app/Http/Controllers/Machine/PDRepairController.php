@@ -25,6 +25,8 @@ use App\Models\Machine\History;
 //************** Package form github ***************
 use App\Exports\MachineExport;
 use Maatwebsite\Excel\Facades\Excel;
+//*************** Controller ************************
+use App\Http\Controllers\Machine\MachineRepairController;
 
 class PDRepairController extends Controller
 {
@@ -275,7 +277,6 @@ class PDRepairController extends Controller
                     <div class="status" >'.$sub_row->REPAIR_SUBSELECT_NAME.'</div>
                      '.$HTML_STATUS.'
                   </div>
-
                 </div>
               </div>
               <div class="row ">
@@ -288,8 +289,7 @@ class PDRepairController extends Controller
         </div>';
         }
         $last_data = MachineRepairREQ::selectraw('UNID,STATUS')->where('STATUS','=',9)->first();
-        $data_count = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->whereRaw('DOC_NO = (SELECT MAX(DOC_NO)FROM [PMCS_CMMS_REPAIR_REQ])')->count();
-
+        $data_count = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->where('STATUS','=',9)->count();
         $newrepair = isset($last_data->STATUS) ? true : false;
         $UNID      = isset($last_data->STATUS) ? $last_data->UNID : '';
         $NUMBER    = $data_count;
@@ -502,8 +502,7 @@ class PDRepairController extends Controller
     }
   public function ReadNotify(Request $request){
     $STATUS = $request->STATUS;
-    $UNID   = $request->UNID;
-    MachineRepairREQ::where('UNID','=',$UNID)->update([
+    MachineRepairREQ::where('STATUS','=',9)->update([
      'STATUS' => $STATUS,
     ]);
   }
@@ -523,14 +522,17 @@ class PDRepairController extends Controller
   public function Renew(Request $request){
     $UNID = $request->REPAIR_UNID;
     MachineRepairREQ::where('UNID','=',$UNID)->update([
-      'CLOSE_BY'        => ''
+      'CLOSE_BY'          => ''
       ,'CLOSE_STATUS'    => 9
       ,'STATUS_NOTIFY'   => 9
       ,'STATUS'          => 1
       ,'PD_CHECK_STATUS' => 9
       ,'STATUS_LINE_NOTIFY' => 9
       ,'WORK_STEP'       => ''
+      ,'INSPECTION_NAME' => ''
+      ,'INSPECTION_CODE' => ''
     ]);
-
+    $REPAIR_CONTROLLER = new MachineRepairController;
+    $REPAIR_CONTROLLER->LineNotify($UNID);
   }
 }
