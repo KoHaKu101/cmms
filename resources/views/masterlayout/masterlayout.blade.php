@@ -90,7 +90,6 @@
 					});
 			})
 		</script>
-
 	@else
 		{{--  --}}
 	@endcan

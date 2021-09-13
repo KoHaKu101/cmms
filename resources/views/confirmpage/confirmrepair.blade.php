@@ -1,18 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 {{-- <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml"><head> --}}
-
 <head>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta http-equiv="Pragma" content="no-cache">
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8 ; charset=iso8859">
-	@yield('meta')
 	<title>{{config('app.name')}}</title>
 	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-
 	<link rel="icon" href="{{asset ('assets/img/icon.ico') }}" type="image/x-icon"/>
-
 	<!-- Fonts and icons -->
 	<script src="{{ asset ('/assets/js/plugin/webfont/webfont.min.js') }}"></script>
 	<script>
@@ -28,42 +24,29 @@
 	<!-- CSS Files -->
 	<link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
 	<link rel="stylesheet" href="{{ asset('assets/css/atlantis.min.css') }}">
-
-  @yield('css')
 </head>
-
 <body>
-
 	<div class="wrapper sidebar_minimize">
-		@if ($errors->count() > 0)
-			<div id="Errorsystem" style="display:none;" class="alert alert-danger">
-				@foreach ($errors->all() as $error)
-						{{ $error }}<br/>
-				@endforeach
-			</div>
-		@endif
-		<div class="main-header">
+    <div class="card">
+      <div class="card-header bg-primary text-center text-white">
+        <h4>รับงาน</h4>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6 ml-auto mr-auto">
+            <label>ผู้รับงาน</label>
+            <select class="form-control form-contron-sm col-md-8">
+              @for ($i=1; $i < 10; $i++)
+                <option>{{ $i }}</option>
+              @endfor
 
-			@can('isAdminandManager')
-				@include('masterlayout.logomaster')
-				@include('masterlayout.navbar.navbarmaster')
-			@else
-				@include('masterlayout.navbar.navbarmasterforuser')
-			@endcan
-			@yield('Logoandnavbar')
-
-		</div>
-		@yield('sidebar')
-		@can('isAdminandManager')
-			@include('masterlayout.sidebar.sidebarmaster')
-	  @else
-	  @endcan
-    <div class="main-panel">
-    @yield('contentandfooter')
-
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
 
-	</div>
+  </div>
 	<!--   Core JS Files   -->
 	<script type="text/javascript" src="{{ asset('/assets/js/core/jquery.3.2.1.min.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('/assets/js/core/popper.min.js') }}"></script>
@@ -79,29 +62,11 @@
 	<script type="text/javascript" src="{{ asset('/assets/js/plugin/datatables/datatables.min.js') }}"></script>
 
 	<script type="text/javascript" src="{{ asset('/assets/js/plugin/sweetalert/sweetalert2.js') }}"></script>
-	@can('isAdminandMA')
-		<script type="text/javascript" src="{{ asset('assets/js/useinproject/dashboard/notifity.js') }}"></script>
-		<script>
-			$(document).ready(function(){
-				var url = "{{route('machine.config.send')}}";
-				$.ajax({
-					 type: "GET",
-					 url: url,
-					});
-			})
-		</script>
-
-	@else
-		{{--  --}}
-	@endcan
 
 	@include('/errorsweetalert/errormessed')
 
-
 	<script type="text/javascript" src="{{ asset('assets/js/atlantis.min.js') }}"></script>
 		@include('sweetalert::alert')
-
-@yield('javascript')
 
 </body>
 </html>

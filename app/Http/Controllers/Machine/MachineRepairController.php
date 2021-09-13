@@ -509,7 +509,6 @@ class MachineRepairController extends Controller
       $DATA_REPAIR  = MachineRepairREQ::select('UNID','MACHINE_CODE','MACHINE_LINE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME')
                                       ->selectraw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
                                       ->where('STATUS_LINE_NOTIFY','=',9)->first();
-
           $MACHINE_LINE = $DATA_REPAIR->MACHINE_LINE;
           $MACHINE_CODE = $DATA_REPAIR->MACHINE_CODE;
           $MACHINE_NAME = $DATA_REPAIR->MACHINE_NAME_TH;
@@ -521,7 +520,7 @@ class MachineRepairController extends Controller
           $MESSEN .= "\n".'MC-NAME : '.$MACHINE_NAME;
           $MESSEN .= "\n".'อาการเสีย : '.$REPAIR_SUBSELECT_NAME;
           $MESSEN .= "\n".'สถานะ : '.$MACHINE_STATUS;
-          $MESSEN .= "\n".'รับงาน :'route('confirm.repair');
+          $MESSEN .= "\n".'รับงาน :'.route('confirm.repair');
           if (Line::send($MESSEN)) {
           MachineRepairREQ::where('UNID','=',$UNID)->update([
             'STATUS_LINE_NOTIFY' => 1,
