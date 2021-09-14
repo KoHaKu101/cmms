@@ -20,6 +20,7 @@ class DashboardController extends Controller
 
   }
   public function Dashboard(){
+    
     $machine_all        = Machine::where('MACHINE_CHECK','!=','4')->count();
     $machine_ready      = Machine::where('MACHINE_CHECK','=','2')->count();
     $machine_wait       = Machine::whereNotIn('MACHINE_CHECK',['2','4'])->count();

@@ -1,6 +1,7 @@
 @extends('masterlayout.masterlayout')
 @section('tittle','homepage')
 @section('css')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <link href={{ asset('/assets/fullcalendar/main.css') }} rel='stylesheet' />
 
 @endsection
@@ -77,6 +78,8 @@
 {{-- ส่วนjava --}}
 @section('javascript')
 <script src='{{ asset('/assets/fullcalendar/main.js')}}'></script>
+<script src="{{ asset('assets/js/ajax/ajax-csrf.js') }}"></script>
+
 
 <script>
     function setcookie(name, value) {
@@ -151,14 +154,11 @@
         calendar.setOption('locale', 'th');
         calendar.render();
 
-        var cookie_style = '{{ Cookie::get('
-        style_calendar ') }}';
+        var cookie_style = '{{ Cookie::get('style_calendar ') }}';
         if (cookie_style == '2') {
             $('.fc-listYear-button').trigger('click');
-
         } else {
             $('.fc-dayGridMonth-button').click();
-
         }
         $('.fc-dayGridMonth-button').on('click', function(event) {
             event.preventDefault();
