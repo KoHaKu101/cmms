@@ -262,12 +262,6 @@ class DashboardController extends Controller
 
     return View('machine/dashboard/machinerepair',compact('MACHINE_CODE','MACHINE_COUNT','MACHINEREPAIRREQ','ORDER_BY_COUNT'));
   }
-  public function Notification(Request $request){
-    $datarepair = MachineRepairREQ::select('*')->where('CLOSE_STATUS','=','9')->orderBy('PRIORITY','DESC')->orderBy('DOC_DATE')->take(4)->get();
-    $datacount  = MachineRepairREQ::where('CLOSE_STATUS','9')->get()->count();
-    return response()->json(['datarepair' => $datarepair,'datacount' => $datacount]);
-  }
-
 
   public function NotificationRepair(){
     $datarepairlist   = MachineRepairREQ::select('STATUS_NOTIFY','PRIORITY','MACHINE_CODE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME','DOC_DATE','DOC_NO')
@@ -306,7 +300,7 @@ class DashboardController extends Controller
     }
     $last_data  = MachineRepairREQ::select('*')->where('STATUS_NOTIFY','=',9)->get();
     $NUMBER     = MachineRepairREQ::where('CLOSE_STATUS','=',9)->count();
-    $newrepair  = $last_data == '' ? true : false;
+    $newrepair  = isset($last_data[0])  ? true : false;
     return Response()->json(['html'=>$html,'newrepair' => $newrepair,'number' => $NUMBER,'datarepair'=>$last_data]);
   }
   public function UserHomePage(Request $request){

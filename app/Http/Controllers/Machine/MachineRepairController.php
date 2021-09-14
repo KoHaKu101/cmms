@@ -275,7 +275,7 @@ class MachineRepairController extends Controller
       }
 
     $last_data  = MachineRepairREQ::select('*')->where('STATUS_NOTIFY','=',9)->get();
-    $newrepair  = $last_data == '' ? true : false;
+    $newrepair  = isset($last_data[0]) ? true : false;
     $NUMBER     = MachineRepairREQ::where('CLOSE_STATUS','=',9)->count();
     return Response()->json(['html'=>$html,'html_style' => $html_style,'newrepair' => $newrepair,'number' => $NUMBER,'datarepair'=>$last_data]);
   }
@@ -479,7 +479,7 @@ class MachineRepairController extends Controller
     return Redirect()->back();
           }
   public function ReadNotify(Request $request){
-    $STATUS = $request->STATUS;
+    $STATUS = 1;
     MachineRepairREQ::where('STATUS_NOTIFY','=',9)->update([
       'STATUS_NOTIFY' => $STATUS,
     ]);

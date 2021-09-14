@@ -59,7 +59,7 @@ use App\Http\Controllers\PDF\RepairSaveFormPDFController;
 use App\Http\Controllers\Machine\PRController;
 use App\Http\Controllers\Machine\ReportPRController;
 use App\http\controllers\MailSend;
-
+use App\http\Controllers\SettingMenu\ErrorPageController;
 use App\http\Controllers\Machine\ConfirmPageController;
 /*
 |--------------------------------------------------------------------------
@@ -84,10 +84,7 @@ if (Gate::allows('isManager_Ma')) {
       return redirect('/dashboard');
   })->middleware('auth');
 }
-Route::get('500',function(){
-  alert('กรุณาลองใหม่');
-  return redirect()->back();
-});
+
 Route::middleware(['auth:sanctum', 'verified']);
 Route::get('/mail/send/',[MailSend::class,'mailsend'])->name('mail.send');
 
