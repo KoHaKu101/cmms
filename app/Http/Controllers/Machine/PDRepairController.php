@@ -288,12 +288,11 @@ class PDRepairController extends Controller
           </div>
         </div>';
         }
-        $last_data = MachineRepairREQ::selectraw('UNID,STATUS')->where('STATUS','=',9)->first();
-        $data_count = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->where('STATUS','=',9)->count();
-        $newrepair = isset($last_data->STATUS) ? true : false;
-        $UNID      = isset($last_data->STATUS) ? $last_data->UNID : '';
+        $last_data  = MachineRepairREQ::where('STATUS','=',9)->count();
+        $data_count = MachineRepairREQ::selectraw('UNID,STATUS_NOTIFY')->where('PD_CHECK_STATUS','=',9)->count();
+        $newrepair = $last_data > 0 ? true : false;
         $NUMBER    = $data_count;
-    return Response()->json(['html'=>$html,'html_style' => $html_style,'newrepair' => $newrepair,'UNID' => $UNID,'number' => $NUMBER]);
+    return Response()->json(['html'=>$html,'html_style' => $html_style,'newrepair' => $newrepair,'number' => $NUMBER]);
   }
 
   public function ShowResult(Request $request){

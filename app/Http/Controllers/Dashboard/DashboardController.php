@@ -298,10 +298,11 @@ class DashboardController extends Controller
             </a>
             ';
     }
-    $last_data  = MachineRepairREQ::select('*')->where('STATUS_NOTIFY','=',9)->get();
-    $NUMBER     = MachineRepairREQ::where('CLOSE_STATUS','=',9)->count();
-    $newrepair  = isset($last_data[0])  ? true : false;
-    return Response()->json(['html'=>$html,'newrepair' => $newrepair,'number' => $NUMBER,'datarepair'=>$last_data]);
+    $last_data  = MachineRepairREQ::where('STATUS_NOTIFY','=',9)->count();
+    $newrepair  = $last_data > 0 ? true : false;
+    $datarepair = MachineRepairREQ::select('UNID','MACHINE_LINE','MACHINE_CODE','DOC_DATE')->where('CLOSE_STATUS','=',9)->get();
+    $NUMBER     = count($datarepair);
+    return Response()->json(['html'=>$html,'newrepair' => $newrepair,'number' => $NUMBER,'datarepair'=>$datarepair]);
   }
   public function UserHomePage(Request $request){
     $ROLE = $request->role;

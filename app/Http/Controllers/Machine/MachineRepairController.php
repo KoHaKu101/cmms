@@ -274,10 +274,11 @@ class MachineRepairController extends Controller
       </div>';
       }
 
-    $last_data  = MachineRepairREQ::select('*')->where('STATUS_NOTIFY','=',9)->get();
-    $newrepair  = isset($last_data[0]) ? true : false;
-    $NUMBER     = MachineRepairREQ::where('CLOSE_STATUS','=',9)->count();
-    return Response()->json(['html'=>$html,'html_style' => $html_style,'newrepair' => $newrepair,'number' => $NUMBER,'datarepair'=>$last_data]);
+    $last_data  = MachineRepairREQ::where('STATUS_NOTIFY','=',9)->count();
+    $newrepair  = $last_data > 0 ? true : false;
+    $datarepair = MachineRepairREQ::select('UNID','MACHINE_LINE','MACHINE_CODE','DOC_DATE')->where('CLOSE_STATUS','=',9)->get();
+    $NUMBER     = count($datarepair);
+    return Response()->json(['html'=>$html,'html_style' => $html_style,'newrepair' => $newrepair,'number' => $NUMBER,'datarepair'=>$datarepair]);
   }
   public function PrepareSearch(Request $request){
     $qrcode_text = '';
