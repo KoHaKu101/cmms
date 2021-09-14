@@ -105,7 +105,7 @@ Route::get('/mail/send/',[MailSend::class,'mailsend'])->name('mail.send');
     Route::get('downtime/export', [DowtimeexportController::class,'Dowtimeexport']);
 //*****************************************  PDRepairController  *********************************************************
 Route::post('/cookie/set',[CookieController::class,'setCookie'])->name('cookie.set');
-Route::get('/cookie/get' ,[CookieController::class,'getCookie'])->name('cookie.get');
+Route::post('/cookie/get' ,[CookieController::class,'getCookie'])->name('cookie.get');
 Route::middleware('can:isAdminandManager')->group(function () {
   //*****************************************  CookieController  *********************************************************
   Route::get('/machine/dashboard/dashboard'            ,[DashboardController::class,'Dashboard']);

@@ -124,11 +124,11 @@
 											<div class="col-6 col-sm-6 col-md-3 col-lg-2 ml-auto my-1">
 												<div class="selectgroup w-100">
 													<label class="selectgroup-item" >
-														<input type="radio"  class="selectgroup-input" onchange="styletable(1)" {{ Cookie::get('table_style') == '1' ? 'checked' : (Cookie::get('table_style') == '' ? 'checked' : '')}} name="styletable">
+														<input type="radio"  class="selectgroup-input"  onchange="styletable(1)" {{ Cookie::get('table_style') == '1' ? 'checked' : (Cookie::get('table_style') == '' ? 'checked' : '')}} name="styletable">
 														<span class="selectgroup-button"><i class="fas fa-th-large"></i></span>
 													</label>
 													<label class="selectgroup-item"  >
-														<input type="radio" class="selectgroup-input" onchange="styletable(2)" {{ Cookie::get('table_style') == '2' ? 'checked' : ''}} name="styletable">
+														<input type="radio" class="selectgroup-input "  onchange="styletable(2)" {{ Cookie::get('table_style') == '2' ? 'checked' : ''}} name="styletable">
 														<span class="selectgroup-button"><i class="fas fa-list-ol"></i></span>
 													</label>
 												</div>
@@ -397,12 +397,14 @@
 	// Cookie Style List
 	var cookie_tablestyle = "{{Cookie::get('table_style')}}";
 	if (cookie_tablestyle == '') {
-			styletable('1');
+		$('#table_style').attr('hidden',false);
+		$('#list_table').attr('hidden',true);
 	}
 	// create Cookie
 	function setcookie(name,value){
 		var urlcookie = "{{ route('cookie.set') }}";
 		var data = {"_token": "{{ csrf_token() }}",NAME : name,VALUE : value}
+
 		$.ajax({
 			type:'POST',
 			url: urlcookie,

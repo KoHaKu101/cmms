@@ -12,7 +12,7 @@
 @section('Logoandnavbar')
 
 		{{-- @include('masterlayout.logomaster') --}}
-		{{--  @include('masterlayout.navbar.navbarmaster')  --}}
+		{{--  @include('masterlayout.navFbar.navbarmaster')  --}}
 
 @stop
 {{-- ปิดท้ายส่วนหัว --}}

@@ -324,7 +324,8 @@ function styletable(table_style){
 }
 	var cookie_tablestyle = "{{Cookie::get('table_style_pd')}}";
 	if (cookie_tablestyle == '') {
-			styletable('1');
+		$('#table_style').attr('hidden',false);
+		$('#list_table').attr('hidden',true);
 	}
 	function setcookie(name,value){
 		var urlcookie = "{{ route('cookie.set') }}";
