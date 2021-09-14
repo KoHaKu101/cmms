@@ -20,11 +20,10 @@ class DashboardController extends Controller
 
   }
   public function Dashboard(){
-
-    $machine_all        = Machine::select('MACHINE_CHECK')->where('MACHINE_CHECK','!=','4')->count();
-    $machine_ready      = Machine::select('MACHINE_CHECK')->where('MACHINE_CHECK','=','2')->count();
-    $machine_wait       = Machine::select('MACHINE_CHECK')->where('MACHINE_CHECK','!=','2')->where('MACHINE_CHECK','!=','4')->count();
-    $datarepair         = MachineRepairREQ::select('CLOSE_STATUS')->where('CLOSE_STATUS','=','9')->count();
+    $machine_all        = Machine::where('MACHINE_CHECK','!=','4')->count();
+    $machine_ready      = Machine::where('MACHINE_CHECK','=','2')->count();
+    $machine_wait       = Machine::whereNotIn('MACHINE_CHECK',['2','4'])->count();
+    $datarepair         = MachineRepairREQ::where('CLOSE_STATUS','=','9')->count();
     $datarepairlist     = MachineRepairREQ::select('STATUS_NOTIFY','PRIORITY','MACHINE_CODE','MACHINE_STATUS','REPAIR_SUBSELECT_NAME','DOC_DATE','DOC_NO')
                                           ->where('CLOSE_STATUS','=','9')->orderBy('DOC_DATE','DESC')->orderBy("REPAIR_REQ_TIME",'DESC')
                                           ->orderBy('PRIORITY','ASC')->take(4)->get();
@@ -35,24 +34,25 @@ class DashboardController extends Controller
     $data_count_repair  = MachineRepairREQ::selectraw('MACHINE_CODE,COUNT(MACHINE_CODE) as MACHINE_CODE_COUNT')
                                           ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
                                           ->where('MACHINE_LINE','like','L'.'%')
-                                          ->groupBy('MACHINE_CODE')->orderBy('MACHINE_CODE_COUNT','DESC')->get();
+                                          ->groupBy('MACHINE_CODE')->orderBy('MACHINE_CODE_COUNT','DESC')->take(5)->get();
     $data_repair_detail = MachineRepairREQ::selectraw('REPAIR_SUBSELECT_NAME,COUNT(REPAIR_SUBSELECT_UNID) as REPAIR_SUBSELECT_UNID_COUNT')
                                           ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))
                                           ->groupBy('REPAIR_SUBSELECT_UNID')->groupBy('REPAIR_SUBSELECT_NAME')
-                                          ->orderBy('REPAIR_SUBSELECT_UNID_COUNT','DESC')->get();
-    $count_pdm           = SparePartPlan::selectraw("sum(CASE WHEN STATUS = 'COMPLETE' THEN 1 ELSE 0 END) as COMPLETE,
-	                                               sum(CASE WHEN STATUS != 'COMPLETE' THEN 1 ELSE 0 END) as NOCOMPLETE")
-                                       ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))->first();
+                                          ->orderBy('REPAIR_SUBSELECT_UNID_COUNT','DESC')->take(5)->get();
+    $count_pdm           = SparePartPlan::selectraw("sum(CASE WHEN STATUS  = 'COMPLETE' THEN 1 ELSE 0 END) as COMPLETE,
+	                                                   sum(CASE WHEN STATUS != 'COMPLETE' THEN 1 ELSE 0 END) as NOCOMPLETE")
+                                        ->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))->first();
     // PLAN MACHINE PM
     $data_complete   = array();
     $data_uncomplete = array();
     for ($i=0; $i < 4; $i++) {
-      $data_complete[$i * 3+3]   = MachinePlanPm::select('PLAN_STATUS')->where('PLAN_YEAR','=',date('Y'))->where('PLAN_MONTH','=',date('n'))
-                                                ->where('PLAN_PERIOD','=',$i * 3+3)->where('PLAN_STATUS','=','COMPLETE')->count();
-      $data_uncomplete[$i * 3+3] = MachinePlanPm::select('PLAN_STATUS')->where('PLAN_YEAR','=',date('Y'))->where('PLAN_MONTH','=',date('n'))
-                                                ->where('PLAN_PERIOD','=',$i * 3+3)->where('PLAN_STATUS','!=','COMPLETE')->count();
+      $DATA_MACHINEPLANPM = MachinePlanPm::selectRaw("sum(CASE WHEN PLAN_STATUS  = 'COMPLETE' THEN 1 ELSE 0 END) as COMPLETE,
+        	                                           sum(CASE WHEN PLAN_STATUS != 'COMPLETE' THEN 1 ELSE 0 END) as NOCOMPLETE")
+                                          ->where('PLAN_YEAR','=',date('Y'))->where('PLAN_MONTH','=',date('n'))
+                                          ->where('PLAN_PERIOD','=',$i * 3+3)->first();
+      $data_complete[$i * 3+3]   = isset($DATA_MACHINEPLANPM->COMPLETE)   ? $DATA_MACHINEPLANPM->COMPLETE   : 0;
+      $data_uncomplete[$i * 3+3] = isset($DATA_MACHINEPLANPM->NOCOMPLETE) ? $DATA_MACHINEPLANPM->NOCOMPLETE : 0;
     }
-
     // Dowm Time
     $downtime_machine       = array();
     $downtime_machine_code  = array();
@@ -68,19 +68,17 @@ class DashboardController extends Controller
       $array_count_machine[$index+1]= $row->MACHINE_CODE;
     }
     //Repair Detail
-    $array_count_detail     = array();
+    $array_count_detail  = array();
     $array_count_name    = array();
     foreach ($data_repair_detail as $index => $row) {
       $array_count_detail[$index+1] = $row->REPAIR_SUBSELECT_UNID_COUNT;
-      $array_count_name[$index+1]= $row->REPAIR_SUBSELECT_NAME;
+      $array_count_name[$index+1]   = $row->REPAIR_SUBSELECT_NAME;
     }
     $array_line       = array();
     $array_repair     = array();
     for ($i=1; $i < 7 ; $i++) {
-      $data_line            = Machine::select('MACHINE_LINE')->where('MACHINE_LINE','=','L'.$i)->count();
-      $data_repair          = MachineRepairREQ::select('MACHINE_LINE')->where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))->where('MACHINE_LINE','=','L'.$i)->count();
-      $array_line['L'.$i]   = $data_line;
-      $array_repair['L'.$i] = $data_repair;
+      $array_line['L'.$i]   = Machine::where('MACHINE_LINE','=','L'.$i)->count();
+      $array_repair['L'.$i] = MachineRepairREQ::where('DOC_YEAR','=',date('Y'))->where('DOC_MONTH','=',date('n'))->where('MACHINE_LINE','=','L'.$i)->count();
     }
 
     return View('machine/dashboard/dashboard',compact('datarepairlist','datarepair','machine_all','machine_ready','machine_wait'
@@ -270,7 +268,7 @@ class DashboardController extends Controller
     foreach ($datarepairlist as $key => $row) {
       $TEXT                  = $row->MACHINE_STATUS == 1 ? 'หยุดทำงาน' : 'ทำงานปกติ' ;
       $COLOR_PRIORITY        = $row->PRIORITY       == 9 ? 'bg-danger' : 'bg-warning';
-      $COLOR_MACHINE_STATUS  = $row->MACHINE_STATUS == '1' ? 'text-danger' : 'text-warning' ;
+      $COLOR_MACHINE_STATUS  = $row->MACHINE_STATUS == 1 ? 'text-danger' : 'text-warning' ;
       $NEW_IMG               = $row->STATUS_NOTIFY  == 9 ? '<img src="'.asset('assets/img/new.gif').'" class="mt--2" width="40px" height="40px">': '' ;
       $html.='<a href="'.route('repair.list').'?SEARCH_MACHINE='.$row->DOC_NO.'"style="text-decoration:none;">
             <div class="row">
