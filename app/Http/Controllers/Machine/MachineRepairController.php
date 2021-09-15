@@ -7,12 +7,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Middleware\VerifyCsrfToken;
 use Carbon\Carbon;
-use App\Services\PayUService\Exception;
 use Auth;
 use Cookie;
 use Gate;
 use File;
-use App\Exceptions\InvalidOrderException;
 
 //******************** model ***********************
 use App\Models\MachineAddTable\SelectMainRepair;
@@ -24,8 +22,6 @@ use App\Models\Machine\MachineLine;
 use App\Models\SettingMenu\MailSetup;
 use App\Models\Machine\MachineRepairREQ;
 //************** Package form github ***************
-use App\Exports\MachineExport;
-use Maatwebsite\Excel\Facades\Excel;
 use Phattarachai\LineNotify\Facade\Line;
 use App\Http\Controllers\QRCODE\lib\QrReader;
 
@@ -118,6 +114,7 @@ class MachineRepairController extends Controller
       $array_EMP[$row_emp->EMP_CODE] = $row_emp->EMP_NAME_TH;
       $array_IMG[$row_emp->EMP_CODE] = $row_emp->EMP_ICON;
     }
+
     $LINE         = MachineLine::select('LINE_CODE','LINE_NAME')->where('LINE_STATUS','=','9')->where('LINE_NAME','like','Line'.'%')->orderBy('LINE_NAME')->get();
     return View('machine/repair/repairlist',compact('dataset','SEARCH','LINE',
     'MACHINE_LINE','MONTH','YEAR','DOC_STATUS','array_EMP','array_IMG'));
@@ -190,9 +187,9 @@ class MachineRepairController extends Controller
                 <td>'.$row->REPAIR_SUBSELECT_NAME.'</td>
                 <td width="15%">
                     <button onclick="rec_work(this)" type="button"
-                    data-unid="'.$row->UNID.'"
-                    data-docno="'.$row->DOC_NO.'"
-                    data-detail="'.$row->REPAIR_SUBSELECT_NAME.'"
+                    data-unid   ="'.$row->UNID.'"
+                    data-docno  ="'.$row->DOC_NO.'"
+                    data-detail ="'.$row->REPAIR_SUBSELECT_NAME.'"
                     class="btn '.$BTN_COLOR_STATUS.' btn-block btn-sm my-1 text-left">
                      <span class="btn-label">
                        '.$REC_WORK_STATUS.'
@@ -200,19 +197,20 @@ class MachineRepairController extends Controller
                    </button>
                  </td>
                  <td width="8%">'.date('d-m-Y').'</td>
-                </tr>';
+              </tr>';
       }
     foreach ($dataset->items($page) as $index => $sub_row) {
       $INSPECTION_CODE= $sub_row->INSPECTION_CODE;
       $SUBROW_UNID    = $sub_row->UNID;
       $EMP_NAME       = EMPName::select('EMP_ICON')->where('EMP_CODE','=',$INSPECTION_CODE)->first();
-      $BG_COLOR    		= $INSPECTION_CODE ? 'bg-warning text-white' : 'bg-danger text-white';
-      $IMG_PRIORITY		= $sub_row->PRIORITY == '9' ? '<img src="'.asset('assets/css/flame.png').'" class="mt--2" width="20px" height="20px">' : '';
-      $WORK_STATUS 		= isset($INSPECTION_CODE) ? $sub_row->INSPECTION_NAME_TH : 'รอรับงาน';
-      $TEXT_STATUS    = $sub_row->PD_CHECK_STATUS == '1' ? 'จัดเก็บเอกสารเรียบร้อย' : ($sub_row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ' : (isset($sub_row->INSPECTION_CODE) ? 'กำลังดำเนินการ' : 'รอรับงาน' ));
+      $BG_COLOR    		= $sub_row->CLOSE_STATUS == '1' ? 'bg-primary' : ($INSPECTION_CODE != ''   ? 'bg-warning' : 'bg-danger');
+      $WORK_STATUS 		= $INSPECTION_CODE   != ''   ? $sub_row->INSPECTION_NAME_TH : 'รอรับงาน';
+      $IMG_PRIORITY		= $sub_row->PRIORITY == '9'  ? '<img src="'.asset('assets/css/flame.png').'" class="mt--2" width="20px" height="20px">' : '';
       $IMG         	  = isset($EMP_NAME->EMP_ICON) ? asset('image/emp/'.$EMP_NAME->EMP_ICON) : asset('../assets/img/noemp.png');
-      $DATE_DIFF   	  = $sub_row->REC_WORK_DATE != '1900-01-01 00:00:00.000'? 'รับเมื่อ:'.Carbon::parse($sub_row->REC_WORK_DATE)->diffForHumans() : 'แจ้งเมื่อ:'.Carbon::parse($sub_row->CREATE_TIME)->diffForHumans();
-      $HTML_STATUS    = '<div class="status" id="DATE_DIFF_'.$SUBROW_UNID.'">'.$DATE_DIFF.'</div>';
+      $DATE_DIFF   	  = $sub_row->REC_WORK_DATE != '1900-01-01 00:00:00.000' ? 'รับเมื่อ:'.Carbon::parse($sub_row->REC_WORK_DATE)->diffForHumans() : 'แจ้งเมื่อ:'.Carbon::parse($sub_row->CREATE_TIME)->diffForHumans();
+      $TEXT_STATUS_WORK = $sub_row->PD_CHECK_STATUS == '1' ? 'จัดเก็บเอกสารเรียบร้อย' : ($sub_row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ' : (isset($sub_row->INSPECTION_CODE) ? 'กำลังดำเนินการ' : 'รอรับงาน' ));
+      $TEXT_STATUS_TIME = $sub_row->PD_CHECK_STATUS == '1' ? 'ปิดเอกสารเรียบร้อย'    : ($sub_row->CLOSE_STATUS == '1' ? 'ดำเนินงานสำเร็จ' : $DATE_DIFF);
+      $HTML_STATUS    = '<div class="status" id="DATE_DIFF_'.$SUBROW_UNID.'">'.$TEXT_STATUS_TIME.'</div>';
       $HTML_BTN       = '<button class="btn  btn-primary  btn-sm"
                         onclick="rec_work(this)"
                         data-unid="'.$SUBROW_UNID.'"
@@ -222,8 +220,7 @@ class MachineRepairController extends Controller
                         </button>';
       $HTML_AVATAR    = '<img src="'.$IMG.'"id="IMG_'.$SUBROW_UNID.'"alt="..." class="avatar-img rounded-circle">';
       if ($sub_row->PD_CHECK_STATUS == '1') {
-        $BG_COLOR  		= 'bg-success text-white';
-        $HTML_STATUS  = '<div class="status" id="DATE_DIFF_'.$SUBROW_UNID.'" >ปิดเอกสารเรียบร้อย</div>';
+        $BG_COLOR  		= 'bg-success';
         $HTML_BTN     =	'<button class="btn btn-primary  btn-sm"
                         onclick=pdfsaverepair("'.$SUBROW_UNID.'")>
                           <i class="fas fa-print mx-1"></i>
@@ -231,15 +228,12 @@ class MachineRepairController extends Controller
                         </button>';
          $HTML_AVATAR = '<div class="timeline-badge success rounded-circle text-center text-white" style="width: 100%;height: 100%;">
                          <i class="fas fa-check my-2" style="font-size: 35px;"></i></div>' ;
-      }elseif ($sub_row->CLOSE_STATUS == '1') {
-        $BG_COLOR  		= 'bg-primary text-white';
-        $HTML_STATUS  = '<div class="status" id="DATE_DIFF_'.$SUBROW_UNID.'" >ดำเนินงานสำเร็จ</div>';
       }
 
       $html_style .=  '<div class="col-lg-3">
         <div class="card card-round">
           <div class="card-body">
-            <div class="card-title  fw-mediumbold '.$BG_COLOR.'"id="BG_'.$SUBROW_UNID.'">
+            <div class="card-title  fw-mediumbold '.$BG_COLOR.' text-white "id="BG_'.$SUBROW_UNID.'">
               <div class="row text-center">
                 <div class="col-lg-12">
                   '.$IMG_PRIORITY.'
@@ -248,7 +242,7 @@ class MachineRepairController extends Controller
               </div>
               <div class="row text-center ">
                 <div class="col-lg-12">
-                  <h5>'.$TEXT_STATUS.'</h5>
+                  <h5>'.$TEXT_STATUS_WORK.'</h5>
                   </div>
               </div>
             </div>
@@ -348,18 +342,18 @@ class MachineRepairController extends Controller
   }
   public function Store(Request $request,$MACHINE_UNID){
       //******************* Request parameter *******************//
-
       $CLOSE_STATUS = '9';
         $MACHINE_UNID = $MACHINE_UNID;
         $EMP_CODE     = $request->cookie('empcode');
         $SELECT_MAIN_REPAIR_UNID = $request->cookie('selectmainrepair');
         $SELECT_SUB_REPAIR_UNID  = $request->cookie('selectsubrepair');
         $PRIORITY = $request->cookie('priority');
-        $UNID = $this->randUNID('PMCS_CMMS_REPAIR_REQ');
+        $UNID     = $this->randUNID('PMCS_CMMS_REPAIR_REQ');
+
       //******************* data *******************//
       $DATA_MACHINE = Machine::where('UNID','=',$MACHINE_UNID)->first();
         $DATA_SELECTMACHINEREPAIR = SelectMainRepair::where('UNID','=',$SELECT_MAIN_REPAIR_UNID)->first();
-        $DATA_SELECTSUBREPAIR = SelectSubRepair::where('UNID','=',$SELECT_SUB_REPAIR_UNID)->first();
+        $DATA_SELECTSUBREPAIR     = SelectSubRepair::where('UNID','=',$SELECT_SUB_REPAIR_UNID)->first();
         $DATA_EMP = DB::select("select EMP_TH_NAME_FIRST,EMP_CODE,UNID
                                         from EMCS_EMPLOYEE
                                         where POSITION_CODE IN ('LD','ASSTMGR','CF')
@@ -376,6 +370,10 @@ class MachineRepairController extends Controller
           $DOC_NO = 'RE' . $DATE_RESET_DOCNO->format('ym'). sprintf('-%04d', $EXPLOT);
       }
       //******************* insert *******************//
+      if (!isset($DATA_EMP[0]->UNID)) {
+        alert()->error('เกิดข้อผืดพลาดกรุณาลองใหม่')->autoclose('1500');
+        return Redirect()->back();
+      }
       MachineRepairREQ::insert([
         'UNID'                   => $UNID
         ,'MACHINE_UNID'          => $DATA_MACHINE->UNID
@@ -399,8 +397,8 @@ class MachineRepairController extends Controller
         ,'CLOSE_STATUS'          => $CLOSE_STATUS
         ,'STATUS_LINE_NOTIFY'    => 9
         ,'CLOSE_BY'              => ''
-        ,'CREATE_BY'             =>Auth::user()->name
-        ,'CREATE_TIME'           =>Carbon::now()
+        ,'CREATE_BY'             => Auth::user()->name
+        ,'CREATE_TIME'           => Carbon::now()
         ,'MODIFY_BY'             => Auth::user()->name
         ,'MODIFY_TIME'           => Carbon::now()
       ]);
@@ -415,70 +413,18 @@ class MachineRepairController extends Controller
       $this->LineNotify();
 
       if (Gate::allows('isManager_Pd')) {
-      return redirect()->route('pd.repairlist');
+        return redirect()->route('pd.repairlist');
       }else {
         return redirect()->route('repair.list');
       }
 
   }
-  public function Edit($UNID) {
-    $data_repairreq = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME')
-                                                   ->where('UNID','=',$UNID)->first();
-    $dataset = SelectMainRepair::where('STATUS','=','9')->get();
-    $data_emp = MachineEMP::select('EMP_CODE','EMP_NAME')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME')
-                          ->where('EMP_STATUS','=','0')->where('REF_UNID','=',$data_repairreq->MACHINE_UNID)->get();
-
-    $data_selectsubrepair = SelectSubRepair::where('REPAIR_MAINSELECT_UNID','=',$data_repairreq->REPAIR_MAINSELECT_UNID)->get();
-    $cookie_array = array('empcode' => $data_repairreq->EMP_CODE,'selectmainrepair' => $data_repairreq->REPAIR_MAINSELECT_UNID
-                         ,'selectsubrepair' => $data_repairreq->REPAIR_SUBSELECT_UNID,'priority' => $data_repairreq->PRIORITY );
-    foreach ($cookie_array as $name => $value) {
-      Cookie::queue($name, $value);
-    }
-    return view('machine/repair/edit',compact('data_repairreq','dataset','data_emp','data_selectsubrepair'));
-
-  }
-  public function Update(Request $request,$UNID){
-    //******************* Request parameter *******************//
-    $EMP_CODE = $request->cookie('empcode');
-    $SELECT_MAIN_REPAIR_UNID = $request->cookie('selectmainrepair');
-    $SELECT_SUB_REPAIR_UNID = $request->cookie('selectsubrepair');
-    $PRIORITY = $request->cookie('priority');
-
-    //******************* data *******************//
-    $DATA_MACHINE = MachineRepairREQ::where('UNID','=',$UNID)->first();
-    $DATA_SELECTMACHINEREPAIR = SelectMainRepair::where('UNID','=',$SELECT_MAIN_REPAIR_UNID)->first();
-    $DATA_SELECTSUBREPAIR = SelectSubRepair::where('UNID','=',$SELECT_SUB_REPAIR_UNID)->first();
-    $DATA_EMP = MachineEMP::where('EMP_CODE','=',$EMP_CODE)->where('REF_UNID','=',$DATA_MACHINE->MACHINE_UNID)->first();
-
-
-    $request->CLOSE_STATUS = '9';
-    $data_set = MachineRepairREQ::where('UNID','=',$UNID)->update([
-         'MACHINE_STATUS'        => $DATA_SELECTSUBREPAIR->STATUS_MACHINE
-        ,'REPAIR_MAINSELECT_UNID'=> $DATA_SELECTMACHINEREPAIR->UNID
-        ,'REPAIR_MAINSELECT_NAME'=> $DATA_SELECTMACHINEREPAIR->REPAIR_MAINSELECT_NAME
-        ,'REPAIR_SUBSELECT_UNID' => $DATA_SELECTSUBREPAIR->UNID
-        ,'REPAIR_SUBSELECT_NAME' => $DATA_SELECTSUBREPAIR->REPAIR_SUBSELECT_NAME
-        ,'EMP_UNID'              => $DATA_EMP->UNID
-        ,'EMP_CODE'              => $DATA_EMP->EMP_CODE
-        ,'EMP_NAME'              => $DATA_EMP->EMP_NAME
-
-        ,'PRIORITY'              => $PRIORITY
-        ,'MODIFY_BY'             => Auth::user()->name
-        ,'MODIFY_TIME'           => Carbon::now()
-      ]);
-      $cookie_array = array('0' => 'empcode','1' => 'selectmainrepair','2' => 'selectsubrepair','3' => 'priority' );
-      foreach ($cookie_array as $index => $row) {
-        Cookie::queue(Cookie::forget($row));
-      }
-        alert()->success('อัพเดทรายการ สำเร็จ')->autoclose('1500');
-            return Redirect()->route('repair.edit',[$UNID]);
-          }
   public function Delete(Request $request){
     $UNID = $request->UNID;
-    MachineRepairREQ::where('UNID','=',$UNID)->delete();
-    alert()->success('ลบสำเร็จ')->autoClose('1500');
+      MachineRepairREQ::where('UNID','=',$UNID)->delete();
+      alert()->success('ลบสำเร็จ')->autoClose('1500');
     return Redirect()->back();
-          }
+   }
   public function ReadNotify(Request $request){
     $STATUS = 1;
     MachineRepairREQ::where('STATUS_NOTIFY','=',9)->update([
@@ -529,3 +475,55 @@ class MachineRepairController extends Controller
 
   }
 }
+// public function Edit($UNID) {
+//   $data_repairreq = MachineRepairREQ::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME')
+//                                                  ->where('UNID','=',$UNID)->first();
+//   $dataset = SelectMainRepair::where('STATUS','=','9')->get();
+//   $data_emp = MachineEMP::select('EMP_CODE','EMP_NAME')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME')
+//                         ->where('EMP_STATUS','=','0')->where('REF_UNID','=',$data_repairreq->MACHINE_UNID)->get();
+//
+//   $data_selectsubrepair = SelectSubRepair::where('REPAIR_MAINSELECT_UNID','=',$data_repairreq->REPAIR_MAINSELECT_UNID)->get();
+//   $cookie_array = array('empcode' => $data_repairreq->EMP_CODE,'selectmainrepair' => $data_repairreq->REPAIR_MAINSELECT_UNID
+//                        ,'selectsubrepair' => $data_repairreq->REPAIR_SUBSELECT_UNID,'priority' => $data_repairreq->PRIORITY );
+//   foreach ($cookie_array as $name => $value) {
+//     Cookie::queue($name, $value);
+//   }
+//   return view('machine/repair/edit',compact('data_repairreq','dataset','data_emp','data_selectsubrepair'));
+//
+// }
+// public function Update(Request $request,$UNID){
+//   //******************* Request parameter *******************//
+//   $EMP_CODE = $request->cookie('empcode');
+//   $SELECT_MAIN_REPAIR_UNID = $request->cookie('selectmainrepair');
+//   $SELECT_SUB_REPAIR_UNID = $request->cookie('selectsubrepair');
+//   $PRIORITY = $request->cookie('priority');
+//
+//   //******************* data *******************//
+//   $DATA_MACHINE = MachineRepairREQ::where('UNID','=',$UNID)->first();
+//   $DATA_SELECTMACHINEREPAIR = SelectMainRepair::where('UNID','=',$SELECT_MAIN_REPAIR_UNID)->first();
+//   $DATA_SELECTSUBREPAIR = SelectSubRepair::where('UNID','=',$SELECT_SUB_REPAIR_UNID)->first();
+//   $DATA_EMP = MachineEMP::where('EMP_CODE','=',$EMP_CODE)->where('REF_UNID','=',$DATA_MACHINE->MACHINE_UNID)->first();
+//
+//
+//   $request->CLOSE_STATUS = '9';
+//   $data_set = MachineRepairREQ::where('UNID','=',$UNID)->update([
+//        'MACHINE_STATUS'        => $DATA_SELECTSUBREPAIR->STATUS_MACHINE
+//       ,'REPAIR_MAINSELECT_UNID'=> $DATA_SELECTMACHINEREPAIR->UNID
+//       ,'REPAIR_MAINSELECT_NAME'=> $DATA_SELECTMACHINEREPAIR->REPAIR_MAINSELECT_NAME
+//       ,'REPAIR_SUBSELECT_UNID' => $DATA_SELECTSUBREPAIR->UNID
+//       ,'REPAIR_SUBSELECT_NAME' => $DATA_SELECTSUBREPAIR->REPAIR_SUBSELECT_NAME
+//       ,'EMP_UNID'              => $DATA_EMP->UNID
+//       ,'EMP_CODE'              => $DATA_EMP->EMP_CODE
+//       ,'EMP_NAME'              => $DATA_EMP->EMP_NAME
+//
+//       ,'PRIORITY'              => $PRIORITY
+//       ,'MODIFY_BY'             => Auth::user()->name
+//       ,'MODIFY_TIME'           => Carbon::now()
+//     ]);
+//     $cookie_array = array('0' => 'empcode','1' => 'selectmainrepair','2' => 'selectsubrepair','3' => 'priority' );
+//     foreach ($cookie_array as $index => $row) {
+//       Cookie::queue(Cookie::forget($row));
+//     }
+//       alert()->success('อัพเดทรายการ สำเร็จ')->autoclose('1500');
+//           return Redirect()->route('repair.edit',[$UNID]);
+//         }

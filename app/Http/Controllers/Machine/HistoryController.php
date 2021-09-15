@@ -9,20 +9,17 @@ use App\Http\Middleware\VerifyCsrfToken;
 use Carbon\Carbon;
 use Auth;
 use Cookie;
-use Gate;
 //******************** model ***********************
 use App\Models\Machine\Machine;
 use App\Models\Machine\SparePart;
 use App\Models\Machine\RepairSparepart;
 use App\Models\Machine\History;
 use App\Models\Machine\MachineRepairREQ;
-use App\Models\Machine\HistoryPlanPM;
 use App\Models\Machine\MachinePlanPm;
 use App\Models\Machine\Pmplanresult;
 use App\Models\Machine\PmPlanSparepart;
 use App\Models\Machine\SparePartPlan;
 use App\Http\Controllers\PDF\HeaderFooterPDF\HistoryHeaderFooterRepair as HistoryHeaderFooterRepair;
-use App\Http\Controllers\PDF\HeaderFooterPDF\HistoryHeaderFooterPM as HistoryHeaderFooterPM;
 //************** Package form github ***************
 
 class HistoryController extends Controller

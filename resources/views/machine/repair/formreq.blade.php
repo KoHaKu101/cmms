@@ -33,6 +33,9 @@
 	}
 
 	</style>
+	@php
+		$CHECK_URL = route('repair.form',$datamachine->UNID);
+	@endphp
 	<div class="content">
 
 

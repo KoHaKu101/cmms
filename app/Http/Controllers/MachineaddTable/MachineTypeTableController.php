@@ -69,7 +69,7 @@ class MachineTypeTableController extends Controller
 
       if ($request->hasFile('TYPE_ICON')) {
         if ($request->file('TYPE_ICON')->isValid()) {
-            $image = $request->file('TYPE_ICON');
+            $image    = $request->file('TYPE_ICON');
             $new_name = rand() . '.' . $image->getClientOriginalExtension();
             $this->saveimg($image,$new_name);
             $last_img = $new_name;

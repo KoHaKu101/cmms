@@ -108,7 +108,6 @@ class PRController extends Controller
       $STATUS            = 'SAVE';
       $TEXT_BTN          = '<i class="fas fa-save mx-2"></i>Save';
     }
-
     $html             = '<div class="row">
                           <div class="col-md-5 form-inline">
                             <label >วัตถุประสงค์</label>
@@ -267,10 +266,9 @@ class PRController extends Controller
     $EMP      = EMPName::where('UNID','=',$request->EMP_UNID)->first();
     $CHECK    = DocItemOut::where('UNID','=',$UNID)->count();
     $DOC_TYPE = $request->DOC_TYPE == 'SELL' ? '1' : '9';
-
     if ($CHECK > 0) {
       DocItemOut::where('UNID','=',$UNID)->update([
-        'DOC_NO'       => ''
+        'DOC_NO'        => ''
         ,'DOC_DATE'     => date('Y-m-d',strtotime($request->DOC_DATE))
         ,'DOC_YEAR'     => date('Y',strtotime($request->DOC_DATE))
         ,'DOC_MONTH'    => date('m',strtotime($request->DOC_DATE))
@@ -284,8 +282,8 @@ class PRController extends Controller
         ,'STATUS'       => 0
         ,'COUNT_DETAIL' => 0
         ,'COST_TOTAL'   => 0
-        ,'MODIFY_BY'    => Carbon::now()
-        ,'MODIFY_TIME'  => Auth::user()->name
+        ,'MODIFY_BY'    => Auth::user()->name
+        ,'MODIFY_TIME'  => Carbon::now()
        ]);
     }else {
       DocItemOut::insert([
@@ -304,10 +302,10 @@ class PRController extends Controller
         ,'STATUS'       => 0
         ,'COUNT_DETAIL' => 0
         ,'COST_TOTAL'   => 0
-        ,'CREATE_BY'    => Carbon::now()
-        ,'CREATE_TIME'  => Auth::user()->name
-        ,'MODIFY_BY'    => Carbon::now()
-        ,'MODIFY_TIME'  => Auth::user()->name
+        ,'CREATE_BY'    => Auth::user()->name
+        ,'CREATE_TIME'  => Carbon::now()
+        ,'MODIFY_BY'    => Auth::user()->name
+        ,'MODIFY_TIME'  => Carbon::now()
        ]);
     }
 
@@ -316,60 +314,55 @@ class PRController extends Controller
   public function SaveStep2(Request $request){
     $MACHINE_UNID   = $request->MACHINE_UNID;
     $SPAREPART_UNID = $request->SPAREPART_UNID;
-    if ($MACHINE_UNID != 0 || $SPAREPART_UNID != 0 ) {
-      $UNID           = $this->randUNID('PMCS_CMMS_DOC_ITEMOUT_DETAIL');
-      $DOC_ITEM_UNID  = $request->DOC_ITEM_UNID;
-      $SPAREPART_NAME = '';
-      $SPAREPART_UNIT = '';
-      $UNID_MACHINE   = '';
-      $MACHINE_CODE   = '';
-      $TOTAL_OUT      = 1;
-      if ($SPAREPART_UNID != 0) {
-        $Sparepart      = Sparepart::selectraw('UNID,SPAREPART_NAME,UNIT')->where('UNID','=',$SPAREPART_UNID)->first();
-        $SPAREPART_UNID = $Sparepart->UNID;
-        $SPAREPART_NAME = $Sparepart->SPAREPART_NAME;
-        $SPAREPART_UNIT = $Sparepart->UNIT;
-        $TOTAL_OUT      = $request->TOTAL_OUT;
-      }
-      if ($MACHINE_UNID != 0) {
-        $Machine        = Machine::select('UNID','MACHINE_CODE')->where('UNID','=',$MACHINE_UNID)->first();
-        $UNID_MACHINE   = $Machine->UNID;
-        $MACHINE_CODE   = $Machine->MACHINE_CODE;
-      }
-
-      $INDEX          = DocItemOutDetail::selectraw('DETAIL_INDEX')->where('DOC_ITEMOUT_UNID','=',$DOC_ITEM_UNID)->count();
-      $NOTE           = $request->NOTE != '' ? $request->NOTE : '';
-      $COUNT          = 1;
-      if ($INDEX > 0 ) {
-        $COUNT = $INDEX+1;
-      }
-
-      DocItemOutDetail::insert([
-        'UNID'             => $UNID
-        ,'DOC_ITEMOUT_UNID'=> $DOC_ITEM_UNID
-        ,'SPAREPART_UNID'  => $SPAREPART_UNID
-        ,'MACHINE_UNID'    => $UNID_MACHINE
-        ,'SPAREPART_NAME'  => $SPAREPART_NAME
-        ,'SPAREPART_UNIT'  => $SPAREPART_UNIT
-        ,'MACHINE_CODE'    => $MACHINE_CODE
-        ,'TOTAL_OUT'       => $TOTAL_OUT
-        ,'DATE_REC'        => $request->DATE_REC
-        ,'DETAIL_INDEX'    => $COUNT
-        ,'PR_CODE'         => ''
-        ,'SERVICES_CODE'   => ''
-        ,'STATUS'          => 0
-        ,'COST_TOTAL'      => 0
-        ,'NOTE'            => $NOTE
-        ,'CREATE_BY'       => Carbon::now()
-        ,'CREATE_TIME'     => Auth::user()->name
-        ,'MODIFY_BY'       => Carbon::now()
-        ,'MODIFY_TIME'     => Auth::user()->name
-      ]);
-    }else {
+    if ($MACHINE_UNID == 0 && $SPAREPART_UNID == 0 ) {
       return Response()->Json(['pass' => false]);
     }
-
-
+          $UNID           = $this->randUNID('PMCS_CMMS_DOC_ITEMOUT_DETAIL');
+          $DOC_ITEM_UNID  = $request->DOC_ITEM_UNID;
+          $SPAREPART_NAME = '';
+          $SPAREPART_UNIT = '';
+          $UNID_MACHINE   = '';
+          $MACHINE_CODE   = '';
+          $TOTAL_OUT      = 1;
+          if ($SPAREPART_UNID != 0) {
+            $Sparepart      = Sparepart::selectraw('UNID,SPAREPART_NAME,UNIT')->where('UNID','=',$SPAREPART_UNID)->first();
+            $SPAREPART_UNID = $Sparepart->UNID;
+            $SPAREPART_NAME = $Sparepart->SPAREPART_NAME;
+            $SPAREPART_UNIT = $Sparepart->UNIT;
+            $TOTAL_OUT      = $request->TOTAL_OUT;
+          }
+          if ($MACHINE_UNID != 0) {
+            $Machine        = Machine::select('UNID','MACHINE_CODE')->where('UNID','=',$MACHINE_UNID)->first();
+            $UNID_MACHINE   = $Machine->UNID;
+            $MACHINE_CODE   = $Machine->MACHINE_CODE;
+          }
+          $INDEX          = DocItemOutDetail::selectraw('DETAIL_INDEX')->where('DOC_ITEMOUT_UNID','=',$DOC_ITEM_UNID)->count();
+          $NOTE           = $request->NOTE != '' ? $request->NOTE : '';
+          $COUNT          = 1;
+          if ($INDEX > 0 ) {
+            $COUNT = $INDEX+1;
+          }
+          DocItemOutDetail::insert([
+            'UNID'             => $UNID
+            ,'DOC_ITEMOUT_UNID'=> $DOC_ITEM_UNID
+            ,'SPAREPART_UNID'  => $SPAREPART_UNID
+            ,'MACHINE_UNID'    => $UNID_MACHINE
+            ,'SPAREPART_NAME'  => $SPAREPART_NAME
+            ,'SPAREPART_UNIT'  => $SPAREPART_UNIT
+            ,'MACHINE_CODE'    => $MACHINE_CODE
+            ,'TOTAL_OUT'       => $TOTAL_OUT
+            ,'DATE_REC'        => $request->DATE_REC
+            ,'DETAIL_INDEX'    => $COUNT
+            ,'PR_CODE'         => ''
+            ,'SERVICES_CODE'   => ''
+            ,'STATUS'          => 0
+            ,'COST_TOTAL'      => 0
+            ,'NOTE'            => $NOTE
+            ,'CREATE_BY'       => Auth::user()->name
+            ,'CREATE_TIME'     => Carbon::now()
+            ,'MODIFY_BY'       => Auth::user()->name
+            ,'MODIFY_TIME'     => Carbon::now()
+          ]);
       $loopselect            = $this->loopselect($DOC_ITEM_UNID);
     return Response()->Json(['html'=>$loopselect['html'],'select' => $loopselect['select'],'pass' => true]);
 
@@ -434,14 +427,10 @@ class PRController extends Controller
         			                  <td>'.date('d-m-Y',strtotime($row->DATE_REC)).'</td>
         											</tr>';
                             }
-
-
         						$html .='</tbody>
         									</table>
         									</div>
         								</div>';
-
-
     return Response()->Json(['html' => $html]);
   }
   public function SaveResult(Request $request){
@@ -472,7 +461,6 @@ class PRController extends Controller
     return Response()->json(['pass'=>true]);
   }
   public function SaveRec(Request $request){
-
     $UNID                  = $request->UNID;
     $DOC_ITEMOUT_UNID      = $request->DOC_ITEMOUT_UNID;
     $COUNT_PR_CODE         = count(array_filter($request->PR_CODE,function($x) { return !empty($x); }) );
@@ -560,7 +548,6 @@ class PRController extends Controller
                </tr>';
         $ARRAY_SPAREPART[$row->SPAREPART_UNID] = $row->SPAREPART_UNID;
     }
-
       $DATA_SPAREPART = Sparepart::whereNotIn('UNID',array_keys($ARRAY_SPAREPART))->get();
       $select ='<select class="form-control form-control-sm select2" id="SPAREPART_UNID" name="SPAREPART_UNID" >
                 <option value="0"> -- </option>';

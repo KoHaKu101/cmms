@@ -5,12 +5,10 @@ namespace App\Http\Controllers\Machine;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Auth;
 use File;
 use Cookie;
-use Gate;
 use Illuminate\Http\Response;
 
 //******************** model ***********************

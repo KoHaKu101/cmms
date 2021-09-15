@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Middleware\VerifyCsrfToken;
 use Carbon\Carbon;
 use Auth;
-use Gate;
 use App\Http\Controllers\Machine\HistoryRepairController;
 use App\Http\Controllers\Machine\SparepartController;
 //******************** model ***********************

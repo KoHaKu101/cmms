@@ -239,7 +239,7 @@ class RepairSaveFormPDFController extends Controller
     $this->pdf->Cell(20,$height[0],iconv('UTF-8', 'cp874', 'จำนวนเงิน'),1,1,'C',1);
     $this->pdf->Cell(2,$height[0],' ',0,0,'C',0);
     if ($DATA_SPAREPART->count() < 1) {
-      $this->pdf->Cell(10,$height[0],'-'),1,0,'C',0);
+      $this->pdf->Cell(10,$height[0],'-',1,0,'C',0);
       $this->pdf->Cell(50,$height[0],'-',1,0,'C',0);
       $this->pdf->Cell(20,$height[0],'-',1,0,'C',0);
       $this->pdf->Cell(10,$height[0],'-',1,0,'C',0);

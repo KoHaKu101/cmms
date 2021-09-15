@@ -11,10 +11,6 @@ use Auth;
 use Cookie;
 use Gate;
 //******************** model ***********************
-use App\Models\MachineAddTable\SelectMainRepair;
-use App\Models\MachineAddTable\SelectSubRepair;
-use App\Models\Machine\Machine;
-use App\Models\Machine\MachineEMP;
 use App\Models\Machine\EMPName;
 use App\Models\Machine\RepairWorker;
 use App\Models\Machine\RepairSparepart;
@@ -22,9 +18,6 @@ use App\Models\Machine\MachineLine;
 use App\Models\Machine\EMPALL;
 use App\Models\Machine\MachineRepairREQ;
 use App\Models\Machine\History;
-//************** Package form github ***************
-use App\Exports\MachineExport;
-use Maatwebsite\Excel\Facades\Excel;
 //*************** Controller ************************
 use App\Http\Controllers\Machine\MachineRepairController;
 
@@ -47,7 +40,6 @@ class PDRepairController extends Controller
     ->first(['UNID'])) );
     return $number;
    }
-
   public function Index(Request $request){
     $COOKIE_PAGE_TYPE = $request->cookie('PAGE_TYPE');
     if ($COOKIE_PAGE_TYPE != 'PD_REPAIR') {
@@ -168,11 +160,9 @@ class PDRepairController extends Controller
     //********************************** TABLE ******************************************************************
     foreach ($dataset->items($page) as $key => $row) {
       //************************* BUTTON *****************************************
-      $BTN_CONFIRM			= $row->CLOSE_STATUS		== '1' ? "onclick=ConFirmForm(this)" : '';
       $BTN              = '<button class="btn btn-danger btn-sm btn-block my-1"
                             style="cursor:default">รอรับงาน</button>';
       if ($row->PD_CHECK_STATUS == '1') {
-        $BTN_COLOR_WORKER = 'btn-secondary';
         $BTN				      = '<button onclick=pdfsaverepair("'.$row->UNID.'") type="button"
                               class="btn btn-primary btn-block btn-sm my-1 text-left">
                               <span class="btn-label">
@@ -181,7 +171,6 @@ class PDRepairController extends Controller
                               </span>
                             </button>';
       }elseif ($row->CLOSE_STATUS == '1') {
-        $BTN_COLOR_WORKER = 'btn-pink';
         $BTN				      = '<button onclick=ConFirmForm(this) type="button"
                               data-unid="'.$row->UNID.'"
                               data-docno="'.$row->DOC_NO.'"
@@ -219,19 +208,19 @@ class PDRepairController extends Controller
 
         $EMP_NAME       = EMPName::select('EMP_ICON')->where('EMP_CODE','=',$INSPECTION_CODE)->first();
         $IMG         	  = isset($EMP_NAME->EMP_ICON) ? asset('image/emp/'.$EMP_NAME->EMP_ICON) : asset('../assets/img/noemp.png');
-        $BG_COLOR    		= isset($INSPECTION_CODE) ? 'bg-warning' : 'bg-danger';
-        $TEXT_STATUS    = isset($INSPECTION_CODE) ? 'กำลังดำเนินการ' : 'รอรับงาน';
-        $WORK_STATUS 		= isset($INSPECTION_CODE) ? $sub_row->INSPECTION_NAME_TH : 'รอรับงาน';
+        $BG_COLOR    		= $INSPECTION_CODE != '' ? 'bg-warning'   : 'bg-danger';
+        $TEXT_STATUS    = $INSPECTION_CODE != '' ? 'กำลังดำเนินการ'  : 'รอรับงาน';
+        $WORK_STATUS 		= $INSPECTION_CODE != '' ? $sub_row->INSPECTION_NAME_TH : 'รอรับงาน';
 
         $IMG_PRIORITY		= $sub_row->PRIORITY == '9' ? '<img src="'.asset('assets/css/flame.png').'" class="mt--2" width="20px" height="20px">' : '';
         $DATE_DIFF   	  = $sub_row->REC_WORK_DATE != '1900-01-01 00:00:00.000'? 'รับเมื่อ:'.Carbon::parse($sub_row->REC_WORK_DATE)->diffForHumans() : 'แจ้งเมื่อ:'.Carbon::parse($sub_row->CREATE_TIME)->diffForHumans();
-        $HTML_STATUS    = '<div class="status" id="DATE_DIFF_'.$SPAREPART_UNID.'">'.$DATE_DIFF.'</div>';
+        $TEXT_HTML      = $sub_row->PD_CHECK_STATUS == '1' ? 'ปิดเอกสารเรียบร้อย' : ($sub_row->CLOSE_STATUS == '1' ? 'ดำเนินงานสำเร็จ' : $DATE_DIFF);
+        $HTML_STATUS    = '<div class="status" id="DATE_DIFF_'.$SPAREPART_UNID.'">'.$TEXT_HTML.'</div>';
         $HTML_BTN       = '';
         $HTML_AVATAR    = '<img src="'.$IMG.'"id="IMG_'.$SPAREPART_UNID.'"alt="..." class="avatar-img rounded-circle">';
         if ($sub_row->PD_CHECK_STATUS == '1') {
           $TEXT_STATUS  = 'จัดเก็บเอกสารเรียบร้อย';
           $BG_COLOR  		= 'bg-success';
-          $HTML_STATUS  = '<div class="status" id="DATE_DIFF_'.$SPAREPART_UNID.'" >ปิดเอกสารเรียบร้อย</div>';
           $HTML_BTN     =	'<button class="btn btn-primary  btn-sm"
                           onclick=pdfsaverepair("'.$SPAREPART_UNID.'")>
                             <i class="fas fa-print mx-1"></i>
@@ -242,7 +231,6 @@ class PDRepairController extends Controller
         }elseif ($sub_row->CLOSE_STATUS == '1') {
           $TEXT_STATUS  = 'ดำเนินการสำเร็จ';
           $BG_COLOR  		= 'bg-primary';
-          $HTML_STATUS  = '<div class="status" id="DATE_DIFF_'.$SPAREPART_UNID.'" >ดำเนินงานสำเร็จ</div>';
           $HTML_BTN     = '<button class="btn  btn-primary  btn-sm"
                             onclick="ConFirmForm(this)"
                             data-unid="'.$SPAREPART_UNID.'"

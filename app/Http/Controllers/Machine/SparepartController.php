@@ -169,10 +169,8 @@ class SparepartController extends Controller
       return Redirect()->back();
     }
     public function AlertSparepartList(Request $request){
-      // dd($request);
       $SEARCH         = $request->SEARCH_SPAREPART;
       $SORT_LIMIT     = $request->SORT_LIMIT != '' ? $request->SORT_LIMIT : 10;
-      // dd($SORT_LIMIT);
       $DATA_SPAREPART = SparePart::where(function($query) use ($SEARCH){
                                       if (isset($SEARCH)) {
                                         $query->where('SPAREPART_NAME','like','%'.$SEARCH.'%')
@@ -184,7 +182,7 @@ class SparepartController extends Controller
     }
     public function HistoryPDF(HistorySparepartHEAD $HistorySparepartHEAD,Request $request){
       $this->pdf = $HistorySparepartHEAD;
-      $UNID = $request->UNID ;
+      $UNID      = $request->UNID ;
       $SPAREPART = SparePart::where('UNID','=',$UNID)->first();
       $DATA_HISTORY = HistorySparepart::select('*')->selectraw("dbo.decode_utf8(RECODE_BY) as RECODE_BY_TH")
                                     ->Where('SPAREPART_UNID','=',$UNID)->get();
@@ -199,7 +197,6 @@ class SparepartController extends Controller
       $this->pdf->AliasNbPages();
 
       $this->pdf->SetFont('THSarabunNew','',14 );
-
       foreach ($DATA_HISTORY as $key => $row) {
         $IN_TOTAL     = $row->IN_TOTAL  > 0 ? $row->IN_TOTAL  : '-';
         $OUT_TOTAL    = $row->OUT_TOTAL > 0 ? $row->OUT_TOTAL : '-';
@@ -213,7 +210,6 @@ class SparepartController extends Controller
         $this->pdf->Cell(15,6,$row->TOTAL,'BRL',0,'C');
         $this->pdf->Cell(31,6,iconv('UTF-8', 'cp874', $row->RECODE_BY_TH),'BRL',0,'L');
         $this->pdf->Cell(47,6,iconv('UTF-8', 'cp874', $REMARK),'BRL',1,$CENTER);
-
         $Y= $this->pdf->getY();
         if ($Y > 279) {
           $this->pdf->AddPage('P','A4');
@@ -228,7 +224,6 @@ class SparepartController extends Controller
     }
     public function SaveHistory( $UNID_REF = NULL,$MACHINE_UNID = NULL,$DOC_NO = NULL
                                  ,$TYPE    = NULL,$RECODE_BY    = NULL){
-
       if ($TYPE == 'REPAIR') {
         $DATA_SPAREPART = RepairSparepart::Where('REPAIR_REQ_UNID','=',$UNID_REF)->get();
       }elseif ($TYPE == 'PLAN_PM') {
@@ -243,8 +238,8 @@ class SparepartController extends Controller
       foreach ($DATA_SPAREPART as $index => $row) {
         $SPAREPART      = Sparepart::select('LAST_STOCK')->where('UNID','=',$row->SPAREPART_UNID)->first();
         $UNID           = $this->randUNID('PMCS_CMMS_HISTORY_SPAREPART');
-        $OUT_TOTAL      = $TYPE == 'REPAIR' ? $row->SPAREPART_TOTAL_OUT : ($TYPE == 'PLAN_PM' ? $row->TOTAL_PIC: ($TYPE == 'PLAN_PDM' ? $row->ACT_QTY : 0) );
-        $DATE           = $TYPE == 'REPAIR' ? $row->CHANGE_DATE : ($TYPE == 'PLAN_PM' ? $row->CHANGE_DATE: ($TYPE == 'PLAN_PDM' ? $row->COMPLETE_DATE : 0) );
+        $OUT_TOTAL      = $TYPE == 'REPAIR' ? $row->SPAREPART_TOTAL_OUT : ($TYPE == 'PLAN_PM' ? $row->TOTAL_PIC  : ($TYPE == 'PLAN_PDM' ? $row->ACT_QTY : 0) );
+        $DATE           = $TYPE == 'REPAIR' ? $row->CHANGE_DATE         : ($TYPE == 'PLAN_PM' ? $row->CHANGE_DATE: ($TYPE == 'PLAN_PDM' ? $row->COMPLETE_DATE : 0) );
         $TOTAL_STOCK    = $SPAREPART->LAST_STOCK - $OUT_TOTAL;
         if ($row->SPAREPART_PAY_TYPE == 'CUT') {
           HistorySparepart::Insert([

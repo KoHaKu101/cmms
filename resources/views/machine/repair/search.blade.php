@@ -26,7 +26,9 @@
 
 	{{-- ส่วนเนื้อหาและส่วนท้า --}}
 @section('contentandfooter')
-
+		@php
+			$CHECK_URL = route('repair.repairsearch');
+		@endphp
 		<div class="content">
 			<div class="page-inner">
 				<!--ส่วนปุ่มด้านบน-->
@@ -34,13 +36,7 @@
 					<div class="container">
 						<div class="row">
 							<div class="col-md-1">
-              @can('isAdmin')
-								<a href="{{ route('repair.list') }}">
-									<button class="btn btn-warning  btn-xs ">
-										<span class="fas fa-arrow-left fa-lg">Back </span>
-									</button>
-								</a>
-              @elsecan('isManager_Ma')
+              @can('isAdminandMA')
 								<a href="{{ route('repair.list') }}">
 									<button class="btn btn-warning  btn-xs ">
 										<span class="fas fa-arrow-left fa-lg">Back </span>

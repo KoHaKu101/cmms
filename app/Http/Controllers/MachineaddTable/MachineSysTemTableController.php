@@ -43,7 +43,7 @@ class MachineSysTemTableController extends Controller
   public function Index(Request $request,$UNID = NULL){
 
     $datapmtemplate           = MachinePmTemplate::orderBy('PM_TEMPLATE_NAME','ASC')->get();
-    $countdetail = 0;
+    $countdetail              = 0;
     $datapmtemplatelist       = NULL;
     $datapmtemplatefirst      = NULL;
     $datamachine              = NULL;
@@ -51,10 +51,10 @@ class MachineSysTemTableController extends Controller
     if($UNID){
       $datapmtemplatelist       = MachinePmTemplateList::where('PM_TEMPLATE_UNID_REF','=',$UNID)->orderBy('PM_TEMPLATELIST_INDEX','ASC')->get();
       $datapmtemplatefirst      = MachinePmTemplate::select('PM_TEMPLATE_NAME','UNID')->where('UNID',$UNID)->first();
-      $datamachine                = MasterIMPS::where('PM_TEMPLATE_UNID_REF',$UNID)
+      $datamachine              = MasterIMPS::where('PM_TEMPLATE_UNID_REF',$UNID)
                                       ->orderBy('MACHINE_CODE','ASC')
                                       ->paginate(10);
-      $countdetail = $datapmtemplatefirst->count();
+      $countdetail  = $datapmtemplatefirst->count();
       $arraymachine = Machine::select('MACHINE_LINE','UNID')->selectRaw('dbo.decode_utf8(MACHINE_NAME) as MACHINE_NAME_TH')
                                ->where('MACHINE_STATUS','!=','4')->get();
 

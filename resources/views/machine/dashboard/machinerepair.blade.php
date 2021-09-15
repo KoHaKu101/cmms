@@ -215,7 +215,7 @@ function printrepairmachine(){
 }
 $('#tablecountrepair').DataTable({
 		'rowsGroup': [0,1,2,5],
-		"pageLength": 20,
+		"pageLength": 10,
 		"bLengthChange": false,
 		"bFilter": true,
 		"bInfo": false,

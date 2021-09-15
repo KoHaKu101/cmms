@@ -13,8 +13,6 @@ use Cookie;
 use App\Models\Machine\Machine;
 use App\Models\Machine\MachineCheckSheet;
 use App\Models\Machine\Uploadimg;
-//***************** Controller ************************
-use App\Http\Controllers\Machine\UploadImgController;
 
 //************** Package form github ***************
 use RealRashid\SweetAlert\Facades\Alert;
@@ -24,8 +22,6 @@ class DailyCheckController extends Controller
 {
   public function __construct(){
     $this->middleware('auth');
-
-
   }
   public function randUNID($table){
     $number = date("ymdhis", time());
@@ -142,7 +138,6 @@ class DailyCheckController extends Controller
 
     $UNID = $request->UNID;
     $DATA_CHECKSHEET = MachineCheckSheet::Where('UNID','=',$UNID)->count();
-    $response_array = 'fail';
 
     if ($DATA_CHECKSHEET > 0) {
       $DATA_CHECKSHEET = MachineCheckSheet::Where('UNID','=',$UNID)->first();
@@ -154,13 +149,11 @@ class DailyCheckController extends Controller
         File::delete($pathfile);
         MachineCheckSheet::where('UNID',$UNID)->delete();
         $response_array = 'pass';
-        return Response()->json(['status' => $response_array]);
-      }else {
-        return Response()->json(['status' => $response_array]);
+        return Response()->json(['status' => 'pass']);
       }
-    }else {
-      return Response()->json(['status' => $response_array]);
+        return Response()->json(['status' => 'fail']);
     }
+      return Response()->json(['status' => 'fail']);
 
   }
 
@@ -177,36 +170,3 @@ class DailyCheckController extends Controller
 
 
   }
-  //************************************** Code Upload IMG *******************************
-  // $image = $request->file('FILE_NAME');
-    // $new_name = rand() . '.' . $image->getClientOriginalExtension();
-    // $img_ext = $image->getClientOriginalExtension();
-    // $width = 800;
-    // $height = 500;
-    // $image = file_get_contents($image);
-    // $img_master  = imagecreatefromstring($image);
-    // $img_widht   = ImagesX($img_master);
-    // $img_height  = ImagesY($img_master);
-    // $img_create  = $img_master;
-    // if ($img_widht < $img_height ) {
-    //   $img_master = imagerotate($img_master,90,0,true);
-    //   $img_widht = ImagesX($img_master);
-    //   $img_height = ImagesY($img_master);
-    //   $img_create  = $img_master;
-    // }
-    // if ($img_widht > $width) {
-    //   $img_create  = ImageCreateTrueColor($width, $height);
-    //   ImageCopyResampled($img_create, $img_master, 0, 0, 0, 0, $width+1, $height+1, $img_widht, $img_height);
-    // }
-    // $path = public_path('image/checksheet/'.$CHECK_YEAR.'/'.$CHECK_MONTH.'/');
-    //   if(!File::isDirectory($path)){
-    //   File::makeDirectory($path, 0777, true, true);
-    //   }
-    //
-    //   if (strtoupper($img_ext) == 'JPEG' || strtoupper($img_ext) == 'JPG') {
-    //     $checkimg_saved = imagejpeg($img_create,$path.'/'.$new_name);
-    //   }elseif (strtoupper($img_ext) == 'PNG') {
-    //     $checkimg_saved = imagepng($img_create,$path.'/'.$new_name);
-    //   }
-    //   ImageDestroy($img_master);
-    //   ImageDestroy($img_create);

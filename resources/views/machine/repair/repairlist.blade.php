@@ -140,7 +140,8 @@
 												@php
 													$BG_COLOR    		=  $row->INSPECTION_CODE ? 'bg-warning text-white' : 'bg-danger text-white';
 													$IMG_PRIORITY		=  $row->PRIORITY == '9' ? '<img src="'.asset('assets/css/flame.png').'" class="mt--2" width="20px" height="20px">' : '';
-													$WORK_STATUS 		=  isset($row->INSPECTION_CODE) ? $array_EMP[$row->INSPECTION_CODE] : 'รอรับงาน';
+
+													$WORK_STATUS 		=  $row->INSPECTION_CODE != '' ? $array_EMP[$row->INSPECTION_CODE] : 'รอรับงาน';
 													$TEXT_STATUS    =  $row->PD_CHECK_STATUS == '1' ? 'จัดเก็บเอกสารเรียบร้อย' : ($row->CLOSE_STATUS == '1' ? 'ดำเนินการสำเร็จ' : (isset($row->INSPECTION_CODE) ? 'กำลังดำเนินการ' : 'รอรับงาน' ));
 													$IMG         	  = isset($array_IMG[$row->INSPECTION_CODE]) ? asset('image/emp/'.$array_IMG[$row->INSPECTION_CODE]) : asset('../assets/img/noemp.png');
 													$DATE_DIFF   	  = $row->REC_WORK_DATE != '1900-01-01 00:00:00.000'? 'รับเมื่อ:'.Carbon\Carbon::parse($row->REC_WORK_DATE)->diffForHumans() : 'แจ้งเมื่อ:'.Carbon\Carbon::parse($row->CREATE_TIME)->diffForHumans();
@@ -231,7 +232,7 @@
 								        <tbody id="result">
 								          @foreach ($dataset as $key => $sub_row)
 														@php
-															$REC_WORK_STATUS  = isset($sub_row->INSPECTION_CODE) ? '<i class="fas fa-wrench fa-lg mx-1"></i>'.$array_EMP[$sub_row->INSPECTION_CODE] : 'รอรับงาน';
+															$REC_WORK_STATUS  = $sub_row->INSPECTION_CODE != '' ? '<i class="fas fa-wrench fa-lg mx-1"></i>'.$array_EMP[$sub_row->INSPECTION_CODE] : 'รอรับงาน';
 															$BTN_COLOR_STATUS = $sub_row->PD_CHECK_STATUS == '1' ? 'btn-success' : ($sub_row->CLOSE_STATUS == '1' ? 'btn-primary': (isset($sub_row->INSPECTION_CODE) ? 'btn-warning' : 'btn-danger text-center'));
 															if ($sub_row->PD_CHECK_STATUS == '1') {
 																$REC_WORK_STATUS = '<i class="fas fa-clipboard-check fa-lg mx-1"></i> จัดเก็บเอกสารเรียบร้อย';

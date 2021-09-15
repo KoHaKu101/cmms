@@ -103,6 +103,8 @@ Route::get('/mail/send/',[MailSend::class,'mailsend'])->name('mail.send');
   //Export Excel
   Route::get('machine/export',  [MachineExportController::class,'export']);
     Route::get('downtime/export', [DowtimeexportController::class,'Dowtimeexport']);
+    Route::get('/confirm/repair'                        ,[ConfirmPageController::class,'Repair'])           ->name('confirm.repair');
+    Route::post('/confirm/save'                         ,[ConfirmPageController::class,'SaveConfirm'])             ->name('confirm.save');
 //*****************************************  PDRepairController  *********************************************************
 Route::post('/cookie/set',[CookieController::class,'setCookie'])->name('cookie.set');
 Route::post('/cookie/get' ,[CookieController::class,'getCookie'])->name('cookie.get');
@@ -122,8 +124,7 @@ Route::middleware('can:isAdminandManager')->group(function () {
     Route::get('/machine/user/homepage'                ,[DashboardController::class,'UserHomePage'])       ->name('user.homepage');
   //*****************************************  CalendarController  *********************************************************
    Route::get('/machine/calendar'                      ,[CalendarController::class,'Index']);
-   Route::get('/confirm/repair'                        ,[ConfirmPageController::class,'Repair'])           ->name('confirm.repair');
-   Route::post('/confirm/save'                         ,[ConfirmPageController::class,'SaveConfirm'])             ->name('confirm.save');
+
 
 });
 
@@ -146,9 +147,9 @@ Route::middleware('can:isAdminandMA')->group(function () {
     Route::get('machine/repair/form/{MACHINE_CODE}'         ,[MachineRepairController::class,'Create'])               ->name('repair.form');
     Route::get('machine/repair/repairsearch'                ,[MachineRepairController::class,'PrepareSearch'])        ->name('repair.repairsearch');
     Route::post('machine/repair/store/{MACHINE_UNID}'       ,[MachineRepairController::class,'Store'])                ->name('repair.store');
-    Route::get('machine/repair/edit/{UNID}'                 ,[MachineRepairController::class,'Edit'])                 ->name('repair.edit');
-    Route::post('machine/repair/update/{UNID}'              ,[MachineRepairController::class,'Update'])               ->name('repair.update');
-    Route::get('machine/repair/delete'                      ,[MachineRepairController::class,'Delete'])               ->name('repair.delete');
+    // Route::get('machine/repair/edit/{UNID}'                 ,[MachineRepairController::class,'Edit'])                 ->name('repair.edit');
+    // Route::post('machine/repair/update/{UNID}'              ,[MachineRepairController::class,'Update'])               ->name('repair.update');
+    // Route::get('machine/repair/delete'                      ,[MachineRepairController::class,'Delete'])               ->name('repair.delete');
     Route::get('machine/repair/readnotify/ma'               ,[MachineRepairController::class,'ReadNotify'])           ->name('repair.readnotify');
   //*****************************************  RepairCloseFormController  *********************************************************
   Route::post('machine/repair/select/selectrepairdetail'    ,[RepairCloseFormController::class,'SelectRepairDetail']) ->name('repair.selectrepairdetail');

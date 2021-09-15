@@ -89,8 +89,7 @@ class MachineManualController extends Controller
      $filenamemaster = uniqid().$FILE_NAME;
      $FILE_EXTENSION = $FILE_UPLOAD->getClientOriginalExtension();
 
-     $FILE_SIZE = 0;
-     $FILE_SIZE = $FILE_UPLOAD->getSize();
+     $FILE_SIZE = $FILE_UPLOAD->getSize() > 0 ? $FILE_UPLOAD->getSize() : 0 ;
      if ($FILE_SIZE >0 ) {
        $FILE_SIZE = number_format($FILE_SIZE /100000, 2);
      }
@@ -110,9 +109,9 @@ class MachineManualController extends Controller
       'TOPIC_NAME'           => $TOPIC_NAME,
       'FILE_UPLOAD'          => $filenamemaster,
       'FILE_SIZE'            => $FILE_SIZE,
-      'FILE_NAME'           => $FILE_NAME,
-      'FILE_EXTENSION'      => $FILE_EXTENSION,
-      'FILE_UPLOADDATETIME'    => $FILE_UPLOADDATETIME,
+      'FILE_NAME'            => $FILE_NAME,
+      'FILE_EXTENSION'       => $FILE_EXTENSION,
+      'FILE_UPLOADDATETIME'  => $FILE_UPLOADDATETIME,
       'CREATE_BY'            => Auth::user()->name,
       'CREATE_TIME'          => Carbon::now(),
       'MODIFY_BY'            => Auth::user()->name,
@@ -138,13 +137,12 @@ class MachineManualController extends Controller
 
          $FILE_UPLOADDATETIME = Carbon::now()->format('Y-m-d');
 
-         $FILE_UPLOAD = $request->file('FILE_UPLOAD');
-         $FILE_NAME = basename($FILE_UPLOAD->getClientOriginalName());
+         $FILE_UPLOAD    = $request->file('FILE_UPLOAD');
+         $FILE_NAME      = basename($FILE_UPLOAD->getClientOriginalName());
          $FILE_EXTENSION = $FILE_UPLOAD->getClientOriginalExtension();
          $filenamemaster = uniqid().$FILE_NAME;
 
-         $FILE_SIZE = 0;
-         $FILE_SIZE = $FILE_UPLOAD->getSize();
+         $FILE_SIZE = $FILE_UPLOAD->getSize() > 0 ? $FILE_UPLOAD->getSize() : 0 ;
          if ($FILE_SIZE > 0 ) {
            $FILE_SIZE = number_format($FILE_SIZE /100000, 2);
          }
@@ -152,28 +150,28 @@ class MachineManualController extends Controller
          $path = public_path('upload/manual/'.$MACHINE_CODE);
          $FILE_UPLOAD->move($path,$filenamemaster);
        }else {
-        $filenamemaster  = $DATA_UPLOAD->FILE_UPLOAD;
-        $FILE_SIZE    = $DATA_UPLOAD->FILE_SIZE;
-        $FILE_NAME     =  $DATA_UPLOAD->FILE_NAME;
-        $FILE_EXTENSION =  $DATA_UPLOAD->FILE_EXTENSION;
+        $filenamemaster   = $DATA_UPLOAD->FILE_UPLOAD;
+        $FILE_SIZE        = $DATA_UPLOAD->FILE_SIZE;
+        $FILE_NAME        =  $DATA_UPLOAD->FILE_NAME;
+        $FILE_EXTENSION   =  $DATA_UPLOAD->FILE_EXTENSION;
         $FILE_UPLOADDATETIME =  $DATA_UPLOAD->FILE_UPLOADDATETIME;
       }
     MachineUpload::where('UNID',$UNID)->update([
-      'TOPIC_NAME'         => $TOPIC_NAME,
-      'FILE_UPLOAD'          => $filenamemaster,
-      'FILE_SIZE'          => $FILE_SIZE,
-      'FILE_NAME'          => $FILE_NAME,
+      'TOPIC_NAME'          => $TOPIC_NAME,
+      'FILE_UPLOAD'         => $filenamemaster,
+      'FILE_SIZE'           => $FILE_SIZE,
+      'FILE_NAME'           => $FILE_NAME,
       'FILE_EXTENSION'      => $FILE_EXTENSION,
-      'FILE_UPLOADDATETIME'    => $FILE_UPLOADDATETIME,
-      'MODIFY_BY'            => Auth::user()->name,
-      'MODIFY_TIME'          => Carbon::now(),
+      'FILE_UPLOADDATETIME' => $FILE_UPLOADDATETIME,
+      'MODIFY_BY'           => Auth::user()->name,
+      'MODIFY_TIME'         => Carbon::now(),
     ]);
     alert()->success('อัพเดทรายการสำเร็จ')->autoclose('1500');
     return Redirect()->back();
   }
   public function Delete($UNID){
       $data_set = MachineUpload::where('UNID','=',$UNID)->first();
-      $path = public_path('upload/manual/'.$data_set->MACHINE_CODE.'/'.$data_set->FILE_UPLOAD);
+      $path     = public_path('upload/manual/'.$data_set->MACHINE_CODE.'/'.$data_set->FILE_UPLOAD);
       File::delete($path);
       MachineUpload::where('UNID','=',$UNID)->delete();
       alert()->success('ลบรายการสำเร็จ')->autoclose('1500');
@@ -181,9 +179,9 @@ class MachineManualController extends Controller
   }
   public static function Download($UNID){
 
-      $dataset = MachineUpload::find($UNID);
-      $FILE_UPLOAD = $dataset->FILE_UPLOAD;
-      $path = public_path('upload/manual/'.$dataset->MACHINE_CODE);
+      $dataset      = MachineUpload::find($UNID);
+      $FILE_UPLOAD  = $dataset->FILE_UPLOAD;
+      $path         = public_path('upload/manual/'.$dataset->MACHINE_CODE);
       $headers = array(
              'Content-Type: application/pdf',
            );

@@ -40,7 +40,6 @@ class MachineStatusTableController extends Controller
   }
 
   public function Store(Request $request){
-    // dd( $request);
     $validated = $request->validate([
       'STATUS_CODE'           => 'required|unique:PMCS_CMMS_MACHINE_STATUS|max:50',
       'STATUS_NAME'           => 'required|unique:PMCS_CMMS_MACHINE_STATUS|max:200',

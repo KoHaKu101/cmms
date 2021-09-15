@@ -64,8 +64,7 @@ class MachineSparePartController extends Controller
                       <div class="form-check">
                       <label class="form-check-label">
                         <input class="form-check-input add-machine" type="checkbox" value="'.$SPAREPART_UNID.'"
-                        id="SPAREPART_UNID'.$SPAREPART_UNID.'" name="SPAREPART_UNID'.$SPAREPART_UNID.'"
-                        >
+                        id="SPAREPART_UNID'.$SPAREPART_UNID.'" name="SPAREPART_UNID'.$SPAREPART_UNID.'">
                         <span class="form-check-sign">'.$row_sparepart->SPAREPART_NAME.'</span>
                       </label>
                     </div>
@@ -87,8 +86,7 @@ class MachineSparePartController extends Controller
                          id="DATESTART_'.$SPAREPART_UNID.'" name="DATESTART_'.$SPAREPART_UNID.'" data-unid="'.$SPAREPART_UNID.'"
                          onchange="';
                     $html.="addmachinetosparepart('".$SPAREPART_UNID."')";
-
-                   $html.='" value="'.date("Y-m-d").'">
+                    $html.='" value="'.date("Y-m-d").'">
                       </div>
                     </td>
                     <td>
@@ -100,9 +98,7 @@ class MachineSparePartController extends Controller
 
                     $html.='" value="0">
                       </div>
-
                     </td>
-
               </tr></form></div>';
 
           }
@@ -114,7 +110,7 @@ class MachineSparePartController extends Controller
     if (!isset($totalmonth->AUTOPLAN)) {
         return Response()->json(['res' => false]);
     }
-    $MACHINE_UNID     = $request->MACHINE_UNID ;
+    $MACHINE_UNID     = $request->MACHINE_UNID;
     $MACHINE_CODE     = $request->MACHINE_CODE;
     $PERIOD           = $request->PERIOD ;
     $DATESTART        = $request->DATESTART;
@@ -124,10 +120,8 @@ class MachineSparePartController extends Controller
     $count_sparepart  = MachineSparePart::where('MACHINE_UNID','=',$MACHINE_UNID)
                                        ->where('SPAREPART_UNID','=',$SPARTPART_UNID)
                                        ->count();
-
     $SPAREPART_COST   = $SPAREPART->SPAREPART_COST ;
     $SPAREPART_PLAN   = new SparPartController;
-
     if ($count_sparepart > 0) {
       MachineSparePart::where('MACHINE_UNID','=',$MACHINE_UNID)
                       ->where('SPAREPART_UNID','=',$SPAREPART->UNID)
@@ -176,13 +170,17 @@ class MachineSparePartController extends Controller
    $SPAREPART_PLAN->PlanSave($MACHINE_UNID,$PERIOD,$DATESTART,$SPARTPART_UNID,$SPAREPART_QTY,$SPAREPART_COST);
   }
   public function Update(Request $request){
-    $count_machinesparepart = MachineSparePart::where('UNID','=',$request->MACHINESPAREPART_UNID)->count();
-    if ($count_machinesparepart > 0) {
+    $MACHINESPAREPART_UNID  = $request->MACHINESPAREPART_UNID;
+    $count_machinesparepart = MachineSparePart::where('UNID','=',$MACHINESPAREPART_UNID)->count();
+    if ($count_machinesparepart == 0) {
+      alert()->error('ไม่พบข้อมูลที่จะบันทึก')->autoclose('1500');
+      return redirect()->back();
+    }
       $PLAN_DATE     = $request->PLAN_DATE;
       $PERIOD        = $request->PERIOD;
       $SPAREPART_QTY = $request->SPAREPART_QTY;
       $STATUS        = $request->STATUS != '' ? $request->STATUS : 1;
-        MachineSparePart::where('UNID','=',$request->MACHINESPAREPART_UNID)->update([
+        MachineSparePart::where('UNID','=',$MACHINESPAREPART_UNID)->update([
            'STATUS'              => $STATUS
           ,'REMARK'              => $request->REMARK
           ,'SPAREPART_QTY'       => $SPAREPART_QTY
@@ -192,7 +190,7 @@ class MachineSparePartController extends Controller
           ,'MODIFY_TIME'         => Carbon::now()
         ]);
 
-        $machinesparepart = MachineSparePart::select('MACHINE_UNID','SPAREPART_UNID','COST_STD')->where('UNID','=',$request->MACHINESPAREPART_UNID)->first();
+        $machinesparepart = MachineSparePart::select('MACHINE_UNID','SPAREPART_UNID','COST_STD')->where('UNID','=',$MACHINESPAREPART_UNID)->first();
         $MACHINE_UNID     = $machinesparepart->MACHINE_UNID;
         $SPARTPART_UNID   = $machinesparepart->SPAREPART_UNID;
         $SPAREPART_COST   = $machinesparepart->COST_STD;
@@ -202,18 +200,12 @@ class MachineSparePartController extends Controller
         SparePartPlan::where($whereplan)->where('PLAN_DATE','>',$PLAN_DATE)->delete();
 
         $plansparepart = new SparPartController;
-        $plansparepart->PlanSave($MACHINE_UNID,$PERIOD,
-        $PLAN_DATE,$SPARTPART_UNID,$SPAREPART_QTY,$SPAREPART_COST);
+        $plansparepart->PlanSave($MACHINE_UNID,$PERIOD,$PLAN_DATE,$SPARTPART_UNID,$SPAREPART_QTY,$SPAREPART_COST);
         SparePartPlan::where('MACHINE_UNID','=',$MACHINE_UNID)->where('SPAREPART_UNID','=',$SPARTPART_UNID)
-                      ->update([
-                        'STATUS_OPEN' => $STATUS
-                      ]);
+                      ->update(['STATUS_OPEN' => $STATUS]);
         alert()->success('อัพเดทข้อมูลสำเร็จ')->autoclose('1500');
         return redirect()->back();
-    }else {
-      alert()->error('ไม่พบข้อมูลที่จะบันทึก')->autoclose('1500');
-       return redirect()->back();
-    }
+
 
 
   }
@@ -226,18 +218,18 @@ class MachineSparePartController extends Controller
     $count_machinesparepart = MachineSparePart::where('MACHINE_UNID','=',$MACHINE_UNID)
                                               ->where('SPAREPART_UNID','=',$SPARTPART_UNID)
                                               ->count();
-    if ($count_machinesparepart > 0) {
-      MachineSparePart::where('MACHINE_UNID','=',$MACHINE_UNID)
-                      ->where('SPAREPART_UNID','=',$SPARTPART_UNID)
-                      ->delete();
-      $whereplan = ['MACHINE_UNID'    => $MACHINE_UNID,
-                    'SPAREPART_UNID'  => $SPARTPART_UNID,
-                    'STATUS'          => 'NEW'];
-      SparePartPlan::where($whereplan)->where('PLAN_DATE','>',Carbon::now())->delete();
-        return Response()->json(['res' => true ]);
-    }else {
-        return Response()->json(['res' => false ]);
+    if ($count_machinesparepart == 0) {
+      return Response()->json(['res' => false ]);
     }
+    MachineSparePart::where('MACHINE_UNID','=',$MACHINE_UNID)
+                    ->where('SPAREPART_UNID','=',$SPARTPART_UNID)
+                    ->delete();
+    $whereplan = ['MACHINE_UNID'    => $MACHINE_UNID,
+                  'SPAREPART_UNID'  => $SPARTPART_UNID,
+                  'STATUS'          => 'NEW'];
+    SparePartPlan::where($whereplan)->where('PLAN_DATE','>',Carbon::now())->delete();
+      return Response()->json(['res' => true ]);
+
   }
   public function StatusOpen(Request $request){
     $MACHINE_UNID   = $request->MACHINE_UNID;
