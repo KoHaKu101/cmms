@@ -95,11 +95,9 @@ class HistoryController extends Controller
 
       $COMPACT_NAME = compact('DOC_TYPE','DATA_REPAIR_HEADER','DOC_YEAR','DOC_MONTH','SEARCH','DATA_MASTERTEMPLAT','DATA_PLANPM','DATA_MACHINE_PLAN');
     }elseif ($DOC_TYPE == 'PLAN_PDM') {
-      $DATA_PLAN_PDM        = History::select('SPAREPART_PLAN_UNID','DOC_DATE','REPAIR_DATE','DOWN_TIME','TOTAL_COST')
-                                      ->where('DOC_TYPE','=','PLAN_PDM')
-                                      ->orderBy('MACHINE_CODE')->get();
+
       $DATA_SPAREPART_PLAN  = SparePartPlan::orderBy('SPAREPART_NAME')->get();
-      $COMPACT_NAME = compact('DOC_TYPE','DATA_REPAIR_HEADER','DOC_YEAR','DOC_MONTH','SEARCH','DATA_PLAN_PDM','DATA_SPAREPART_PLAN');
+      $COMPACT_NAME = compact('DOC_TYPE','DATA_REPAIR_HEADER','DOC_YEAR','DOC_MONTH','SEARCH','DATA_SPAREPART_PLAN');
     }
 
     return view('machine.history.list',$COMPACT_NAME);

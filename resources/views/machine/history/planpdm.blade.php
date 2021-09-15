@@ -36,8 +36,13 @@
             @php
               $no = 1 ;
               $sub_no = 1 ;
+
+              $DATA_PLAN_PDM = App\Models\Machine\History::select('SPAREPART_PLAN_UNID','DOC_DATE','REPAIR_DATE','DOWN_TIME','TOTAL_COST')
+                                              ->where('DOC_YEAR','=',date('Y'))
+                                              ->where('DOC_TYPE','=','PLAN_PDM')->where('MACHINE_UNID','=',$row->MACHINE_UNID)
+                                              ->orderBy('MACHINE_CODE')->get();
             @endphp
-            @foreach ($DATA_PLAN_PDM->where('MACHINE_UNID','=',$row->MACHINE_UNID) as $key => $row_sparepart)
+            @foreach ($DATA_PLAN_PDM as $key => $row_sparepart)
               @php
               $DATA_SPAREPART_PLAN = $DATA_SPAREPART_PLAN->where('UNID','=',$row_sparepart->SPAREPART_PLAN_UNID)->first();
               @endphp

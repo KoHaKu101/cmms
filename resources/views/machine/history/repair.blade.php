@@ -40,6 +40,7 @@
                 $i = 1 ;
                 $i_sub = 1 ;
                 $DATA_REPAIR = App\Models\Machine\History::select('*')->selectraw('dbo.decode_utf8(INSPECTION_BY) as INSPECTION_BY_TH')
+                                                    ->where('DOC_YEAR','=',date('Y'))
                                                     ->where('DOC_TYPE','=','REPAIR')->where('MACHINE_UNID','=',$row->MACHINE_UNID)
                                                     ->orderBy('MACHINE_CODE')->orderBy('DOC_DATE')->get();
               @endphp
