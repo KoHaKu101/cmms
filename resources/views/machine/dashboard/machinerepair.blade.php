@@ -215,13 +215,13 @@ function printrepairmachine(){
 }
 $('#tablecountrepair').DataTable({
 		'rowsGroup': [0,1,2,5],
-		"pageLength": 10,
+		paging: true,
+		"pageLength": 14,
 		"bLengthChange": false,
 		"bFilter": true,
 		"bInfo": false,
 		"bAutoWidth": false,
 		searching: false,
-		paging: false,
 		columnDefs: [
 		{ orderable: false, targets:[0,1,2,3,4,5] }
 	]
