@@ -34,7 +34,7 @@
 										<form action="{{ route('machine.config.save') }}" method="POST" id="FRM_MAILSETUP" name="FRM_MAILSETUP" >
 											@csrf
 													<div class="form-group form-inline">
-														<label for="MAILHOST" class="col-md-3 col-form-label">Host Name</label>
+														<label for="MAILHOST" class="col-md-3 col-form-label">Host Name **</label>
 														<div class="col-md-9 p-0">
 															<input type="hidden" id="UNID" name="UNID" value="{{ isset($datamail[0]->UNID) ? $datamail[0]->UNID : ''}}">
 															<input type="text" class="form-control form-control-sm input-full" id="MAILHOST" name="MAILHOST"
@@ -42,12 +42,12 @@
 														</div>
 													</div>
 													<div class="form-group form-inline">
-														<label for="MAILPORT" class="col-md-3 col-form-label">Port</label>
+														<label for="MAILPORT" class="col-md-3 col-form-label">Port **</label>
 														<div class="col-md-2 p-0">
 															<input type="text" class="form-control form-control-sm input-full" id="MAILPORT" name="MAILPORT"
 															value="{{ isset( $datamail[0]->MAILPORT) ?  $datamail[0]->MAILPORT : '' }}" >
 														</div>
-														<label class="col-md-3 col-form-label">วันที่่ส่งเมล</label>
+														<label class="col-md-3 col-form-label">วันที่่ส่งเมล **</label>
 														<div class="col-md-4 p-0">
 															<input type="date" class="form-control form-control-sm input-full" id="DATESEND_MAIL" name="DATESEND_MAIL"
 															value="{{ isset( $datamail[0]->DATESEND_MAIL) ?  $datamail[0]->DATESEND_MAIL : '' }}">
@@ -55,14 +55,14 @@
 													</div>
 
 													<div class="form-group form-inline">
-														<label for="EMAILADDRESS" class="col-md-3 col-form-label">Email Admin</label>
+														<label for="EMAILADDRESS" class="col-md-3 col-form-label">Email Admin **</label>
 														<div class="col-md-9 p-0">
 															<input type="email" class="form-control form-control-sm input-full" id="EMAILADDRESS" name="EMAILADDRESS"
 															 value="{{ isset( $datamail[0]->EMAILADDRESS) ?  $datamail[0]->EMAILADDRESS : '' }}" >
 														</div>
 													</div>
 													<div class="form-group form-inline">
-														<label for="MAILPASSWORD" class="col-md-3 col-form-label">Password</label>
+														<label for="MAILPASSWORD" class="col-md-3 col-form-label">Password **</label>
 														<div class="col-md-9 p-0">
 															<input type="password" class="form-control form-control-sm input-full" id="MAILPASSWORD" name="MAILPASSWORD"
 															 value="{{ isset( $datamail[0]->MAILPASSWORD) ?  $datamail[0]->MAILPASSWORD : '' }}" autocomplete="off">
