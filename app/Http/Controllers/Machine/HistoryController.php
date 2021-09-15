@@ -76,11 +76,9 @@ class HistoryController extends Controller
                                             ->orderBy('MACHINE_CODE')->paginate(5);
 
     if ($DOC_TYPE == 'REPAIR') {
-      $DATA_REPAIR        = History::select('*')->selectraw('dbo.decode_utf8(INSPECTION_BY) as INSPECTION_BY_TH')
-                                          ->where('DOC_TYPE','=','REPAIR')
-                                          ->orderBy('MACHINE_CODE')->orderBy('DOC_DATE')->get();
+
       $DATA_SPAREPART     = RepairSparepart::orderBy('SPAREPART_NAME')->get();
-      $COMPACT_NAME = compact('DOC_TYPE','DATA_REPAIR_HEADER','DOC_YEAR','DOC_MONTH','SEARCH','DATA_SPAREPART','DATA_REPAIR');
+      $COMPACT_NAME = compact('DOC_TYPE','DATA_REPAIR_HEADER','DOC_YEAR','DOC_MONTH','SEARCH','DATA_SPAREPART');
 
     }elseif ($DOC_TYPE == 'PLAN_PM') {
       $DATA_PLANPM        = History::select('PM_PLAN_UNID','DOC_DATE','REPAIR_DATE','DOWN_TIME')
