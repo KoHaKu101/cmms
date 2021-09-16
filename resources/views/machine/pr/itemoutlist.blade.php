@@ -110,7 +110,7 @@
 													<div class="col-12 col-md-9 form-inline ">
 														<h4 class="mt-1">ค้นหา : </h4>
 														<div class="input-group mx-1 col-10 col-md-9 ml-auto">
-							                <input type="search" id="SEARCH" name="SEARCH" class="form-control form-control-sm " placeholder="ค้นหา........." value="">
+							                <input type="search" id="SEARCH_PR" name="SEARCH_PR" class="form-control form-control-sm " placeholder="ค้นหา........." value="{{ $SEARCH_PR }}">
 							                <div class="input-group-prepend">
 							                  <button type="submit" class="btn btn-search pr-1 btn-xs	" id="BTN_SUBMIT">
 							                    <i class="fa fa-search search-icon"></i>
@@ -180,7 +180,7 @@
 													@endforeach
 												</tbody>
 											</table>
-
+											{{ $DocItemOut->appends(['SEARCH_PR'=>$SEARCH_PR])->links('pagination.default') }}
 									</divl>
 								</div>
 							</div>

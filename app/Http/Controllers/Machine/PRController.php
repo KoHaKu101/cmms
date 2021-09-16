@@ -38,6 +38,7 @@ class PRController extends Controller
   }
 
   public function ItemoutList(Request $request){
+
     $DocItemOutDetail = DocItemOut::where('STATUS','=',0);
     if ($DocItemOutDetail->count() > 0 ) {
       $DocItemOutDetail = $DocItemOutDetail->first();
@@ -67,6 +68,8 @@ class PRController extends Controller
     Cookie::queue('DOC_MONTH',$DOC_MONTH,$MINUTES);
     Cookie::queue('STATUS',$STATUS,$MINUTES);
     Cookie::queue('PAGE_TYPE','PR_ITEM_OUT',$MINUTES);
+    $SEARCH_PR        = $request->SEARCH_PR;
+
     $DocItemOut       = DocItemOut::select('*')->selectraw('dbo.decode_utf8(EMP_NAME) as EMP_NAME_TH')
                         ->where(function($query) use ($DOC_YEAR){
                           if ($DOC_YEAR != 0) {
@@ -78,14 +81,20 @@ class PRController extends Controller
                             $query->where('DOC_MONTH','=',$DOC_MONTH);
                           }
                         })
+                        ->where(function($query) use ($SEARCH_PR){
+                          if ($SEARCH_PR != '') {
+                            $query->where('DOC_NO','like','%'.$SEARCH_PR.'%')
+                                  ->orwhere('COMPANY_NAME','like','%'.$SEARCH_PR.'%');
+                          }
+                        })
                         ->where(function($query) use ($STATUS){
                           if ($STATUS != 0) {
                             $query->where('STATUS','=',$STATUS);
                           }else {
                             $query->where('STATUS','!=','8');
                           }
-                        })->orderBy('DOC_DATE')->orderBy('DOC_NO','DESC')->get();
-    return view('machine.pr.itemoutlist',compact('DocItemOut','DOC_MONTH','DOC_YEAR','STATUS'));
+                        })->orderBy('DOC_DATE')->orderBy('DOC_NO','DESC')->paginate(10);
+    return view('machine.pr.itemoutlist',compact('DocItemOut','DOC_MONTH','DOC_YEAR','STATUS','SEARCH_PR'));
   }
   public function Detail(Request $request){
     $DOC_ITEMOUT_UNID    = $request->UNID;
