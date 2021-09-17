@@ -58,6 +58,6 @@ $(document).ready(function(){
 						 }
 					 });
 				 }
-	setInterval(loaddata_table_all,10000);
+	setInterval(loaddata_table_all,30000);
 	loopdata_table();
 });

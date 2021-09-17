@@ -51,7 +51,7 @@ var loaddata_table_all = function loaddata_table(){
              }
            });
          }
-      setInterval(loaddata_table_all,10000);
+      setInterval(loaddata_table_all,30000);
 });
 function notifityicon(datarepair){
   if (datarepair != null) {
