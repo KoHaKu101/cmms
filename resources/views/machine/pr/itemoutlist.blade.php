@@ -113,7 +113,7 @@
 							                <input type="search" id="SEARCH_PR" name="SEARCH_PR" class="form-control form-control-sm " placeholder="ค้นหา........." value="{{ $SEARCH_PR }}">
 							                <div class="input-group-prepend">
 							                  <button type="submit" class="btn btn-search pr-1 btn-xs	" id="BTN_SUBMIT">
-							                    <i class="fa fa-search search-icon"></i>
+							                    <i class="fa fa-search search-icon" ></i>
 							                  </button>
 							                </div>
 							              </div>
@@ -282,7 +282,6 @@
 				var count 	= step - 1;
 				var countup = count + 2 ;
 				var count_table = $('#result_detail tr').length;
-
 				if (step == '2') {
 					SaveStep1();
 					nextstep2();
