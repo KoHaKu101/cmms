@@ -9,7 +9,6 @@ use App\Models\Machine\MachineRepairREQ;
 use App\Models\Machine\MachinePlanPm;
 use App\Models\Machine\SparePartPlan;
 use App\Models\Machine\Pmplanresult;
-use Carbon\Carbon;
 use Auth;
 use Gate;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +19,7 @@ class DashboardController extends Controller
 
   }
   public function Dashboard(){
-    
+
     $machine_all        = Machine::where('MACHINE_CHECK','!=','4')->count();
     $machine_ready      = Machine::where('MACHINE_CHECK','=','2')->count();
     $machine_wait       = Machine::whereNotIn('MACHINE_CHECK',['2','4'])->count();
@@ -299,7 +298,7 @@ class DashboardController extends Controller
     }
     $last_data  = MachineRepairREQ::where('STATUS_NOTIFY','=',9)->count();
     $newrepair  = $last_data > 0 ? true : false;
-    $datarepair = MachineRepairREQ::select('UNID','MACHINE_LINE','MACHINE_CODE','DOC_DATE')->where('CLOSE_STATUS','=',9)->get();
+    $datarepair = MachineRepairREQ::select('UNID','MACHINE_LINE','MACHINE_CODE','DOC_DATE')->where('CLOSE_STATUS','=',9)->orderBy('DOC_DATE','DESC')->orderBy("REPAIR_REQ_TIME",'DESC')->orderBy('PRIORITY','ASC')->get();
     $NUMBER     = count($datarepair);
     return Response()->json(['html'=>$html,'newrepair' => $newrepair,'number' => $NUMBER,'datarepair'=>$datarepair]);
   }

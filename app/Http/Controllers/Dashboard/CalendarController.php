@@ -4,12 +4,9 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Models\Machine\MachinePlanPm;
 use App\Models\Machine\SparePartPlan;
-use App\Models\Machine\SparePart;
-use App\Models\SettingMenu\MailSetup;
 
 
 

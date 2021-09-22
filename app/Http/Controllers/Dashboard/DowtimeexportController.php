@@ -4,12 +4,6 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Machine\Machine;
-use App\Models\Machine\MachineRepairREQ;
-use App\Models\Machine\MachinePlanPm;
-use App\Models\Machine\SparePartPlan;
-use App\Models\Machine\Pmplanresult;
-use Carbon\Carbon;
 use Auth;
 use Illuminate\Support\Facades\DB;
 use App\Exports\DowntimeExports;

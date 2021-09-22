@@ -5,10 +5,8 @@ namespace App\Http\Controllers\Export;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Exports\Plan\PDMExport;
-// use Maatwebsite\Excel\Excel;
 use Excel;
 use File;
-use App\Models\Machine\Machine;
 
 
 

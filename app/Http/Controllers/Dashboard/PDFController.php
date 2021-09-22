@@ -4,14 +4,9 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Machine\Machine;
 use App\Models\Machine\MachineRepairREQ;
-use App\Models\Machine\MachinePlanPm;
-use App\Models\Machine\SparePartPlan;
-use App\Models\Machine\Pmplanresult;
 use App\Http\Controllers\PDF\HeaderFooterPDF\DowntimeHeader as DowntimeHeader;
 use App\Http\Controllers\PDF\HeaderFooterPDF\MachineRepairHeader as MachineRepairHeader;
-use Carbon\Carbon;
 use Auth;
 use Illuminate\Support\Facades\DB;
 class PDFController extends Controller
