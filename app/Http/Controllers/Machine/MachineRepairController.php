@@ -100,7 +100,7 @@ class MachineRepairController extends Controller
                                                   if ($DOC_STATUS == 'PD_CLOSE') {
                                                       $query->where('PD_CHECK_STATUS', '=', '1');
                                                    }elseif ($DOC_STATUS > 0) {
-                                                      $query->where('CLOSE_STATUS', '=', $DOC_STATUS);
+                                                      $query->where('CLOSE_STATUS', '=', $DOC_STATUS)->where('PD_CHECK_STATUS','!=','1');
                                                    }
                                                  })
                                             ->orderBy('DOC_YEAR','DESC')
@@ -157,7 +157,8 @@ class MachineRepairController extends Controller
                                                   if ($DOC_STATUS == 'PD_CLOSE') {
                                                       $query->where('PD_CHECK_STATUS', '=', '1');
                                                    }elseif ($DOC_STATUS > 0) {
-                                                      $query->where('CLOSE_STATUS', '=', $DOC_STATUS);
+                                                      $query->where('CLOSE_STATUS', '=', $DOC_STATUS)
+                                                      ->where('PD_CHECK_STATUS','!=',1);
                                                    }
                                                  })
                                             ->orderBy('DOC_YEAR','DESC')
